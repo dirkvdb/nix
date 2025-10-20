@@ -8,9 +8,7 @@
     # $ nix-env -qaP | grep wget
     systemPackages = with pkgs; [
       home-manager
-      bitwarden-cli
       raycast
-      sqlitebrowser
     ];
   };
 
@@ -42,8 +40,9 @@
     ];
 
     casks = [
-      # Managed by nix: alt-tab-macos, iina, karabiner-elements, raycast, wezterm, zed-editor
       # Not available for macOS in nixpkgs:
+      # balenaetcher
+      # bruno
       "ghostty"
       "vivaldi"
       "fork"
@@ -52,22 +51,12 @@
       "microsoft-outlook"
       "microsoft-excel"
       "orbstack"
+      #"qgis"
+      # autodesk-fusion
       "raycast"
       "spotify"
       "whatsapp"
       "zen"
-
-      # font-fira-code
-      #                                 font-fira-code-nerd-font        qgis
-      # autodesk-fusion                 font-fira-mono-nerd-font
-      # balenaetcher                    font-lobster
-      # bruno                                            stats
-      # db-browser-for-sqlite
-      # google-chrome
-      # font-cascadia-code
-      # font-cascadia-code-pl
-      # font-caskaydia-mono-nerd-font
-      # font-courgette
     ];
   };
 }
