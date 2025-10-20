@@ -33,6 +33,7 @@
   home.packages = with pkgs; [
     age
     btop
+    bitwarden-desktop
     dust
     fd
     fzf

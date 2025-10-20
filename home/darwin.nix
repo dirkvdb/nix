@@ -33,12 +33,9 @@
     homeDirectory = "/Users/${userConfig.username}";
 
     packages = with pkgs; [
-      bitwarden-desktop
       alt-tab-macos
       iina
       karabiner-elements
-      raycast
-      sqlitebrowser
     ];
   };
 
