@@ -90,7 +90,7 @@ automatically-unhide-macos-hidden-apps = false
     # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
     # You can uncomment the following lines to open up terminal with alt + enter shortcut
     # (like in i3)
-    alt-enter = 'exec-and-forget open -n /Applications/WezTerm.app'
+    alt-enter = 'exec-and-forget open -n -a "Wezterm"'
     alt-e = 'exec-and-forget open $HOME'
     alt-b = 'exec-and-forget open -n /Applications/Zen.app'
     alt-shift-m = 'exec-and-forget open -n -a "Spotify"'

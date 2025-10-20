@@ -1,6 +1,17 @@
 { pkgs, ... }:
 {
-  environment.variables.EDITOR = "micro";
+  environment = {
+    variables.EDITOR = "micro";
+    # variables.XDG_CONFIG_HOME = "${config.xdg.configHome}";
+
+    # List packages installed in system profile. To search by name, run:
+    # $ nix-env -qaP | grep wget
+    systemPackages = with pkgs; [
+      home-manager
+      bitwarden-cli
+    ];
+  };
+
   services.aerospace = {
     enable = true;
     settings = pkgs.lib.importTOML ../../configs/aerospace.toml;
@@ -18,7 +29,6 @@
       Amphetamine = 937984704;
       Pages = 409201541;
       Numbers = 409203825;
-      "Microsoft Excel" = 462058435;
     };
 
     # brews = [
@@ -32,21 +42,28 @@
       "vivaldi"
       "karabiner-elements"
       "fork"
+      "iina"
+      "localsend"
+      "microsoft-teams"
+      "microsoft-outlook"
+      "microsoft-excel"
+      "orbstack"
+      #"raycast"
       "spotify"
       "whatsapp"
       "zen"
 
-      # font-fira-code                  postman
+      # font-fira-code
       #                                 font-fira-code-nerd-font        qgis
       # autodesk-fusion                 font-fira-mono-nerd-font
       # balenaetcher                    font-lobster
-      # bruno                           font-noto-emoji                 stats
-      # db-browser-for-sqlite                                       vivaldi
-      # firefox                         google-chrome                   whatsapp
-      # font-cascadia-code              iina
+      # bruno                                            stats
+      # db-browser-for-sqlite
+      # google-chrome
+      # font-cascadia-code
       # font-cascadia-code-pl
-      # font-caskaydia-mono-nerd-font   microsoft-auto-update
-      # font-courgette                  orbstack
+      # font-caskaydia-mono-nerd-font
+      # font-courgette
     ];
   };
 }
