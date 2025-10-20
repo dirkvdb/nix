@@ -130,7 +130,7 @@
         "com.apple.finder" = {
           ShowExternalHardDrivesOnDesktop = false;
           ShowHardDrivesOnDesktop = false;
-          ShowMountedServersOnDesktop = true;
+          ShowMountedServersOnDesktop = false;
           ShowRemovableMediaOnDesktop = true;
           _FXSortFoldersFirst = true;
           # When performing a search, search the current folder by default
