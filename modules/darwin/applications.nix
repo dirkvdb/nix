@@ -9,6 +9,8 @@
     systemPackages = with pkgs; [
       home-manager
       bitwarden-cli
+      raycast
+      sqlitebrowser
     ];
   };
 
@@ -31,24 +33,26 @@
       Numbers = 409203825;
     };
 
-    # brews = [
-    #   "curl" # no not install curl via nixpkgs, it's not working well on macOS!
-    # ];
+    taps = [
+      "FelixKratz/formulae"
+    ];
+
+    brews = [
+      "borders" # from tap: FelixKratz/formulae
+    ];
 
     casks = [
       # Managed by nix: alt-tab-macos, iina, karabiner-elements, raycast, wezterm, zed-editor
       # Not available for macOS in nixpkgs:
       "ghostty"
       "vivaldi"
-      "karabiner-elements"
       "fork"
-      "iina"
       "localsend"
       "microsoft-teams"
       "microsoft-outlook"
       "microsoft-excel"
       "orbstack"
-      #"raycast"
+      "raycast"
       "spotify"
       "whatsapp"
       "zen"
