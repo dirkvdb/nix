@@ -32,21 +32,18 @@
     username = userConfig.username;
     homeDirectory = "/Users/${userConfig.username}";
 
-    # Copy these dotfiles to the home directory as is
-    file."${config.xdg.configHome}" = {
-      source = ../dotfiles;
-      recursive = true;
-    };
-
     packages = with pkgs; [
       bitwarden-desktop
       alt-tab-macos
       iina
       karabiner-elements
       raycast
-      wezterm
+      sqlitebrowser
     ];
   };
+
+  # Per-directory XDG config entries for dotfiles
+  xdg.configFile."karabiner".source = ../dotfiles/karabiner;
 
   programs.zsh = {
     enable = true;

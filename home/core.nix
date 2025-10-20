@@ -24,6 +24,10 @@
 
   xdg.enable = true;
 
+  # Per-directory XDG config entries for dotfiles
+  xdg.configFile."btop".source = ../dotfiles/btop;
+  xdg.configFile."wezterm".source = ../dotfiles/wezterm;
+
   home.username = userConfig.username;
   home.stateVersion = "25.05";
   home.packages = with pkgs; [
@@ -39,6 +43,7 @@
     sops
     tabiew
     yazi
+    wezterm
   ];
 
   programs = {
