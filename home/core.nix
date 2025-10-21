@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   userConfig,
   ...
@@ -30,6 +31,12 @@
 
   home.username = userConfig.username;
   home.stateVersion = "25.05";
+
+  # Add ~/.local/bin to PATH
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.local/bin"
+  ];
+
   home.packages = with pkgs; [
     age
     btop
@@ -50,6 +57,7 @@
   ];
 
   programs = {
+    git.enable = true;
     ripgrep.enable = true;
     home-manager.enable = true;
 
