@@ -24,6 +24,32 @@
       home-manager,
     }:
     {
+      nixosConfigurations.mini =
+        let
+          userConfig = {
+            hostname = "mini";
+            username = "dirk";
+          };
+        in
+        nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {inherit inputs userConfig;};
+          modules = [
+            ./modules/linux/configuration.nix
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "backup";
+                users.dirk = import ./home/linux.nix;
+                extraSpecialArgs = { inherit userConfig; };
+              };
+            }
+          ];
+        };
+
       # Build darwin flake using:
       # darwin-rebuild build --flake ~/.config/nix/#MacBook-Pro
       # sudo darwin-rebuild switch --flake ~/.config/nix/#MacBook-Pro
@@ -55,5 +81,5 @@
             inherit inputs userConfig;
           };
         };
-    };
+      };
 }

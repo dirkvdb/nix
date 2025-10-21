@@ -39,6 +39,7 @@
       k = "kubectl";
       ll = "ls -la";
       ls = "lsd";
+      nrs = "sudo nixos-rebuild switch";
       tree = "lsd --tree";
       zed = "zeditor";
     };
