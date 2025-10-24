@@ -30,6 +30,7 @@
 
   environment.systemPackages = with pkgs; [
     walker
+    elephant
   ];
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 }

@@ -8,14 +8,8 @@
   imports = [
     ./core.nix
     ./applications/hyprland.nix
+    ./scripts/linux.nix
   ];
-
-  # Copy scripts to ~/.local/bin
-  home.file.".local/bin" = {
-    source = ../scripts/linux;
-    recursive = true;
-    executable = true;
-  };
 
   home = {
     username = userConfig.username;
