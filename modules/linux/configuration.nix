@@ -142,20 +142,6 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-      # Hyprland Stuff
-      hypridle
-      hyprpolkitagent
-      pyprland
-      #uwsm
-      hyprlang
-      hyprshot
-      hyprcursor
-      mesa
-      nwg-displays
-      nwg-look
-      waypaper
-      hyprland-qt-support # for hyprland-qt-support
-
       #  Apps
       brightnessctl
       (btop.override {
