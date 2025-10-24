@@ -13,7 +13,7 @@
   };
 
   services.aerospace = {
-    enable = true;
+    enable = false;
     settings = pkgs.lib.importTOML ../../configs/aerospace.toml;
   };
 
@@ -31,13 +31,13 @@
       Numbers = 409203825;
     };
 
-    taps = [
-      "FelixKratz/formulae"
-    ];
+    # taps = [
+    #   "FelixKratz/formulae"
+    # ];
 
-    brews = [
-      "borders" # from tap: FelixKratz/formulae
-    ];
+    # brews = [
+    #   "borders" # from tap: FelixKratz/formulae
+    # ];
 
     casks = [
       # Not available for macOS in nixpkgs:
@@ -50,6 +50,7 @@
       "microsoft-teams"
       "microsoft-outlook"
       "microsoft-excel"
+      "microsoft-auto-update"
       "orbstack"
       #"qgis"
       # autodesk-fusion

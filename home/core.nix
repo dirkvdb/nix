@@ -39,6 +39,7 @@
 
   home.packages = with pkgs; [
     age
+    autossh
     btop
     bitwarden-cli
     bitwarden-desktop
@@ -48,6 +49,7 @@
     gh
     lsd
     micro
+    rsync
     sd
     sqlitebrowser
     sops
