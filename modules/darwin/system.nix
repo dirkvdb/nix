@@ -33,6 +33,9 @@
   # Fix GID mismatch for nixbld group: remove on next clean install
   ids.gids.nixbld = 350;
 
+  # targets.darwin.linkApps.enable = true;
+  # targets.darwin.copyApps.enable = true;
+
   nixpkgs.config.allowUnfree = true;
 
   networking.hostName = userConfig.hostname;
@@ -76,7 +79,7 @@
         autohide = true;
         orientation = "bottom";
         show-recents = false; # disable recent apps
-        static-only = true;
+        static-only = false;
       };
 
       finder = {
@@ -153,7 +156,7 @@
 
       loginwindow = {
         GuestEnabled = false; # disable guest user
-        SHOWFULLNAME = true; # show full name in login window
+        SHOWFULLNAME = false; # show full name in login window
       };
     };
   };
