@@ -14,6 +14,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    elephant = {
+      url = "github:abenz1267/elephant";
+    };
+
+    walker = {
+      url = "github:abenz1267/walker";
+      inputs.elephant.follows = "elephant";
+    };
+
   };
 
   outputs =
@@ -22,6 +31,8 @@
       nixpkgs,
       darwin,
       home-manager,
+      elephant,
+      walker,
     }:
     {
       nixosConfigurations.mini =
@@ -33,7 +44,7 @@
         in
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = {inherit inputs userConfig;};
+          specialArgs = {inherit inputs userConfig elephant walker;};
           modules = [
             ./modules/linux/configuration.nix
 
@@ -44,7 +55,7 @@
                 useUserPackages = true;
                 backupFileExtension = "backup";
                 users.dirk = import ./home/linux.nix;
-                extraSpecialArgs = { inherit userConfig; };
+                extraSpecialArgs = { inherit userConfig elephant walker; system = "x86_64-linux"; };
               };
             }
           ];

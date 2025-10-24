@@ -4,18 +4,12 @@
   "position": "top",
   "spacing": 0,
   "height": 26,
-  "modules-left": ["custom/nix", "hyprland/workspaces"],
+  "modules-left": ["custom/nixmenu", "hyprland/workspaces"],
   "modules-center": [
     "clock"
     //"custom/screenrecording-indicator",
   ],
-  "modules-right": [
-    "group/tray-expander",
-    "bluetooth",
-    "network",
-    "pulseaudio",
-    "cpu"
-  ],
+  "modules-right": ["tray", "bluetooth", "network", "pulseaudio", "cpu"],
   "hyprland/workspaces": {
     "on-click": "activate",
     "format": "{icon}",
@@ -43,7 +37,7 @@
       "8": []
     }
   },
-  "custom/nix": {
+  "custom/nixmenu": {
     "format": "<span font='omarchy'>\ue900</span>",
     "on-click": "nixcfg-launch-walker",
     "tooltip-format": "Applications Menu\n\nSuper + Space"

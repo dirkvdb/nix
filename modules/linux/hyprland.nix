@@ -28,9 +28,5 @@
   # Enable polkit for privilege escalation
   security.polkit.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    walker
-    elephant
-  ];
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 }
