@@ -18,6 +18,10 @@
     # ];
 
     settings = {
+      # Auto-start applications
+      exec-once = [
+        "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
+      ];
       # Cursor size
       env = [
         "XCURSOR_SIZE,24"
