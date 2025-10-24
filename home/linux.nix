@@ -14,6 +14,7 @@
   home.file.".local/bin" = {
     source = ../scripts/linux;
     recursive = true;
+    executable = true;
   };
 
   home = {
