@@ -3,7 +3,7 @@
   home.packages = [
     # Terminal launcher script
     (pkgs.writeShellScriptBin "nixcfg-launch-terminal" ''
-        exec setsid uwsm-app -- "${TERMINAL:-wezterm}" "$@"
+        exec setsid uwsm-app -- "''${TERMINAL:-wezterm}" "$@"
     '')
 
     # Walker launcher script

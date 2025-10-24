@@ -33,6 +33,14 @@
   # Use the latest kernel from unstable
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  # AMD-specific kernel parameters for Strix/Radeon 880M/890M
+  boot.kernelParams = [
+    "amd_pstate=active"
+    "amdgpu.dcdebugmask=0x10"
+    "amdgpu.gpu_recovery=1"
+    "amdgpu.ppfeaturemask=0xffffffff"
+  ];
+
   # Define a user account.
   users.users.${userConfig.username} = {
     isNormalUser = true;
@@ -105,7 +113,21 @@
 
   hardware = {
     bluetooth.enable = true;
-    graphics.enable = true; # OpenGL
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [
+        rocmPackages.clr.icd
+        vaapiVdpau
+        libvdpau-va-gl
+      ];
+    };
+
+    # AMD GPU firmware
+    enableRedistributableFirmware = true;
+
+    # CPU microcode updates
+    cpu.amd.updateMicrocode = true;
   };
 
   # systemd = {
@@ -133,7 +155,7 @@
     direnv.enable = true;
     virt-manager.enable = true;
     nix-ld.enable = true;
-    steam.enable = true;
+    # steam.enable = true;
     fish.enable = true;
     firefox.enable = true;
   };
@@ -142,6 +164,12 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+      # AMD GPU tools
+      radeontop
+      clinfo
+      vulkan-tools
+      rocmPackages.rocm-smi
+
       #  Apps
       brightnessctl
       (btop.override {

@@ -10,8 +10,11 @@
 
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usb_storage" "usbhid" ];
   boot.initrd.kernelModules = [ "amdgpu" ];
-  boot.kernelModules = [ "kvm-amd" ];
+  boot.kernelModules = [ "kvm-amd" "mt7925e" "r8169" ];
   boot.extraModulePackages = [ ];
+
+  # MediaTek WiFi firmware for MT7925
+  hardware.firmware = with pkgs; [ linux-firmware ];
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/313f127b-a623-4606-9bc8-d660e2c3542a";
