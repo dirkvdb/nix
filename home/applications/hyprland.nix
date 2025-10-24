@@ -164,7 +164,7 @@
         "$mod, E, File manager, exec, uwsm app -- nautilus --new-window"
         "$mod, B, Browser, exec, $browser"
         "$mod SHIFT, B, Browser (private), exec, $browser --private"
-        "$mod SHIFT, M, Music, exec, omarchy-launch-or-focus spotify"
+        "$mod SHIFT, M, Music, exec, nixcfg-launch-or-focus spotify"
         "$mod SHIFT, N, Editor, exec, uwsm app -- zeditor"
         "$mod SHIFT, T, Activity, exec, $terminal -e btop"
         "$mod SHIFT, slash, Passwords, exec, uwsm app -- bitwarden-desktop"
