@@ -4,7 +4,15 @@
   ...
 }:
 {
-  programs.uwsm.enable = true;
+  programs.uwsm = {
+    enable = true;
+    waylandCompositors.hyprland = {
+      prettyName = "Hyprland";
+      comment = "Hyprland compositor managed by UWSM";
+      binPath = "/run/current-system/sw/bin/Hyprland";
+    };
+  };
+
   programs.hyprlock.enable = true;
   programs.waybar.enable = true;
   #programs.hypridle.enable = true;
@@ -29,4 +37,22 @@
   security.polkit.enable = true;
 
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  environment.sessionVariables.TERMINAL = "wezterm";
+  environment.sessionVariables.EDITOR = "micro";
+
+  # Hyprland-specific packages
+  environment.systemPackages = with pkgs; [
+    hypridle
+    hyprpolkitagent
+    pyprland
+    gawk
+    hyprlang
+    hyprshot
+    hyprcursor
+    mesa
+    nwg-displays
+    nwg-look
+    waypaper
+    hyprland-qt-support
+  ];
 }

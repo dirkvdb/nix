@@ -1,6 +1,11 @@
 { pkgs, ... }:
 {
   home.packages = [
+    # Terminal launcher script
+    (pkgs.writeShellScriptBin "nixcfg-launch-terminal" ''
+        exec setsid uwsm-app -- "${TERMINAL:-wezterm}" "$@"
+    '')
+
     # Walker launcher script
     # Note: walker service is auto-started by home-manager with runAsService = true
     (pkgs.writeShellScriptBin "nixcfg-launch-walker" ''
