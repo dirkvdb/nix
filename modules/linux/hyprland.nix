@@ -4,6 +4,17 @@
   ...
 }:
 {
+  fonts.packages = [
+    (pkgs.stdenvNoCC.mkDerivation {
+      name = "omarchy";
+      src = ../../fonts;
+      installPhase = ''
+        mkdir -p $out/share/fonts/truetype
+        cp omarchy.ttf $out/share/fonts/truetype/
+      '';
+    })
+  ];
+
   programs.uwsm = {
     enable = true;
     waylandCompositors.hyprland = {
