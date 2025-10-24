@@ -2,13 +2,9 @@
 {
   home.packages = [
     # Walker launcher script
+    # Note: walker service is auto-started by home-manager with runAsService = true
     (pkgs.writeShellScriptBin "nixcfg-launch-walker" ''
-      # Ensure walker service is running
-      if ! ${pkgs.procps}/bin/pgrep -f "walker --gapplication-service" > /dev/null; then
-        ${pkgs.coreutils}/bin/setsid uwsm-app -- walker --gapplication-service &
-      fi
-
-      exec ${pkgs.walker}/bin/walker --width 644 --maxheight 300 --minheight 300 "$@"
+      exec walker --width 644 --maxheight 300 --minheight 300 "$@"
     '')
 
     # Waybar toggle script
@@ -88,7 +84,7 @@
             fi
           fi
 
-          echo -e "$options" | nixcfg-launch-walker --dmenu --width 295 --minheight 1 --maxheight 600 -p "$prompt…" "${args[@]}" 2>/dev/null
+          echo -e "$options" | nixcfg-launch-walker --dmenu --width 295 --minheight 1 --maxheight 600 -p "$prompt..." "''${args[@]}" 2>/dev/null
         }
 
         # terminal() {
@@ -176,8 +172,8 @@
         }
 
         go_to_menu() {
-          case "${1,,}" in
-          *apps*) walker -p "Launch…" ;;
+          case "''${1,,}" in
+          *apps*) walker -p "Launch..." ;;
           *trigger*) show_trigger_menu ;;
           *share*) show_share_menu ;;
           *screenshot*) show_screenshot_menu ;;
