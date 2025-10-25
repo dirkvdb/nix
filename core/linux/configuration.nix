@@ -1,10 +1,4 @@
 {pkgs, userConfig, ...}: {
-  imports = [
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
-    ./hyprland.nix
-  ];
-
   nix = {
     settings = {
       trusted-users = ["root" userConfig.username];
@@ -30,32 +24,18 @@
     timeout = 1;
   };
 
-  # Use the latest kernel from unstable
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
-  # AMD-specific kernel parameters for Strix/Radeon 880M/890M
-  boot.kernelParams = [
-    "amd_pstate=active"
-    "amdgpu.dcdebugmask=0x10"
-    "amdgpu.gpu_recovery=1"
-    "amdgpu.ppfeaturemask=0xffffffff"
-  ];
-
   # Define a user account.
   users.users.${userConfig.username} = {
     isNormalUser = true;
     description = userConfig.username;
     shell = pkgs.fish;
     extraGroups = [
-      "networkmanager"
       "wheel"
     ];
   };
 
   networking = {
     hostName = userConfig.hostname;
-    networkmanager.enable = true;
-    firewall.enable = false;
   };
 
   # Set your time zone.
@@ -78,37 +58,10 @@
     };
   };
 
-  fonts = {
-    packages = with pkgs; [
-      nerd-fonts.fira-code
-      nerd-fonts.fira-mono
-      nerd-fonts.caskaydia-mono
-      fira-code
-      monaspace
-      cascadia-code
-    ];
-  };
-
   security.rtkit.enable = true;
   services = {
     openssh.enable = true;
-    printing.enable = true;
-    pulseaudio.enable = false;
-    pipewire = {
-      enable = true;
-      alsa.enable = true;
-      pulse.enable = true;
-      jack.enable = true;
-    };
-
-    greetd = {
-      enable = true;
-      settings.default_session.command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd 'uwsm start hyprland-uwsm.desktop'";
-    };
-
-    # Networking
-    resolved.enable = true;
-    blueman.enable = true;
+    resolved.enable = true; # Networking
   };
 
   hardware = {

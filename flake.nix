@@ -46,7 +46,7 @@
           system = "x86_64-linux";
           specialArgs = {inherit inputs userConfig elephant walker;};
           modules = [
-            ./modules/linux/configuration.nix
+            ./hosts/minisforum-ai-x1/configuration.nix
 
             home-manager.nixosModules.home-manager
             {
