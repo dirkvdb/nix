@@ -79,7 +79,7 @@
       monitor = ",preferred,auto,1.666667";
 
       # Variables
-      "$activeBorderColor" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
+      "$activeBorderColor" = "rgb(d3c6aa)";
       "$inactiveBorderColor" = "rgba(595959aa)";
 
       general = {
@@ -102,6 +102,10 @@
 
         # Please see https://wiki.hyprland.org/Configuring/Tearing/ before you turn this on
         allow_tearing = false;
+      };
+
+      group = {
+        "col.border_active" = "$activeBorderColor";
       };
 
       decoration = {
@@ -174,6 +178,37 @@
         };
       };
 
+      animations = {
+        enabled = true;
+
+        # Default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
+
+        bezier = [
+          "easeOutQuint,0.23,1,0.32,1"
+          "easeInOutCubic,0.65,0.05,0.36,1"
+          "linear,0,0,1,1"
+          "almostLinear,0.5,0.5,0.75,1.0"
+          "quick,0.15,0,0.1,1"
+        ];
+
+        animation = [
+          "global, 1, 10, default"
+          "border, 1, 5.39, easeOutQuint"
+          "windows, 1, 4.79, easeOutQuint"
+          "windowsIn, 1, 4.1, easeOutQuint, popin 87%"
+          "windowsOut, 1, 1.49, linear, popin 87%"
+          "fadeIn, 1, 1.73, almostLinear"
+          "fadeOut, 1, 1.46, almostLinear"
+          "fade, 1, 3.03, quick"
+          "layers, 1, 3.81, easeOutQuint"
+          "layersIn, 1, 4, easeOutQuint, fade"
+          "layersOut, 1, 1.5, linear, fade"
+          "fadeLayersIn, 1, 1.79, almostLinear"
+          "fadeLayersOut, 1, 1.39, almostLinear"
+          "workspaces, 0, 0, ease"
+        ];
+      };
+
       "$mod" = "SUPER";
       "$terminal" = "uwsm app -- ghostty";
       "$browser" = "uwsm app -- firefox";
@@ -237,6 +272,47 @@
         #"CONTROL SHIFT, V, Clipboard, exec, uwsm app -- walker --modules=clipboard"
         #"$mod SHIFT, O, Office applications, exec, systemctl --user start work.target"
         #"$mod SHIFT ALT, O, Close office applications, exec, systemctl --user stop work.target"
+
+      ];
+
+      layerrule = [
+        "noanim, walker"
+        # Remove 1px border around hyprshot screenshots
+        "noanim, selection"
+      ];
+
+      windowrule = [
+        # Floating windows
+        "float, tag:floating-window"
+        "center, tag:floating-window"
+        "size 800 600, tag:floating-wi"
+        # Float LocalSend and fzf file picker
+        "float, class:(Share|localsend)"
+        "center, class:(Share|localsend)"
+        # Define terminal tag to style them uniformly
+        "tag +terminal, class:(Alacritty|kitty|com.mitchellh.ghostty)"
+        "float, class:org.gnome.Calculato"
+        "tag +floating-window, class:(blueberry.py|Impala|Wiremix|org.gnome.NautilusPreviewer|com.gabm.satty|About|TUI.float)"
+        "tag +floating-window, class:(xdg-desktop-portal-gtk|sublime_text|DesktopEditors|org.gnome.Nautilus), title:^(Open.*Files?|Open [F|f]older.*|Save.*Files?|Save.*As|Save|All Files)"
+        # Browser types
+        "tag +chromium-based-browser, class:((google-)?[cC]hrom(e|ium)|[bB]rave-browser|Microsoft-edge|Vivaldi-stable|helium)"
+        "tag +firefox-based-browser, class:([fF]irefox|zen|librewolf)"
+
+        # Force chromium-based browsers into a tile to deal with --app bug
+        "tile, tag:chromium-based-browser"
+
+        # Picture-in-picture overlays
+        "tag +pip, title:(Picture.{0,1}in.{0,1}[Pp]icture)"
+        "float, tag:pip"
+        "pin, tag:pip"
+        "size 600 338, tag:pip"
+        "keepaspectratio, tag:pip"
+        "noborder, tag:pip"
+        "opacity 1 1, tag:pip"
+        "move 100%-w-40 4%, tag:pip"
+        # No password manager screenshare
+        "noscreenshare, class:^(Bitwarden)$"
+
       ];
     };
   };
