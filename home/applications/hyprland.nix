@@ -2,10 +2,10 @@
 {
   home.file = {
     ".config/walker" = {
-      source = ../../dotfiles/walker;
+      source = ../dotfiles/walker;
     };
     ".config/waybar" = {
-      source = ../../dotfiles/waybar;
+      source = ../dotfiles/waybar;
     };
   };
 
@@ -15,6 +15,22 @@
     systemd = {
       enable = true;
       target = "hyprland-session.target";
+    };
+  };
+
+  services.hyprpaper = {
+    enable = true;
+    settings = {
+      ipc = "on";
+      splash = false;
+
+      preload = [
+        "~/.config/wallpaper.jpg"
+      ];
+
+      wallpaper = [
+        ",~/.config/wallpaper.jpg"  # The comma means "all monitors"
+      ];
     };
   };
 
@@ -30,7 +46,6 @@
       # Auto-start applications
       exec-once = [
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
-        "exec-once = uwsm-app -- waybar"
       ];
       # Cursor size
       env = [
@@ -180,10 +195,10 @@
         "$mod SHIFT, slash, Passwords, exec, uwsm app -- bitwarden-desktop"
 
         # Control tiling
-        "$mod, T, Toggle floating, togglefloating,"
-        "$mod, F, Force full screen, fullscreen, 0"
-        "$mod, CTRL, F, Tiled full screen, fullscreenstate, 0 2"
-        "$mod, ALT, F, Full width, fullscreen, 1"
+        #"$mod, T, Toggle floating, togglefloating,"
+        #"$mod, F, Force full screen, fullscreen, 0"
+        "$mod CTRL, F, Tiled full screen, fullscreenstate, 0 2"
+        "$mod ALT, F, Full width, fullscreen, 1"
 
         # Move focus with SUPER + arrow keys
         "$mod, LEFT, Move focus left, movefocus, l"
@@ -192,16 +207,16 @@
         "$mod, DOWN, Move focus down, movefocus, d"
 
         # Switch workspaces with SUPER + [0-9]
-        "$mod code:10, Switch to workspace 1, workspace, 1"
-        "$mod code:11, Switch to workspace 2, workspace, 2"
-        "$mod code:12, Switch to workspace 3, workspace, 3"
-        "$mod code:13, Switch to workspace 4, workspace, 4"
-        "$mod code:14, Switch to workspace 5, workspace, 5"
-        "$mod code:15, Switch to workspace 6, workspace, 6"
-        "$mod code:16, Switch to workspace 7, workspace, 7"
-        "$mod code:17, Switch to workspace 8, workspace, 8"
-        "$mod code:18, Switch to workspace 9, workspace, 9"
-        "$mod code:19, Switch to workspace 10, workspace, 10"
+        "$mod, code:10, Switch to workspace 1, workspace, 1"
+        "$mod, code:11, Switch to workspace 2, workspace, 2"
+        "$mod, code:12, Switch to workspace 3, workspace, 3"
+        "$mod, code:13, Switch to workspace 4, workspace, 4"
+        "$mod, code:14, Switch to workspace 5, workspace, 5"
+        "$mod, code:15, Switch to workspace 6, workspace, 6"
+        "$mod, code:16, Switch to workspace 7, workspace, 7"
+        "$mod, code:17, Switch to workspace 8, workspace, 8"
+        "$mod, code:18, Switch to workspace 9, workspace, 9"
+        "$mod, code:19, Switch to workspace 10, workspace, 10"
 
         # Move active window to a workspace with SUPER + SHIFT + [0-9]
         "$mod SHIFT, code:10, Move window to workspace 1, movetoworkspace, 1"

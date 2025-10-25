@@ -38,7 +38,7 @@
   };
 
   # Per-directory XDG config entries for dotfiles
-  xdg.configFile."karabiner".source = ../dotfiles/karabiner;
+  xdg.configFile."karabiner".source = ./dotfiles/karabiner;
 
   programs.zsh = {
     enable = true;
