@@ -29,7 +29,7 @@
       ];
 
       wallpaper = [
-        ",~/.config/wallpaper.jpg"  # The comma means "all monitors"
+        ",~/.config/wallpaper.jpg" # The comma means "all monitors"
       ];
     };
   };
@@ -51,6 +51,8 @@
       env = [
         "XCURSOR_SIZE,24"
         "HYPRCURSOR_SIZE,24"
+        "XCURSOR_THEME,macOS"
+        "HYPRCURSOR_THEME,macOS"
 
         # Force all apps to use Wayland
         "GDK_BACKEND,wayland,x11,*"
@@ -115,9 +117,9 @@
 
         # https://wiki.hyprland.org/Configuring/Variables/#blur
         blur = {
-            enabled = true;
-            size = 3;
-            passes = 3;
+          enabled = true;
+          size = 3;
+          passes = 3;
         };
       };
 
@@ -131,14 +133,15 @@
       # https://wiki.hyprland.org/Configuring/Variables/#misc
       misc = {
         disable_hyprland_logo = true;
-        disable_splash_rendering  = true;
+        disable_splash_rendering = true;
         focus_on_activate = true;
         anr_missed_pings = 3;
       };
 
       # https://wiki.hypr.land/Configuring/Variables/#cursor
       cursor = {
-        hide_on_key_press = true;
+        no_hardware_cursors = false;
+        enable_hyprcursor = true;
       };
 
       # Control your input devices
@@ -172,7 +175,7 @@
       };
 
       "$mod" = "SUPER";
-      "$terminal" = "uwsm app -- wezterm";
+      "$terminal" = "uwsm app -- ghostty";
       "$browser" = "uwsm app -- firefox";
 
       bindm = [
@@ -186,11 +189,12 @@
         "$mod, SPACE, Launch apps, exec, nixcfg-launch-walker"
 
         "$mod, RETURN, Terminal, exec, $terminal --working-directory=\"$(nixcfg-cmd-terminal-cwd)\""
-        "$mod, E, File manager, exec, uwsm app -- nautilus --new-window"
         "$mod, B, Browser, exec, $browser"
+        "$mod, E, File manager, exec, uwsm app -- nautilus --new-window"
+        "$mod, N, Editor, exec, uwsm app -- zeditor"
+        "$mod, W, Close active window, killactive,"
         "$mod SHIFT, B, Browser (private), exec, $browser --private"
         "$mod SHIFT, M, Music, exec, nixcfg-launch-or-focus spotify"
-        "$mod SHIFT, N, Editor, exec, uwsm app -- zeditor"
         "$mod SHIFT, T, Activity, exec, $terminal -e btop"
         "$mod SHIFT, slash, Passwords, exec, uwsm app -- bitwarden-desktop"
 

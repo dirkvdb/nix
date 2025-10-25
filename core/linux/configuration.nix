@@ -1,7 +1,11 @@
-{pkgs, userConfig, ...}: {
+{ pkgs, userConfig, ... }:
+{
   nix = {
     settings = {
-      trusted-users = ["root" userConfig.username];
+      trusted-users = [
+        "root"
+        userConfig.username
+      ];
       experimental-features = [
         "nix-command"
         "flakes"
@@ -103,7 +107,6 @@
     };
   };
 
-
   programs = {
     direnv.enable = true;
     virt-manager.enable = true;
@@ -117,27 +120,12 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-      # AMD GPU tools
-      radeontop
-      clinfo
-      vulkan-tools
-      rocmPackages.rocm-smi
-
-      #  Apps
-      brightnessctl
-      (btop.override {
-        rocmSupport = true;
-      })
-      cpufrequtils
-      curl
-      fd
-      glib # for gsettings to work
-      gsettings-qt
-      gtk-engine-murrine # for gtk themes
-      killall
-      wl-clipboard
-      ripgrep
-    ];
-
-  system.stateVersion = "25.05"; # Did you read the comment?
+    #  Apps
+    cpufrequtils
+    curl
+    lazygit
+    fd
+    killall
+    ripgrep
+  ];
 }

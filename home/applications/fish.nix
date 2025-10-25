@@ -39,7 +39,11 @@
       k = "kubectl";
       ll = "ls -la";
       ls = "lsd";
-      nrs = if pkgs.stdenv.isDarwin then "sudo darwin-rebuild switch --flake ~/.config/nix#MacBook-Pro" else "sudo nixos-rebuild switch";
+      nrs =
+        if pkgs.stdenv.isDarwin then
+          "sudo darwin-rebuild switch --flake ~/.config/nix#MacBook-Pro"
+        else
+          "sudo nixos-rebuild switch --flake ~/nix";
       tree = "lsd --tree";
       zed = "zeditor";
     };

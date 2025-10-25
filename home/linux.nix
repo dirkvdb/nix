@@ -6,7 +6,8 @@
   elephant,
   walker,
   ...
-}: {
+}:
+{
   imports = [
     ./core.nix
     ./applications/hyprland.nix
@@ -25,6 +26,13 @@
       # Elephant with all providers for walker
       elephant.packages.${system}.elephant-with-providers
     ];
+
+    pointerCursor = {
+      package = pkgs.apple-cursor;
+      name = "macOS";
+      size = 24;
+      gtk.enable = true;
+    };
   };
 
   # Configure walker from flake
