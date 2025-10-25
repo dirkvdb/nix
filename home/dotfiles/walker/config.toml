@@ -6,7 +6,7 @@ global_argument_delimiter = "#"                                             # qu
 exact_search_prefix = "'"                                                   # disable fuzzy searching
 disable_mouse = false                                                       # disable mouse (on input and list only)
 # theme = "omarchy-default"                                                   # theme to use
-# additional_theme_location = "~/.local/share/omarchy/default/walker/themes/"
+additional_theme_location = "~/.local/config/walker/themes/"
 
 [shell]
 anchor_top = true
