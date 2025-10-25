@@ -166,8 +166,8 @@
         *Lock*) nixcfg-lock-screen ;;
         *Screensaver*) nixcfg-launch-screensaver force ;;
         *Suspend*) systemctl suspend ;;
-        *Restart*) nixcfg-state clear re*-required && systemctl reboot --no-wall ;;
-        *Shutdown*) nixcfg-state clear re*-required && systemctl poweroff --no-wall ;;
+        *Restart*) systemctl reboot --no-wall ;;
+        *Shutdown*) systemctl poweroff --no-wall ;;
         *) back_to show_main_menu ;;
         esac
       }
