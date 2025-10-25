@@ -14,9 +14,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    elephant = {
-      url = "github:abenz1267/elephant";
-    };
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
+    elephant.url = "github:abenz1267/elephant";
 
     walker = {
       url = "github:abenz1267/walker";
@@ -33,6 +32,7 @@
       home-manager,
       elephant,
       walker,
+      zen-browser,
     }:
     {
       nixosConfigurations.mini =
@@ -44,7 +44,14 @@
         in
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = {inherit inputs userConfig elephant walker;};
+          specialArgs = {
+            inherit
+              inputs
+              userConfig
+              elephant
+              walker
+              ;
+          };
           modules = [
             ./hosts/minisforum-ai-x1/configuration.nix
 
@@ -55,7 +62,15 @@
                 useUserPackages = true;
                 backupFileExtension = "backup";
                 users.dirk = import ./home/linux.nix;
-                extraSpecialArgs = { inherit userConfig elephant walker; system = "x86_64-linux"; };
+                extraSpecialArgs = {
+                  inherit
+                    userConfig
+                    elephant
+                    walker
+                    zen-browser
+                    ;
+                  system = "x86_64-linux";
+                };
               };
             }
           ];
@@ -92,5 +107,5 @@
             inherit inputs userConfig;
           };
         };
-      };
+    };
 }

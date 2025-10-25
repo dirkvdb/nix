@@ -1,9 +1,9 @@
 {
   pkgs,
   system,
-  inputs,
   userConfig,
   elephant,
+  zen-browser,
   walker,
   ...
 }:
@@ -11,8 +11,10 @@
   imports = [
     ./core.nix
     ./applications/hyprland.nix
+    ./applications/zen.nix
     ./scripts/linux.nix
     walker.homeManagerModules.default
+    zen-browser.homeModules.default
   ];
 
   home = {
