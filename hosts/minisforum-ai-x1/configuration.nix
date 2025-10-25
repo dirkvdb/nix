@@ -1,4 +1,5 @@
-{pkgs, userConfig, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -18,9 +19,9 @@
   # AMD-specific kernel parameters for Strix/Radeon 880M/890M
   boot.kernelParams = [
     "amd_pstate=active"
-    "amdgpu.dcdebugmask=0x10"
-    "amdgpu.gpu_recovery=1"
-    "amdgpu.ppfeaturemask=0xffffffff"
+    #"amdgpu.dcdebugmask=0x10" # Enable if the display freezes
+    #"amdgpu.gpu_recovery=1"
+    #"amdgpu.ppfeaturemask=0xffffffff"
   ];
 
   nixcfg.ethernet = {
@@ -72,25 +73,24 @@
   };
 
   environment.systemPackages = with pkgs; [
-      # AMD GPU tools
-      radeontop
-      clinfo
-      vulkan-tools
-      rocmPackages.rocm-smi
+    # AMD GPU tools
+    radeontop
+    clinfo
+    vulkan-tools
+    rocmPackages.rocm-smi
 
-      #  Apps
-      brightnessctl
-      (btop.override {
-        rocmSupport = true;
-      })
-      cpufrequtils
-      curl
-      fd
-      glib # for gsettings to work
-      gsettings-qt
-      gtk-engine-murrine # for gtk themes
-      killall
-      wl-clipboard
-      ripgrep
-    ];
+    gparted
+    ghostty
+
+    #  Apps
+    brightnessctl
+    (btop.override {
+      rocmSupport = true;
+    })
+
+    glib # for gsettings to work
+    gsettings-qt
+    gtk-engine-murrine # for gtk themes
+    wl-clipboard
+  ];
 }
