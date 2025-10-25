@@ -1,4 +1,4 @@
-@import "../walker.css";
+@import "../../../../../.config/walker/walker.css";
 
 * {
     all: unset;

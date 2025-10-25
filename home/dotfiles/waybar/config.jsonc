@@ -9,7 +9,7 @@
     "clock"
     //"custom/screenrecording-indicator",
   ],
-  "modules-right": ["tray", "bluetooth", "network", "pulseaudio", "cpu"],
+  "modules-right": ["cpu", "tray", "bluetooth", "network", "pulseaudio"],
   "hyprland/workspaces": {
     "on-click": "activate",
     "format": "{icon}",

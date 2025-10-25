@@ -9,6 +9,13 @@
     };
   };
 
+  home.file = {
+    ".local/share/walker/themes" = {
+      source = ../dotfiles/walker/themes;
+      recursive = true;
+    };
+  };
+
   # Configure waybar with systemd service to ensure proper PATH
   programs.waybar = {
     enable = true;
@@ -206,6 +213,8 @@
           "fadeLayersIn, 1, 1.79, almostLinear"
           "fadeLayersOut, 1, 1.39, almostLinear"
           "workspaces, 0, 0, ease"
+          # minimal fade when switching workspaces
+          "workspaces, 1, 1, default, fade"
         ];
       };
 
@@ -220,14 +229,21 @@
         "$mod ALT, mouse:272, resizewindow"
       ];
 
+      bindld = [
+        ", XF86PowerOff, Power menu, exec, nixcfg-menu system"
+      ];
+
       bindd = [
         "$mod, SPACE, Launch apps, exec, nixcfg-launch-walker"
+        "$mod ALT, SPACE, Menu, exec, nixcfg-menu"
 
+        "$mod, ESCAPE, Power menu, exec, nixcfg-menu system"
         "$mod, RETURN, Terminal, exec, $terminal --working-directory=\"$(nixcfg-cmd-terminal-cwd)\""
         "$mod, B, Browser, exec, $browser"
         "$mod, E, File manager, exec, uwsm app -- nautilus --new-window"
         "$mod, N, Editor, exec, uwsm app -- zeditor"
         "$mod, W, Close active window, killactive,"
+        "$mod, K, Show key bindings, exec, nixcfg-menu-keybindings"
         "$mod SHIFT, B, Browser (private), exec, $browser --private"
         "$mod SHIFT, M, Music, exec, nixcfg-launch-or-focus spotify"
         "$mod SHIFT, T, Activity, exec, $terminal -e btop"
@@ -282,6 +298,8 @@
       ];
 
       windowrule = [
+        # disable the window opacity
+        "opacity 1 1, class:.*"
         # Floating windows
         "float, tag:floating-window"
         "center, tag:floating-window"
@@ -312,6 +330,21 @@
         "move 100%-w-40 4%, tag:pip"
         # No password manager screenshare
         "noscreenshare, class:^(Bitwarden)$"
+
+        # Open browsers on workspace 2 when launched with SUPER+B
+        "workspace 2, class:(vivaldi-stable)"
+        "workspace 2, class:(firefox|Firefox|librewolf)"
+        "workspace 2, class:(zen)"
+
+        # Open Zed editor on workspace 3
+        "workspace 3, class:(dev.zed.Zed)"
+        # Open File explorers on workspace 3
+        "workspace 4, class:(org.gnome.Nautilus)"
+
+        "workspace 6, class:(sublime_merge)"
+        "workspace 7, class:(Slack)"
+        "workspace 8, class:(outlook-for-linux)"
+        "workspace 8, class:(teams-for-linux)"
 
       ];
     };

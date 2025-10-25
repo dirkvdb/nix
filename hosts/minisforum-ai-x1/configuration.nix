@@ -70,6 +70,7 @@
     # steam.enable = true;
     fish.enable = true;
     firefox.enable = true;
+    localsend.enable = true;
   };
 
   environment.systemPackages = with pkgs; [
