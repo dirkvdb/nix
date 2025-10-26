@@ -11,6 +11,7 @@
     ./applications/git.nix
     ./applications/starship.nix
     ./applications/ssh.nix
+    ./applications/zed.nix
   ];
 
   # sops = {
@@ -91,15 +92,6 @@
       config = {
         theme = "Visual Studio Dark+";
       };
-    };
-
-    zed-editor = {
-      enable = true;
-      extensions = [ "nix" ];
-      extraPackages = with pkgs; [
-        nil
-        nixd
-      ];
     };
   };
 }

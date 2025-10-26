@@ -37,19 +37,20 @@
     {
       nixosConfigurations.mini =
         let
+          system = "x86_64-linux";
           userConfig = {
             hostname = "mini";
             username = "dirk";
           };
         in
         nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
           specialArgs = {
             inherit
               inputs
               userConfig
               elephant
               walker
+              system
               ;
           };
           modules = [
@@ -62,14 +63,15 @@
                 useUserPackages = true;
                 backupFileExtension = "backup";
                 users.dirk = import ./home/linux.nix;
+
                 extraSpecialArgs = {
                   inherit
                     userConfig
                     elephant
                     walker
                     zen-browser
+                    system
                     ;
-                  system = "x86_64-linux";
                 };
               };
             }
