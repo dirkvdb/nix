@@ -58,6 +58,7 @@
         "HYPRCURSOR_SIZE,24"
         "XCURSOR_THEME,macOS"
         "HYPRCURSOR_THEME,macOS"
+        "GTK_THEME,Adwaita-dark"
 
         # Force all apps to use Wayland
         "GDK_BACKEND,wayland,x11,*"
@@ -326,7 +327,7 @@
         # Define terminal tag to style them uniformly
         "tag +terminal, class:(Alacritty|kitty|com.mitchellh.ghostty)"
         "float, class:org.gnome.Calculato"
-        "tag +floating-window, class:(blueberry.py|Impala|Wiremix|org.gnome.NautilusPreviewer|com.gabm.satty|About|TUI.float)"
+        "tag +floating-window, class:(blueberry.py|io.github.kaii_lb.Overskride|Impala|Wiremix|org.gnome.NautilusPreviewer|com.gabm.satty|About|TUI.float)"
         "tag +floating-window, class:(xdg-desktop-portal-gtk|sublime_text|DesktopEditors|org.gnome.Nautilus), title:^(Open.*Files?|Open [F|f]older.*|Save.*Files?|Save.*As|Save|All Files)"
         # Browser types
         "tag +chromium-based-browser, class:((google-)?[cC]hrom(e|ium)|[bB]rave-browser|Microsoft-edge|Vivaldi-stable|helium)"
@@ -355,7 +356,7 @@
         # Open Zed editor on workspace 3
         "workspace 3, class:(dev.zed.Zed)"
         # Open File explorers on workspace 3
-        "workspace 4, class:(org.gnome.Nautilus)"
+        "workspace 4, class:(org.gnome.Nautilus|thunar)"
 
         "workspace 6, class:(sublime_merge)"
         "workspace 7, class:(Slack)"
