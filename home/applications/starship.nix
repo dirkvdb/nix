@@ -9,15 +9,15 @@
       format = ''[╭](fg:separator)$status$hostname$directory$git_branch$cmd_duration$line_break[╰](fg:separator)$character'';
 
       palettes.default = {
-        prompt_ok = "#c3e88d";
-        prompt_err = "#ff757f";
-        icon = "#161514";
+        prompt_ok = "#D3C6AA";
+        prompt_err = "#E67E80";
+        icon = "#1E2326";
         separator = "#737aa2";
-        background = "#414868";
-        host = "#7dcfff";
-        directory = "#7aa83e";
-        gitbranch = "#d3c6aa";
-        duration = "#ffc777";
+        background = "#4F5B58";
+        host = "#D699B6";
+        directory = "#A7C080";
+        gitbranch = "#7FBBB3";
+        duration = "#E69875";
         status = "#c53b53";
       };
 
