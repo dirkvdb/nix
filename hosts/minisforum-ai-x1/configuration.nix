@@ -70,6 +70,13 @@
     fish.enable = true;
     firefox.enable = true;
     localsend.enable = true;
+
+    # xfconf.enable = true; # for thunar settings
+    # thunar.enable = true;
+    # thunar.plugins = with pkgs.xfce; [
+    #   thunar-archive-plugin
+    #   thunar-volman
+    # ];
   };
 
   environment.systemPackages = with pkgs; [
@@ -87,6 +94,7 @@
     swayosd
     wiremix
     sublime-merge
+    nautilus
 
     #  Apps
     brightnessctl
