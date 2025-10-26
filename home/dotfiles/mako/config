@@ -6,6 +6,7 @@ width=420
 outer-margin=20
 padding=10,15
 border-size=2
+border-radius=8
 max-icon-size=32
 font=sans-serif 14px
 
