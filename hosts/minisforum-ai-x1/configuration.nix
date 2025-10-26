@@ -41,7 +41,6 @@
 
     # Networking
     resolved.enable = true;
-    blueman.enable = true;
   };
 
   hardware = {
@@ -82,6 +81,12 @@
 
     gparted
     ghostty
+    overskride
+    impala # wifi menu
+    pamixer
+    swayosd
+    wiremix
+    sublime-merge
 
     #  Apps
     brightnessctl
