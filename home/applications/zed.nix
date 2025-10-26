@@ -77,7 +77,7 @@
       ui_font_size = 15.0;
       buffer_font_family = "CaskaydiaMono Nerd Font Mono";
       buffer_font_weight = 600.0;
-      buffer_font_size = 15;
+      buffer_font_size = 14;
       buffer_font_features = {
         liga = true;
       };
