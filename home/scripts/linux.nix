@@ -54,6 +54,11 @@
       fi
     '')
 
+    # Launch or the wifi selection
+    (pkgs.writeShellScriptBin "nixcfg-launch-wifu" ''
+      exec setsid uwsm-app -- "$TERMINAL" --class=Impala -e impala "$@"
+    '')
+
     # Menu launcher
     (pkgs.writeShellScriptBin "nixcfg-menu" ''
       # export PATH="$HOME/.local/share/omarchy/bin:$PATH"

@@ -1,19 +1,16 @@
 { pkgs, ... }:
 {
-  home.file = {
-    ".config/walker" = {
-      source = ../dotfiles/walker;
-    };
-    ".config/waybar" = {
-      source = ../dotfiles/waybar;
-    };
+  xdg.configFile."waybar".source = ../dotfiles/waybar;
+
+  xdg.configFile."walker".source = ../dotfiles/walker;
+  xdg.dataFile."walker/themes" = {
+    source = ../dotfiles/walker/themes;
+    recursive = true;
   };
 
-  home.file = {
-    ".local/share/walker/themes" = {
-      source = ../dotfiles/walker/themes;
-      recursive = true;
-    };
+  xdg.configFile."swayosd" = {
+    source = ../dotfiles/swayosd;
+    recursive = true;
   };
 
   # Configure waybar with systemd service to ensure proper PATH
@@ -32,11 +29,11 @@
       splash = false;
 
       preload = [
-        "~/.config/wallpaper.jpg"
+        "~/.local/share/wallpaper.jpg"
       ];
 
       wallpaper = [
-        ",~/.config/wallpaper.jpg" # The comma means "all monitors"
+        ",~/.local/share/wallpaper.jpg" # The comma means "all monitors"
       ];
     };
   };
@@ -53,6 +50,7 @@
       # Auto-start applications
       exec-once = [
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
+        "uwsm-app -- swayosd-server"
       ];
       # Cursor size
       env = [
@@ -88,6 +86,8 @@
       # Variables
       "$activeBorderColor" = "rgb(d3c6aa)";
       "$inactiveBorderColor" = "rgba(595959aa)";
+      "$osdclient" =
+        ''swayosd-client --monitor "$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')"'';
 
       general = {
         # No gaps between windows
@@ -291,6 +291,22 @@
 
       ];
 
+      bindeld = [
+        # Laptop multimedia keys for volume and LCD brightness (with OSD)
+        ",XF86AudioRaiseVolume, Volume up, exec, $osdclient --output-volume raise"
+        ",XF86AudioLowerVolume, Volume down, exec, $osdclient --output-volume lower"
+        ",XF86AudioMute, Mute, exec, $osdclient --output-volume mute-toggle"
+        ",XF86AudioMicMute, Mute microphone, exec, $osdclient --input-volume mute-toggle"
+        ",XF86MonBrightnessUp, Brightness up, exec, $osdclient --brightness raise"
+        ",XF86MonBrightnessDown, Brightness down, exec, $osdclient --brightness lower"
+
+        # Precise 1% multimedia adjustments with Alt modifier
+        "ALT, XF86AudioRaiseVolume, Volume up precise, exec, $osdclient --output-volume +1"
+        "ALT, XF86AudioLowerVolume, Volume down precise, exec, $osdclient --output-volume -1"
+        "ALT, XF86MonBrightnessUp, Brightness up precise, exec, $osdclient --brightness +1"
+        "ALT, XF86MonBrightnessDown, Brightness down precise, exec, $osdclient --brightness -1"
+      ];
+
       layerrule = [
         "noanim, walker"
         # Remove 1px border around hyprshot screenshots
@@ -345,7 +361,6 @@
         "workspace 7, class:(Slack)"
         "workspace 8, class:(outlook-for-linux)"
         "workspace 8, class:(teams-for-linux)"
-
       ];
     };
   };
