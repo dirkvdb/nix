@@ -91,8 +91,7 @@
         darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           modules = [
-            ./modules/darwin/system.nix
-            ./modules/darwin/applications.nix
+            ./hosts/macbook-pro-m2/configuration.nix
 
             home-manager.darwinModules.home-manager
             {
