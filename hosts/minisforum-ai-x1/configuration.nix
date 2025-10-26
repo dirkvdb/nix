@@ -39,6 +39,12 @@
       settings.default_session.command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd 'uwsm start hyprland-uwsm.desktop'";
     };
 
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+    };
+
     # Networking
     resolved.enable = true;
   };
@@ -90,11 +96,17 @@
     ghostty
     overskride
     impala # wifi menu
+    mako # notifications
     pamixer
     swayosd
     wiremix
     sublime-merge
     nautilus
+    slack
+    spotify
+
+    # works
+    teams-for-linux
 
     #  Apps
     brightnessctl
@@ -107,4 +119,5 @@
     gtk-engine-murrine # for gtk themes
     wl-clipboard
   ];
+
 }

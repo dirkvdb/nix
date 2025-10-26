@@ -17,6 +17,8 @@
     zen-browser.homeModules.default
   ];
 
+  xdg.configFile."mako".source = ./dotfiles/mako;
+
   home = {
     username = userConfig.username;
     homeDirectory = "/home/${userConfig.username}";
