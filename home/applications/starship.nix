@@ -6,7 +6,7 @@
       add_newline = false;
       palette = "default";
 
-      format = ''[╭](fg:separator)$status$hostname$directory$cmd_duration$line_break[╰](fg:separator)$character'';
+      format = ''[╭](fg:separator)$status$hostname$directory$git_branch$cmd_duration$line_break[╰](fg:separator)$character'';
 
       palettes.default = {
         prompt_ok = "#c3e88d";
@@ -16,6 +16,7 @@
         background = "#414868";
         host = "#7dcfff";
         directory = "#7aa83e";
+        gitbranch = "#d3c6aa";
         duration = "#ffc777";
         status = "#c53b53";
       };
@@ -29,6 +30,27 @@
         format = "[─](fg:separator)[](fg:directory)[](fg:icon bg:directory)[](fg:directory bg:background)[ $path](bg:background)[](fg:background)";
         truncate_to_repo = false;
         truncation_length = 0;
+      };
+
+      git_branch = {
+        format = "[─](fg:separator)[](fg:gitbranch)[](fg:icon bg:gitbranch)[](fg:gitbranch bg:background)[ $branch](bg:background)[](fg:background)";
+        style = "italic cyan";
+      };
+
+      git_status = {
+        format = "[─](fg:separator)[](fg:status)[](fg:icon bg:status)[](fg:status bg:background)[ $all_status]($style)(bg:background)[](fg:background)";
+        style = "cyan";
+        ahead = "⇡\${count} ";
+        diverged = "⇕⇡\${ahead_count}⇣\${behind_count} ";
+        behind = "⇣\${count} ";
+        conflicted = " ";
+        up_to_date = " ";
+        untracked = "? ";
+        modified = " ";
+        stashed = "";
+        staged = "";
+        renamed = "";
+        deleted = "";
       };
 
       status = {

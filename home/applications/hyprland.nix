@@ -220,7 +220,7 @@
 
       "$mod" = "SUPER";
       "$terminal" = "uwsm app -- ghostty";
-      "$browser" = "uwsm app -- firefox";
+      "$browser" = "uwsm app -- zen";
 
       bindm = [
         # mouse movements
