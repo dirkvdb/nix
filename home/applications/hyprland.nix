@@ -51,6 +51,7 @@
       exec-once = [
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
         "uwsm-app -- swayosd-server"
+        "uwsm-app -- mako"
       ];
       # Cursor size
       env = [
@@ -351,7 +352,7 @@
         # Open browsers on workspace 2 when launched with SUPER+B
         "workspace 2, class:(vivaldi-stable)"
         "workspace 2, class:(firefox|Firefox|librewolf)"
-        "workspace 2, class:(zen)"
+        "workspace 2, class:(zen|zen-beta)"
 
         # Open Zed editor on workspace 3
         "workspace 3, class:(dev.zed.Zed)"
