@@ -6,6 +6,11 @@
   # enable the RealtimeKit system service, required by PipeWire for low-latency audio
   security.rtkit.enable = true;
 
+  environment.systemPackages = with pkgs; [
+    pamixer
+    wiremix
+  ];
+
   services = {
     pulseaudio.enable = false;
     pipewire = {
