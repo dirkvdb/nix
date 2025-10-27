@@ -8,8 +8,6 @@
 {
   imports = [
     (import ./core.nix { inherit pkgs config userConfig; })
-    #./programs/k9s.nix
-    #./programs/ghostty.nix
   ];
 
   # sops.secrets = {

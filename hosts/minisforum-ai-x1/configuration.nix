@@ -3,11 +3,15 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    # Common system applications
+    ../../core/applications.nix
+    # Sysstem configuration
+    ../../core/fonts.nix
     ../../core/linux/configuration.nix
     ../../core/linux/hyprland.nix
     ../../core/linux/audio.nix
+    ../../core/linux/bluetooth.nix
     ../../core/linux/ethernet.nix
-    ../../core/fonts.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -23,6 +27,10 @@
     #"amdgpu.gpu_recovery=1"
     #"amdgpu.ppfeaturemask=0xffffffff"
   ];
+
+  nixCfg.applications = {
+    gui = true;
+  };
 
   nixcfg.ethernet = {
     enable = true;
@@ -50,7 +58,6 @@
   };
 
   hardware = {
-    bluetooth.enable = true;
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -94,16 +101,10 @@
 
     gparted
     ghostty
-    overskride
     impala # wifi menu
     mako # notifications
-    pamixer
     swayosd
-    wiremix
-    sublime-merge
-    nautilus
     slack
-    spotify
 
     # works
     teams-for-linux
@@ -114,9 +115,6 @@
       rocmSupport = true;
     })
 
-    glib # for gsettings to work
-    gsettings-qt
-    gtk-engine-murrine # for gtk themes
     wl-clipboard
   ];
 
