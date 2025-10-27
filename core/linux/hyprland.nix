@@ -35,13 +35,6 @@
     withUWSM = true;
   };
 
-  # Enable XDG portal for screen sharing, file pickers, etc.
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    config.common.default = "*";
-  };
-
   # Enable polkit for privilege escalation
   security.polkit.enable = true;
 
@@ -54,7 +47,6 @@
     hypridle
     hyprpolkitagent
     pyprland
-    gawk
     hyprlang
     hyprshot
     hyprcursor

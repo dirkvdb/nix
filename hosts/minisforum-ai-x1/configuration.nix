@@ -10,6 +10,7 @@
     ../../core/linux/configuration.nix
     ../../core/linux/hyprland.nix
     ../../core/linux/audio.nix
+    ../../core/linux/desktop.nix
     ../../core/linux/bluetooth.nix
     ../../core/linux/ethernet.nix
   ];
@@ -29,8 +30,9 @@
   ];
 
   nixCfg.applications.gui = true;
+  nixCfg.desktop.enable = true;
 
-  nixcfg.ethernet = {
+  nixCfg.ethernet = {
     enable = true;
     interface = "enp195s0";
     wakeOnLan = true;
