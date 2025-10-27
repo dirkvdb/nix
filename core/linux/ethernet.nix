@@ -41,6 +41,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    systemd.network = {
+      enable = true;
+      # Do not block boot/login waiting for full network online state.
+      wait-online.enable = false;
+    };
+
     networking = {
       firewall.enable = cfg.firewall;
       interfaces.${cfg.interface}.wakeOnLan.enable = cfg.wakeOnLan;
