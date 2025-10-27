@@ -42,10 +42,10 @@
         hostname = "develop.marvin.vito.local";
         user = "vdboerd";
         proxyCommand = "nc -x localhost:1080 -X 5 %h %p";
-        extraOptions = {
-          remoteCommand = "fish";
-          requestTTY = "true";
-        };
+        # extraOptions = {
+        #   remoteCommand = "fish";
+        #   requestTTY = "true";
+        # };
       };
       clusterfs = {
         hostname = "develop.marvin.vito.local";

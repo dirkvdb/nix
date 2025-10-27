@@ -14,8 +14,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
-    elephant.url = "github:abenz1267/elephant";
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    elephant = {
+      url = "github:abenz1267/elephant";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     walker = {
       url = "github:abenz1267/walker";
@@ -44,13 +51,13 @@
           };
         in
         nixpkgs.lib.nixosSystem {
+          inherit system;
           specialArgs = {
             inherit
               inputs
               userConfig
               elephant
               walker
-              system
               ;
           };
           modules = [
@@ -58,6 +65,7 @@
 
             home-manager.nixosModules.home-manager
             {
+              nixpkgs.config.allowUnfree = true;
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
@@ -83,16 +91,16 @@
       # sudo darwin-rebuild switch --flake ~/.config/nix/#MacBook-Pro
       darwinConfigurations."MacBook-Pro" =
         let
+          system = "aarch64-darwin";
           userConfig = {
             hostname = "macbook-pro";
             username = "dirk";
           };
         in
         darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
+          inherit system;
           modules = [
-            ./modules/darwin/system.nix
-            ./modules/darwin/applications.nix
+            ./hosts/macbook-pro-m2/configuration.nix
 
             home-manager.darwinModules.home-manager
             {
@@ -101,12 +109,20 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 users.dirk = import ./home/darwin.nix;
-                extraSpecialArgs = { inherit userConfig; };
+                extraSpecialArgs = {
+                  inherit
+                    userConfig
+                    system
+                    ;
+                };
               };
             }
           ];
           specialArgs = {
-            inherit inputs userConfig;
+            inherit
+              inputs
+              userConfig
+              ;
           };
         };
     };
