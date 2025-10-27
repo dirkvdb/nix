@@ -35,12 +35,19 @@
     shell = pkgs.fish;
     extraGroups = [
       "wheel"
+      "hidraw"
+      "i2c"
+      "video"
     ];
   };
+  users.groups.hidraw = { };
 
   networking = {
     hostName = userConfig.hostname;
   };
+
+  hardware.i2c.enable = true;
+  services.ddccontrol.enable = true;
 
   # Set your time zone.
   time.timeZone = "Europe/Brussels";
@@ -66,6 +73,22 @@
   services = {
     openssh.enable = true;
     resolved.enable = true; # Networking
+    udev.extraRules = ''
+      # Give group hidraw RW access to all hidraw devices (needed for via keyboards)
+      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0660", GROUP="hidraw"
+      # Give access to i2c devices (needed for monitor brightness control)
+      KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
+    '';
+  };
+
+  systemd.services.ddcci-attach-i2c13 = {
+    description = "Attach ddcci driver to i2c-13 for external monitor backlight";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "systemd-udev-settle.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'echo ddcci 0x37 > /sys/bus/i2c/devices/i2c-13/new_device || true'";
+    };
   };
 
   hardware = {
@@ -127,5 +150,6 @@
     fd
     killall
     ripgrep
+    brightnessctl
   ];
 }
