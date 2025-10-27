@@ -2,10 +2,12 @@
   config,
   lib,
   ...
-}: let
-  cfg = config.nixcfg.ethernet;
-in {
-  options.nixcfg.ethernet = {
+}:
+let
+  cfg = config.nixCfg.ethernet;
+in
+{
+  options.nixCfg.ethernet = {
     enable = lib.mkEnableOption "ethernet configuration";
 
     interface = lib.mkOption {
@@ -21,7 +23,12 @@ in {
     };
 
     dhcp = lib.mkOption {
-      type = lib.types.enum ["ipv4" "ipv6" "yes" "no"];
+      type = lib.types.enum [
+        "ipv4"
+        "ipv6"
+        "yes"
+        "no"
+      ];
       default = "ipv4";
       description = "DHCP configuration for the ethernet interface";
     };

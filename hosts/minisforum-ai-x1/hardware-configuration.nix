@@ -8,27 +8,35 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usb_storage" "usbhid" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usbhid" ];
   boot.initrd.kernelModules = [ "amdgpu" ];
-  boot.kernelModules = [ "kvm-amd" "mt7925e" "r8169" ];
+  boot.kernelModules = [ "kvm-amd" "mt79225e" "r8169" ];
   boot.extraModulePackages = [ ];
 
-  # MediaTek WiFi firmware for MT7925
-  hardware.firmware = with pkgs; [ linux-firmware ];
+  fileSystems."/" = {
+    device = "/dev/disk/by-partlabel/root";
+    fsType = "ext4";
+  };
+  
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-partlabel/EFI";
+    fsType = "vfat";
+    options = [ "fmask=0022" "dmask=0022" ];
+  };
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/313f127b-a623-4606-9bc8-d660e2c3542a";
-      fsType = "ext4";
-    };
+  swapDevices =
+    [ { device = "/dev/disk/by-uuid/4a89ee79-e552-40f5-a4b5-bb5107cdd278"; }
+    ];
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/FF85-51B0";
-      fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
-    };
-
-  swapDevices = [ ];
+  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
+  # (the default) this is the recommended approach. When using systemd-networkd it's
+  # still possible to use this option, but it's recommended to use it in conjunction
+  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
+  networking.useDHCP = lib.mkDefault true;
+  # networking.interfaces.enp195s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlp194s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.firmware = with pkgs; [ linux-firmware ];
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

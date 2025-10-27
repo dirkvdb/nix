@@ -23,7 +23,7 @@
     username = userConfig.username;
     homeDirectory = "/home/${userConfig.username}";
 
-    packages = with pkgs; [
+    packages = [
       # Elephant with all providers for walker
       elephant.packages.${system}.elephant-with-providers
     ];
