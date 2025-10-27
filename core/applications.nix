@@ -3,7 +3,7 @@
   ...
 }:
 {
-  imports = pkgs.lib.optionals pkgs.stdenv.isLinux [
+  imports = [
     ./linux/applications.nix
   ];
 
