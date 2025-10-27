@@ -5,9 +5,9 @@
   ...
 }:
 {
-  options.applications.gui = lib.mkEnableOption "GUI applications";
+  options.nixCfg.applications.gui = lib.mkEnableOption "GUI applications";
 
-  config = lib.mkIf config.applications.gui {
+  config = lib.mkIf config.nixCfg.applications.gui {
     environment.systemPackages = with pkgs; [
       ghostty
       nautilus

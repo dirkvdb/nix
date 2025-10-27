@@ -28,9 +28,7 @@
     #"amdgpu.ppfeaturemask=0xffffffff"
   ];
 
-  nixCfg.applications = {
-    gui = true;
-  };
+  nixCfg.applications.gui = true;
 
   nixcfg.ethernet = {
     enable = true;
