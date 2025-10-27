@@ -25,8 +25,10 @@
     "kvm-amd"
     "mt79225e"
     "r8169"
+    "i2c-dev"
+    "ddcci_backlight"
   ];
-  boot.extraModulePackages = [ ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.ddcci-driver ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-partlabel/root";

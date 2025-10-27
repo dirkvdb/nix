@@ -50,8 +50,8 @@
       # Auto-start applications
       exec-once = [
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
-        "uwsm-app -- mako"
-        "uwsm-app -- swayosd-server"
+        "uwsm app -- mako"
+        "uwsm app -- swayosd-server"
       ];
       # Cursor size
       env = [
@@ -223,6 +223,11 @@
       "$mod" = "SUPER";
       "$terminal" = "uwsm app -- ghostty";
       "$browser" = "uwsm app -- zen-beta";
+
+      bind = [
+        ",XF86MonBrightnessUp,   exec, brightnessctl --device 'ddcci13' set +10%"
+        ",XF86MonBrightnessDown, exec, brightnessctl --device 'ddcci13' set 10%-"
+      ];
 
       bindm = [
         # mouse movements
