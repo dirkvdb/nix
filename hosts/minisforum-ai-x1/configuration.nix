@@ -10,6 +10,7 @@
     ../../core/linux/configuration.nix
     ../../core/linux/hyprland.nix
     ../../core/linux/audio.nix
+    ../../core/linux/boot.nix
     ../../core/linux/desktop.nix
     ../../core/linux/bluetooth.nix
     ../../core/linux/ethernet.nix
@@ -31,6 +32,7 @@
 
   nixCfg.applications.gui = true;
   nixCfg.desktop.enable = true;
+  nixCfg.graphicalBoot.enable = true;
 
   nixCfg.ethernet = {
     enable = true;
