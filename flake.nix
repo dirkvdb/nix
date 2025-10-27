@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -32,15 +33,16 @@
   };
 
   outputs =
-    inputs@{
+    {
       self,
       nixpkgs,
+      nixos-hardware,
       darwin,
       home-manager,
       elephant,
       walker,
       zen-browser,
-    }:
+    }@inputs:
     {
       nixosConfigurations.mini =
         let
@@ -62,6 +64,10 @@
           };
           modules = [
             ./hosts/minisforum-ai-x1/configuration.nix
+            nixos-hardware.nixosModules.common-cpu-amd
+            nixos-hardware.nixosModules.common-gpu-amd
+            nixos-hardware.nixosModules.common-hidpi
+            nixos-hardware.nixosModules.common-pc-ssd
 
             home-manager.nixosModules.home-manager
             {
