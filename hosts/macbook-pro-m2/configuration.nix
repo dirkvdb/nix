@@ -225,7 +225,7 @@
 
     casks = [
       # Not available for macOS in nixpkgs:
-      # balenaetcher
+      "balenaetcher"
       # bruno
       "ghostty"
       "vivaldi"
