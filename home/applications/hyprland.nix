@@ -138,7 +138,6 @@
         "HYPRCURSOR_SIZE,24"
         "XCURSOR_THEME,macOS"
         "HYPRCURSOR_THEME,macOS"
-        "GTK_THEME,Adwaita-dark"
 
         # Force all apps to use Wayland
         "GDK_BACKEND,wayland,x11,*"
@@ -350,11 +349,9 @@
         #"$mod SHIFT, Y, YouTube, exec, omarchy-launch-or-focus-webapp YouTube \"https://youtube.com/\""
         #"$mod SHIFT, G, WhatsApp, exec, omarchy-launch-or-focus-webapp WhatsApp \"https://web.whatsapp.com/\""
 
-        # Toggle idling
         "$mod CTRL, I, Toggle locking on idle, exec, nixcfg-toggle-idle"
-
-        # Toggle nightlight
         "$mod CTRL, N, Toggle nightlight, exec, nixcfg-toggle-nightlight"
+        "$mod CTRL, S, Share, exec, nixcfg-menu share"
 
         # Control tiling
         #"$mod, T, Toggle floating, togglefloating,"
