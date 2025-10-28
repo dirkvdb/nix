@@ -319,9 +319,6 @@
       "$applauncher" = "nc -U /run/user/1000/walker/walker.sock";
 
       bind = [
-        ",XF86MonBrightnessUp,   exec, brightnessctl --device 'ddcci13' set +15%"
-        ",XF86MonBrightnessDown, exec, brightnessctl --device 'ddcci13' set 15%-"
-
         # Swap active window with the one next to it with SUPER + SHIFT + arrow keys (VIM style)
         "$mod SHIFT, H, movewindow, l"
         "$mod SHIFT, L, movewindow, r"
@@ -453,8 +450,8 @@
         ",XF86AudioLowerVolume, Volume down, exec, $osdclient --output-volume lower"
         ",XF86AudioMute, Mute, exec, $osdclient --output-volume mute-toggle"
         ",XF86AudioMicMute, Mute microphone, exec, $osdclient --input-volume mute-toggle"
-        ",XF86MonBrightnessUp, Brightness up, exec, $osdclient --brightness raise"
-        ",XF86MonBrightnessDown, Brightness down, exec, $osdclient --brightness lower"
+        ",XF86MonBrightnessUp, Brightness up, exec, $osdclient --brightness +10"
+        ",XF86MonBrightnessDown, Brightness down, exec, $osdclient --brightness -10"
 
         # Precise 1% multimedia adjustments with Alt modifier
         "ALT, XF86AudioRaiseVolume, Volume up precise, exec, $osdclient --output-volume +1"
