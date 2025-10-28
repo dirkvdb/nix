@@ -1,5 +1,6 @@
 {
   pkgs,
+  config,
   system,
   userConfig,
   elephant,
@@ -16,6 +17,17 @@
     walker.homeManagerModules.default
     zen-browser.homeModules.default
   ];
+
+  xdg.userDirs.enable = true;
+  xdg.userDirs.createDirectories = true;
+  xdg.userDirs.download = "${config.home.homeDirectory}/downloads";
+  xdg.userDirs.pictures = "${config.home.homeDirectory}/pictures";
+  xdg.userDirs.documents = "${config.home.homeDirectory}/docs";
+  xdg.userDirs.desktop = null;
+  xdg.userDirs.templates = null;
+  xdg.userDirs.publicShare = null;
+  xdg.userDirs.videos = null;
+  xdg.userDirs.music = null;
 
   xdg.configFile."mako".source = ./dotfiles/mako;
   xdg.dataFile."theme" = {

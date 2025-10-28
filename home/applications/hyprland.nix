@@ -305,8 +305,15 @@
       "$applauncher" = "nc -U /run/user/1000/walker/walker.sock";
 
       bind = [
-        ",XF86MonBrightnessUp,   exec, brightnessctl --device 'ddcci13' set +10%"
-        ",XF86MonBrightnessDown, exec, brightnessctl --device 'ddcci13' set 10%-"
+        ",XF86MonBrightnessUp,   exec, brightnessctl --device 'ddcci13' set +15%"
+        ",XF86MonBrightnessDown, exec, brightnessctl --device 'ddcci13' set 15%-"
+
+        # Swap active window with the one next to it with SUPER + SHIFT + arrow keys (VIM style)
+        "$mod SHIFT, H, movewindow, l"
+        "$mod SHIFT, L, movewindow, r"
+        "$mod SHIFT, K, movewindow, u"
+        "$mod SHIFT, J, movewindow, d"
+        "$mod, backslash, togglesplit"
       ];
 
       bindm = [
