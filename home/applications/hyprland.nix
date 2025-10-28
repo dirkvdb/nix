@@ -109,8 +109,23 @@
           identity = true;
         }
         {
-          time = "21:00";
+          time = "20:00";
           temperature = 5000;
+          gamma = 0.8;
+        }
+        {
+          time = "21:00";
+          temperature = 4500;
+          gamma = 0.8;
+        }
+        {
+          time = "22:00";
+          temperature = 3500;
+          gamma = 0.8;
+        }
+        {
+          time = "23:00";
+          temperature = 3000;
           gamma = 0.8;
         }
       ];
