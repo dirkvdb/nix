@@ -68,16 +68,6 @@ providerlist = [
   { action = "activate", default = true, bind = "Return", after = "ClearReload" },
 ]
 
-bluetooth = [
-  { action = "find", global = true, bind = "ctrl f", after = "AsyncClearReload" },
-  { action = "trust", bind = "ctrl t", after = "AsyncReload" },
-  { action = "untrust", bind = "ctrl t", after = "AsyncReload" },
-  { action = "pair", bind = "Return", after = "AsyncReload" },
-  { action = "remove", bind = "ctrl d", after = "AsyncReload" },
-  { action = "connect", bind = "Return", after = "AsyncReload" },
-  { action = "disconnect", bind = "Return", after = "AsyncReload" },
-]
-
 calc = [
   { action = "copy", default = true, bind = "Return" },
   { action = "delete", bind = "ctrl d", after = "AsyncReload" },
@@ -104,15 +94,6 @@ files = [
   { action = "opendir", label = "open dir", bind = "ctrl Return" },
   { action = "copypath", label = "copy path", bind = "ctrl shift c" },
   { action = "copyfile", label = "copy file", bind = "ctrl c" },
-]
-
-todo = [
-  { action = "save", default = true, bind = "Return", after = "ClearReload" },
-  { action = "delete", bind = "ctrl d", after = "ClearReload" },
-  { action = "active", bind = "Return", after = "ClearReload" },
-  { action = "inactive", bind = "Return", after = "ClearReload" },
-  { action = "done", bind = "ctrl f", after = "ClearReload" },
-  { action = "clear", bind = "ctrl x", after = "ClearReload", global = true },
 ]
 
 runner = [
