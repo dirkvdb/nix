@@ -1,18 +1,20 @@
+{ config, lib, ... }:
+let
+  cfg = config.nixCfg.docker;
+in
 {
-  ...
-}:
-{
-  # enable containerization ( docker )
-  virtualisation = {
-    containers.enable = true;
-    libvirtd = {
-      enable = true;
-    };
-    docker = {
-      enable = true;
-      rootless = {
+
+  config = lib.mkIf cfg.enable {
+    # enable containerization ( docker )
+    virtualisation = {
+      containers.enable = true;
+      libvirtd.enable = true;
+      docker = {
         enable = true;
-        setSocketVariable = true;
+        rootless = {
+          enable = true;
+          setSocketVariable = true;
+        };
       };
     };
   };

@@ -1,0 +1,47 @@
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
+# Core module aggregator (simplified).
+# Unconditionally imports all .nix files in this directory and, on Linux, all in ./linux.
+# Enable flags remain defined but do not gate imports.
+let
+  isLinux = pkgs.stdenv.isLinux;
+
+  readNixFiles =
+    dir:
+    let
+      entries = builtins.readDir dir;
+      names = lib.attrNames entries;
+    in
+    lib.filter (n: lib.hasSuffix ".nix" n && n != "default.nix") names;
+
+  coreFileNames = readNixFiles ./.;
+  linuxFileNames = if isLinux then readNixFiles ./linux else [ ];
+
+  coreImports = map (fname: ./. + "/${fname}") coreFileNames;
+  linuxImports = map (fname: ./linux + "/${fname}") linuxFileNames;
+in
+{
+  options.nixCfg = lib.mkMerge [
+    {
+      applications.enable = lib.mkEnableOption "Applications module";
+      fonts.enable = lib.mkEnableOption "Fonts module";
+    }
+    (lib.mkIf isLinux {
+      audio.enable = lib.mkEnableOption "PipeWire audio stack";
+      bluetooth.enable = lib.mkEnableOption "Bluetooth stack";
+      configuration.enable = lib.mkEnableOption "Base system configuration";
+      docker.enable = lib.mkEnableOption "Container & virtualisation stack";
+      hyprland.enable = lib.mkEnableOption "Hyprland compositor";
+      graphicalBoot.enable = lib.mkEnableOption "Graphical boot (plymouth)";
+      ethernet.enable = lib.mkEnableOption "Ethernet networking";
+      applications.gui = lib.mkEnableOption "Additional GUI applications";
+      applications.dev = lib.mkEnableOption "Developer tooling applications";
+    })
+  ];
+
+  imports = coreImports ++ linuxImports;
+}

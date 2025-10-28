@@ -5,12 +5,9 @@
   ...
 }:
 let
-  cfg = config.nixCfg.ethernet;
+  cfg = config.nixCfg.graphicalBoot;
 in
 {
-  options.nixCfg.graphicalBoot = {
-    enable = lib.mkEnableOption "Enable graphical boot";
-  };
 
   config = lib.mkIf cfg.enable {
     fonts = {
