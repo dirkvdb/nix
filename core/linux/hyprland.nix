@@ -52,7 +52,6 @@ in
 
     # Hyprland-specific packages
     environment.systemPackages = with pkgs; [
-      hypridle
       hyprpolkitagent
       pyprland
       hyprlang
