@@ -5,8 +5,6 @@
   ...
 }:
 {
-  options.nixCfg.applications.gui = lib.mkEnableOption "GUI applications";
-  options.nixCfg.applications.dev = lib.mkEnableOption "Developer applications";
 
   config = lib.mkMerge [
     (lib.mkIf config.nixCfg.applications.gui {
