@@ -14,11 +14,11 @@
       auto-optimise-store = true;
     };
 
-    gc = {
-      automatic = true;
-      dates = "23:30";
-      options = "--delete-older-than +3";
-    };
+    # gc = {
+    #   automatic = true;
+    #   dates = "23:30";
+    #   options = "--delete-older-than +3";
+    # };
   };
 
   # Bootloader.
