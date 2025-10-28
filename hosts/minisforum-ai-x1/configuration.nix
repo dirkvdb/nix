@@ -55,8 +55,9 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        rocmPackages.clr.icd
-        vaapiVdpau
+        rocmPackages.clr.icd # OpenCL ICD loader
+        rocmPackages.rocm-smi # ROCm System Management Interface
+        libva # Video Acceleration API
         libvdpau-va-gl
       ];
     };
@@ -96,7 +97,8 @@
     radeontop
     clinfo
     vulkan-tools
-    rocmPackages.rocm-smi
+
+    libva # VA-API
 
     gparted
     ghostty
@@ -104,6 +106,12 @@
     mako # notifications
     swayosd
     slack
+
+    # graphics config Tools
+    glxinfo # OpenGL info
+    vulkan-tools # Khronos official Vulkan Tools and Utilities
+    clinfo # Print information about available OpenCL platforms and devices
+    libva-utils # Collection of utilities and examples for VA-API
 
     # works
     teams-for-linux
