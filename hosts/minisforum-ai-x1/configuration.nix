@@ -3,17 +3,8 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    # Common system applications
-    ../../core/applications.nix
-    # System configuration
-    ../../core/fonts.nix
-    ../../core/linux/configuration.nix
-    ../../core/linux/hyprland.nix
-    ../../core/linux/audio.nix
-    ../../core/linux/boot.nix
-    ../../core/linux/desktop.nix
-    ../../core/linux/bluetooth.nix
-    ../../core/linux/ethernet.nix
+    # Core aggregated modules
+    ../../core/default.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -22,8 +13,15 @@
   # Use the latest kernel from unstable (for better AMD CPU support)
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  nixCfg.applications.enable = true;
   nixCfg.applications.gui = true;
   nixCfg.applications.dev = true;
+  nixCfg.fonts.enable = true;
+  nixCfg.audio.enable = true;
+  nixCfg.bluetooth.enable = true;
+  nixCfg.configuration.enable = true;
+  nixCfg.docker.enable = true;
+  nixCfg.hyprland.enable = true;
   nixCfg.desktop.enable = true;
   nixCfg.graphicalBoot.enable = true;
 

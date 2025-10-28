@@ -1,4 +1,9 @@
-{ pkgs, userConfig, ... }:
+{
+  pkgs,
+  lib,
+  userConfig,
+  ...
+}:
 {
   nix = {
     settings = {
@@ -10,7 +15,6 @@
         "nix-command"
         "flakes"
       ];
-
       auto-optimise-store = true;
     };
 
@@ -21,14 +25,12 @@
     # };
   };
 
-  # Bootloader.
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
     timeout = 1;
   };
 
-  # Define a user account.
   users.users.${userConfig.username} = {
     isNormalUser = true;
     description = userConfig.username;
@@ -42,20 +44,15 @@
   };
   users.groups.hidraw = { };
 
-  networking = {
-    hostName = userConfig.hostname;
-  };
+  networking.hostName = userConfig.hostname;
 
   hardware.i2c.enable = true;
   services.ddccontrol.enable = true;
 
-  # Set your time zone.
   time.timeZone = "Europe/Brussels";
 
   i18n = {
-    # Select internationalisation properties.
     defaultLocale = "en_US.UTF-8";
-
     extraLocaleSettings = {
       LC_ADDRESS = "nl_BE.UTF-8";
       LC_IDENTIFICATION = "nl_BE.UTF-8";
@@ -102,25 +99,13 @@
         libvdpau-va-gl
       ];
     };
-
-    # AMD GPU firmware
     enableRedistributableFirmware = true;
-
-    # CPU microcode updates
     cpu.amd.updateMicrocode = true;
   };
 
-  # systemd = {
-  #   services = {
-  #   };
-  # };
-
-  # enable containerization ( docker )
   virtualisation = {
     containers.enable = true;
-    libvirtd = {
-      enable = true;
-    };
+    libvirtd.enable = true;
     docker = {
       enable = true;
       rootless = {
@@ -134,16 +119,13 @@
     direnv.enable = true;
     virt-manager.enable = true;
     nix-ld.enable = true;
-    # steam.enable = true;
     fish.enable = true;
     firefox.enable = true;
   };
 
-  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-    #  Apps
     cpufrequtils
     curl
     lazygit

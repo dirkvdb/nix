@@ -8,8 +8,6 @@ let
 in
 {
   options.nixCfg.ethernet = {
-    enable = lib.mkEnableOption "ethernet configuration";
-
     interface = lib.mkOption {
       type = lib.types.str;
       description = "Name of the ethernet interface";
@@ -56,5 +54,12 @@ in
       matchConfig.Name = cfg.interface;
       networkConfig.DHCP = cfg.dhcp;
     };
+
+    assertions = [
+      {
+        assertion = cfg.interface != "";
+        message = "nixCfg.ethernet.interface must be set (non-empty) when nixCfg.ethernet.enable is true";
+      }
+    ];
   };
 }
