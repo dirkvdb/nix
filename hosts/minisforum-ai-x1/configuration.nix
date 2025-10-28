@@ -1,11 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, userConfig, ... }:
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     # Common system applications
     ../../core/applications.nix
-    # Sysstem configuration
+    # System configuration
     ../../core/fonts.nix
     ../../core/linux/configuration.nix
     ../../core/linux/hyprland.nix
@@ -22,15 +22,8 @@
   # Use the latest kernel from unstable (for better AMD CPU support)
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  # AMD-specific kernel parameters for Strix/Radeon 880M/890M
-  boot.kernelParams = [
-    "amd_pstate=active"
-    #"amdgpu.dcdebugmask=0x10" # Enable if the display freezes
-    #"amdgpu.gpu_recovery=1"
-    #"amdgpu.ppfeaturemask=0xffffffff"
-  ];
-
   nixCfg.applications.gui = true;
+  nixCfg.applications.dev = true;
   nixCfg.desktop.enable = true;
   nixCfg.graphicalBoot.enable = true;
 
@@ -85,6 +78,12 @@
     fish.enable = true;
     firefox.enable = true;
     localsend.enable = true;
+    nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 4d --keep 3";
+      flake = "/home/${userConfig.username}/nix"; # sets NH_OS_FLAKE variable
+    };
 
     # xfconf.enable = true; # for thunar settings
     # thunar.enable = true;
