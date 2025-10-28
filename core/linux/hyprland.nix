@@ -31,8 +31,6 @@ in
       };
     };
 
-    programs.hyprlock.enable = true;
-    #programs.hypridle.enable = true;
     #programs.hyprsunset.enable = true;
     #programs.hyprpicker.enable = true;
 

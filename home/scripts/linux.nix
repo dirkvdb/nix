@@ -12,12 +12,72 @@
       exec walker --width 644 --maxheight 300 --minheight 300 "$@"
     '')
 
+    (pkgs.writeShellScriptBin "nixcfg-launch-or-focus" ''
+      if (($# == 0)); then
+        echo "Usage: nixcfg-launch-or-focus [window-pattern] [launch-command]"
+        exit 1
+      fi
+
+      WINDOW_PATTERN="$1"
+      LAUNCH_COMMAND="''${2:-uwsm-app -- $WINDOW_PATTERN}"
+      WINDOW_ADDRESS=$(hyprctl clients -j | jq -r --arg p "$WINDOW_PATTERN" '.[]|select((.class|test("\\b" + $p + "\\b";"i")) or (.title|test("\\b" + $p + "\\b";"i")))|.address' | head -n1)
+
+      if [[ -n $WINDOW_ADDRESS ]]; then
+        hyprctl dispatch focuswindow "address:$WINDOW_ADDRESS"
+      else
+        eval exec $LAUNCH_COMMAND
+      fi
+    '')
+
     # Waybar toggle script
     (pkgs.writeShellScriptBin "nixcfg-toggle-waybar" ''
       if ${pkgs.procps}/bin/pgrep -x waybar >/dev/null; then
         ${pkgs.procps}/bin/pkill -x waybar
       else
         uwsm-app -- ${pkgs.waybar}/bin/waybar >/dev/null 2>&1 &
+      fi
+    '')
+
+    # Toggle idle lock
+    (pkgs.writeShellScriptBin "nixcfg-toggle-idle" ''
+      if systemctl --user is-active --quiet hypridle.service; then
+        systemctl --user stop hypridle.service
+        notify-desktop "Stop locking computer when idle"
+      else
+      systemctl --user start hypridle.service
+        notify-desktop "Now locking computer when idle"
+      fi
+    '')
+
+    # Toggle nightlight
+    (pkgs.writeShellScriptBin "nixcfg-toggle-nightlight" ''
+      # Default temperature values
+      ON_TEMP=4000
+      OFF_TEMP=6000
+
+      # Ensure hyprsunset is running
+      if ! pgrep -x hyprsunset; then
+        setsid uwsm-app -- hyprsunset &
+        sleep 1 # Give it time to register
+      fi
+
+      # Query the current temperature
+      CURRENT_TEMP=$(hyprctl hyprsunset temperature 2>/dev/null | grep -oE '[0-9]+')
+
+      restart_nightlighted_waybar() {
+        if grep -q "custom/nightlight" ~/.config/waybar/config.jsonc; then
+          nixcfg-restart-waybar # restart waybar in case user has waybar module for hyprsunset
+        fi
+      }
+
+      if [[ "$CURRENT_TEMP" == "$OFF_TEMP" ]]; then
+        hyprctl hyprsunset temperature $ON_TEMP
+        notify-desktop "  Nightlight screen temperature"
+        #restart_nightlighted_waybar
+      else
+        hyprctl hyprsunset temperature $OFF_TEMP
+        notify-desktop "   Daylight screen temperature"
+        #restart_nightlighted_waybar
       fi
     '')
 
@@ -37,20 +97,6 @@
         fi
       else
         echo "$HOME"
-      fi
-    '')
-
-    # Launch or focus application
-    (pkgs.writeShellScriptBin "nixcfg-launch-or-focus" ''
-      app="$1"
-
-      # Check if the app is already running
-      if ${pkgs.procps}/bin/pgrep -x "$app" > /dev/null; then
-        # Focus the window using hyprctl
-        ${pkgs.hyprland}/bin/hyprctl dispatch focuswindow "class:$app"
-      else
-        # Launch the app via uwsm
-        uwsm-app -- "$app" &
       fi
     '')
 
@@ -106,7 +152,7 @@
       }
 
       open_in_editor() {
-        notify-send "Editing config file" "$1"
+        notify-desktop "Editing config file" "$1"
         nixcfg-launch-editor "$1"
       }
 

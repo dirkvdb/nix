@@ -1,12 +1,7 @@
 { pkgs, ... }:
 {
   xdg.configFile."waybar".source = ../dotfiles/waybar;
-
   xdg.configFile."walker".source = ../dotfiles/walker;
-  xdg.dataFile."walker/themes" = {
-    source = ../dotfiles/walker/themes;
-    recursive = true;
-  };
 
   xdg.configFile."swayosd" = {
     source = ../dotfiles/swayosd;
@@ -19,6 +14,42 @@
     systemd = {
       enable = true;
       target = "hyprland-session.target";
+    };
+  };
+
+  programs.hyprlock = {
+    enable = true;
+    settings = {
+      source = "~/.local/share/theme/hyprlock.conf";
+      background = {
+        color = "$color";
+        path = "~/.local/share/theme/wallpapers/wallpaper-1.jpg";
+        blur_passes = 3;
+      };
+
+      animations.ebabled = false;
+
+      input-field = {
+        size = "650, 100";
+        position = "0, 0";
+        halign = "center";
+        valign = "center";
+
+        inner_color = "$inner_color";
+        outer_color = "$outer_color";
+        outline_thickness = 4;
+
+        font_family = "CaskaydiaMono Nerd Font Propo";
+        font_color = "$font_color";
+
+        placeholder_text = "Enter Password";
+        check_color = "$check_color";
+        fail_text = "<i>$FAIL ($ATTEMPTS)</i>";
+
+        rounding = 8;
+        shadow_passes = 0;
+        fade_on_empty = false;
+      };
     };
   };
 
@@ -60,11 +91,28 @@
       splash = false;
 
       preload = [
-        "~/.local/share/wallpaper.jpg"
+        "~/.local/share/theme/wallpapers/wallpaper-1.jpg"
       ];
 
       wallpaper = [
-        ",~/.local/share/wallpaper.jpg" # The comma means "all monitors"
+        ",~/.local/share/theme/wallpapers/wallpaper-1.jpg" # The comma means "all monitors"
+      ];
+    };
+  };
+
+  services.hyprsunset = {
+    enable = true;
+    settings = {
+      profile = [
+        {
+          time = "7:30";
+          identity = true;
+        }
+        {
+          time = "21:00";
+          temperature = 5000;
+          gamma = 0.8;
+        }
       ];
     };
   };
@@ -197,7 +245,7 @@
         kb_options = "compose:ralt"; # ,grp:alts_toggle
 
         # Change speed of keyboard repeat
-        repeat_rate = 40;
+        repeat_rate = 35;
         repeat_delay = 200;
 
         # Start with numlock on by default
@@ -253,7 +301,7 @@
 
       "$mod" = "SUPER";
       "$terminal" = "uwsm app -- ghostty";
-      "$browser" = "uwsm app -- zen-beta";
+      "$browser" = "zen-beta";
       "$applauncher" = "nc -U /run/user/1000/walker/walker.sock";
 
       bind = [
@@ -278,28 +326,53 @@
 
         "$mod, ESCAPE, Power menu, exec, nixcfg-menu system"
         "$mod, RETURN, Terminal, exec, $terminal --working-directory=\"$(nixcfg-cmd-terminal-cwd)\""
-        "$mod, B, Browser, exec, $browser"
+        "$mod, B, Browser, exec, nixcfg-launch-or-focus $browser"
+        "$mod SHIFT, B, Browser (new instance), exec, uwsm app -- $browser"
         "$mod, E, File manager, exec, nautilus --new-window"
+        "$mod, M, Music, exec, nixcfg-launch-or-focus spotify"
         "$mod, N, Editor, exec, uwsm app -- zeditor"
         "$mod, W, Close active window, killactive,"
         "$mod, K, Show key bindings, exec, nixcfg-menu-keybindings"
-        "$mod SHIFT, B, Browser (private), exec, $browser --private"
+        "$mod, T, Activity, exec, $terminal -e btop"
         "$mod SHIFT, M, Music, exec, nixcfg-launch-or-focus spotify"
-        "$mod SHIFT, T, Activity, exec, $terminal -e btop"
         "$mod SHIFT, slash, Passwords, exec, uwsm app -- bitwarden-desktop"
-        "CONTROL SHIFT, V, Clipboard, exec, uwsm app -- walker -m clipboard"
+        "CONTROL SHIFT, V, Clipboard, exec, uwsm app -- walker --provider clipboard --theme clipboard"
+        "$mod SHIFT, O, Office applications, exec, systemctl --user start work.target"
+        "$mod SHIFT ALT, O, Close office applications, exec, systemctl --user stop work.target"
+        #"$mod SHIFT, E, Email, exec, omarchy-launch-webapp \"https://mail.google.com\""
+        #"$mod SHIFT, Y, YouTube, exec, omarchy-launch-or-focus-webapp YouTube \"https://youtube.com/\""
+        #"$mod SHIFT, G, WhatsApp, exec, omarchy-launch-or-focus-webapp WhatsApp \"https://web.whatsapp.com/\""
+
+        # Toggle idling
+        "$mod CTRL, I, Toggle locking on idle, exec, nixcfg-toggle-idle"
+
+        # Toggle nightlight
+        "$mod CTRL, N, Toggle nightlight, exec, nixcfg-toggle-nightlight"
 
         # Control tiling
         #"$mod, T, Toggle floating, togglefloating,"
         #"$mod, F, Force full screen, fullscreen, 0"
-        "$mod CTRL, F, Tiled full screen, fullscreenstate, 0 2"
+        # "$mod SHIFT, V, Toggle floating, togglefloating"
+        "$mod SHIFT, V, Toggle floating, togglefloating"
+        "$mod SHIFT, F, Maximize App Window, fullscreen, 1"
         "$mod ALT, F, Full width, fullscreen, 1"
+
+        #bind = SUPER SHIFT, GRAVE, hyprexpo:expo, toggle
+        "$mod, code:20, Expand window left, resizeactive, -100 0" # - key
+        "$mod, code:21, Shrink window left, resizeactive, 100 0" # = key
+        "$mod SHIFT, code:20, Shrink window up, resizeactive, 0 -100"
+        "$mod SHIFT, code:21, Expand window down, resizeactive, 0 100"
 
         # Move focus with SUPER + arrow keys
         "$mod, LEFT, Move focus left, movefocus, l"
         "$mod, RIGHT, Move focus right, movefocus, r"
         "$mod, UP, Move focus up, movefocus, u"
         "$mod, DOWN, Move focus down, movefocus, d"
+        # Move focus with SUPER + vim arrow keys
+        "$mod, H, Move focus left, movefocus, l"
+        "$mod, L, Move focus right, movefocus, r"
+        "$mod, K, Move focus up, movefocus, u"
+        "$mod, J, Move focus down, movefocus, d"
 
         # Switch workspaces with SUPER + [0-9]
         "$mod, code:10, Switch to workspace 1, workspace, 1"
@@ -325,10 +398,34 @@
         "$mod SHIFT, code:18, Move window to workspace 9, movetoworkspace, 9"
         "$mod SHIFT, code:19, Move window to workspace 10, movetoworkspace, 10"
 
-        #"CONTROL SHIFT, V, Clipboard, exec, uwsm app -- walker --modules=clipboard"
-        #"$mod SHIFT, O, Office applications, exec, systemctl --user start work.target"
-        #"$mod SHIFT ALT, O, Close office applications, exec, systemctl --user stop work.target"
+        # Toggle groups
+        "$mod, G, Toggle window grouping, togglegroup"
+        "$mod ALT, G, Move active window out of group, moveoutofgroup"
 
+        # Join groups
+        "$mod ALT, LEFT, Move window to group on left, moveintogroup, l"
+        "$mod ALT, RIGHT, Move window to group on right, moveintogroup, r"
+        "$mod ALT, UP, Move window to group on top, moveintogroup, u"
+        "$mod ALT, DOWN, Move window to group on bottom, moveintogroup, d"
+
+        # Navigate a single set of grouped windows
+        "$mod ALT, TAB, Next window in group, changegroupactive, f"
+        "$mod ALT SHIFT, TAB, Previous window in group, changegroupactive, b"
+
+        # Activate window in a group by number
+        "$mod ALT, 1, Switch to group window 1, changegroupactive, 1"
+        "$mod ALT, 2, Switch to group window 2, changegroupactive, 2"
+        "$mod ALT, 3, Switch to group window 3, changegroupactive, 3"
+        "$mod ALT, 4, Switch to group window 4, changegroupactive, 4"
+        "$mod ALT, 5, Switch to group window 5, changegroupactive, 5"
+
+        # Screenshots
+        "$mod ALT, 4, Screenshot of region, exec, omarchy-cmd-screenshot"
+        "$mod ALT, 3, Screenshot of window, exec, omarchy-cmd-screenshot window"
+        "$mod ALT, 2, Screenshot of display, exec, omarchy-cmd-screenshot output"
+
+        # Color picker
+        "$mod ALT, 5, Color picker, exec, pkill hyprpicker || hyprpicker -a"
       ];
 
       bindeld = [
@@ -351,6 +448,17 @@
         "noanim, walker"
         # Remove 1px border around hyprshot screenshots
         "noanim, selection"
+      ];
+
+      workspace = [
+        "1, name:cmd, persistent:true"
+        "2, name:web, persistent:true"
+        "3, name:dev, persistent:true, rounding:false, decorate:false, gapsin:0, gapsout:0, border:false, monitor:DP-1"
+        "4, name:scratch, persistent:true"
+        "5, name:scratch, persistent:true"
+        "6, name:vcs, persistent:true"
+        "7, name:chat, persistent:true"
+        "8, name:com, persistent:true"
       ];
 
       windowrule = [

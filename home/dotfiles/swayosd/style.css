@@ -1,4 +1,4 @@
-@import "./swayosd.css";
+@import "~/.local/share/theme/swayosd.css";
 
 window {
     border-radius: 8px;
