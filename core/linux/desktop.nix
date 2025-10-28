@@ -29,6 +29,7 @@ in
       glib # for gsettings to work
       gsettings-qt
       gtk-engine-murrine # for gtk themes
+      tela-icon-theme
     ];
 
     services = {
