@@ -50,6 +50,7 @@ in
 
     # Hyprland-specific packages
     environment.systemPackages = with pkgs; [
+      grim # grab images from a Wayland compositor
       hyprpolkitagent
       pyprland
       hyprlang
@@ -58,7 +59,10 @@ in
       mesa
       nwg-displays
       nwg-look
+      satty # screenshot annotation tool
+      slurp # for region selection (screen shot, etc)
       waypaper
+      wayfreeze # for screenshots
       hyprland-qt-support
     ];
   };
