@@ -22,6 +22,37 @@
     };
   };
 
+  services.hypridle = {
+    enable = true;
+    settings = {
+      general = {
+        after_sleep_cmd = "hyprctl dispatch dpms on";
+        ignore_dbus_inhibit = false;
+        lock_cmd = "hyprlock";
+      };
+
+      listener = [
+        # Save power on short time away
+        {
+          timeout = 150; # 2.5min.
+          on-timeout = "brightnessctl -s set 10"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
+          on-resume = "brightnessctl -r"; # monitor backlight restore.
+        }
+        # Power of the monitor after some time
+        {
+          timeout = 600; # 10min
+          on-timeout = "hyprctl dispatch dpms off";
+          on-resume = "hyprctl dispatch dpms on && brightnessctl -r";
+        }
+        # Long time away - lock the screen
+        {
+          timeout = 12000; # 2hr
+          on-timeout = "hyprlock";
+        }
+      ];
+    };
+  };
+
   services.hyprpaper = {
     enable = true;
     settings = {
@@ -50,8 +81,8 @@
       # Auto-start applications
       exec-once = [
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
-        "uwsm app -- mako"
-        "uwsm app -- swayosd-server"
+        "uwsm app -- mako" # Notification daemon
+        "uwsm app -- swayosd-server" # On-screen display for volume/brightness
       ];
       # Cursor size
       env = [
@@ -223,6 +254,7 @@
       "$mod" = "SUPER";
       "$terminal" = "uwsm app -- ghostty";
       "$browser" = "uwsm app -- zen-beta";
+      "$applauncher" = "nc -U /run/user/1000/walker/walker.sock";
 
       bind = [
         ",XF86MonBrightnessUp,   exec, brightnessctl --device 'ddcci13' set +10%"
@@ -241,13 +273,13 @@
       ];
 
       bindd = [
-        "$mod, SPACE, Launch apps, exec, nixcfg-launch-walker"
+        "$mod, SPACE, Launch apps, exec, $applauncher"
         "$mod ALT, SPACE, Menu, exec, nixcfg-menu"
 
         "$mod, ESCAPE, Power menu, exec, nixcfg-menu system"
         "$mod, RETURN, Terminal, exec, $terminal --working-directory=\"$(nixcfg-cmd-terminal-cwd)\""
         "$mod, B, Browser, exec, $browser"
-        "$mod, E, File manager, exec, uwsm app -- nautilus --new-window"
+        "$mod, E, File manager, exec, nautilus --new-window"
         "$mod, N, Editor, exec, uwsm app -- zeditor"
         "$mod, W, Close active window, killactive,"
         "$mod, K, Show key bindings, exec, nixcfg-menu-keybindings"
@@ -255,6 +287,7 @@
         "$mod SHIFT, M, Music, exec, nixcfg-launch-or-focus spotify"
         "$mod SHIFT, T, Activity, exec, $terminal -e btop"
         "$mod SHIFT, slash, Passwords, exec, uwsm app -- bitwarden-desktop"
+        "CONTROL SHIFT, V, Clipboard, exec, uwsm app -- walker -m clipboard"
 
         # Control tiling
         #"$mod, T, Toggle floating, togglefloating,"
