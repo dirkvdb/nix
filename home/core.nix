@@ -30,7 +30,6 @@
   xdg.configFile."btop".source = ./dotfiles/btop;
   xdg.configFile."ghostty".source = ./dotfiles/ghostty;
   xdg.configFile."wezterm".source = ./dotfiles/wezterm;
-  xdg.dataFile."wallpaper.jpg".source = ./wallpapers/everforest.jpg;
 
   home.username = userConfig.username;
   home.stateVersion = "25.05";

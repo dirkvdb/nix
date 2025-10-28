@@ -129,6 +129,7 @@
     cpufrequtils
     curl
     lazygit
+    jq # needed by some scripts
     fd
     killall
     ripgrep

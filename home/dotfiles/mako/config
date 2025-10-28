@@ -1,4 +1,4 @@
-include=~/.config/mako/colors.ini
+include=~/.local/share/theme/mako.ini
 
 anchor=top-right
 default-timeout=5000

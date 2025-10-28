@@ -50,6 +50,7 @@
           userConfig = {
             hostname = "mini";
             username = "dirk";
+            theme = "everforest";
           };
         in
         nixpkgs.lib.nixosSystem {

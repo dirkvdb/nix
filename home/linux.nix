@@ -18,6 +18,10 @@
   ];
 
   xdg.configFile."mako".source = ./dotfiles/mako;
+  xdg.dataFile."theme" = {
+    source = ./themes/${userConfig.theme};
+    recursive = true;
+  };
 
   home = {
     username = userConfig.username;

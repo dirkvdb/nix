@@ -13,6 +13,7 @@
       environment.systemPackages = with pkgs; [
         ghostty
         nautilus
+        notify-desktop # cmd for sending notifications
         glib # for gsettings to work
         gsettings-qt
         gtk-engine-murrine # for gtk themes
