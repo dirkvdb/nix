@@ -31,12 +31,12 @@
   boot.extraModulePackages = [ config.boot.kernelPackages.ddcci-driver ];
 
   fileSystems."/" = {
-    device = "/dev/disk/by-partlabel/root";
+    device = "/dev/disk/by-label/NIXROOT";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-partlabel/EFI";
+    device = "/dev/disk/by-label/NIXBOOT";
     fsType = "vfat";
     options = [
       "fmask=0022"
@@ -45,7 +45,7 @@
   };
 
   swapDevices = [
-    { device = "/dev/disk/by-uuid/4a89ee79-e552-40f5-a4b5-bb5107cdd278"; }
+    { device = "/dev/disk/by-label/SWAP"; }
   ];
 
   # systemd-networkd is used; disable dhcpcd's global DHCP default from generated config
