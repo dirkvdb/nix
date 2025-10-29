@@ -5,16 +5,19 @@
   ...
 }:
 let
-  cfg = config.nixCfg.hyprland;
+  cfg = config.local.desktop.hyprland;
 in
 {
-  # hyprland.enable option moved to core/default.nix
+  options.local.desktop.hyprland = {
+    enable = lib.mkEnableOption "Enable hyprland desktop environment";
+  };
 
   config = lib.mkIf cfg.enable {
+    # copy the font that contains the menu symbol used in the waybar config
     fonts.packages = [
       (pkgs.stdenvNoCC.mkDerivation {
         name = "omarchy";
-        src = ../../fonts;
+        src = ./fonts;
         installPhase = ''
           mkdir -p $out/share/fonts/truetype
           cp omarchy.ttf $out/share/fonts/truetype/
@@ -31,13 +34,10 @@ in
       };
     };
 
-    #programs.hyprsunset.enable = true;
-    #programs.hyprpicker.enable = true;
-
     programs.hyprland = {
       enable = true;
       portalPackage = pkgs.xdg-desktop-portal-hyprland;
-      xwayland.enable = true;
+      # xwayland.enable = true;
       withUWSM = true;
     };
 

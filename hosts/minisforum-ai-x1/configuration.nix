@@ -53,6 +53,10 @@ in
 
         bluetooth.enable = true;
       };
+
+      desktop = {
+        hyprland.enable = true;
+      };
     };
 
     nixCfg.applications.enable = true;
@@ -61,7 +65,6 @@ in
     nixCfg.fonts.enable = true;
     nixCfg.configuration.enable = true;
     nixCfg.docker.enable = true;
-    nixCfg.hyprland.enable = true;
     nixCfg.desktop.enable = true;
 
     services = {
