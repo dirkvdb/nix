@@ -15,13 +15,17 @@ in
     # Core aggregated modules
     ../../core/default.nix
     ../../modules/nixos/import.nix
+    ../../modules/common/import.nix
 
+    inputs.nixos-hardware.nixosModules.common-cpu-amd
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
+    inputs.nixos-hardware.nixosModules.common-gpu-amd
     inputs.nixos-hardware.nixosModules.common-hidpi
     inputs.nixos-hardware.nixosModules.common-pc-ssd
   ];
 
   config = {
-    nixpkgs.config.allowUnfree = true;
     system.stateVersion = "25.05"; # Version at install time, never change
 
     # Use the latest kernel from unstable (for better AMD CPU support)
@@ -29,6 +33,11 @@ in
 
     local = {
       system = {
+        nix = {
+          unfree.enable = true;
+          nh.enable = true;
+          flakes.enable = true;
+        };
 
         boot = {
           systemd = {
@@ -39,8 +48,15 @@ in
 
         audio.pipewire.enable = true;
         video.amd.enable = true;
+        display.brightnesscontrol = {
+          enable = true;
+          i2cDevice = "i2c-13";
+        };
 
         network = {
+          enable = true;
+          hostname = userConfig.hostname;
+
           ethernet = {
             enable = true;
             wakeOnLan = true;
@@ -49,10 +65,21 @@ in
           };
         };
 
+        utils = {
+          dev = true;
+          sysadmin = true;
+        };
+
         bluetooth.enable = true;
+        fonts.enable = true;
+      };
+
+      services = {
+        ssh.enable = true;
       };
 
       desktop = {
+        enable = true;
         hyprland.enable = true;
       };
     };
@@ -60,7 +87,6 @@ in
     nixCfg.applications.enable = true;
     nixCfg.applications.gui = true;
     nixCfg.applications.dev = true;
-    nixCfg.fonts.enable = true;
     nixCfg.configuration.enable = true;
     nixCfg.docker.enable = true;
     nixCfg.desktop.enable = true;
@@ -76,18 +102,10 @@ in
 
     programs = {
       direnv.enable = true;
-      virt-manager.enable = true;
-      nix-ld.enable = true;
       # steam.enable = true;
       fish.enable = true;
       firefox.enable = true;
       localsend.enable = true;
-      nh = {
-        enable = true;
-        clean.enable = true;
-        clean.extraArgs = "--keep-since 4d --keep 3";
-        flake = "/home/${userConfig.username}/nix"; # sets NH_OS_FLAKE variable
-      };
 
       # xfconf.enable = true; # for thunar settings
       # thunar.enable = true;
@@ -100,7 +118,6 @@ in
     environment.systemPackages = with pkgs; [
       gparted
       ghostty
-      impala # wifi menu
       mako # notifications
       swayosd
       slack

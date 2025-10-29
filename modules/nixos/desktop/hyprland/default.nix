@@ -41,9 +41,6 @@ in
       withUWSM = true;
     };
 
-    # Enable polkit for privilege escalation
-    security.polkit.enable = true;
-
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
     environment.sessionVariables.TERMINAL = "ghostty";
     environment.sessionVariables.EDITOR = "micro";

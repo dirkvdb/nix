@@ -17,8 +17,12 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
-        boot.loader.systemd-boot.enable = true;
-        boot.loader.systemd-boot.consoleMode = "auto";
+        boot.loader = {
+          systemd-boot.enable = true;
+          systemd-boot.consoleMode = "auto";
+          efi.canTouchEfiVariables = true;
+          timeout = 1;
+        };
       }
 
       (lib.mkIf cfg.graphical {
