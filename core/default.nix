@@ -23,7 +23,6 @@ in
 {
   options.nixCfg = {
     applications.enable = lib.mkEnableOption "Applications module";
-    fonts.enable = lib.mkEnableOption "Fonts module";
     configuration.enable = lib.mkEnableOption "Base system configuration";
     docker.enable = lib.mkEnableOption "Container & virtualisation stack";
     applications.gui = lib.mkEnableOption "Additional GUI applications";

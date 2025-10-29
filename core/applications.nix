@@ -15,8 +15,6 @@ in
     (lib.mkIf cfg.enable {
       environment.systemPackages = with pkgs; [
         bitwarden
-        sqlitebrowser
-        sublime-merge
         spotify
       ];
     })
@@ -25,17 +23,11 @@ in
       environment.systemPackages = with pkgs; [
         ghostty
         nautilus
+        file-roller
         glib # for gsettings to work
         gsettings-qt
         gtk-engine-murrine # for gtk themes
         ungoogled-chromium
-      ];
-    })
-
-    (lib.mkIf (isLinux && cfg.dev) {
-      environment.systemPackages = with pkgs; [
-        mise
-        just
       ];
     })
   ];

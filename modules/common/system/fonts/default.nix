@@ -1,14 +1,16 @@
 {
   lib,
-  pkgs,
   config,
+  pkgs,
   ...
 }:
 let
-  cfg = config.nixCfg.fonts;
+  cfg = config.local.system.fonts;
 in
 {
-  # fonts.enable option declared in core/default.nix
+  options.local.system.fonts = {
+    enable = lib.mkEnableOption "Enable additional fonts";
+  };
 
   config = lib.mkIf cfg.enable {
     fonts = {
@@ -17,9 +19,12 @@ in
         nerd-fonts.fira-mono
         nerd-fonts.caskaydia-mono
         nerd-fonts.roboto-mono
+        cascadia-code
+        fira-sans
         fira-code
         monaspace
-        cascadia-code
+        noto-fonts
+        noto-fonts-emoji
       ];
     };
   };

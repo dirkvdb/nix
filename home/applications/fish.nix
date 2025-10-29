@@ -10,6 +10,10 @@
 
     shellInit = ''
       set -g fish_greeting
+
+      bind \cx beginning-of-line
+      bind \cb backward-word
+      bind \cf forward-word
     '';
 
     shellAbbrs = {

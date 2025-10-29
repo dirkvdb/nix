@@ -2,17 +2,12 @@
   lib,
   config,
   pkgs,
-  inputs,
   ...
 }:
 let
   cfg = config.local.system.video.amd;
 in
 {
-  imports = [
-    inputs.nixos-hardware.nixosModules.common-gpu-amd
-  ];
-
   options.local.system.video.amd = {
     enable = lib.mkEnableOption "Enable AMD graphics support";
   };
@@ -24,19 +19,18 @@ in
         enable32Bit = true;
         extraPackages = with pkgs; [
           rocmPackages.clr.icd # OpenCL ICD loader
-          rocmPackages.rocm-smi # ROCm System Management Interface
+          rocmPackages.rocm-smi # ROCm SMI
           radeontop
-          libva # Video Acceleration API
+          libva
           libvdpau-va-gl
           vulkan-tools
-          glxinfo
-          clinfo # Print information about available OpenCL platforms and devices
+          mesa-demos # provides `glxinfo`
+          clinfo
         ];
       };
 
       # AMD GPU firmware
       enableRedistributableFirmware = true;
-
     };
   };
 }

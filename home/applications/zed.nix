@@ -110,19 +110,6 @@
             "nil"
             "nixd"
           ];
-          lsp = {
-            nil = {
-              settings = {
-                nil = {
-                  nix = {
-                    flake = {
-                      autoArchive = true;
-                    };
-                  };
-                };
-              };
-            };
-          };
         };
       };
       diagnostics = {
@@ -146,6 +133,19 @@
         presentation = {
           buffer_font_size = 20;
           ui_font_size = 18;
+        };
+        lsp = {
+          nil = {
+            settings = {
+              nil = {
+                nix = {
+                  flake = {
+                    autoArchive = true;
+                  };
+                };
+              };
+            };
+          };
         };
       };
     };

@@ -31,23 +31,10 @@ in
       default = "ipv4";
       description = "DHCP configuration for the ethernet interface";
     };
-
-    firewall = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Enable firewall";
-    };
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.network = {
-      enable = true;
-      # Do not block boot/login waiting for full network online state.
-      wait-online.enable = false;
-    };
-
     networking = {
-      firewall.enable = cfg.firewall;
       interfaces.${cfg.interface}.wakeOnLan.enable = cfg.wakeOnLan;
     };
 
@@ -56,20 +43,10 @@ in
       networkConfig.DHCP = cfg.dhcp;
     };
 
-    services = {
-      avahi = {
-        enable = true;
-        nssmdns4 = true;
-        openFirewall = true;
-      };
-
-      resolved.enable = true;
-    };
-
     assertions = [
       {
         assertion = cfg.interface != "";
-        message = "nixCfg.ethernet.interface must be set (non-empty) when nixCfg.ethernet.enable is true";
+        message = "config.local.system.network.ethernet.interface must be set (non-empty) when nixCfg.ethernet.enable is true";
       }
     ];
   };
