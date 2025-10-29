@@ -113,17 +113,7 @@ in
 
     programs = {
       direnv.enable = true;
-      # steam.enable = true;
-      fish.enable = true;
-      firefox.enable = true;
       localsend.enable = true;
-
-      # xfconf.enable = true; # for thunar settings
-      # thunar.enable = true;
-      # thunar.plugins = with pkgs.xfce; [
-      #   thunar-archive-plugin
-      #   thunar-volman
-      # ];
     };
 
     environment.systemPackages = with pkgs; [
@@ -135,9 +125,6 @@ in
 
       # works
       teams-for-linux
-
-      #  Apps
-      brightnessctl
 
       (btop.override {
         rocmSupport = true;

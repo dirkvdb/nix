@@ -38,6 +38,9 @@ in
     environment.systemPackages =
       with pkgs;
       [
+        (btop.override {
+          rocmSupport = config.local.system.video.amd.enable;
+        })
         fd
         jq # needed by some scripts
         curl

@@ -68,7 +68,7 @@ in
     #local.system.shell.fish.enable = lib.mkIf (user.shell.package == pkgs.fish) true;
     #local.system.shell.zsh.enable = lib.mkIf (user.shell.package == pkgs.zsh) true;
 
-    nix.settings.trusted-users = [ "${user.name}" ];
+    programs.fish.enable = lib.mkIf (user.shell.package == pkgs.fish) true;
 
     environment.variables = {
       EDITOR = "micro";
