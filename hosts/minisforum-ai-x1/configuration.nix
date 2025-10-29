@@ -35,6 +35,13 @@ in
       system = {
         audio.pipewire.enable = true;
 
+        boot = {
+          systemd = {
+            enable = true;
+            graphical = true;
+          };
+        };
+
         network = {
           ethernet = {
             enable = true;
@@ -44,12 +51,7 @@ in
           };
         };
 
-        boot = {
-          systemd = {
-            enable = true;
-            graphical = true;
-          };
-        };
+        bluetooth.enable = true;
       };
     };
 
@@ -57,7 +59,6 @@ in
     nixCfg.applications.gui = true;
     nixCfg.applications.dev = true;
     nixCfg.fonts.enable = true;
-    nixCfg.bluetooth.enable = true;
     nixCfg.configuration.enable = true;
     nixCfg.docker.enable = true;
     nixCfg.hyprland.enable = true;
