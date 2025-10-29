@@ -12,12 +12,6 @@ in
   # Application options (enable/gui/dev) moved to nix/core/default.nix for consistency.
 
   config = lib.mkMerge [
-    (lib.mkIf cfg.enable {
-      environment.systemPackages = with pkgs; [
-        bitwarden
-        spotify
-      ];
-    })
 
     (lib.mkIf (isLinux && cfg.gui) {
       environment.systemPackages = with pkgs; [
