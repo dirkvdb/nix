@@ -18,7 +18,7 @@
         directory = "#A7C080";
         gitbranch = "#7FBBB3";
         duration = "#E69875";
-        status = "#c53b53";
+        status = "#E67E80";
       };
 
       character = {
