@@ -1,10 +1,22 @@
-{ pkgs, userConfig, ... }:
+{
+  pkgs,
+  inputs,
+  userConfig,
+  ...
+}:
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     # Core aggregated modules
     ../../core/default.nix
+
+    inputs.nixos-hardware.nixosModules.common-cpu-amd
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
+    inputs.nixos-hardware.nixosModules.common-gpu-amd
+    inputs.nixos-hardware.nixosModules.common-hidpi
+    inputs.nixos-hardware.nixosModules.common-pc-ssd
   ];
 
   nixpkgs.config.allowUnfree = true;

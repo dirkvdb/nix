@@ -59,21 +59,12 @@
             inherit
               inputs
               userConfig
-              elephant
-              walker
               ;
           };
           modules = [
             {
-              _module.args = { inherit userConfig; };
               imports = [ ./hosts/minisforum-ai-x1/configuration.nix ];
             }
-            nixos-hardware.nixosModules.common-cpu-amd
-            nixos-hardware.nixosModules.common-cpu-amd-pstate
-            nixos-hardware.nixosModules.common-cpu-amd-zenpower
-            nixos-hardware.nixosModules.common-gpu-amd
-            nixos-hardware.nixosModules.common-hidpi
-            nixos-hardware.nixosModules.common-pc-ssd
 
             home-manager.nixosModules.home-manager
             {
