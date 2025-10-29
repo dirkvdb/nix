@@ -24,5 +24,7 @@ in
         KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0660", GROUP="hidraw"
       '';
     };
+
+    users.groups.hidraw = { };
   };
 }

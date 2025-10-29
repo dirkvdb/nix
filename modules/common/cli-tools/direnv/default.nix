@@ -6,11 +6,11 @@
 }:
 let
   inherit (lib) mkEnableOption mkIf;
-  inherit (config.mine) user;
-  cfg = config.mine.cli-tools.direnv;
+  inherit (config.local) user;
+  cfg = config.local.cli-tools.direnv;
 in
 {
-  options.mine.cli-tools.direnv = {
+  options.local.cli-tools.direnv = {
     enable = mkEnableOption "Enable direnv";
   };
 
