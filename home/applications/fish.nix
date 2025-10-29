@@ -39,6 +39,7 @@
       k = "kubectl";
       ll = "ls -la";
       ls = "lsd";
+      man = "batman";
       nrs =
         if pkgs.stdenv.isDarwin then
           "sudo darwin-rebuild switch --flake ~/.config/nix#MacBook-Pro"
