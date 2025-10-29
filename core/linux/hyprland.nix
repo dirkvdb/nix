@@ -64,6 +64,7 @@ in
       waypaper
       wayfreeze # for screenshots
       hyprland-qt-support
+      wl-clipboard
     ];
   };
 }

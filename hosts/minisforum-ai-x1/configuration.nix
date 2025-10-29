@@ -121,8 +121,6 @@
     (btop.override {
       rocmSupport = true;
     })
-
-    wl-clipboard
   ];
 
 }
