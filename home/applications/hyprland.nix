@@ -2,6 +2,7 @@
 {
   xdg.configFile."waybar".source = ../dotfiles/waybar;
   xdg.configFile."walker".source = ../dotfiles/walker;
+  xdg.configFile."sunsetr".source = ../dotfiles/sunsetr;
 
   xdg.configFile."swayosd" = {
     source = ../dotfiles/swayosd;
@@ -100,38 +101,6 @@
     };
   };
 
-  services.hyprsunset = {
-    enable = true;
-    settings = {
-      profile = [
-        {
-          time = "7:30";
-          identity = true;
-        }
-        {
-          time = "20:00";
-          temperature = 5000;
-          gamma = 0.8;
-        }
-        {
-          time = "21:00";
-          temperature = 4500;
-          gamma = 0.8;
-        }
-        {
-          time = "22:00";
-          temperature = 3500;
-          gamma = 0.8;
-        }
-        {
-          time = "23:00";
-          temperature = 3000;
-          gamma = 0.8;
-        }
-      ];
-    };
-  };
-
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;
@@ -146,6 +115,7 @@
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
         "uwsm app -- mako" # Notification daemon
         "uwsm app -- swayosd-server" # On-screen display for volume/brightness
+        "uwsm app -- sunsetr"
       ];
       # Cursor size
       env = [
