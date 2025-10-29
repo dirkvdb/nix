@@ -5,6 +5,12 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
+    # prebuilt database for nix-index (find packages for missing binaries)
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -36,6 +42,7 @@
     {
       self,
       nixpkgs,
+      nix-index-database,
       nixos-hardware,
       darwin,
       home-manager,
@@ -54,17 +61,16 @@
           };
         in
         nixpkgs.lib.nixosSystem {
-          inherit system;
           specialArgs = {
             inherit
               inputs
+              system
               userConfig
               ;
           };
           modules = [
-            {
-              imports = [ ./hosts/minisforum-ai-x1/configuration.nix ];
-            }
+            ./hosts/minisforum-ai-x1/configuration.nix
+            nix-index-database.nixosModules.nix-index
 
             home-manager.nixosModules.home-manager
             {
@@ -73,17 +79,17 @@
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 backupFileExtension = "backup";
-                users.dirk = import ./home/linux.nix;
-
                 extraSpecialArgs = {
                   inherit
+                    inputs
+                    system
                     userConfig
                     elephant
                     walker
                     zen-browser
-                    system
                     ;
                 };
+                users.dirk = import ./home/linux.nix;
               };
             }
           ];
@@ -101,9 +107,16 @@
           };
         in
         darwin.lib.darwinSystem {
-          inherit system;
+          specialArgs = {
+            inherit
+              inputs
+              system
+              userConfig
+              ;
+          };
           modules = [
             ./hosts/macbook-pro-m2/configuration.nix
+            nix-index-database.darwinModules.nix-index
 
             home-manager.darwinModules.home-manager
             {
@@ -111,22 +124,17 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                users.dirk = import ./home/darwin.nix;
                 extraSpecialArgs = {
                   inherit
-                    userConfig
+                    inputs
                     system
+                    userConfig
                     ;
                 };
+                users.dirk = import ./home/darwin.nix;
               };
             }
           ];
-          specialArgs = {
-            inherit
-              inputs
-              userConfig
-              ;
-          };
         };
     };
 }
