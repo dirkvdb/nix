@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.local.system.boot.systemd;
+  amd = config.local.system.video.amd.enable or false;
 in
 {
   options.local.system.boot.systemd = {
@@ -45,8 +46,8 @@ in
           "vt.global_cursor_default=0"
           "fbcon=nodefer"
           "video=efifb:nobgrt" # disable firmware vendor logo
-          "amdgpu.modeset=1"
-        ];
+        ]
+        ++ lib.optionals amd [ "amdgpu.modeset=1" ];
 
         # plymouth, showing after LUKS unlock
         boot.plymouth.enable = true;
