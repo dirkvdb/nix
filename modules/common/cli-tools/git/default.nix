@@ -7,13 +7,13 @@
 let
 
   inherit (lib) mkEnableOption mkIf;
-  inherit (config.mine) user;
-  cfg = config.mine.cli-tools.git;
+  inherit (config.local) user;
+  cfg = config.local.cli-tools.git;
   aliases = import ../../../shared/aliases.nix;
 
 in
 {
-  options.mine.cli-tools.git = {
+  options.local.cli-tools.git = {
     enable = mkEnableOption "Git configs";
   };
 
@@ -24,7 +24,7 @@ in
     ];
 
     programs.fish.shellAliases = mkIf (
-      user.shell.package == pkgs.fish || config.mine.system.shell.fish.enable
+      user.shell.package == pkgs.fish || config.local.system.shell.fish.enable
     ) aliases.git;
   };
 }

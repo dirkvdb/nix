@@ -15,7 +15,7 @@ in
       description = "Enable firewall";
     };
     hostname = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       description = "Device hostname";
     };
   };

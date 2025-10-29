@@ -24,9 +24,7 @@ in
   options.nixCfg = {
     applications.enable = lib.mkEnableOption "Applications module";
     configuration.enable = lib.mkEnableOption "Base system configuration";
-    docker.enable = lib.mkEnableOption "Container & virtualisation stack";
     applications.gui = lib.mkEnableOption "Additional GUI applications";
-    applications.dev = lib.mkEnableOption "Developer tooling applications";
   };
 
   imports = coreImports ++ linuxImports;

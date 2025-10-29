@@ -134,14 +134,14 @@
           buffer_font_size = 20;
           ui_font_size = 18;
         };
-        lsp = {
-          nil = {
-            settings = {
-              nil = {
-                nix = {
-                  flake = {
-                    autoArchive = true;
-                  };
+      };
+      lsp = {
+        nil = {
+          settings = {
+            nil = {
+              nix = {
+                flake = {
+                  autoArchive = true;
                 };
               };
             };

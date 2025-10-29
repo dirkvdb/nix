@@ -12,7 +12,6 @@ in
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    # Core aggregated modules
     ../../core/default.nix
     ../../modules/nixos/import.nix
     ../../modules/common/import.nix
@@ -32,6 +31,12 @@ in
     boot.kernelPackages = pkgs.linuxPackages_latest;
 
     local = {
+      user = {
+        enable = true;
+        home-manager.enable = false;
+        shell.package = pkgs.fish;
+      };
+
       system = {
         nix = {
           unfree.enable = true;
@@ -82,13 +87,18 @@ in
         enable = true;
         hyprland.enable = true;
       };
+
+      apps = {
+        ghostty.enable = true;
+        bitwarden.enable = true;
+        prusa-slicer.enable = true;
+        vivaldi.enable = true;
+      };
     };
 
     nixCfg.applications.enable = true;
     nixCfg.applications.gui = true;
-    nixCfg.applications.dev = true;
     nixCfg.configuration.enable = true;
-    nixCfg.docker.enable = true;
     nixCfg.desktop.enable = true;
 
     services = {

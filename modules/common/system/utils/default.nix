@@ -44,6 +44,9 @@ in
         cpufrequtils
         file
         fzf
+        micro
+        nix-ld # required for running certain binaries not meant for NixOS
+        rsync
         ripgrep
         unzip
         wget

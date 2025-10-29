@@ -7,11 +7,11 @@
 let
 
   inherit (lib) mkEnableOption mkIf;
-  cfg = config.mine.cli-tools.just;
+  cfg = config.local.cli-tools.just;
 
 in
 {
-  options.mine.cli-tools.just = {
+  options.local.cli-tools.just = {
     enable = mkEnableOption "Enable just, its like make but more straight forward";
   };
 
