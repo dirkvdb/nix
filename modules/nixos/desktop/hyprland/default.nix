@@ -61,6 +61,8 @@ in
       nwg-look
       satty # screenshot annotation tool
       slurp # for region selection (screen shot, etc)
+      sunsetr
+      hyprsunset
       waypaper
       wayfreeze # for screenshots
       hyprland-qt-support

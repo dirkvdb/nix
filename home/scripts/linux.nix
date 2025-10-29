@@ -51,33 +51,12 @@
 
     # Toggle nightlight
     (pkgs.writeShellScriptBin "nixcfg-toggle-nightlight" ''
-      # Default temperature values
-      ON_TEMP=4000
-      OFF_TEMP=6000
-
-      # Ensure hyprsunset is running
-      if ! pgrep -x hyprsunset; then
-        setsid uwsm-app -- hyprsunset &
-        sleep 1 # Give it time to register
-      fi
-
-      # Query the current temperature
-      CURRENT_TEMP=$(hyprctl hyprsunset temperature 2>/dev/null | grep -oE '[0-9]+')
-
-      restart_nightlighted_waybar() {
-        if grep -q "custom/nightlight" ~/.config/waybar/config.jsonc; then
-          nixcfg-restart-waybar # restart waybar in case user has waybar module for hyprsunset
-        fi
-      }
-
-      if [[ "$CURRENT_TEMP" == "$OFF_TEMP" ]]; then
-        hyprctl hyprsunset temperature $ON_TEMP
-        notify-desktop "  Nightlight screen temperature"
-        #restart_nightlighted_waybar
-      else
-        hyprctl hyprsunset temperature $OFF_TEMP
+      if [ "$(sunsetr get transition_mode)" = "geo" ]; then
+        sunsetr preset day
         notify-desktop "   Daylight screen temperature"
-        #restart_nightlighted_waybar
+      else
+        sunsetr preset day
+        notify-desktop "  Nightlight screen temperature"
       fi
     '')
 
