@@ -32,10 +32,15 @@ in
         "boot.shell_on_fail"
         "udev.log_priority=3"
         "rd.systemd.show_status=auto"
+        "vt.global_cursor_default=0"
+        "fbcon=nodefer"
+        "video=efifb:nobgrt" # disable firmware vendor logo
+        "amdgpu.modeset=1"
       ];
 
       # plymouth, showing after LUKS unlock
       plymouth.enable = true;
+      plymouth.theme = "spinner";
       plymouth.font = "${pkgs.noto-fonts}/share/fonts/noto/NotoSans[wdth,wght].ttf";
       plymouth.logo = "${pkgs.nixos-icons}/share/icons/hicolor/128x128/apps/nix-snowflake.png";
     };
