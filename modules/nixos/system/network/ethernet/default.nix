@@ -56,6 +56,16 @@ in
       networkConfig.DHCP = cfg.dhcp;
     };
 
+    services = {
+      avahi = {
+        enable = true;
+        nssmdns4 = true;
+        openFirewall = true;
+      };
+
+      resolved.enable = true;
+    };
+
     assertions = [
       {
         assertion = cfg.interface != "";

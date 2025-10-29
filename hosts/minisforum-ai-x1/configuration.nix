@@ -16,10 +16,6 @@ in
     ../../core/default.nix
     ../../modules/nixos/import.nix
 
-    inputs.nixos-hardware.nixosModules.common-cpu-amd
-    inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
-    inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
-    inputs.nixos-hardware.nixosModules.common-gpu-amd
     inputs.nixos-hardware.nixosModules.common-hidpi
     inputs.nixos-hardware.nixosModules.common-pc-ssd
   ];
@@ -33,7 +29,6 @@ in
 
     local = {
       system = {
-        audio.pipewire.enable = true;
 
         boot = {
           systemd = {
@@ -41,6 +36,9 @@ in
             graphical = true;
           };
         };
+
+        audio.pipewire.enable = true;
+        video.amd.enable = true;
 
         network = {
           ethernet = {
@@ -74,34 +72,6 @@ in
         enable = true;
         settings.default_session.command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd 'uwsm start hyprland-uwsm.desktop'";
       };
-
-      avahi = {
-        enable = true;
-        nssmdns4 = true;
-        openFirewall = true;
-      };
-
-      # Networking
-      resolved.enable = true;
-    };
-
-    hardware = {
-      graphics = {
-        enable = true;
-        enable32Bit = true;
-        extraPackages = with pkgs; [
-          rocmPackages.clr.icd # OpenCL ICD loader
-          rocmPackages.rocm-smi # ROCm System Management Interface
-          libva # Video Acceleration API
-          libvdpau-va-gl
-        ];
-      };
-
-      # AMD GPU firmware
-      enableRedistributableFirmware = true;
-
-      # CPU microcode updates
-      cpu.amd.updateMicrocode = true;
     };
 
     programs = {
@@ -128,13 +98,6 @@ in
     };
 
     environment.systemPackages = with pkgs; [
-      # AMD GPU tools
-      radeontop
-      clinfo
-      vulkan-tools
-
-      libva # VA-API
-
       gparted
       ghostty
       impala # wifi menu
@@ -142,17 +105,12 @@ in
       swayosd
       slack
 
-      # graphics config Tools
-      glxinfo # OpenGL info
-      vulkan-tools # Khronos official Vulkan Tools and Utilities
-      clinfo # Print information about available OpenCL platforms and devices
-      libva-utils # Collection of utilities and examples for VA-API
-
       # works
       teams-for-linux
 
       #  Apps
       brightnessctl
+
       (btop.override {
         rocmSupport = true;
       })
