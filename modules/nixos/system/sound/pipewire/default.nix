@@ -1,13 +1,16 @@
 {
-  config,
   lib,
+  config,
   pkgs,
   ...
 }:
 let
-  cfg = config.nixCfg.audio;
+  cfg = config.local.system.audio.pipewire;
 in
 {
+  options.local.system.audio.pipewire = {
+    enable = lib.mkEnableOption "Enable PipeWire audio server";
+  };
 
   config = lib.mkIf cfg.enable {
     # enable the RealtimeKit system service, required by PipeWire for low-latency audio

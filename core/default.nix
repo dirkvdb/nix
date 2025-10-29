@@ -24,13 +24,11 @@ in
   options.nixCfg = {
     applications.enable = lib.mkEnableOption "Applications module";
     fonts.enable = lib.mkEnableOption "Fonts module";
-    audio.enable = lib.mkEnableOption "PipeWire audio stack";
     bluetooth.enable = lib.mkEnableOption "Bluetooth stack";
     configuration.enable = lib.mkEnableOption "Base system configuration";
     docker.enable = lib.mkEnableOption "Container & virtualisation stack";
     hyprland.enable = lib.mkEnableOption "Hyprland compositor";
     graphicalBoot.enable = lib.mkEnableOption "Graphical boot (plymouth)";
-    ethernet.enable = lib.mkEnableOption "Ethernet networking";
     applications.gui = lib.mkEnableOption "Additional GUI applications";
     applications.dev = lib.mkEnableOption "Developer tooling applications";
   };

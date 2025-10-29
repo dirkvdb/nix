@@ -4,10 +4,11 @@
   ...
 }:
 let
-  cfg = config.nixCfg.ethernet;
+  cfg = config.local.system.network.ethernet;
 in
 {
-  options.nixCfg.ethernet = {
+  options.local.system.network.ethernet = {
+    enable = lib.mkEnableOption "Enable ethernet networking";
     interface = lib.mkOption {
       type = lib.types.str;
       description = "Name of the ethernet interface";
