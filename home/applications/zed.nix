@@ -105,6 +105,25 @@
             "ruff"
           ];
         };
+        Nix = {
+          language_servers = [
+            "nil"
+            "nixd"
+          ];
+          lsp = {
+            nil = {
+              settings = {
+                nil = {
+                  nix = {
+                    flake = {
+                      autoArchive = true;
+                    };
+                  };
+                };
+              };
+            };
+          };
+        };
       };
       diagnostics = {
         inline = {
