@@ -117,18 +117,12 @@ in
     };
 
     environment.systemPackages = with pkgs; [
-      gparted
-      ghostty
       mako # notifications
       swayosd
-      slack
 
       # works
+      slack
       teams-for-linux
-
-      (btop.override {
-        rocmSupport = true;
-      })
     ];
   };
 }

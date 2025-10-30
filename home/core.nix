@@ -42,7 +42,7 @@
   home.packages = with pkgs; [
     age
     autossh
-    btop
+    #btop
     bitwarden-cli
     bitwarden-desktop
     dust

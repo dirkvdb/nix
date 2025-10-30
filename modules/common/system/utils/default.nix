@@ -20,7 +20,11 @@ let
     ]
     ++ lib.optionals pkgs.stdenv.isLinux [
       usbutils
+    ]
+    ++ lib.optionals config.local.desktop.enable [
+      gparted
     ];
+
 in
 {
   options.local.system.utils = {
@@ -38,9 +42,6 @@ in
     environment.systemPackages =
       with pkgs;
       [
-        (btop.override {
-          rocmSupport = config.local.system.video.amd.enable;
-        })
         fd
         jq # needed by some scripts
         curl
@@ -57,6 +58,12 @@ in
       ]
       ++ lib.optionals cfg.dev dev
       ++ lib.optionals cfg.sysadmin sysadmin
+      ++ lib.optionals (!config.local.system.video.amd.enable) [
+        btop
+      ]
+      ++ lib.optionals config.local.system.video.amd.enable [
+        btop-rocm
+      ]
       ++ lib.optionals config.local.desktop.enable [
         sqlitebrowser
         sublime-merge
