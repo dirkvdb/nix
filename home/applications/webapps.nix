@@ -43,5 +43,11 @@ in
       url = "https://youtube.com/";
       icon = "youtube";
     })
+
+    (mkWebApp {
+      name = "Outlook";
+      url = "https://outlook.office365.com/";
+      icon = "outlook-for-linux";
+    })
   ];
 }
