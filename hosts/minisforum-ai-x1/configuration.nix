@@ -77,6 +77,7 @@
 
       services = {
         ssh.enable = true;
+        fwupd.enable = true;
       };
 
       desktop = {
