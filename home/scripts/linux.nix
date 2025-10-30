@@ -31,7 +31,7 @@
 
       WINDOW_PATTERN="$1"
       shift
-      LAUNCH_COMMAND="omarchy-launch-webapp $@"
+      LAUNCH_COMMAND="nixcfg-launch-webapp $@"
 
       exec nixcfg-launch-or-focus "$WINDOW_PATTERN" "$LAUNCH_COMMAND"
     '')
