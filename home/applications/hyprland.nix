@@ -105,9 +105,9 @@
     enable = true;
     systemd.enable = true;
 
-    # plugins = [
-    #   pkgs.hyprlandPlugins.hyprexpo;
-    # ];
+    plugins = [
+      pkgs.hyprlandPlugins.hyprexpo
+    ];
 
     settings = {
       # Auto-start applications
@@ -283,6 +283,14 @@
         ];
       };
 
+      plugin.hyprexpo = {
+        columns = 3;
+        gap_size = 5;
+        bg_col = "rgb(111111)";
+        workspace_method = "center current"; # [center/first] [workspace] e.g. first 1 or center m+1
+        gesture_distance = 300; # how far is the "max" for the gesture
+      };
+
       "$mod" = "SUPER";
       "$terminal" = "uwsm app -- ghostty";
       "$browser" = "zen-beta";
@@ -341,7 +349,6 @@
         "$mod SHIFT, F, Maximize App Window, fullscreen, 1"
         "$mod ALT, F, Full width, fullscreen, 0"
 
-        #bind = SUPER SHIFT, GRAVE, hyprexpo:expo, toggle
         "$mod, code:20, Expand window left, resizeactive, -100 0" # - key
         "$mod, code:21, Shrink window left, resizeactive, 100 0" # = key
         "$mod SHIFT, code:20, Shrink window up, resizeactive, 0 -100"
@@ -358,6 +365,8 @@
         "$mod, K, Move focus up, movefocus, u"
         "$mod, J, Move focus down, movefocus, d"
 
+        # Export workspace overview with SUPER + ~
+        "$mod, GRAVE, Workspace overview, hyprexpo:expo, toggle"
         # Switch workspaces with SUPER + [0-9]
         "$mod, code:10, Switch to workspace 1, workspace, 1"
         "$mod, code:11, Switch to workspace 2, workspace, 2"
