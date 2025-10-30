@@ -1,13 +1,9 @@
 {
   pkgs,
-  config,
   userConfig,
   inputs,
   ...
 }:
-let
-  inherit (config.local) user;
-in
 {
   imports = [
     # Include the results of the hardware scan.
