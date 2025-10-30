@@ -12,6 +12,30 @@
       exec walker --width 644 --maxheight 300 --minheight 300 "$@"
     '')
 
+    (pkgs.writeShellScriptBin "nixcfg-launch-webapp" ''
+      browser=$(xdg-settings get default-web-browser)
+
+      case $browser in
+      google-chrome* | brave-browser* | microsoft-edge* | opera* | vivaldi* | helium-browser*) ;;
+      *) browser="chromium-browser.desktop" ;;
+      esac
+
+      exec setsid uwsm-app -- $(sed -n 's/^Exec=\([^ ]*\).*/\1/p' {~/.local,~/.nix-profile,/run/current-system/sw}/share/applications/$browser 2>/dev/null | head -1) --app="$1" "''${@:2}"
+    '')
+
+    (pkgs.writeShellScriptBin "nixcfg-launch-or-focus-webapp" ''
+      if (($# == 0)); then
+        echo "Usage: nixcfg-launch-or-focus-webapp [window-pattern] [url-and-flags...]"
+        exit 1
+      fi
+
+      WINDOW_PATTERN="$1"
+      shift
+      LAUNCH_COMMAND="omarchy-launch-webapp $@"
+
+      exec nixcfg-launch-or-focus "$WINDOW_PATTERN" "$LAUNCH_COMMAND"
+    '')
+
     (pkgs.writeShellScriptBin "nixcfg-launch-or-focus" ''
       if (($# == 0)); then
         echo "Usage: nixcfg-launch-or-focus [window-pattern] [launch-command]"
