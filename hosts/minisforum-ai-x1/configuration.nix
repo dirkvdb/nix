@@ -8,7 +8,6 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ../../core/default.nix
     ../../modules/nixos/import.nix
     ../../modules/common/import.nix
 
@@ -93,11 +92,6 @@
         spotify.enable = true;
       };
     };
-
-    nixCfg.applications.enable = true;
-    nixCfg.applications.gui = true;
-    nixCfg.configuration.enable = true;
-    nixCfg.desktop.enable = true;
 
     services = {
       printing.enable = true;
