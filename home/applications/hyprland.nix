@@ -106,6 +106,7 @@
     systemd.enable = true;
 
     plugins = [
+      pkgs.hyprlandPlugins.hyprscrolling
       pkgs.hyprlandPlugins.hyprexpo
     ];
 
@@ -161,7 +162,9 @@
 
         border_size = 2;
 
-        layout = "dwindle";
+        # layout = "dwindle";
+        layout = "scrolling";
+
         # Use master layout instead of dwindle
         # layout = "master";
 
@@ -289,6 +292,11 @@
         bg_col = "rgb(111111)";
         workspace_method = "center current"; # [center/first] [workspace] e.g. first 1 or center m+1
         gesture_distance = 300; # how far is the "max" for the gesture
+      };
+
+      plugin.hyprscrolling = {
+        column_width = 1.0;
+        fullscreen_on_one_column = false;
       };
 
       "$mod" = "SUPER";
