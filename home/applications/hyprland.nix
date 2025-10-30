@@ -179,6 +179,19 @@
         allow_tearing = false;
       };
 
+      plugin.hyprexpo = {
+        columns = 3;
+        gap_size = 5;
+        bg_col = "rgb(111111)";
+        workspace_method = "center current"; # [center/first] [workspace] e.g. first 1 or center m+1
+        gesture_distance = 300; # how far is the "max" for the gesture
+      };
+
+      plugin.hyprscrolling = {
+        column_width = 0.5;
+        fullscreen_on_one_column = true;
+      };
+
       group = {
         "col.border_active" = "$activeBorderColor";
       };
@@ -286,28 +299,23 @@
         ];
       };
 
-      plugin.hyprexpo = {
-        columns = 3;
-        gap_size = 5;
-        bg_col = "rgb(111111)";
-        workspace_method = "center current"; # [center/first] [workspace] e.g. first 1 or center m+1
-        gesture_distance = 300; # how far is the "max" for the gesture
-      };
-
-      plugin.hyprscrolling = {
-        column_width = 1.0;
-        fullscreen_on_one_column = false;
-      };
-
       "$mod" = "SUPER";
       "$terminal" = "uwsm app -- ghostty";
       "$browser" = "zen-beta";
       "$applauncher" = "nc -U /run/user/1000/walker/walker.sock";
 
       bind = [
+        # scrolling layout controls
+        "$mod SHIFT, L, layoutmsg, movewindowto r"
+        "$mod SHIFT, H, layoutmsg, movewindowto l"
+        "$mod SHIFT, I, layoutmsg, promote"
+        "$mod SHIFT ALT, L, layoutmsg, move +col"
+        "$mod SHIFT ALT, H, layoutmsg, move -col"
+
+        # tiling layout controls
         # Swap active window with the one next to it with SUPER + SHIFT + arrow keys (VIM style)
-        "$mod SHIFT, H, movewindow, l"
-        "$mod SHIFT, L, movewindow, r"
+        #"$mod SHIFT, H, movewindow, l"
+        #"$mod SHIFT, L, movewindow, r"
         "$mod SHIFT, K, movewindow, u"
         "$mod SHIFT, J, movewindow, d"
         "$mod, backslash, togglesplit"
@@ -414,11 +422,11 @@
         "$mod ALT SHIFT, TAB, Previous window in group, changegroupactive, b"
 
         # Activate window in a group by number
-        "$mod ALT, 1, Switch to group window 1, changegroupactive, 1"
-        "$mod ALT, 2, Switch to group window 2, changegroupactive, 2"
-        "$mod ALT, 3, Switch to group window 3, changegroupactive, 3"
-        "$mod ALT, 4, Switch to group window 4, changegroupactive, 4"
-        "$mod ALT, 5, Switch to group window 5, changegroupactive, 5"
+        # "$mod ALT, 1, Switch to group window 1, changegroupactive, 1"
+        # "$mod ALT, 2, Switch to group window 2, changegroupactive, 2"
+        # "$mod ALT, 3, Switch to group window 3, changegroupactive, 3"
+        # "$mod ALT, 4, Switch to group window 4, changegroupactive, 4"
+        # "$mod ALT, 5, Switch to group window 5, changegroupactive, 5"
 
         # Screenshots
         "$mod ALT, 4, Screenshot of region, exec, omarchy-cmd-screenshot"
