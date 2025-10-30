@@ -41,7 +41,13 @@ in
     (mkWebApp {
       name = "YouTube";
       url = "https://youtube.com/";
-      icon = "youtube";
+      icon = "Youtube-youtube.com";
+    })
+
+    (mkWebApp {
+      name = "Gmail";
+      url = "https://mail.google.com/";
+      icon = "Gmail-mail.google.com";
     })
 
     (mkWebApp {
