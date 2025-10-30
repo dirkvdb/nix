@@ -24,7 +24,7 @@ in
         fira-code
         monaspace
         noto-fonts
-        noto-fonts-emoji
+        noto-fonts-color-emoji
       ];
     };
   };

@@ -44,7 +44,6 @@
     autossh
     #btop
     bitwarden-cli
-    bitwarden-desktop
     dust
     fd
     fzf
