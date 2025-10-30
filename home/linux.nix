@@ -13,6 +13,7 @@
     ./core.nix
     ./applications/hyprland.nix
     ./applications/zen.nix
+    ./applications/webapps.nix
     ./scripts/linux.nix
     walker.homeManagerModules.default
     zen-browser.homeModules.default
