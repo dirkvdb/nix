@@ -9,6 +9,7 @@
       "biome"
       "cargo-tom"
       "catppuccin-icons"
+      "color-highlight"
       "dockerfile"
       "just"
       "log"
