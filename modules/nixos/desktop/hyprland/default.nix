@@ -51,6 +51,7 @@ in
       hyprpolkitagent
       pyprland
       hyprlang
+      hyprpicker
       hyprshot
       hyprcursor
       mesa
