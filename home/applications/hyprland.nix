@@ -103,7 +103,7 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    systemd.enable = false;
+    systemd.enable = true;
 
     plugins = [
       pkgs.hyprlandPlugins.hyprscrolling
@@ -114,9 +114,9 @@
       # Auto-start applications
       exec-once = [
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
-        "uwsm app -- mako" # Notification daemon
-        "uwsm app -- swayosd-server" # On-screen display for volume/brightness
-        "uwsm app -- sunsetr"
+        "mako" # Notification daemon
+        "swayosd-server" # On-screen display for volume/brightness
+        "sunsetr"
         "hyprctl dismissnotify" # Dismiss the plugin loaded notification
       ];
       # Cursor size
@@ -301,7 +301,7 @@
       };
 
       "$mod" = "SUPER";
-      "$terminal" = "uwsm app -- ghostty";
+      "$terminal" = "ghostty";
       "$browser" = "zen-beta";
       "$applauncher" = "nc -U /run/user/1000/walker/walker.sock";
 
@@ -340,20 +340,20 @@
         "$mod, ESCAPE, Power menu, exec, nixcfg-menu system"
         "$mod, RETURN, Terminal, exec, $terminal --working-directory=\"$(nixcfg-cmd-terminal-cwd)\""
         "$mod, B, Browser, exec, nixcfg-launch-or-focus $browser"
-        "$mod SHIFT, B, Browser (new instance), exec, uwsm app -- $browser"
-        "$mod, D, Dev editor, exec, uwsm app -- zeditor"
+        "$mod SHIFT, B, Browser (new instance), exec, $browser"
+        "$mod, D, Dev editor, exec, zeditor"
         "$mod, E, File manager, exec, nautilus --new-window"
         "$mod SHIFT, A, ChatGPT, exec, nixcfg-launch-or-focus-webapp ChatGPT \"https://chatgpt.com\""
         "$mod SHIFT, M, Music, exec, nixcfg-launch-or-focus spotify"
         "$mod SHIFT, Y, Youtube, exec, nixcfg-launch-or-focus-webapp Youtube \"https://youtube.com/\""
         "$mod SHIFT, W, Whatsapp, exec, nixcfg-launch-or-focus-webapp Whatsapp \"https://web.whatsapp.com/\""
         "$mod SHIFT, E, Email, exec, nixcfg-launch-or-focus-webapp GMail \"https://mail.google.com\""
-        "$mod SHIFT, slash, Passwords, exec, uwsm app -- bitwarden"
+        "$mod SHIFT, slash, Passwords, exec, bitwarden"
         "$mod, M, Music, exec, nixcfg-launch-or-focus spotify"
         "$mod, W, Close active window, killactive,"
         "$mod, K, Show key bindings, exec, nixcfg-menu-keybindings"
         "$mod, T, Activity, exec, $terminal -e btop"
-        "CONTROL SHIFT, V, Clipboard, exec, uwsm app -- walker --provider clipboard --theme clipboard"
+        "CONTROL SHIFT, V, Clipboard, exec, walker --provider clipboard --theme clipboard"
         "$mod SHIFT, O, Office applications, exec, systemctl --user start work.target"
         "$mod SHIFT ALT, O, Close office applications, exec, systemctl --user stop work.target"
 
@@ -463,7 +463,7 @@
       workspace = [
         "1, name:cmd, persistent:true"
         "2, name:web, persistent:true"
-        "3, name:dev, persistent:true, rounding:false, decorate:false, gapsin:0, gapsout:0, border:false, monitor:DP-1"
+        "3, name:dev, persistent:true, rounding:false, decorate:false, gapsin:0, gapsout:1"
         "4, name:scratch, persistent:true"
         "5, name:scratch, persistent:true"
         "6, name:vcs, persistent:true"

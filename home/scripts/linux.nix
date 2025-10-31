@@ -3,7 +3,7 @@
   home.packages = [
     # Terminal launcher script
     (pkgs.writeShellScriptBin "nixcfg-launch-terminal" ''
-      exec setsid uwsm-app -- "''${TERMINAL:-wezterm}" "$@"
+      exec setsid "''${TERMINAL:-wezterm}" "$@"
     '')
 
     # Walker launcher script
@@ -20,7 +20,7 @@
       *) browser="chromium-browser.desktop" ;;
       esac
 
-      exec setsid uwsm-app -- $(sed -n 's/^Exec=\([^ ]*\).*/\1/p' {~/.local,~/.nix-profile,/run/current-system/sw}/share/applications/$browser 2>/dev/null | head -1) --app="$1" "''${@:2}"
+      exec setsid $(sed -n 's/^Exec=\([^ ]*\).*/\1/p' {~/.local,~/.nix-profile,/run/current-system/sw}/share/applications/$browser 2>/dev/null | head -1) --app="$1" "''${@:2}"
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-launch-or-focus-webapp" ''
@@ -43,7 +43,7 @@
       fi
 
       WINDOW_PATTERN="$1"
-      LAUNCH_COMMAND="''${2:-uwsm-app -- $WINDOW_PATTERN}"
+      LAUNCH_COMMAND="''${2:- $WINDOW_PATTERN}"
       WINDOW_ADDRESS=$(hyprctl clients -j | jq -r --arg p "$WINDOW_PATTERN" '.[]|select((.class|test("\\b" + $p + "\\b";"i")) or (.title|test("\\b" + $p + "\\b";"i")))|.address' | head -n1)
 
       if [[ -n $WINDOW_ADDRESS ]]; then
@@ -55,10 +55,12 @@
 
     # Waybar toggle script
     (pkgs.writeShellScriptBin "nixcfg-toggle-waybar" ''
-      if ${pkgs.procps}/bin/pgrep -x waybar >/dev/null; then
-        ${pkgs.procps}/bin/pkill -x waybar
+      if systemctl --user is-active --quiet waybar.service; then
+        systemctl --user stop waybar.service
+        notify-desktop "Waybar stopped"
       else
-        uwsm-app -- ${pkgs.waybar}/bin/waybar >/dev/null 2>&1 &
+        systemctl --user start waybar.service
+        notify-desktop "Waybar started"
       fi
     '')
 
@@ -105,7 +107,7 @@
 
     # Launch or the wifi selection
     (pkgs.writeShellScriptBin "nixcfg-launch-wifi" ''
-      exec setsid uwsm-app -- "$TERMINAL" --class=Impala -e impala "$@"
+      exec setsid "$TERMINAL" --class=Impala -e impala "$@"
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-cmd-share" ''
@@ -278,7 +280,7 @@
       }
 
       terminal() {
-        uwsm-app -- $TERMINAL --class=NixCfg -e "$@"
+        $TERMINAL --class=NixCfg -e "$@"
       }
 
       present_terminal() {
