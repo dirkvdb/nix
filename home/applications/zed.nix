@@ -97,8 +97,8 @@
       };
       theme = {
         mode = "system";
-        light = "Ayu Dark";
-        dark = "Ayu Mirage";
+        light = "Ayu Mirage";
+        dark = "Ayu Dark";
       };
       languages = {
         Python = {
