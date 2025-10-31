@@ -23,6 +23,12 @@ in
       config.common.default = "*";
     };
 
+    qt = {
+      enable = true;
+      platformTheme = "gtk2";
+      style = "adwaita-dark";
+    };
+
     environment.systemPackages = with pkgs; [
       glib # for gsettings to work
       gsettings-qt
