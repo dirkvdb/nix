@@ -117,6 +117,7 @@
         "uwsm app -- mako" # Notification daemon
         "uwsm app -- swayosd-server" # On-screen display for volume/brightness
         "uwsm app -- sunsetr"
+        "hyprctl dismissnotify" # Dismiss the plugin loaded notification
       ];
       # Cursor size
       env = [
@@ -429,9 +430,9 @@
         # "$mod ALT, 5, Switch to group window 5, changegroupactive, 5"
 
         # Screenshots
-        "$mod ALT, 4, Screenshot of region, exec, omarchy-cmd-screenshot"
-        "$mod ALT, 3, Screenshot of window, exec, omarchy-cmd-screenshot window"
-        "$mod ALT, 2, Screenshot of display, exec, omarchy-cmd-screenshot output"
+        "$mod ALT, 4, Screenshot of region, exec, nixcfg-cmd-screenshot"
+        "$mod ALT, 3, Screenshot of window, exec, nixcfg-cmd-screenshot window"
+        "$mod ALT, 2, Screenshot of display, exec, nixcfg-cmd-screenshot output"
 
         # Color picker
         "$mod ALT, 5, Color picker, exec, pkill hyprpicker || hyprpicker -a"
