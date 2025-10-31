@@ -64,6 +64,7 @@
             hostname = "mini";
             username = "dirk";
             theme = "everforest";
+            qtScaleFactor = 2;
           };
         in
         nixpkgs.lib.nixosSystem {

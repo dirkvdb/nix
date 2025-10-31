@@ -4,17 +4,14 @@
   ...
 }:
 let
-
-  inherit (lib) mkEnableOption mkIf;
   cfg = config.local.system.nix.flakes;
-
 in
 {
   options.local.system.nix.flakes = {
-    enable = mkEnableOption "Enable Flakes";
+    enable = lib.mkEnableOption "Enable Flakes";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     nix = {
       settings.experimental-features = [
         "nix-command"

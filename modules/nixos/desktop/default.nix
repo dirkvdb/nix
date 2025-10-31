@@ -16,11 +16,6 @@ in
     # Enable polkit for privilege escalation
     security.polkit.enable = true;
 
-    # For regular login
-    # security.pam.services.login.enableGnomeKeyring = true;
-    # For display managers:
-    security.pam.services.greetd.enableGnomeKeyring = true;
-
     # Enable XDG portal for screen sharing, file pickers, etc.
     xdg.portal = {
       enable = true;
@@ -47,7 +42,6 @@ in
       # power-profiles-daemon.enable = true;
 
       gnome = {
-        gnome-keyring.enable = true;
         sushi.enable = true; # a quick previewer for nautilus
       };
     };
