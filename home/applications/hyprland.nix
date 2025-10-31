@@ -113,6 +113,20 @@
     settings = {
       # Auto-start applications
       exec-once = [
+        # Import environment variables into systemd user session
+        ''
+          systemctl --user import-environment \
+            WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP \
+            ELECTRON_OZONE_PLATFORM_HINT GDK_BACKEND QT_QPA_PLATFORM SDL_VIDEODRIVER \
+            MOZ_ENABLE_WAYLAND OZONE_PLATFORM
+        ''
+        ''
+          dbus-update-activation-environment --systemd \
+            WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP \
+            ELECTRON_OZONE_PLATFORM_HINT GDK_BACKEND QT_QPA_PLATFORM SDL_VIDEODRIVER \
+            MOZ_ENABLE_WAYLAND OZONE_PLATFORM
+        ''
+
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
         "mako" # Notification daemon
         "swayosd-server" # On-screen display for volume/brightness
