@@ -36,7 +36,7 @@
         nix = {
           unfree.enable = true;
           nh.enable = true;
-          ld.enable = true;
+          ld.enable = false;
           flakes.enable = true;
         };
 
