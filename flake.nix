@@ -50,6 +50,12 @@
       walker,
       zen-browser,
     }@inputs:
+    let
+      # Custom packages overlay
+      overlay = final: prev: {
+        plymouth-theme-nixos = prev.callPackage ./pkgs/plymouth-theme-nixos { };
+      };
+    in
     {
       nixosConfigurations.mini =
         let
@@ -75,6 +81,7 @@
             home-manager.nixosModules.home-manager
             {
               nixpkgs.config.allowUnfree = true;
+              nixpkgs.overlays = [ overlay ];
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
@@ -121,6 +128,7 @@
             home-manager.darwinModules.home-manager
             {
               nixpkgs.config.allowUnfree = true;
+              nixpkgs.overlays = [ overlay ];
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;

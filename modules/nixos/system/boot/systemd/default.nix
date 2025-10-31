@@ -27,16 +27,6 @@ in
 
       (lib.mkIf cfg.graphical {
 
-        fonts = {
-          packages = [
-            pkgs.noto-fonts
-          ];
-        };
-
-        environment.systemPackages = with pkgs; [
-          nixos-icons
-        ];
-
         boot.consoleLogLevel = 3;
         boot.initrd.verbose = false;
         boot.initrd.systemd.enable = true;
@@ -55,9 +45,8 @@ in
 
         # plymouth, showing after LUKS unlock
         boot.plymouth.enable = true;
-        boot.plymouth.theme = "spinner";
-        boot.plymouth.font = "${pkgs.noto-fonts}/share/fonts/noto/NotoSans[wdth,wght].ttf";
-        boot.plymouth.logo = "${pkgs.nixos-icons}/share/icons/hicolor/128x128/apps/nix-snowflake.png";
+        boot.plymouth.themePackages = [ pkgs.plymouth-theme-nixos ];
+        boot.plymouth.theme = "nixos";
       })
     ]
   );
