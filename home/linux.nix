@@ -114,10 +114,7 @@
     Service = {
       Type = "simple";
       ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
-      Environment = [
-        "SSH_AUTH_SOCK=%t/ssh-agent"
-        "QT_SCALE_FACTOR=${toString (userConfig.qtScaleFactor or 1)}"
-      ];
+      Environment = [ "SSH_AUTH_SOCK=%t/ssh-agent" ];
       ExecStart = "${pkgs.keepassxc}/bin/keepassxc --minimized --keyfile %h/.local/share/secrets/desktop %h/.local/share/secrets/Desktop.kdbx";
       Restart = "on-failure";
       RestartSec = 3;
