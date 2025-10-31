@@ -25,20 +25,11 @@ in
       })
     ];
 
-    programs.uwsm = {
-      enable = true;
-      waylandCompositors.hyprland = {
-        prettyName = "Hyprland";
-        comment = "Hyprland compositor managed by UWSM";
-        binPath = "/run/current-system/sw/bin/Hyprland";
-      };
-    };
-
     programs.hyprland = {
       enable = true;
       portalPackage = pkgs.xdg-desktop-portal-hyprland;
       xwayland.enable = false;
-      withUWSM = true;
+      withUWSM = false;
     };
 
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
