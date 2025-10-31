@@ -287,6 +287,8 @@ let
 
 in
 stdenv.mkDerivation {
+  # logo generated using: https://patorjk.com/software/taag/#p=display&f=Delta+Corps+Priest+1&t=NixOS&x=none&v=4&h=4&w=80&we=false
+
   pname = "plymouth-theme-nixos";
   version = "1.0.0";
 
