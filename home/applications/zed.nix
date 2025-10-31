@@ -21,6 +21,7 @@
     extraPackages = with pkgs; [
       nil
       nixd
+      biome
     ];
 
     userSettings = {
