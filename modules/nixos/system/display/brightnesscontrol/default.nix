@@ -33,9 +33,13 @@ in
       description = "Attach ddcci driver to ${cfg.i2cDevice} for external monitor backlight";
       wantedBy = [ "multi-user.target" ];
       after = [ "systemd-udev-settle.service" ];
+      before = [ "shutdown.target" ];
+      conflicts = [ "shutdown.target" ];
       serviceConfig = {
         Type = "oneshot";
+        RemainAfterExit = true;
         ExecStart = "${pkgs.bash}/bin/bash -c 'echo ddcci 0x37 > /sys/bus/i2c/devices/${cfg.i2cDevice}/new_device || true'";
+        ExecStop = "${pkgs.bash}/bin/bash -c 'if [ -e /sys/bus/i2c/devices/${cfg.i2cDevice}/delete_device ]; then echo 0x37 > /sys/bus/i2c/devices/${cfg.i2cDevice}/delete_device 2>/dev/null || true; fi'";
       };
     };
 
