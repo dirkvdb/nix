@@ -74,6 +74,18 @@
           };
         };
 
+        nfs-mounts = {
+          enable = true;
+          mounts = {
+            "/nas/secrets" = {
+              device = "192.168.1.13:/volume2/secrets";
+            };
+            "/nas/ssd" = {
+              device = "192.168.1.13:/volume2/ssd";
+            };
+          };
+        };
+
         utils = {
           dev = true;
           sysadmin = true;
@@ -104,8 +116,8 @@
       home-manager = {
         keepassxc = {
           enable = true;
-          databasePath = "%h/.local/share/secrets/Desktop.kdbx";
-          keyfilePath = "%h/.local/share/secrets/desktop";
+          databasePath = "/nas/ssd/google_drive_dirk/Secrets/Desktop.kdbx";
+          keyfilePath = "/nas/secrets/desktop.key";
         };
       };
     };

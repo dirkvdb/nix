@@ -8,16 +8,6 @@ in
       enable = true;
       enableDefaultConfig = false;
       matchBlocks = {
-        "*" = {
-          extraOptions = {
-            AddKeysToAgent = "yes";
-            Compression = "yes";
-            ControlMaster = "auto";
-            ControlPath = "~/.ssh/master-%r@%n:%p";
-            ControlPersist = "10m";
-            ServerAliveInterval = "60";
-          };
-        };
         mini = {
           hostname = "mini.local";
           user = "dirk";
@@ -41,6 +31,9 @@ in
           hostname = "nas.local";
           user = "dirk";
           port = 6987;
+          extraOptions = {
+            requestTTY = "true";
+          };
         };
         cluster = {
           hostname = "develop.marvin.vito.local";
