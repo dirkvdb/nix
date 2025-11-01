@@ -1,11 +1,13 @@
+os_cmd := if os() == "macos" { "darwin" } else { "os" }
+
 build:
-    nh os build
+    nh {{os_cmd}} build .
 
 test:
-    nh os test
+    nh {{os_cmd}} test  .
 
 switch:
-    nh os switch
+    nh {{os_cmd}} switch  .
 
 switch_on_boot:
-    nh os boot
+    nh {{os_cmd}} boot  .

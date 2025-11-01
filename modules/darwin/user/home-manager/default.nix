@@ -12,14 +12,13 @@ let
 in
 {
   imports = [
-    inputs.home-manager.nixosModules.home-manager
+    inputs.home-manager.darwinModules.home-manager
   ];
 
   config = lib.mkIf cfg.enable {
     home-manager = {
-      useGlobalPkgs = true;
       useUserPackages = true;
-      backupFileExtension = "backup";
+      useGlobalPkgs = true;
       extraSpecialArgs = {
         inherit
           inputs
@@ -27,16 +26,12 @@ in
           userConfig
           user
           ;
-        elephant = inputs.elephant;
-        walker = inputs.walker;
         zen-browser = inputs.zen-browser;
       };
       sharedModules = [
         inputs.zen-browser.homeModules.default
       ];
-      users.${user.name}.imports = [
-        ./home.nix
-      ];
+      users.${user.name}.imports = [ ./home.nix ];
     };
   };
 }

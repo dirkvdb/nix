@@ -1,9 +1,15 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   inherit (config.local) user;
+  isLinux = pkgs.stdenv.isLinux;
 in
 {
-  home-manager.users.${user.name} = {
+  home-manager.users.${user.name} = lib.mkIf isLinux {
     xdg.configFile."waybar".source = ../../dotfiles/waybar;
     xdg.configFile."walker".source = ../../dotfiles/walker;
     xdg.configFile."sunsetr".source = ../../dotfiles/sunsetr;

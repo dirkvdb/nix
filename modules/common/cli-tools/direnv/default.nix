@@ -5,16 +5,15 @@
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf;
   inherit (config.local) user;
   cfg = config.local.cli-tools.direnv;
 in
 {
   options.local.cli-tools.direnv = {
-    enable = mkEnableOption "Enable direnv";
+    enable = lib.mkEnableOption "Enable direnv";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     programs.direnv = {
       enable = true;
       nix-direnv = {
@@ -23,8 +22,8 @@ in
       };
     }
     // lib.optionalAttrs pkgs.stdenv.isLinux {
-      enableFishIntegration = mkIf (user.shell.package == pkgs.fish) true;
-      enableZshIntegration = mkIf (user.shell.package == pkgs.zsh) true;
+      enableFishIntegration = lib.mkIf (user.shell.package == pkgs.fish) true;
+      enableZshIntegration = lib.mkIf (user.shell.package == pkgs.zsh) true;
     };
   };
 }

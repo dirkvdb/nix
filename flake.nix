@@ -88,7 +88,7 @@
       # Build darwin flake using:
       # darwin-rebuild build --flake ~/.config/nix/#MacBook-Pro
       # sudo darwin-rebuild switch --flake ~/.config/nix/#MacBook-Pro
-      darwinConfigurations."MacBook-Pro" =
+      darwinConfigurations."macbook-pro" =
         let
           system = "aarch64-darwin";
           userConfig = {
@@ -108,22 +108,8 @@
             ./hosts/macbook-pro-m2/configuration.nix
             nix-index-database.darwinModules.nix-index
 
-            home-manager.darwinModules.home-manager
             {
-              nixpkgs.config.allowUnfree = true;
               nixpkgs.overlays = [ overlay ];
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                extraSpecialArgs = {
-                  inherit
-                    inputs
-                    system
-                    userConfig
-                    ;
-                };
-                users.dirk = import ./home/darwin.nix;
-              };
             }
           ];
         };
