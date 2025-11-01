@@ -10,6 +10,11 @@ in
 {
   options.local.system.audio.pipewire = {
     enable = lib.mkEnableOption "Enable PipeWire audio server";
+
+    airplay = lib.mkOption {
+      type = lib.types.bool;
+      description = "Airplay output support";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -28,6 +33,23 @@ in
         alsa.enable = true;
         pulse.enable = true;
         jack.enable = false;
+
+        # Airplay support
+        raopOpenFirewall = cfg.airplay;
+        extraConfig.pipewire = lib.mkIf cfg.airplay {
+          "10-airplay" = {
+            "context.modules" = [
+              {
+                name = "libpipewire-module-raop-discover";
+
+                # increase the buffer size if you get dropouts/glitches
+                # args = {
+                #   "raop.latency.ms" = 500;
+                # };
+              }
+            ];
+          };
+        };
 
         # prevent the alsa audio devices from getting suspended after a timeout
         # which causes you to miss the first second of audio playback
