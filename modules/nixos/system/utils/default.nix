@@ -2,7 +2,6 @@
   lib,
   config,
   pkgs,
-  options,
   ...
 }:
 let
@@ -20,18 +19,7 @@ let
     ];
 in
 {
-  # options.local.system.utils = {
-  #   enable = lib.mkOption {
-  #     type = lib.types.bool;
-  #     default = true;
-  #     description = "Enable installation of common system utilities.";
-  #   };
-
-  #   dev = lib.mkEnableOption "Developer-focused tooling (e.g., mise, just)";
-  #   sysadmin = lib.mkEnableOption "Sysadmin-focused tooling (bind, killall, usbutils on Linux)";
-  # };
-
-  config = lib.mkIf options.local.system.utils.enable {
+  config = lib.mkIf cfg.enable {
     environment.systemPackages =
       with pkgs;
       [
