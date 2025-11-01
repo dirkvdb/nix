@@ -502,7 +502,7 @@ in
           # Define terminal tag to style them uniformly
           "tag +terminal, class:(Alacritty|kitty|com.mitchellh.ghostty)"
           "float, class:org.gnome.Calculato"
-          "tag +floating-window, class:(blueberry.py|io.github.kaii_lb.Overskride|Impala|Wiremix|org.gnome.NautilusPreviewer|com.gabm.satty|About|TUI.float)"
+          "tag +floating-window, class:(blueberry.py|io.github.kaii_lb.Overskride|Impala|Wiremix|org.gnome.NautilusPreviewer|com.gabm.satty|About|TUI.float|org.keepassxc.KeePassXC)"
           "tag +floating-window, class:(xdg-desktop-portal-gtk|sublime_text|DesktopEditors|org.gnome.Nautilus), title:^(Open.*Files?|Open [F|f]older.*|Save.*Files?|Save.*As|Save|All Files)"
           # Browser types
           "tag +chromium-based-browser, class:((google-)?[cC]hrom(e|ium)|[bB]rave-browser|Microsoft-edge|Vivaldi-stable|helium)"
@@ -521,7 +521,7 @@ in
           "opacity 1 1, tag:pip"
           "move 100%-w-40 4%, tag:pip"
           # No password manager screenshare
-          "noscreenshare, class:^(Bitwarden)$"
+          "noscreenshare, class:^(Bitwarden|org.keepassxc.KeePassXC)$"
 
           # Open browsers on workspace 2 when launched with SUPER+B
           "workspace 2, class:(vivaldi-stable)"
