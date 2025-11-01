@@ -52,6 +52,7 @@ in
         nix-ld # required for running certain binaries not meant for NixOS
         rsync
         ripgrep
+        zip
         unzip
         wget
         p7zip
