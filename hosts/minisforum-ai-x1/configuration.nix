@@ -10,6 +10,7 @@
     ./hardware-configuration.nix
     ../../modules/nixos/import.nix
     ../../modules/common/import.nix
+    ../../modules/home/import.nix
 
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
@@ -28,7 +29,8 @@
     local = {
       user = {
         enable = true;
-        home-manager.enable = false;
+        name = "dirk";
+        home-manager.enable = true;
         shell.package = pkgs.fish;
       };
 
@@ -36,7 +38,7 @@
         nix = {
           unfree.enable = true;
           nh.enable = true;
-          ld.enable = false;
+          ld.enable = true;
           flakes.enable = true;
         };
 
@@ -97,6 +99,14 @@
         prusa-slicer.enable = true;
         vivaldi.enable = true;
         spotify.enable = true;
+      };
+
+      home-manager = {
+        keepassxc = {
+          enable = true;
+          databasePath = "%h/.local/share/secrets/Desktop.kdbx";
+          keyfilePath = "%h/.local/share/secrets/desktop";
+        };
       };
     };
 

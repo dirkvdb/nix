@@ -79,26 +79,8 @@
             ./hosts/minisforum-ai-x1/configuration.nix
             nix-index-database.nixosModules.nix-index
 
-            home-manager.nixosModules.home-manager
             {
-              nixpkgs.config.allowUnfree = true;
               nixpkgs.overlays = [ overlay ];
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                backupFileExtension = "backup";
-                extraSpecialArgs = {
-                  inherit
-                    inputs
-                    system
-                    userConfig
-                    elephant
-                    walker
-                    zen-browser
-                    ;
-                };
-                users.dirk = import ./home/linux.nix;
-              };
             }
           ];
         };

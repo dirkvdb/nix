@@ -37,7 +37,7 @@ in
     };
 
     home-manager.enable = lib.mkOption {
-      type = lib.types.str;
+      type = lib.types.bool;
       default = false;
       description = "Enable home-manager";
     };
