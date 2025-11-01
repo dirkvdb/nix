@@ -6,7 +6,6 @@
   userConfig,
   elephant,
   walker,
-  zen-browser,
   ...
 }:
 {
