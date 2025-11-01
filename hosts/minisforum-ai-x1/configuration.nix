@@ -47,7 +47,13 @@
           };
         };
 
-        audio.pipewire.enable = true;
+        input.keyboard.via = true;
+
+        audio.pipewire = {
+          enable = true;
+          airplay = true;
+        };
+
         video.amd.enable = true;
         display.brightnesscontrol = {
           enable = true;
