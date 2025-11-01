@@ -17,7 +17,7 @@ in
     via = lib.mkEnableOption "Support for VIA-configurable keyboards";
   };
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf cfg.via {
     services = {
       udev.extraRules = ''
         # Give group hidraw RW access to all hidraw devices (needed for via keyboards)
