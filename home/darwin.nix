@@ -1,14 +1,13 @@
 {
   pkgs,
   #inputs,
-  config,
   userConfig,
   ...
 }:
 {
-  imports = [
-    (import ./core.nix { inherit pkgs config userConfig; })
-  ];
+  # imports = [
+  #   (import ./core.nix { inherit pkgs config userConfig; })
+  # ];
 
   # sops.secrets = {
   #   # c... ssh
