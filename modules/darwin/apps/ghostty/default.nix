@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }:
 let
@@ -13,8 +12,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
-      ghostty
+    homebrew.casks = [
+      "ghostty"
     ];
   };
 }

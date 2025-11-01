@@ -13,11 +13,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # On NixOS, use the programs.nh module
     programs.nh = {
       enable = true;
       clean.enable = true;
       clean.extraArgs = "--keep-since 4d --keep 3";
-      flake = "/home/${userConfig.username}/nix"; # sets NH_OS_FLAKE variable
+      flake = "/home/${userConfig.username}/nix"; # sets NH_FLAKE variable
     };
   };
 }

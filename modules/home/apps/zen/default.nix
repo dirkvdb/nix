@@ -1,9 +1,15 @@
-{ config, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   inherit (config.local) user;
+  isLinux = pkgs.stdenv.isLinux;
 in
 {
-  home-manager.users.${user.name} = {
+  home-manager.users.${user.name} = lib.mkIf isLinux {
     programs.zen-browser = {
       enable = true;
       # profiles."default" = {

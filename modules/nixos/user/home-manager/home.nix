@@ -13,7 +13,6 @@
   imports = [
     ./scripts/linux.nix
     walker.homeManagerModules.default
-    zen-browser.homeModules.default
   ];
 
   config = {

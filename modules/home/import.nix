@@ -59,7 +59,6 @@ in
       rsync
       sd
       sqlitebrowser
-      sops
       tabiew
       yazi
       wezterm

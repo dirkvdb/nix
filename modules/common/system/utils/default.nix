@@ -6,25 +6,17 @@
 }:
 let
   cfg = config.local.system.utils;
+  hasDesktop = config.local.desktop.enable or false;
   dev = with pkgs; [
     direnv
     mise
     just
     lazygit
   ];
-  sysadmin =
-    with pkgs;
-    [
-      bind
-      killall
-    ]
-    ++ lib.optionals pkgs.stdenv.isLinux [
-      usbutils
-    ]
-    ++ lib.optionals config.local.desktop.enable [
-      gparted
-    ];
-
+  sysadmin = with pkgs; [
+    bind
+    killall
+  ];
 in
 {
   options.local.system.utils = {
@@ -45,11 +37,9 @@ in
         fd
         jq # needed by some scripts
         curl
-        cpufrequtils
         file
         fzf
         micro
-        nix-ld # required for running certain binaries not meant for NixOS
         rsync
         ripgrep
         zip
@@ -59,14 +49,7 @@ in
       ]
       ++ lib.optionals cfg.dev dev
       ++ lib.optionals cfg.sysadmin sysadmin
-      ++ lib.optionals (!config.local.system.video.amd.enable) [
-        btop
-      ]
-      ++ lib.optionals config.local.system.video.amd.enable [
-        btop-rocm
-      ]
-      ++ lib.optionals config.local.desktop.enable [
-        sqlitebrowser
+      ++ lib.optionals hasDesktop [
         sublime-merge
       ];
   };
