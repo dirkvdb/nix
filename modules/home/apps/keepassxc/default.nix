@@ -7,6 +7,38 @@
 let
   inherit (config.local) user;
   cfg = config.local.home-manager.keepassxc;
+
+  keepassxcConfig = ''
+    [FdoSecrets]
+    Enabled=true
+    ConfirmAccessItem=false
+    ConfirmDeleteItem=false
+
+    [SSHAgent]
+    Enabled=true
+    UseOpenSSH=true
+
+    [GUI]
+    MinimizeOnClose=true
+    MinimizeOnStartup=true
+    MinimizeToTray=true
+    ShowTrayIcon=true
+    TrayIconAppearance=monochrome-light
+
+    [General]
+    ConfigVersion=2
+    RememberLastDatabases=true
+    RememberLastKeyFiles=true
+    OpenPreviousDatabasesOnStartup=true
+    AutoSaveAfterEveryChange=true
+    AutoSaveOnExit=true
+
+    [Security]
+    IconDownloadFallbackToGoogle=false
+    LockDatabaseIdle=false
+    LockDatabaseMinimize=false
+    LockDatabaseScreenLock=false
+  '';
 in
 {
   options.local.home-manager.keepassxc = {
@@ -32,41 +64,17 @@ in
       };
 
       # KeePassXC configuration to enable Secret Service by default
-      xdg.configFile."keepassxc/keepassxc.ini".text = ''
-        [FdoSecrets]
-        Enabled=true
-        ConfirmAccessItem=false
-        ConfirmDeleteItem=false
+      home.file = lib.mkIf pkgs.stdenv.isDarwin {
+        "Library/Application Support/KeePassXC/keepassxc.ini".text = keepassxcConfig;
+      };
 
-        [SSHAgent]
-        Enabled=true
-        UseOpenSSH=true
-
-        [GUI]
-        MinimizeOnClose=true
-        MinimizeOnStartup=true
-        MinimizeToTray=true
-        ShowTrayIcon=true
-        TrayIconAppearance=monochrome-light
-
-        [General]
-        ConfigVersion=2
-        RememberLastDatabases=true
-        RememberLastKeyFiles=true
-        OpenPreviousDatabasesOnStartup=true
-        AutoSaveAfterEveryChange=true
-        AutoSaveOnExit=true
-
-        [Security]
-        IconDownloadFallbackToGoogle=false
-        LockDatabaseIdle=false
-        LockDatabaseMinimize=false
-        LockDatabaseScreenLock=false
-      '';
+      xdg.configFile = lib.mkIf pkgs.stdenv.isLinux {
+        "keepassxc/keepassxc.ini".text = keepassxcConfig;
+      };
 
       # Systemd user service for KeePassXC with Secret Service
       # KeePassXC will register org.freedesktop.secrets on D-Bus once running
-      systemd.user.services.keepassxc = {
+      systemd.user.services.keepassxc = lib.mkIf pkgs.stdenv.isLinux {
         Unit = {
           Description = "KeePassXC password manager with Secret Service";
           After = [

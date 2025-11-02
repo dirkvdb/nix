@@ -46,6 +46,13 @@
         };
       };
 
+      home-manager = {
+        keepassxc = {
+          enable = true;
+          databasePath = "/Users/dirk/Secrets/Desktop.kdbx";
+          keyfilePath = "/Users/dirk/Secrets/desktop.key";
+        };
+      };
     };
 
     # targets.darwin.linkApps.enable = true;
