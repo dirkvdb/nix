@@ -124,15 +124,7 @@
       };
     };
 
-    programs = {
-      direnv.enable = true;
-    };
-
     environment.systemPackages = with pkgs; [
-      mako # notifications
-      swayosd
-
-      # works
       slack
       teams-for-linux
     ];
