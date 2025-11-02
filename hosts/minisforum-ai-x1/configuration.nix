@@ -113,6 +113,7 @@
         prusa-slicer.enable = true;
         vivaldi.enable = true;
         spotify.enable = true;
+        localsend.enable = true;
       };
 
       home-manager = {
@@ -130,7 +131,6 @@
 
     programs = {
       direnv.enable = true;
-      localsend.enable = true;
     };
 
     environment.systemPackages = with pkgs; [
