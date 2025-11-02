@@ -23,7 +23,8 @@ in
     services = {
       greetd = {
         enable = true;
-        settings.default_session.command = "${pkgs.tuigreet}/bin/tuigreet --asterisks --remember --time --cmd '${cfg.launchCmd}'";
+        # logs can be checked with: journalctl -t session
+        settings.default_session.command = "${pkgs.tuigreet}/bin/tuigreet --asterisks --remember --time --cmd 'systemd-cat -t session ${cfg.launchCmd}'";
       };
     };
   };
