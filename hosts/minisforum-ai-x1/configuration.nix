@@ -49,6 +49,8 @@
           };
         };
 
+        loginmanager.tuigreet.enable = true;
+
         input.keyboard.via = true;
 
         audio.pipewire = {
@@ -124,11 +126,6 @@
 
     services = {
       printing.enable = true;
-
-      greetd = {
-        enable = true;
-        settings.default_session.command = "${pkgs.tuigreet}/bin/tuigreet --remember --time --cmd 'hyprland'";
-      };
     };
 
     programs = {
