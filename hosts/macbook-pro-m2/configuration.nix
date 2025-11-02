@@ -26,6 +26,7 @@
         karabiner.enable = true;
         bitwarden.enable = false;
         ghostty.enable = true;
+        localsend.enable = true;
       };
 
       tools = {
@@ -78,7 +79,6 @@
         # "ghostty"
         "vivaldi"
         "fork"
-        "localsend"
         "microsoft-teams"
         "microsoft-outlook"
         "microsoft-excel"
