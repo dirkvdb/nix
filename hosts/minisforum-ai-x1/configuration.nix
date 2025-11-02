@@ -100,6 +100,7 @@
       services = {
         ssh.enable = true;
         fwupd.enable = true;
+        printing.enable = true;
       };
 
       desktop = {
@@ -123,10 +124,6 @@
           keyfilePath = "/nas/secrets/desktop.key";
         };
       };
-    };
-
-    services = {
-      printing.enable = true;
     };
 
     programs = {
