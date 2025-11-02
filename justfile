@@ -9,5 +9,8 @@ test:
 switch:
     nh {{os_cmd}} switch  .
 
+update:
+    nix flake update
+
 switch_on_boot:
     nh {{os_cmd}} boot  .

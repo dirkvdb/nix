@@ -1,0 +1,18 @@
+[
+  {
+    "allow_concurrent_runs": false,
+    "args": ["update"],
+    "command": "just",
+    "label": "Update the flake dependencies",
+    "reveal": "always",
+    "use_new_terminal": false
+  },
+  {
+    "allow_concurrent_runs": false,
+    "args": ["switch"],
+    "command": "just",
+    "label": "Switch to the new flake configuration",
+    "reveal": "always",
+    "use_new_terminal": false
+  }
+]

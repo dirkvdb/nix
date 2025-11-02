@@ -45,12 +45,14 @@ in
       hyprpicker
       hyprshot
       hyprcursor
+      mako
       mesa
       nwg-displays
       nwg-look
       satty # screenshot annotation tool
       slurp # for region selection (screen shot, etc)
       sunsetr
+      swayosd
       hyprsunset
       waypaper
       wayfreeze # for screenshots
