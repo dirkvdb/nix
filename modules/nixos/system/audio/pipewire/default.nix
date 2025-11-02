@@ -41,11 +41,6 @@ in
             "context.modules" = [
               {
                 name = "libpipewire-module-raop-discover";
-
-                # increase the buffer size if you get dropouts/glitches
-                # args = {
-                #   "raop.latency.ms" = 500;
-                # };
               }
             ];
           };
