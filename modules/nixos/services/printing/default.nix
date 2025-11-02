@@ -13,9 +13,30 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.printing.enable = true;
+    services.printing = {
+      enable = true;
 
-    services.printing.drivers = [ pkgs.gutenprint ];
+      drivers = lib.singleton (
+        pkgs.linkFarm "drivers" [
+          {
+            name = "share/cups/model/HP-Photosmart-Prem-C310-series.ppd";
+            path = ./printers/HP-Photosmart-Prem-C310-series.ppd;
+          }
+        ]
+      );
+    };
+
+    hardware.printers = {
+      ensureDefaultPrinter = "Photosmart-Premium-C310";
+      ensurePrinters = [
+        {
+          name = "Photosmart-Premium-C310";
+          location = "Home Office";
+          deviceUri = "ipps://my-printer.local:631/ipp/print";
+          model = "HP-Photosmart-Prem-C310-series.ppd";
+        }
+      ];
+    };
 
     # Optional but recommended: Allow network printer discovery
     services.avahi = {
