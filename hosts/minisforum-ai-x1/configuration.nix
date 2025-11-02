@@ -78,10 +78,10 @@
           enable = true;
           mounts = {
             "/nas/secrets" = {
-              device = "192.168.1.13:/volume2/secrets";
+              device = "nas.local:/volume2/secrets";
             };
             "/nas/ssd" = {
-              device = "192.168.1.13:/volume2/ssd";
+              device = "nas.local:/volume2/ssd";
             };
           };
         };
