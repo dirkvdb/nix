@@ -19,5 +19,5 @@ let
     );
 in
 {
-  imports = getDefaultNix ./.;
+  imports = getDefaultNix ./. ++ [ ../common/import.nix ];
 }
