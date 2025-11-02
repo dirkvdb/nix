@@ -4,9 +4,7 @@
 }:
 {
   imports = [
-    # Include the results of the hardware scan.
     ../../modules/darwin/import.nix
-    ../../modules/common/import.nix
     ../../modules/home/import.nix
   ];
 

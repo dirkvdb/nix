@@ -6,10 +6,8 @@
 }:
 {
   imports = [
-    # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ../../modules/nixos/import.nix
-    ../../modules/common/import.nix
     ../../modules/home/import.nix
 
     inputs.nixos-hardware.nixosModules.common-cpu-amd
