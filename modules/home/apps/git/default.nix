@@ -17,7 +17,6 @@ in
           name = "Dirk Vanden Boer";
           email = "dirk.vdb@gmail.com";
         };
-
         credential."https://github.com" = {
           helper = [
             "!gh auth git-credential"
@@ -26,11 +25,6 @@ in
         credential."https://gist.github.com" = {
           helper = [
             "!gh auth git-credential"
-          ];
-        };
-        credential."https://git.vito.be" = {
-          helper = [
-            "keepassxc --git-groups"
           ];
         };
       };
