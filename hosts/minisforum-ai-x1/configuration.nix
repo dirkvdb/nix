@@ -119,7 +119,7 @@
         keepassxc = {
           enable = true;
           databasePaths = [
-            "/nas/ssd/google_drive_dirk/Secrets/Desktop.kdbx"
+            "/nas/ssd/secrets/Desktop.kdbx"
             "/nas/ssd/secrets/Passwords.kdbx"
           ];
           keyfilePath = "/nas/secrets/desktop.key";
