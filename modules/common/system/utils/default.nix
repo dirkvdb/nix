@@ -8,7 +8,6 @@ let
   cfg = config.local.system.utils;
   hasDesktop = config.local.desktop.enable or false;
   dev = with pkgs; [
-    direnv
     devenv
     mise
     just
@@ -54,5 +53,11 @@ in
         sublime-merge
         vscode
       ];
+
+    programs.direnv = {
+      enable = cfg.dev;
+      enableFishIntegration = true;
+    };
   };
+
 }
