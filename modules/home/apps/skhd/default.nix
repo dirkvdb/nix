@@ -21,7 +21,7 @@ in
           alt - return : ${pkgs.wezterm}/bin/wezterm
           alt - d : ${pkgs.zed-editor}/bin/zeditor
           alt - b : open -na zen
-          alt + shift - w : open -na whatsapp
+          alt - e : open ${user.homeDir}
         '';
       };
     };
