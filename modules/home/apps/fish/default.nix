@@ -28,7 +28,7 @@ in
         gp = "git pull -r --autostash && git submodule update -r";
         gs = "git status";
         k = "kubectl";
-        ll = "ls -la";
+        ll = "lsd -la";
         ls = "lsd";
         man = "batman";
         nrs =
