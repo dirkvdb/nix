@@ -34,5 +34,9 @@ in
       ++ lib.optionals hasAmdVideo [
         btop-rocm
       ];
+
+    programs.direnv = {
+      enableFishIntegration = true;
+    };
   };
 }

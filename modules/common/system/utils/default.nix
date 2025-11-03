@@ -56,7 +56,6 @@ in
 
     programs.direnv = {
       enable = cfg.dev;
-      enableFishIntegration = true;
     };
   };
 
