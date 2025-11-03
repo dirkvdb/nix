@@ -68,6 +68,10 @@ in
         enable = true;
       };
 
+      programs.git-credential-keepassxc = {
+        enable = true;
+      };
+
       # KeePassXC configuration to enable Secret Service by default
       home.file = lib.mkIf pkgs.stdenv.isDarwin {
         "Library/Application Support/KeePassXC/keepassxc.ini".text = keepassxcConfig;
@@ -96,6 +100,7 @@ in
           ExecStartPre = [
             "${pkgs.coreutils}/bin/sleep 2"
             "${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online --timeout=30"
+            # browser integration cannot be enabled if the config file is read-only, so we make a writable copy
             "${pkgs.coreutils}/bin/cp %h/.config/keepassxc/keepassxc.immutable.ini %h/.config/keepassxc/keepassxc.ini"
             "${pkgs.coreutils}/bin/chmod o+w %h/.config/keepassxc/keepassxc.ini"
           ];
