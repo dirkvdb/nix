@@ -118,7 +118,10 @@
       home-manager = {
         keepassxc = {
           enable = true;
-          databasePath = "/nas/ssd/google_drive_dirk/Secrets/Desktop.kdbx";
+          databasePaths = [
+            "/nas/ssd/google_drive_dirk/Secrets/Desktop.kdbx"
+            "/nas/ssd/secrets/Passwords.kdbx"
+          ];
           keyfilePath = "/nas/secrets/desktop.key";
         };
       };

@@ -34,7 +34,7 @@ let
     AutoSaveOnExit=true
 
     [Security]
-    IconDownloadFallbackToGoogle=false
+    IconDownloadFallback=true
     LockDatabaseIdle=false
     LockDatabaseMinimize=false
     LockDatabaseScreenLock=false
@@ -48,10 +48,11 @@ in
   options.local.home-manager.keepassxc = {
     enable = lib.mkEnableOption "Keepassxc password/secret manager.";
 
-    databasePath = lib.mkOption {
-      type = lib.types.str;
-      description = "Location of the KeePassXC database file.";
-      example = "%h/.local/share/secrets/Desktop.kdbx";
+    databasePaths = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "Locations of the KeePassXC database files.";
+      example = [ "%h/.local/share/secrets/Desktop.kdbx" ];
+      default = [ ];
     };
 
     keyfilePath = lib.mkOption {
@@ -97,7 +98,7 @@ in
             "${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online --timeout=30"
           ];
           Environment = [ "SSH_AUTH_SOCK=%t/ssh-agent" ];
-          ExecStart = "${pkgs.keepassxc}/bin/keepassxc --minimized --keyfile ${cfg.keyfilePath} ${cfg.databasePath}";
+          ExecStart = "${pkgs.keepassxc}/bin/keepassxc --minimized --keyfile ${cfg.keyfilePath} ${lib.concatStringsSep " " cfg.databasePaths}";
           Restart = "on-failure";
           RestartSec = 3;
         };
