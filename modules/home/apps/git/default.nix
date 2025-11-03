@@ -9,10 +9,6 @@ in
       lfs.enable = true;
 
       settings = {
-
-      };
-
-      settings = {
         init.defaultBranch = "main";
         push.autoSetupRemote = true;
         pull.rebase = true;
@@ -33,9 +29,9 @@ in
           ];
         };
         credential."https://git.vito.be" = {
-          interactive = false;
-          modalPrompt = false;
-          provider = "bitbucket";
+          helper = [
+            "keepassxc --git-groups"
+          ];
         };
       };
     };
