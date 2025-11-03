@@ -47,6 +47,7 @@
       };
 
       home-manager = {
+        skhd.enable = true;
         keepassxc = {
           enable = true;
           databasePaths = [
