@@ -49,8 +49,11 @@
       home-manager = {
         keepassxc = {
           enable = true;
-          databasePath = "/Users/dirk/Secrets/Desktop.kdbx";
-          keyfilePath = "/Users/dirk/Secrets/desktop.key";
+          databasePaths = [
+            "/Users/dirk/Secrets/Desktop.kdbx"
+            "/Users/dirk/Secrets/Passwords.kdbx"
+          ];
+          keyfilePath = "/Users/dirk/.local/share/desktop.key";
         };
       };
     };
