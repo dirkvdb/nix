@@ -9,6 +9,7 @@ let
   hasDesktop = config.local.desktop.enable or false;
   dev = with pkgs; [
     direnv
+    devenv
     mise
     just
     lazygit
