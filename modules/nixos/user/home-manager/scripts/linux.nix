@@ -1,6 +1,14 @@
 { pkgs, ... }:
 {
   home.packages = [
+    (pkgs.writeShellScriptBin "worktunnel" ''
+      autossh -f -M 0 -D 1080 vito
+    '')
+
+    (pkgs.writeShellScriptBin "workbrowser" ''
+      vivaldi --proxy-server=socks5://localhost:1080
+    '')
+
     # Terminal launcher script
     (pkgs.writeShellScriptBin "nixcfg-launch-terminal" ''
       exec setsid "''${TERMINAL:-wezterm}" "$@"
