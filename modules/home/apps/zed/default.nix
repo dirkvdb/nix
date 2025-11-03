@@ -12,6 +12,7 @@ in
         "catppuccin-icons"
         "color-highlight"
         "dockerfile"
+        "git-firefly"
         "just"
         "log"
         "neocmake"
