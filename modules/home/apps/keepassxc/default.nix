@@ -74,7 +74,7 @@ in
       };
 
       xdg.configFile = lib.mkIf pkgs.stdenv.isLinux {
-        "keepassxc/keepassxc.ini".text = keepassxcConfig;
+        "keepassxc/keepassxc.immutable.ini".text = keepassxcConfig;
       };
 
       # Systemd user service for KeePassXC with Secret Service
@@ -96,6 +96,8 @@ in
           ExecStartPre = [
             "${pkgs.coreutils}/bin/sleep 2"
             "${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online --timeout=30"
+            "${pkgs.coreutils}/bin/cp %h/.config/keepassxc/keepassxc.immutable.ini %h/.config/keepassxc/keepassxc.ini"
+            "${pkgs.coreutils}/bin/chmod o+w %h/.config/keepassxc/keepassxc.ini"
           ];
           Environment = [ "SSH_AUTH_SOCK=%t/ssh-agent" ];
           ExecStart = "${pkgs.keepassxc}/bin/keepassxc --minimized --keyfile ${cfg.keyfilePath} ${lib.concatStringsSep " " cfg.databasePaths}";
