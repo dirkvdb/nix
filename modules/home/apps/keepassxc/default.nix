@@ -38,6 +38,10 @@ let
     LockDatabaseIdle=false
     LockDatabaseMinimize=false
     LockDatabaseScreenLock=false
+
+    [Browser]
+    CustomProxyLocation=
+    Enabled=true
   '';
 in
 {
