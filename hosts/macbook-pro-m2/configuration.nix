@@ -82,6 +82,7 @@
       casks = [
         # Not available for macOS in nixpkgs:
         "balenaetcher"
+        "dropbox"
         # bruno
         # "ghostty"
         "vivaldi"
