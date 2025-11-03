@@ -75,7 +75,7 @@ in
                   }
                 ]
                 actions = {
-                # Node settings
+                  # Node settings
                   update-props = {
                     session.suspend-timeout-seconds = 0
                   }
