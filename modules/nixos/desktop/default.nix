@@ -16,13 +16,6 @@ in
     # Enable polkit for privilege escalation
     security.polkit.enable = true;
 
-    # Enable XDG portal for screen sharing, file pickers, etc.
-    xdg.portal = {
-      enable = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-      config.common.default = "*";
-    };
-
     qt = {
       enable = true;
       platformTheme = "gtk2";

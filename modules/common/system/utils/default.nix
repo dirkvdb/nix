@@ -51,7 +51,6 @@ in
       ++ lib.optionals cfg.sysadmin sysadmin
       ++ lib.optionals hasDesktop [
         sublime-merge
-        vscode
       ];
 
     programs.direnv = {
