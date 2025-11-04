@@ -100,6 +100,7 @@
         # autodesk-fusion
         "raycast"
         "spotify"
+        "passepartout"
         "whatsapp"
         "zen"
       ];
