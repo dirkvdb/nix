@@ -11,6 +11,7 @@ let
     devenv
     mise
     just
+    pixi
     lazygit
   ];
   sysadmin = with pkgs; [
