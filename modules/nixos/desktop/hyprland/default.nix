@@ -27,14 +27,11 @@ in
 
     programs.hyprland = {
       enable = true;
-      portalPackage = pkgs.xdg-desktop-portal-hyprland;
       xwayland.enable = false;
       withUWSM = false;
     };
 
-    environment.sessionVariables.NIXOS_OZONE_WL = "1";
-    environment.sessionVariables.TERMINAL = "ghostty";
-    environment.sessionVariables.EDITOR = "micro";
+
 
     # Hyprland-specific packages
     environment.systemPackages = with pkgs; [

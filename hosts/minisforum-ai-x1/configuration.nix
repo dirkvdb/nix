@@ -113,6 +113,7 @@
         vivaldi.enable = true;
         spotify.enable = true;
         localsend.enable = true;
+        vscode.enable = true;
       };
 
       home-manager = {

@@ -111,9 +111,48 @@ in
       };
     };
 
+    # Enable XDG portal for screen sharing, file pickers, etc.
+    xdg.portal = {
+      enable = true;
+      xdgOpenUsePortal = true;
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gtk
+      ];
+      config.common.default = [
+        "gtk"
+        "hyprland"
+      ];
+    };
+
+    home.sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+      TERMINAL = "ghostty";
+      EDITOR = "micro";
+      XDG_SESSION_TYPE = "wayland";
+      XDG_CURRENT_DESKTOP = "Hyprland";
+      XDG_SESSION_DESKTOP = "Hyprland";
+    };
+
     wayland.windowManager.hyprland = {
       enable = true;
-      systemd.enable = true;
+
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
+
+      systemd = {
+        enable = true;
+        variables = [
+          "WAYLAND_DISPLAY"
+          "XDG_CURRENT_DESKTOP"
+          "XDG_SESSION_TYPE"
+          "XDG_SESSION_DESKTOP"
+          "GDK_BACKEND"
+          "ELECTRON_OZONE_PLATFORM_HINT"
+          "QT_QPA_PLATFORM"
+          "SDL_VIDEODRIVER"
+          "MOZ_ENABLE_WAYLAND"
+          "OZONE_PLATFORM"
+        ];
+      };
 
       plugins = [
         pkgs.hyprlandPlugins.hyprscrolling
@@ -124,18 +163,18 @@ in
         # Auto-start applications
         exec-once = [
           # Import environment variables into systemd user session
-          ''
-            systemctl --user import-environment \
-              WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP \
-              ELECTRON_OZONE_PLATFORM_HINT GDK_BACKEND QT_QPA_PLATFORM SDL_VIDEODRIVER \
-              MOZ_ENABLE_WAYLAND OZONE_PLATFORM
-          ''
-          ''
-            dbus-update-activation-environment --systemd \
-              WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP \
-              ELECTRON_OZONE_PLATFORM_HINT GDK_BACKEND QT_QPA_PLATFORM SDL_VIDEODRIVER \
-              MOZ_ENABLE_WAYLAND OZONE_PLATFORM
-          ''
+          # ''
+          #   systemctl --user import-environment \
+          #     WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP \
+          #     ELECTRON_OZONE_PLATFORM_HINT GDK_BACKEND QT_QPA_PLATFORM SDL_VIDEODRIVER \
+          #     MOZ_ENABLE_WAYLAND OZONE_PLATFORM
+          # ''
+          # ''
+          #   dbus-update-activation-environment --systemd \
+          #     WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP \
+          #     ELECTRON_OZONE_PLATFORM_HINT GDK_BACKEND QT_QPA_PLATFORM SDL_VIDEODRIVER \
+          #     MOZ_ENABLE_WAYLAND OZONE_PLATFORM
+          # ''
 
           "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
           "mako" # Notification daemon
