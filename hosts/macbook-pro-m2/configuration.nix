@@ -27,6 +27,7 @@
         bitwarden.enable = false;
         ghostty.enable = true;
         localsend.enable = true;
+        vscode.enable = true;
       };
 
       tools = {
