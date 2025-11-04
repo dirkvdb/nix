@@ -102,7 +102,7 @@ in
             "${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online --timeout=30"
             # browser integration cannot be enabled if the config file is read-only, so we make a writable copy
             "${pkgs.coreutils}/bin/cp %h/.config/keepassxc/keepassxc.immutable.ini %h/.config/keepassxc/keepassxc.ini"
-            "${pkgs.coreutils}/bin/chmod o+w %h/.config/keepassxc/keepassxc.ini"
+            "${pkgs.coreutils}/bin/chmod u+w %h/.config/keepassxc/keepassxc.ini"
           ];
           Environment = [ "SSH_AUTH_SOCK=%t/ssh-agent" ];
           ExecStart = "${pkgs.keepassxc}/bin/keepassxc --minimized --keyfile ${cfg.keyfilePath} ${lib.concatStringsSep " " cfg.databasePaths}";
