@@ -94,6 +94,7 @@ in
         "wheel"
         "hidraw"
         "i2c"
+        "users"
         "video"
       ];
       shell = user.shell.package;
