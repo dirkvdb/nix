@@ -219,6 +219,10 @@ in
         "$osdclient" =
           ''swayosd-client --monitor "$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')"'';
 
+        dwindle = {
+          #single_window_aspect_ratio = "4 3";
+        };
+
         general = {
           # No gaps between windows
           gaps_in = 5;
@@ -226,9 +230,9 @@ in
 
           border_size = 2;
 
-          # layout = "dwindle";
-          layout = "scrolling";
-
+          layout = "dwindle";
+          # layout = "scrolling";
+          #
           # Use master layout instead of dwindle
           # layout = "master";
 
