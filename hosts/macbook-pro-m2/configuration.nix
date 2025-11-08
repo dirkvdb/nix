@@ -53,7 +53,6 @@
           enable = true;
           databasePaths = [
             "/Users/dirk/Secrets/Desktop.kdbx"
-            "/Users/dirk/Secrets/Passwords.kdbx"
           ];
           keyfilePath = "/Users/dirk/.local/share/desktop.key";
         };

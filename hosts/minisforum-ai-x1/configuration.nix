@@ -121,7 +121,6 @@
           enable = true;
           databasePaths = [
             "/nas/ssd/secrets/Desktop.kdbx"
-            "/nas/ssd/secrets/Passwords.kdbx"
           ];
           keyfilePath = "/nas/secrets/desktop.key";
         };
