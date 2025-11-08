@@ -140,18 +140,7 @@ in
 
       systemd = {
         enable = true;
-        variables = [
-          "WAYLAND_DISPLAY"
-          "XDG_CURRENT_DESKTOP"
-          "XDG_SESSION_TYPE"
-          "XDG_SESSION_DESKTOP"
-          "GDK_BACKEND"
-          "ELECTRON_OZONE_PLATFORM_HINT"
-          "QT_QPA_PLATFORM"
-          "SDL_VIDEODRIVER"
-          "MOZ_ENABLE_WAYLAND"
-          "OZONE_PLATFORM"
-        ];
+        variables = [ "--all" ];
       };
 
       plugins = [
