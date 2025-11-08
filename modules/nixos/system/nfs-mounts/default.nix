@@ -30,6 +30,9 @@ in
                 "rw"
                 "defaults"
                 "x-systemd.automount"
+                "noauto"
+                "_netdev" # filesystem requires a network connection before it can be mounted
+                "x-systemd.idle-timeout=10min"
               ];
               description = "Default mount options";
             };
