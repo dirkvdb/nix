@@ -39,6 +39,7 @@ in
     xdg.configFile."btop".source = ./dotfiles/btop;
     xdg.configFile."ghostty".source = ./dotfiles/ghostty;
     xdg.configFile."wezterm".source = ./dotfiles/wezterm;
+    xdg.configFile."sublime-merge/Packages/User".source = ./dotfiles/sublime-merge/Packages/User;
 
     # Add ~/.local/bin to PATH
     home.sessionPath = [
