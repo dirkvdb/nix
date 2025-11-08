@@ -16,14 +16,15 @@ in
     services.printing = {
       enable = true;
 
-      drivers = lib.singleton (
-        pkgs.linkFarm "drivers" [
+      drivers = [
+        (pkgs.linkFarm "drivers" [
           {
             name = "share/cups/model/HP-Photosmart-Prem-C310-series.ppd";
             path = ./printers/HP-Photosmart-Prem-C310-series.ppd;
           }
-        ]
-      );
+        ])
+        pkgs.gutenprint
+      ];
     };
 
     hardware.printers = {
