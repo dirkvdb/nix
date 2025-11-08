@@ -84,11 +84,21 @@ in
           {
             timeout = 600; # 10min
             on-timeout = "hyprctl dispatch dpms off";
-            on-resume = "hyprctl dispatch dpms on && brightnessctl -r";
+            on-resume = ''
+              bash -lc '
+                hyprctl dispatch dpms on
+                # give the link time to train
+                sleep 1.0
+                # restore brightness *after* DPMS is up
+                brightnessctl -r
+                # belt-and-suspenders: one more dpms on after brightness restore
+                hyprctl dispatch dpms on
+              '
+            '';
           }
           # Long time away - lock the screen
           {
-            timeout = 12000; # 2hr
+            timeout = 3600; # 1hr
             on-timeout = "hyprlock";
           }
         ];
