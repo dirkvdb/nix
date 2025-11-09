@@ -8,6 +8,7 @@ let
   cfg = config.local.system.utils;
   hasAmdVideo = config.local.system.video.amd.enable or false;
   hasDesktop = config.local.desktop.enable or false;
+  supportCpuFreqUtils = pkgs.stdenv.hostPlatform.system == "x86_64-linux";
   dev = [ ];
   sysadmin =
     with pkgs;
@@ -23,13 +24,16 @@ in
     environment.systemPackages =
       with pkgs;
       [
-        cpufrequtils
+
         nix-ld # required for running certain binaries not meant for NixOS
       ]
       ++ lib.optionals cfg.dev dev
       ++ lib.optionals cfg.sysadmin sysadmin
       ++ lib.optionals (!hasAmdVideo) [
         btop
+      ]
+      ++ lib.optionals supportCpuFreqUtils [
+        cpufrequtils
       ]
       ++ lib.optionals hasAmdVideo [
         btop-rocm
