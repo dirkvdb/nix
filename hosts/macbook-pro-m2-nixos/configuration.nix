@@ -143,6 +143,7 @@
 
     environment.systemPackages = with pkgs; [
       teams-for-linux
+      brightnessctl
     ];
   };
 }
