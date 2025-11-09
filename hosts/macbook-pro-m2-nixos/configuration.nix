@@ -58,13 +58,6 @@
           wifi = {
             enable = true;
           };
-
-          # ethernet = {
-          #   enable = true;
-          #   wakeOnLan = true;
-          #   interface = "enp195s0";
-          #   dhcp = "ipv4";
-          # };
         };
 
         nfs-mounts = {
