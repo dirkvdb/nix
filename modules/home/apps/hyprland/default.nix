@@ -560,7 +560,7 @@ in
           "tile, tag:chromium-based-browser"
 
           # Picture-in-picture overlays
-          "tag +pip, title:(Picture.{0,1}in.{0,1}[Pp]icture)"
+          "tag +pip, title:(Picture.?in.?[Pp]icture)"
           "float, tag:pip"
           "pin, tag:pip"
           "size 600 338, tag:pip"
@@ -568,6 +568,7 @@ in
           "noborder, tag:pip"
           "opacity 1 1, tag:pip"
           "move 100%-w-40 4%, tag:pip"
+
           # No password manager screenshare
           "noscreenshare, class:^(Bitwarden|org.keepassxc.KeePassXC)$"
 
