@@ -11,7 +11,7 @@ in
 {
   options.local.system.boot.systemd = {
     enable = lib.mkEnableOption "Enable systemd bootloader";
-    raphical = lib.mkEnableOption "Enable graphical boot without kernel messages";
+    graphical = lib.mkEnableOption "Enable graphical boot without kernel messages";
     canTouchEfi = lib.mkOption {
       type = lib.types.bool;
       default = true;
