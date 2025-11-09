@@ -54,6 +54,7 @@
       elephant,
       walker,
       zen-browser,
+      apple-silicon,
     }@inputs:
     let
       # Custom packages overlay

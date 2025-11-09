@@ -7,7 +7,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./apple-sillicon-support
     ../../modules/nixos/import.nix
     ../../modules/home/import.nix
 
@@ -58,7 +57,6 @@
 
           wifi = {
             enable = true;
-            interfaces = [ "en0" ];
           };
 
           # ethernet = {
@@ -123,8 +121,6 @@
     };
 
     #hardware.asahi.peripheralFirmwareDirectory = ./firmware;
-    # enable GPU support
-    hardware.asahi.useExperimentalGPUDriver = true;
 
     # backlight control
     programs.light.enable = true;
