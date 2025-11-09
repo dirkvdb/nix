@@ -120,6 +120,7 @@
     # Swap fn and left ctrl keys on MacBook keyboard
     boot.extraModprobeConfig = ''
       options hid-apple swap_fn_leftctrl=1
+      options hid-apple swap_opt_cmd=1
     '';
 
     # backlight control
