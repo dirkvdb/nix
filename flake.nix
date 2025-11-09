@@ -91,7 +91,7 @@
           ];
         };
 
-      nixosConfigurations.macbook-pro-m2-nixos =
+      nixosConfigurations.macbook-pro =
         let
           system = "aarch64-linux";
           userConfig = {
