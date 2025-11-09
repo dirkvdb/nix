@@ -11,7 +11,12 @@ in
 {
   options.local.system.boot.systemd = {
     enable = lib.mkEnableOption "Enable systemd bootloader";
-    graphical = lib.mkEnableOption "Enable graphical boot without kernel messages";
+    raphical = lib.mkEnableOption "Enable graphical boot without kernel messages";
+    canTouchEfi = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Allow modifying EFI variables";
+    };
   };
 
   config = lib.mkIf cfg.enable (
@@ -20,7 +25,7 @@ in
         boot.loader = {
           systemd-boot.enable = true;
           systemd-boot.consoleMode = "auto";
-          efi.canTouchEfiVariables = true;
+          efi.canTouchEfiVariables = cfg.canTouchEfi;
           timeout = 1;
         };
       }

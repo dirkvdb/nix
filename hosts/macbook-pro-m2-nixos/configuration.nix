@@ -1,0 +1,152 @@
+{
+  pkgs,
+  userConfig,
+  inputs,
+  ...
+}:
+{
+  imports = [
+    ./hardware-configuration.nix
+    ./apple-sillicon-support
+    ../../modules/nixos/import.nix
+    ../../modules/home/import.nix
+
+    inputs.apple-silicon.nixosModules.apple-silicon-support
+    inputs.nixos-hardware.nixosModules.common-hidpi
+    inputs.nixos-hardware.nixosModules.common-pc-ssd
+  ];
+
+  config = {
+    system.stateVersion = "25.05"; # Version at install time, never change
+
+    local = {
+      user = {
+        enable = true;
+        name = "dirk";
+        home-manager.enable = true;
+        shell.package = pkgs.fish;
+      };
+
+      system = {
+        nix = {
+          unfree.enable = true;
+          nh.enable = true;
+          ld.enable = true;
+          flakes.enable = true;
+        };
+
+        boot = {
+          systemd = {
+            enable = true;
+            graphical = true;
+            canTouchEfi = false;
+          };
+        };
+
+        loginmanager.tuigreet.enable = true;
+
+        input.keyboard.via = true;
+
+        audio.pipewire = {
+          enable = true;
+          airplay = true;
+        };
+
+        network = {
+          enable = true;
+          hostname = userConfig.hostname;
+
+          wifi = {
+            enable = true;
+            interfaces = [ "en0" ];
+          };
+
+          # ethernet = {
+          #   enable = true;
+          #   wakeOnLan = true;
+          #   interface = "enp195s0";
+          #   dhcp = "ipv4";
+          # };
+        };
+
+        nfs-mounts = {
+          enable = true;
+          mounts = {
+            "/nas/secrets" = {
+              device = "nas.local:/volume2/secrets";
+            };
+            "/nas/ssd" = {
+              device = "nas.local:/volume2/ssd";
+            };
+          };
+        };
+
+        utils = {
+          dev = true;
+          sysadmin = true;
+        };
+
+        bluetooth.enable = true;
+        fonts.enable = true;
+      };
+
+      services = {
+        ssh.enable = true;
+        fwupd.enable = true;
+        printing.enable = true;
+      };
+
+      desktop = {
+        enable = true;
+        hyprland.enable = true;
+      };
+
+      apps = {
+        ghostty.enable = true;
+        bitwarden.enable = true;
+        prusa-slicer.enable = true;
+        vivaldi.enable = true;
+        spotify.enable = true;
+        localsend.enable = true;
+        vscode.enable = true;
+      };
+
+      home-manager = {
+        keepassxc = {
+          enable = true;
+          databasePaths = [
+            "/nas/ssd/secrets/Desktop.kdbx"
+          ];
+          keyfilePath = "/nas/secrets/desktop.key";
+        };
+      };
+    };
+
+    #hardware.asahi.peripheralFirmwareDirectory = ./firmware;
+    # enable GPU support
+    hardware.asahi.useExperimentalGPUDriver = true;
+
+    # backlight control
+    programs.light.enable = true;
+    services.actkbd = {
+      enable = true;
+      bindings = [
+        {
+          keys = [ 225 ];
+          events = [ "key" ];
+          command = "/run/current-system/sw/bin/light -A 10";
+        }
+        {
+          keys = [ 224 ];
+          events = [ "key" ];
+          command = "/run/current-system/sw/bin/light -U 10";
+        }
+      ];
+    };
+
+    environment.systemPackages = with pkgs; [
+      slack
+      teams-for-linux
+    ];
+  };
+}

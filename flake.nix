@@ -36,6 +36,11 @@
       inputs.elephant.follows = "elephant";
     };
 
+    apple-silicon = {
+      url = "github:tpwrules/nixos-apple-silicon";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs =
@@ -81,6 +86,37 @@
 
             {
               nixpkgs.overlays = [ overlay ];
+            }
+          ];
+        };
+
+      nixosConfigurations.macbook-pro-m2-nixos =
+        let
+          system = "aarch64-linux";
+          userConfig = {
+            hostname = "macbook-pro";
+            username = "dirk";
+            theme = "everforest";
+            qtScaleFactor = 2;
+          };
+        in
+        nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit
+              inputs
+              system
+              userConfig
+              ;
+          };
+          modules = [
+            ./hosts/macbook-pro-m2-nixos/configuration.nix
+            nix-index-database.nixosModules.nix-index
+
+            {
+              nixpkgs.overlays = [
+                overlay
+                inputs.apple-silicon.overlays.apple-silicon-overlay
+              ];
             }
           ];
         };
