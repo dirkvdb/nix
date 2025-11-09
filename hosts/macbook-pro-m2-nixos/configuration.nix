@@ -117,6 +117,11 @@
     hardware.asahi.enable = true;
     hardware.asahi.extractPeripheralFirmware = true;
 
+    # Swap fn and left ctrl keys on MacBook keyboard
+    boot.extraModprobeConfig = ''
+      options hid-apple swap_fn_leftctrl=1
+    '';
+
     # backlight control
     programs.light.enable = true;
     services.actkbd = {
