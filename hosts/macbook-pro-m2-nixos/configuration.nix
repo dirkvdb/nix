@@ -101,8 +101,8 @@
 
       apps = {
         ghostty.enable = true;
-        bitwarden.enable = true;
-        prusa-slicer.enable = true;
+        bitwarden.enable = false;
+        prusa-slicer.enable = false;
         vivaldi.enable = true;
         spotify.enable = false;
         localsend.enable = true;
@@ -141,7 +141,6 @@
     };
 
     environment.systemPackages = with pkgs; [
-      slack
       teams-for-linux
     ];
   };

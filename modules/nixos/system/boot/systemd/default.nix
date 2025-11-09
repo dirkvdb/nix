@@ -24,7 +24,7 @@ in
       {
         boot.loader = {
           systemd-boot.enable = true;
-          systemd-boot.consoleMode = "auto";
+          systemd-boot.consoleMode = lib.mkDefault "auto";
           efi.canTouchEfiVariables = cfg.canTouchEfi;
           timeout = 1;
         };
