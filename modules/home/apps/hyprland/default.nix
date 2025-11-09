@@ -7,6 +7,9 @@
 let
   inherit (config.local) user;
   isLinux = pkgs.stdenv.isLinux;
+  # hyprexpo uses x86-only function hooks and doesn't work on ARM
+  # See: https://github.com/hyprwm/hyprland-plugins/issues/438
+  isX86 = pkgs.stdenv.isx86_64;
 in
 {
   home-manager.users.${user.name} = lib.mkIf isLinux {
@@ -155,6 +158,9 @@ in
 
       plugins = [
         pkgs.hyprlandPlugins.hyprscrolling
+      ]
+      ++ lib.optionals isX86 [
+        # hyprexpo only works on x86_64 due to function hooking limitations
         pkgs.hyprlandPlugins.hyprexpo
       ];
 
@@ -246,7 +252,7 @@ in
           allow_tearing = false;
         };
 
-        plugin.hyprexpo = {
+        plugin.hyprexpo = lib.mkIf isX86 {
           columns = 3;
           gap_size = 5;
           bg_col = "rgb(111111)";
@@ -401,6 +407,12 @@ in
 
         bindd = [
           "$mod, SPACE, Launch apps, exec, $applauncher"
+        ]
+        # Export workspace overview with SUPER + ~ (only on x86_64)
+        ++ lib.optionals isX86 [
+          "$mod, GRAVE, Workspace overview, hyprexpo:expo, toggle"
+        ]
+        ++ [
           "$mod ALT, SPACE, Menu, exec, nixcfg-menu"
 
           "$mod, ESCAPE, Power menu, exec, nixcfg-menu system"
@@ -448,8 +460,6 @@ in
           "$mod, K, Move focus up, movefocus, u"
           "$mod, J, Move focus down, movefocus, d"
 
-          # Export workspace overview with SUPER + ~
-          "$mod, GRAVE, Workspace overview, hyprexpo:expo, toggle"
           # Switch workspaces with SUPER + [0-9]
           "$mod, code:10, Switch to workspace 1, workspace, 1"
           "$mod, code:11, Switch to workspace 2, workspace, 2"
