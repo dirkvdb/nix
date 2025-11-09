@@ -120,7 +120,9 @@
       };
     };
 
-    #hardware.asahi.peripheralFirmwareDirectory = ./firmware;
+    # Disable peripheral firmware extraction
+    hardware.asahi.enable = true;
+    hardware.asahi.extractPeripheralFirmware = true;
 
     # backlight control
     programs.light.enable = true;
