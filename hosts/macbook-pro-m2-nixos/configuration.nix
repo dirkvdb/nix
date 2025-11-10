@@ -89,6 +89,7 @@
 
       desktop = {
         enable = true;
+        displayScale = 2.0;
         hyprland.enable = true;
       };
 
@@ -143,6 +144,7 @@
 
     environment.systemPackages = with pkgs; [
       teams-for-linux
+      xdg-terminal-exec
       brightnessctl
     ];
   };
