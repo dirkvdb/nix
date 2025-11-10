@@ -119,7 +119,8 @@
 
     # Disable peripheral firmware extraction
     hardware.asahi.enable = true;
-    hardware.asahi.extractPeripheralFirmware = true;
+    # hardware.asahi.extractPeripheralFirmware = true;
+    hardware.asahi.peripheralFirmwareDirectory = ./firmware;
 
     # Swap fn and left ctrl keys on MacBook keyboard
     boot.extraModprobeConfig = ''
