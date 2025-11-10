@@ -734,8 +734,8 @@ in
           ",XF86AudioLowerVolume, Volume down, exec, $osdclient --output-volume lower"
           ",XF86AudioMute, Mute, exec, $osdclient --output-volume mute-toggle"
           ",XF86AudioMicMute, Mute microphone, exec, $osdclient --input-volume mute-toggle"
-          ",XF86MonBrightnessUp, Brightness up, exec, $osdclient --brightness +10"
-          ",XF86MonBrightnessDown, Brightness down, exec, $osdclient --brightness -10"
+          ",XF86MonBrightnessUp, Brightness up, exec, $osdclient --brightness +5"
+          ",XF86MonBrightnessDown, Brightness down, exec, $osdclient --brightness -5"
 
           # Precise 1% multimedia adjustments with Alt modifier
           "ALT, XF86AudioRaiseVolume, Volume up precise, exec, $osdclient --output-volume +1"
@@ -753,7 +753,7 @@ in
         workspace = [
           "1, name:cmd, persistent:true"
           "2, name:web, persistent:true"
-          "3, name:dev, persistent:true, rounding:false, decorate:false, gapsin:0, gapsout:1"
+          "3, name:dev, persistent:true, rounding:false, decorate:false, gapsin:0, gapsout:0"
           "4, name:scratch, persistent:true"
           "5, name:scratch, persistent:true"
           "6, name:vcs, persistent:true"
