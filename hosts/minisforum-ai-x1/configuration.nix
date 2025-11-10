@@ -103,6 +103,7 @@
 
       desktop = {
         enable = true;
+        displayScale = 1.666667;
         hyprland.enable = true;
       };
 

@@ -216,7 +216,7 @@ in
 
         # Good compromise for 27" or 32" 4K monitors (but fractional!)
         # env = GDK_SCALE,1.75
-        monitor = ",preferred,auto,1.666667";
+        monitor = ",preferred,auto,${toString (config.local.desktop.displayScale or 1.75)}";
 
         # Variables
         "$activeBorderColor" = "rgb(d3c6aa)";
