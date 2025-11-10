@@ -20,11 +20,17 @@ in
 
   config = lib.mkIf cfg.enable {
     networking.useDHCP = false;
+    networking.useNetworkd = true;
     networking.wireless.iwd.enable = true;
     networking.wireless.iwd.settings = {
       Settings = {
         AutoConnect = true;
       };
+    };
+
+    systemd.network.networks."10-wlan0" = {
+      matchConfig.Name = "wlan0";
+      networkConfig.DHCP = "yes";
     };
 
     networking.firewall.enable = cfg.firewall;
