@@ -525,12 +525,19 @@ in
           touchpad = {
             # Use natural (inverse) scrolling
             natural_scroll = true;
-
             # Use two-finger clicks for right-click instead of lower-right corner
             clickfinger_behavior = true;
-
             # Control the speed of your scrolling
-            scroll_factor = 0.4;
+            # Increased from 0.4 to 1.0 for more responsive scrolling
+            # Higher values (1.0-2.0) give a smoother feel that mimics inertia
+            scroll_factor = 1.0;
+            # Disable touchpad while typing to prevent accidental palm touches
+            disable_while_typing = true;
+            tap-to-click = true;
+            # Disable tap and drag (helps prevent accidental drags)
+            drag_lock = false;
+            # Tap and drag
+            tap-and-drag = true;
           };
         };
 
