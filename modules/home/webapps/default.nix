@@ -33,7 +33,12 @@ in
 {
   home-manager.users.${user.name} = {
     xdg.dataFile = lib.mkMerge [
-      { "xdg-desktop-portal/icons".source = ./icons; }
+      {
+        "icons/hicolor/256x256/apps/chatgpt.png".source = ./icons/ChatGPT.png;
+        "icons/hicolor/256x256/apps/youtube.png".source = ./icons/youtube.png;
+        "icons/hicolor/256x256/apps/gmail.png".source = ./icons/gmail.png;
+        "icons/hicolor/256x256/apps/outlook.png".source = ./icons/outlook.png;
+      }
 
       (mkWebApp {
         name = "ChatGPT";
@@ -45,19 +50,19 @@ in
       (mkWebApp {
         name = "YouTube";
         url = "https://youtube.com/";
-        icon = "Youtube-youtube.com";
+        icon = "youtube";
       })
 
       (mkWebApp {
         name = "Gmail";
         url = "https://mail.google.com/";
-        icon = "Gmail-mail.google.com";
+        icon = "gmail";
       })
 
       (mkWebApp {
         name = "Outlook";
         url = "https://outlook.office365.com/";
-        icon = "outlook-for-linux";
+        icon = "outlook";
       })
     ];
   };
