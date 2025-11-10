@@ -100,7 +100,7 @@
         ghostty.enable = true;
         bitwarden.enable = false;
         prusa-slicer.enable = false;
-        vivaldi.enable = true;
+        brave.enable = true;
         spotify.enable = false;
         localsend.enable = true;
         vscode.enable = true;
