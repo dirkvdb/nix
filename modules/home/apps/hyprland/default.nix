@@ -504,6 +504,17 @@ in
           enable_hyprcursor = true;
         };
 
+        device = {
+          name = "apple-mtp-multi-touch";
+          # Keep palm brushes from registering as taps/clicks
+          tap-to-click = false;
+          clickfinger_behavior = true;
+
+          # Disable touchpad while typing to prevent accidental palm touches
+          disable_while_typing = true;
+          scroll_factor = 0.3;
+        };
+
         # Control your input devices
         # See https://wiki.hypr.land/Configuring/Variables/#input
         input = {
@@ -520,17 +531,13 @@ in
           numlock_by_default = true;
 
           # Increase sensitity for mouse/trackpack (default: 0)
-          sensitivity = 0.15;
+          sensitivity = 0.2;
 
           touchpad = {
             # Use natural (inverse) scrolling
             natural_scroll = true;
             # Use two-finger clicks for right-click instead of lower-right corner
             clickfinger_behavior = true;
-            # Control the speed of your scrolling
-            scroll_factor = 0.5;
-            # Disable touchpad while typing to prevent accidental palm touches
-            disable_while_typing = true;
             tap-to-click = true;
             # Disable tap and drag (helps prevent accidental drags)
             drag_lock = false;
