@@ -33,9 +33,9 @@ in
         man = "batman";
         nrs =
           if pkgs.stdenv.isDarwin then
-            "sudo darwin-rebuild switch --flake ~/.config/nix#MacBook-Pro"
+            "nh darwin switch --flake ~/.config/nix"
           else
-            "sudo nixos-rebuild switch --flake ~/nix";
+            "nh os switch --flake ~/nix";
         tree = "lsd --tree";
         zed = "zeditor";
       };
