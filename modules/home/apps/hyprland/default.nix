@@ -10,10 +10,205 @@ let
   # hyprexpo uses x86-only function hooks and doesn't work on ARM
   # See: https://github.com/hyprwm/hyprland-plugins/issues/438
   isX86 = pkgs.stdenv.isx86_64;
+
+  # Get CPU core count from system config
+  cpuCores = config.local.system.cpu.cores;
+
+  # Generate CPU icon placeholders based on core count
+  cpuIconPlaceholders = lib.concatStrings (lib.genList (i: "{icon${toString i}}") cpuCores);
+
+  # Generate waybar config with dynamic CPU format
+  waybarConfigContent = lib.generators.toJSON { } {
+    reload_style_on_change = true;
+    layer = "top";
+    position = "top";
+    spacing = 0;
+    height = 26;
+    modules-left = [
+      "custom/nixmenu"
+      "hyprland/workspaces"
+    ];
+    modules-center = [ "clock" ];
+    modules-right = [
+      "cpu"
+      "battery"
+      "tray"
+      "bluetooth"
+      "network"
+      "pulseaudio"
+    ];
+
+    "hyprland/workspaces" = {
+      on-click = "activate";
+      format = "{icon}";
+      format-icons = {
+        default = "";
+        "1" = "1";
+        "2" = "2";
+        "3" = "3";
+        "4" = "4";
+        "5" = "5";
+        "6" = "6";
+        "7" = "7";
+        "8" = "8";
+        "9" = "9";
+        active = "󱓻";
+      };
+      persistent-workspaces = {
+        "1" = [ ];
+        "2" = [ ];
+        "3" = [ ];
+        "4" = [ ];
+        "5" = [ ];
+        "6" = [ ];
+        "7" = [ ];
+        "8" = [ ];
+      };
+    };
+
+    "custom/nixmenu" = {
+      format = "<span font='omarchy'></span>";
+      on-click = "nixcfg-launch-walker";
+      on-click-right = "nixcfg-launch-terminal";
+      tooltip-format = "Applications Menu\n\nSuper + Space";
+    };
+
+    cpu = {
+      interval = 2;
+      format = "  ${cpuIconPlaceholders}";
+      format-icons = [
+        "<span> </span>"
+        "<span color='#a7c080'>▁</span>"
+        "<span color='#a7c080'>▂</span>"
+        "<span color='#83c092'>▃</span>"
+        "<span color='#83c092'>▄</span>"
+        "<span color='#dbbc7f'>▅</span>"
+        "<span color='#dbbc7f'>▆</span>"
+        "<span color='#e69875'>▇</span>"
+        "<span color='#e67e80'>█</span>"
+      ];
+      on-click = "ghostty -e btop";
+    };
+
+    clock = {
+      format = "{:L%A %H:%M}";
+      format-alt = "{:L%d %B W%V %Y}";
+      tooltip = false;
+    };
+
+    network = {
+      format-icons = [
+        "󰤯"
+        "󰤟"
+        "󰤢"
+        "󰤥"
+        "󰤨"
+      ];
+      format = "{icon}";
+      format-wifi = "{icon}";
+      format-ethernet = "󰀂";
+      format-disconnected = "󰤮";
+      tooltip-format-wifi = "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+      tooltip-format-ethernet = "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+      tooltip-format-disconnected = "Disconnected";
+      interval = 3;
+      spacing = 1;
+      on-click = "nixcfg-launch-wifi";
+    };
+
+    battery = {
+      format = "{capacity}% {icon}";
+      format-discharging = "{icon}";
+      format-charging = "{icon}";
+      format-plugged = "";
+      format-icons = {
+        charging = [
+          "󰢜"
+          "󰂆"
+          "󰂇"
+          "󰂈"
+          "󰢝"
+          "󰂉"
+          "󰢞"
+          "󰂊"
+          "󰂋"
+          "󰂅"
+        ];
+        default = [
+          "󰁺"
+          "󰁻"
+          "󰁼"
+          "󰁽"
+          "󰁾"
+          "󰁿"
+          "󰂀"
+          "󰂁"
+          "󰂂"
+          "󰁹"
+        ];
+      };
+      format-full = "󰂅";
+      tooltip-format-discharging = "{power:>1.0f}W↓ {capacity}%";
+      tooltip-format-charging = "{power:>1.0f}W↑ {capacity}%";
+      interval = 5;
+      on-click = "nixcfg-menu power";
+      states = {
+        warning = 20;
+        critical = 10;
+      };
+    };
+
+    bluetooth = {
+      format = "";
+      format-disabled = "󰂲";
+      format-connected = "";
+      tooltip-format = "Devices connected: {num_connections}";
+      on-click = "overskride";
+    };
+
+    pulseaudio = {
+      format = "{icon}";
+      on-click = "ghostty --class=Wiremix -e wiremix";
+      on-click-right = "pamixer -t";
+      tooltip-format = "Playing at {volume}%";
+      scroll-step = 5;
+      format-muted = "";
+      format-icons = {
+        default = [
+          ""
+          ""
+          ""
+        ];
+      };
+    };
+
+    "group/tray-expander" = {
+      orientation = "inherit";
+      drawer = {
+        transition-duration = 600;
+        children-class = "tray-group-item";
+      };
+      modules = [
+        "custom/expand-icon"
+        "tray"
+      ];
+    };
+
+    "custom/expand-icon" = {
+      format = " ";
+      tooltip = false;
+    };
+
+    tray = {
+      icon-size = 12;
+      spacing = 12;
+    };
+  };
 in
 {
   home-manager.users.${user.name} = lib.mkIf isLinux {
-    xdg.configFile."waybar".source = ../../dotfiles/waybar;
+    xdg.configFile."waybar/config.jsonc".text = waybarConfigContent;
+    xdg.configFile."waybar/style.css".source = ../../dotfiles/waybar/style.css;
     xdg.configFile."walker".source = ../../dotfiles/walker;
     xdg.configFile."sunsetr".source = ../../dotfiles/sunsetr;
 

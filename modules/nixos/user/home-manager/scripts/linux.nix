@@ -115,7 +115,7 @@
 
     # Launch or the wifi selection
     (pkgs.writeShellScriptBin "nixcfg-launch-wifi" ''
-      exec setsid "$TERMINAL" --class=Impala -e impala "$@"
+      xdg-terminal-exec --app-id=nmtui -- nmtui "$@"
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-cmd-share" ''

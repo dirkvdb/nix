@@ -33,6 +33,8 @@
       };
 
       system = {
+        cpu.cores = 20;
+
         nix = {
           unfree.enable = true;
           nh.enable = true;
