@@ -115,7 +115,7 @@
 
     # Launch or the wifi selection
     (pkgs.writeShellScriptBin "nixcfg-launch-wifi" ''
-      xdg-terminal-exec --app-id=TUI.float -- nmtui "$@"
+      xdg-terminal-exec --app-id=TUI.float -- impala "$@"
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-cmd-share" ''
