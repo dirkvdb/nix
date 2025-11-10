@@ -62,7 +62,7 @@ in
           pipestatus = true;
           pipestatus_separator = "-";
           pipestatus_segment_format = "$status";
-          pipestatus_format = ''[─](fg:separator)[](fg:status)[\\uf658](fg:icon bg:status)[](fg:status bg:background)[ $pipestatus](bg:background)[](fg:background)'';
+          pipestatus_format = ''[─](fg:separator)[](fg:status)[](fg:icon bg:status)[](fg:status bg:background)[ $pipestatus](bg:background)[](fg:background)'';
           disabled = false;
         };
 
