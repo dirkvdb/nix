@@ -520,7 +520,7 @@ in
           numlock_by_default = true;
 
           # Increase sensitity for mouse/trackpack (default: 0)
-          # sensitivity = 0.35
+          sensitivity = 0.35;
 
           touchpad = {
             # Use natural (inverse) scrolling
@@ -528,9 +528,7 @@ in
             # Use two-finger clicks for right-click instead of lower-right corner
             clickfinger_behavior = true;
             # Control the speed of your scrolling
-            # Increased from 0.4 to 1.0 for more responsive scrolling
-            # Higher values (1.0-2.0) give a smoother feel that mimics inertia
-            scroll_factor = 1.0;
+            scroll_factor = 0.5;
             # Disable touchpad while typing to prevent accidental palm touches
             disable_while_typing = true;
             tap-to-click = true;
@@ -714,6 +712,13 @@ in
 
           # Color picker
           "$mod ALT, 5, Color picker, exec, pkill hyprpicker || hyprpicker -a"
+        ];
+
+        # Touchpad gesture bindings for workspace switching
+        gesture = [
+          "3, horizontal, workspace"
+          "3, up, scale: 1.5, fullscreen"
+          "3, down, close"
         ];
 
         bindeld = [
