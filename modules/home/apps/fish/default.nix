@@ -31,11 +31,7 @@ in
         ll = "lsd -la";
         ls = "lsd";
         man = "batman";
-        nrs =
-          if pkgs.stdenv.isDarwin then
-            "nh darwin switch --flake ~/.config/nix"
-          else
-            "nh os switch --flake ~/nix";
+        nrs = if pkgs.stdenv.isDarwin then "nh darwin switch ~/.config/nix" else "nh os switch ~/nix";
         tree = "lsd --tree";
         zed = "zeditor";
       };
