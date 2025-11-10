@@ -138,14 +138,6 @@
       };
     };
 
-    # Create the quirks override file at build time
-    environment.etc."libinput/local-overrides.quirks".text = ''
-      [Touchpad:apple-mtp-multi-touch]
-      MatchUdevType=touchpad
-      MatchName=*apple-mtp-multi-touch*
-      AttrPalmSizeThreshold=4
-    '';
-
     environment.systemPackages = with pkgs; [
       teams-for-linux
       vulkan-tools
