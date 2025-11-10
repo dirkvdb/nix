@@ -130,6 +130,7 @@
 
     environment.systemPackages = with pkgs; [
       teams-for-linux
+      vulkan-tools
       brightnessctl
     ];
   };
