@@ -249,10 +249,14 @@
       fi
     '')
 
+    (pkgs.writeShellScriptBin "nixcfg-powerprofiles-list" ''
+      powerprofilesctl list |
+        awk '/^\s*[* ]\s*[a-zA-Z0-9\-]+:$/ { gsub(/^[*[:space:]]+|:$/,""); print }' |
+        tac
+    '')
+
     # Menu launcher
     (pkgs.writeShellScriptBin "nixcfg-menu" ''
-      # export PATH="$HOME/.local/share/omarchy/bin:$PATH"
-
       # Set to true when going directly to a submenu, so we can exit directly
       BACK_TO_EXIT=false
 
@@ -337,6 +341,16 @@
         esac
       }
 
+      show_setup_power_menu() {
+        profile=$(menu "Power Profile" "$(nixcfg-powerprofiles-list)" "" "$(powerprofilesctl get)")
+
+        if [[ "$profile" == "CNCLD" || -z "$profile" ]]; then
+          back_to show_setup_menu
+        else
+          powerprofilesctl set "$profile"
+        fi
+      }
+
       show_share_menu() {
         case $(menu "Share" "  Clipboard\n  File \n  Folder") in
         *Clipboard*) terminal bash -c "nixcfg-cmd-share clipboard" ;;
@@ -376,6 +390,7 @@
         *apps*) walker -p "Launch..." ;;
         *trigger*) show_trigger_menu ;;
         *share*) show_share_menu ;;
+        *power*) show_setup_power_menu ;;
         *screenshot*) show_screenshot_menu ;;
         *screenrecord*) show_screenrecord_menu ;;
         *system*) show_system_menu ;;
