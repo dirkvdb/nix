@@ -19,7 +19,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    networking.networkmanager.enable = true;
+    networking.useDHCP = false;
+    networking.wireless.iwd.enable = true;
+    networking.wireless.iwd.settings = {
+      Settings = {
+        AutoConnect = true;
+      };
+    };
+
     networking.firewall.enable = cfg.firewall;
 
     environment.systemPackages = with pkgs; [
