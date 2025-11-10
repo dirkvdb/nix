@@ -126,27 +126,8 @@
       options hid-apple swap_opt_cmd=1
     '';
 
-    # backlight control
-    programs.light.enable = true;
-    services.actkbd = {
-      enable = true;
-      bindings = [
-        {
-          keys = [ 225 ];
-          events = [ "key" ];
-          command = "/run/current-system/sw/bin/light -A 5";
-        }
-        {
-          keys = [ 224 ];
-          events = [ "key" ];
-          command = "/run/current-system/sw/bin/light -U 5";
-        }
-      ];
-    };
-
     environment.systemPackages = with pkgs; [
       teams-for-linux
-      xdg-terminal-exec
       brightnessctl
     ];
   };
