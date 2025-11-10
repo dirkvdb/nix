@@ -31,8 +31,8 @@ let
     modules-center = [ "clock" ];
     modules-right = [
       "cpu"
-      "battery"
       "tray"
+      "battery"
       "bluetooth"
       "network"
       "pulseaudio"
@@ -159,16 +159,16 @@ let
     };
 
     bluetooth = {
-      format = "";
+      format = "󰂯";
       format-disabled = "󰂲";
-      format-connected = "";
+      format-connected = "󰂱";
       tooltip-format = "Devices connected: {num_connections}";
       on-click = "overskride";
     };
 
     pulseaudio = {
       format = "{icon}";
-      on-click = "ghostty --class=Wiremix -e wiremix";
+      on-click = "xdg-terminal-exec --app-id=TUI.float -- wiremix";
       on-click-right = "pamixer -t";
       tooltip-format = "Playing at {volume}%";
       scroll-step = 5;
@@ -520,7 +520,7 @@ in
           numlock_by_default = true;
 
           # Increase sensitity for mouse/trackpack (default: 0)
-          sensitivity = 0.35;
+          sensitivity = 0.15;
 
           touchpad = {
             # Use natural (inverse) scrolling

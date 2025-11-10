@@ -23,6 +23,13 @@ in
     # Enable polkit for privilege escalation
     security.polkit.enable = true;
 
+    xdg.terminal-exec = {
+      enable = true;
+      settings = {
+        default = [ "com.mitchellh.ghostty.desktop" ];
+      };
+    };
+
     qt = {
       enable = true;
       platformTheme = "gtk2";
