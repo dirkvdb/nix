@@ -11,7 +11,7 @@
 
     # Terminal launcher script
     (pkgs.writeShellScriptBin "nixcfg-launch-terminal" ''
-      exec setsid "''${TERMINAL:-wezterm}" "$@"
+      exec setsid xdg-terminal-exec -- "$@"
     '')
 
     # Walker launcher script
@@ -119,10 +119,8 @@
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-cmd-share" ''
-      #!/bin/bash
-
       if (($# == 0)); then
-        echo "Usage: omarchy-cmd-share [clipboard|file|folder]"
+        echo "Usage: nixcfg-cmd-share [clipboard|file|folder]"
         exit 1
       fi
 
@@ -292,7 +290,7 @@
       }
 
       terminal() {
-        $TERMINAL --class=NixCfg -e "$@"
+        xdg-terminal-exec --app-id=NixCfg -- "$@"
       }
 
       present_terminal() {
