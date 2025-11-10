@@ -760,7 +760,7 @@ in
           # Floating windows
           "float, tag:floating-window"
           "center, tag:floating-window"
-          "size 800 600, tag:floating-wi"
+          "size 1024 768, tag:floating-window"
           # Float LocalSend and fzf file picker
           "float, class:(Share|localsend)"
           "center, class:(Share|localsend)"
