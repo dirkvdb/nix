@@ -31,9 +31,9 @@ in
         ll = "lsd -la";
         ls = "lsd";
         man = "batman";
-        nrs = if pkgs.stdenv.isDarwin then "nh darwin switch ~/.config/nix" else "nh os switch ~/nix";
+        nrs = if pkgs.stdenv.isDarwin then "nh darwin switch ~/nix" else "nh os switch ~/nix";
         tree = "lsd --tree";
-        zed = "zeditor";
+        zed = if pkgs.stdenv.isDarwin then "zed" else "zeditor";
       };
 
       plugins = [
