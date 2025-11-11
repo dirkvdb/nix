@@ -25,6 +25,9 @@ in
         monaspace
         noto-fonts
         noto-fonts-color-emoji
+        roboto
+        ubuntu-sans
+        ubuntu-sans-mono
       ];
     };
   };

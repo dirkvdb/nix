@@ -39,8 +39,6 @@ in
     environment.systemPackages = with pkgs; [
       glib # for gsettings to work
       gsettings-qt
-      gtk-engine-murrine # for gtk themes
-      tela-icon-theme
       nautilus
       file-roller # archive manager
       notify-desktop # cmd for sending notifications
