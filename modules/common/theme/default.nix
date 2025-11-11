@@ -1,7 +1,12 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
-  presets = import ./presets.nix;
+  presets = import ./presets.nix { inherit pkgs; };
 
   cfg = config.local.theme;
 
@@ -35,6 +40,18 @@ in
       description = "Icon theme name";
     };
 
+    gtkThemePackage = lib.mkOption {
+      type = lib.types.package;
+      default = selectedPreset.gtkThemePackage;
+      description = "GTK theme package";
+    };
+
+    iconThemePackage = lib.mkOption {
+      type = lib.types.package;
+      default = selectedPreset.iconThemePackage;
+      description = "Icon theme package";
+    };
+
     uiFont = lib.mkOption {
       type = lib.types.str;
       default = selectedPreset.uiFont;
@@ -64,5 +81,10 @@ in
       default = selectedPreset.terminalFont;
       description = "Terminal font family";
     };
+  };
+
+  config = {
+    # Automatically install fonts required by the selected preset
+    fonts.packages = selectedPreset.fonts or [ ];
   };
 }
