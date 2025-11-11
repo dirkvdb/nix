@@ -6,6 +6,7 @@
 }:
 let
   inherit (config.local) user;
+  inherit (config.local) theme;
   hasDesktop = config.local.desktop.enable or false;
 in
 {
@@ -19,18 +20,18 @@ in
         enable = true;
 
         theme = {
-          name = "Adwaita-dark";
+          name = theme.gtkTheme;
           package = pkgs.gnome-themes-extra;
         };
 
         iconTheme = {
-          name = "Tela nord";
+          name = theme.iconTheme;
           package = pkgs.tela-icon-theme;
         };
 
         font = {
-          name = "Ubuntu Sans Bold";
-          size = 10;
+          name = theme.uiFont;
+          size = theme.uiFontSize;
         };
 
         gtk3.extraConfig = {
@@ -45,12 +46,6 @@ in
       dconf.settings = {
         "org/gnome/desktop/interface" = {
           color-scheme = "prefer-dark";
-          gtk-theme = "Adwaita-dark"; # many non-GNOME GTK apps still honor this
-          font-name = "Ubuntu Sans Bold 10";
-          monospace-font-name = "Caskaydia Mono Nerd Font 11";
-          icon-theme = "Tela nord";
-          cursor-theme = "macOS";
-          cursor-size = 24;
         };
       };
     };

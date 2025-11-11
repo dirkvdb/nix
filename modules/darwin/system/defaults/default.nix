@@ -1,14 +1,13 @@
 {
   lib,
   config,
-  userConfig,
   ...
 }:
 let
 
   inherit (lib) mkEnableOption mkIf;
   cfg = config.local.system.defaults;
-
+  hostname = config.local.network.hostname;
 in
 {
   options.local.system.defaults = {
@@ -24,7 +23,7 @@ in
       };
 
       defaults = {
-        smb.NetBIOSName = userConfig.hostname;
+        smb.NetBIOSName = hostname;
 
         dock = {
           autohide = true;

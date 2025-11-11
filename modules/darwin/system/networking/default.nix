@@ -1,6 +1,6 @@
-{ userConfig, ... }:
+{ config, ... }:
 {
 
-  networking.hostName = userConfig.hostname;
-  networking.computerName = userConfig.hostname;
+  networking.hostName = config.local.network.hostname;
+  networking.computerName = config.local.network.hostname;
 }

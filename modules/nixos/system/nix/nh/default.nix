@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  userConfig,
   ...
 }:
 let
@@ -18,7 +17,7 @@ in
       enable = true;
       clean.enable = true;
       clean.extraArgs = "--keep-since 4d --keep 3";
-      flake = "/home/${userConfig.username}/nix"; # sets NH_FLAKE variable
+      flake = "/home/${config.local.user.name}/nix"; # sets NH_FLAKE variable
     };
   };
 }

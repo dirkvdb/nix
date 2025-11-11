@@ -1,11 +1,13 @@
 {
   pkgs,
+  themeConfig,
   ...
 }:
 {
   imports = [
     ../../modules/darwin/import.nix
     ../../modules/home/import.nix
+    ../theme.nix
   ];
 
   config = {
@@ -20,6 +22,8 @@
         home-manager.enable = true;
         shell.package = pkgs.fish;
       };
+
+      theme = themeConfig;
 
       apps = {
         raycast.enable = true;

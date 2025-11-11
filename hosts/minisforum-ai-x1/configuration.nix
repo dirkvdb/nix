@@ -1,6 +1,5 @@
 {
   pkgs,
-  userConfig,
   inputs,
   ...
 }:
@@ -30,6 +29,10 @@
         name = "dirk";
         home-manager.enable = true;
         shell.package = pkgs.fish;
+      };
+
+      theme = {
+        name = "everforest";
       };
 
       system = {
@@ -66,7 +69,7 @@
 
         network = {
           enable = true;
-          hostname = userConfig.hostname;
+          hostname = "mini";
 
           ethernet = {
             enable = true;
@@ -106,6 +109,7 @@
       desktop = {
         enable = true;
         displayScale = 1.666667;
+        qtScaleFactor = 2.0;
         hyprland.enable = true;
       };
 
