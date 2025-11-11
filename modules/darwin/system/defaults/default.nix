@@ -7,7 +7,6 @@ let
 
   inherit (lib) mkEnableOption mkIf;
   cfg = config.local.system.defaults;
-  hostname = config.local.network.hostname;
 in
 {
   options.local.system.defaults = {
@@ -20,10 +19,11 @@ in
         enableKeyMapping = true; # enable key mapping so that we can use `option` as `control`
         remapCapsLockToEscape = false; # remap caps lock to escape, useful for vim users
         swapLeftCommandAndLeftAlt = false;
+        swapLeftCtrlAndFn = true;
       };
 
       defaults = {
-        smb.NetBIOSName = hostname;
+        smb.NetBIOSName = config.local.system.network.hostname;
 
         dock = {
           autohide = true;

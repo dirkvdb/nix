@@ -6,7 +6,6 @@
   imports = [
     ../../modules/darwin/import.nix
     ../../modules/home/import.nix
-    ../theme.nix
   ];
 
   config = {
@@ -37,6 +36,12 @@
       };
 
       system = {
+        defaults.enable = true;
+
+        network = {
+          hostname = "macbook-pro";
+        };
+
         nix = {
           unfree.enable = true;
           nh.enable = true;
@@ -93,7 +98,7 @@
         "balenaetcher"
         "dropbox"
         # bruno
-        # "ghostty"
+        "ghostty"
         "vivaldi"
         "fork"
         "microsoft-teams"
@@ -107,6 +112,7 @@
         "spotify"
         "passepartout"
         "whatsapp"
+        "zed"
         "zen"
       ];
     };

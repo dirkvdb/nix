@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 let
@@ -17,6 +18,8 @@ in
     home-manager.users.${user.name} = {
       programs.ghostty = {
         enable = true;
+        package = if pkgs.stdenv.isDarwin then null else pkgs.ghostty;
+
         settings = {
           theme = theme.ghosttyTheme;
 

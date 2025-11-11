@@ -7,6 +7,8 @@ in
   home-manager.users.${user.name} = {
     programs.zed-editor = {
       enable = true;
+      package = if pkgs.stdenv.isDarwin then null else pkgs.zed-editor;
+
       extensions = [
         "biome"
         "cargo-tom"
@@ -21,11 +23,12 @@ in
         "rainbow-csv"
         "tombi"
       ];
-      extraPackages = with pkgs; [
+
+      extraPackages = pkgs.lib.mkIf (!pkgs.stdenv.isDarwin) (with pkgs; [
         nil
         nixd
         biome
-      ];
+      ]);
 
       userSettings = {
         #ui_font_family = "Roboto";
