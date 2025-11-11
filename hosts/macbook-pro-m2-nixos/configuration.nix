@@ -94,7 +94,6 @@
       desktop = {
         enable = true;
         displayScale = 2.0;
-        qtScaleFactor = 2.0;
         hyprland.enable = true;
       };
 
