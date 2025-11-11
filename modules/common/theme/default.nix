@@ -70,6 +70,12 @@ in
       description = "UI font family (bold variant)";
     };
 
+    uiFontSerif = lib.mkOption {
+      type = lib.types.str;
+      default = selectedPreset.uiFontSerif;
+      description = "UI font family (serif variant)";
+    };
+
     codeFont = lib.mkOption {
       type = lib.types.str;
       default = selectedPreset.codeFont;

@@ -102,6 +102,7 @@
         ssh.enable = true;
         fwupd.enable = true;
         printing.enable = true;
+        power-profiles-daemon.enable = true;
       };
 
       desktop = {
