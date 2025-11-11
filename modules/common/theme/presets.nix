@@ -7,6 +7,7 @@
     iconTheme = "Tela nord";
     iconThemePackage = pkgs.tela-icon-theme;
     uiFont = "Ubuntu Sans";
+    uiFontSerif = "Noto Serif";
     uiFontSize = 10;
     uiFontBold = "Ubuntu Sans Bold";
     codeFont = "CaskaydiaMono Nerd Font Mono";
@@ -32,6 +33,7 @@
   #   uiFont = "Inter";
   #   uiFontSize = 11;
   #   uiFontBold = "Inter Bold";
+  #   uiFontSerif = "Noto Serif";
   #   codeFont = "JetBrainsMono Nerd Font";
   codeFontSize = 14;
   #   terminalFont = "JetBrainsMono Nerd Font";
