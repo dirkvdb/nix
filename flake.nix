@@ -66,25 +66,17 @@
       nixosConfigurations.mini =
         let
           system = "x86_64-linux";
-          userConfig = {
-            hostname = "mini";
-            username = "dirk";
-            theme = "everforest";
-            qtScaleFactor = 2;
-          };
         in
         nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit
               inputs
               system
-              userConfig
               ;
           };
           modules = [
             ./hosts/minisforum-ai-x1/configuration.nix
             nix-index-database.nixosModules.nix-index
-
             {
               nixpkgs.overlays = [ overlay ];
             }
@@ -94,19 +86,12 @@
       nixosConfigurations.macbook-pro =
         let
           system = "aarch64-linux";
-          userConfig = {
-            hostname = "macbook-pro";
-            username = "dirk";
-            theme = "everforest";
-            qtScaleFactor = 2;
-          };
         in
         nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit
               inputs
               system
-              userConfig
               ;
           };
           modules = [
@@ -128,17 +113,12 @@
       darwinConfigurations."macbook-pro" =
         let
           system = "aarch64-darwin";
-          userConfig = {
-            hostname = "macbook-pro";
-            username = "dirk";
-          };
         in
         darwin.lib.darwinSystem {
           specialArgs = {
             inherit
               inputs
               system
-              userConfig
               ;
           };
           modules = [

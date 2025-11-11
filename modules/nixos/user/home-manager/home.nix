@@ -3,9 +3,9 @@
   system,
   user,
   config,
-  userConfig,
   elephant,
   walker,
+  theme,
   ...
 }:
 {
@@ -47,7 +47,7 @@
 
     xdg.configFile."mako".source = ../../../home/dotfiles/mako;
     xdg.dataFile."theme" = {
-      source = ../../../home/themes/${userConfig.theme};
+      source = ../../../home/themes/${theme.name};
       recursive = true;
     };
 

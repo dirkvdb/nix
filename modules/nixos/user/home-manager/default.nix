@@ -3,7 +3,6 @@
   config,
   inputs,
   system,
-  userConfig,
   ...
 }:
 let
@@ -24,12 +23,12 @@ in
         inherit
           inputs
           system
-          userConfig
           user
           ;
         elephant = inputs.elephant;
         walker = inputs.walker;
         zen-browser = inputs.zen-browser;
+        theme = config.local.theme;
       };
       sharedModules = [
         inputs.zen-browser.homeModules.default

@@ -2,12 +2,11 @@
   lib,
   config,
   pkgs,
-  userConfig,
   ...
 }:
 let
   inherit (config.local) user;
-  home-directory = "/home/${userConfig.username}";
+  home-directory = "/home/${config.local.user.name}";
 in
 {
   options.local.user = {

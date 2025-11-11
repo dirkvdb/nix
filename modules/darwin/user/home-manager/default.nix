@@ -3,7 +3,6 @@
   config,
   inputs,
   system,
-  userConfig,
   ...
 }:
 let
@@ -23,7 +22,6 @@ in
         inherit
           inputs
           system
-          userConfig
           user
           ;
         zen-browser = inputs.zen-browser;

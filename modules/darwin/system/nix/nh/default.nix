@@ -2,7 +2,6 @@
   lib,
   config,
   pkgs,
-  userConfig,
   ...
 }:
 let
@@ -19,7 +18,7 @@ in
 
     # Set environment variables for nh on Darwin
     environment.variables = {
-      NH_FLAKE = "/Users/${userConfig.username}/.config/nix";
+      NH_FLAKE = "/Users/${config.local.user.name}/.config/nix";
     };
   };
 }

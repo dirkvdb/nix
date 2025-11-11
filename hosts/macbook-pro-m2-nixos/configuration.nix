@@ -1,6 +1,5 @@
 {
   pkgs,
-  userConfig,
   inputs,
   ...
 }:
@@ -24,6 +23,10 @@
         name = "dirk";
         home-manager.enable = true;
         shell.package = pkgs.fish;
+      };
+
+      theme = {
+        name = "everforest";
       };
 
       system = {
@@ -55,7 +58,7 @@
 
         network = {
           enable = true;
-          hostname = userConfig.hostname;
+          hostname = "macbook-pro";
 
           wifi = {
             enable = true;
@@ -93,6 +96,7 @@
       desktop = {
         enable = true;
         displayScale = 2.0;
+        qtScaleFactor = 2.0;
         hyprland.enable = true;
       };
 
