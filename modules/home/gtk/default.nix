@@ -21,12 +21,12 @@ in
 
         theme = {
           name = theme.gtkTheme;
-          package = pkgs.gnome-themes-extra;
+          package = theme.gtkThemePackage;
         };
 
         iconTheme = {
           name = theme.iconTheme;
-          package = pkgs.tela-icon-theme;
+          package = theme.iconThemePackage;
         };
 
         font = {
