@@ -98,7 +98,7 @@ in
           font_family = "FiraMono Nerd Font Mono";
         };
         theme = {
-          mode = "system";
+          mode = "light";
           light = "Ayu Mirage";
           dark = "Ayu Dark";
         };
