@@ -108,7 +108,6 @@
       desktop = {
         enable = true;
         displayScale = 1.666667;
-        qtScaleFactor = 2.0;
         hyprland.enable = true;
       };
 

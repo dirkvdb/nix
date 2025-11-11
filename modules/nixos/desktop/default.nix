@@ -17,13 +17,6 @@ in
       example = 1.5;
       description = "Global display scale factor (e.g., 1.0 for normal, 1.5 for 150% scaling).";
     };
-
-    qtScaleFactor = lib.mkOption {
-      type = lib.types.number;
-      default = 1.0;
-      example = 2.0;
-      description = "Qt application scale factor (QT_SCALE_FACTOR environment variable).";
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -41,10 +34,6 @@ in
       enable = true;
       platformTheme = "gtk2";
       style = "adwaita-dark";
-    };
-
-    environment.sessionVariables = {
-      QT_SCALE_FACTOR = toString cfg.qtScaleFactor;
     };
 
     environment.systemPackages = with pkgs; [
