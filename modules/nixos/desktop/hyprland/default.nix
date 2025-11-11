@@ -31,8 +31,6 @@ in
       withUWSM = false;
     };
 
-
-
     # Hyprland-specific packages
     environment.systemPackages = with pkgs; [
       grim # grab images from a Wayland compositor
@@ -45,7 +43,6 @@ in
       mako
       mesa
       nwg-displays
-      nwg-look
       satty # screenshot annotation tool
       slurp # for region selection (screen shot, etc)
       sunsetr
