@@ -1,6 +1,7 @@
 { pkgs, config, ... }:
 let
   inherit (config.local) user;
+  inherit (config.local) theme;
 in
 {
   home-manager.users.${user.name} = {
@@ -33,7 +34,7 @@ in
           calt = 0;
         };
         icon_theme = {
-          mode = "system";
+          mode = "light";
           light = "Catppuccin Mocha";
           dark = "Catppuccin Mocha";
         };
@@ -42,7 +43,7 @@ in
         };
         autosave = "on_focus_change";
         agent = {
-          use_modifier_to_send = true;
+          use_modifier_to_send = false;
           default_profile = "write";
           play_sound_when_agent_done = true;
           inline_assistant_model = {
@@ -79,9 +80,9 @@ in
           metrics = false;
         };
         ui_font_size = 15.0;
-        buffer_font_family = "CaskaydiaMono Nerd Font Mono";
+        buffer_font_family = theme.codeFont;
         buffer_font_weight = 600.0;
-        buffer_font_size = 14;
+        buffer_font_size = theme.codeFontSize;
         buffer_font_features = {
           liga = true;
         };
@@ -93,9 +94,9 @@ in
         };
         terminal = {
           dock = "bottom";
-          font_size = 13;
+          font_size = theme.terminalFontSize;
           line_height = "standard";
-          font_family = "FiraMono Nerd Font Mono";
+          font_family = theme.terminalFont;
         };
         theme = {
           mode = "light";

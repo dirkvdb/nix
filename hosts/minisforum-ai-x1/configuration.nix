@@ -112,7 +112,6 @@
       };
 
       apps = {
-        ghostty.enable = true;
         bitwarden.enable = true;
         prusa-slicer.enable = true;
         vivaldi.enable = true;
@@ -122,6 +121,8 @@
       };
 
       home-manager = {
+        ghostty.enable = true;
+
         keepassxc = {
           enable = true;
           databasePaths = [

@@ -37,7 +37,6 @@ in
 
     # Per-directory XDG config entries for dotfiles
     xdg.configFile."btop".source = ./dotfiles/btop;
-    xdg.configFile."ghostty".source = ./dotfiles/ghostty;
     xdg.configFile."wezterm".source = ./dotfiles/wezterm;
     xdg.configFile."sublime-merge/Packages/User".source = ./dotfiles/sublime-merge/Packages/User;
 

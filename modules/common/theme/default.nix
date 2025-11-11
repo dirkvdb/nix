@@ -76,10 +76,28 @@ in
       description = "Code font family";
     };
 
+    codeFontSize = lib.mkOption {
+      type = lib.types.int;
+      default = selectedPreset.codeFontSize;
+      description = "Code font size";
+    };
+
     terminalFont = lib.mkOption {
       type = lib.types.str;
       default = selectedPreset.terminalFont;
       description = "Terminal font family";
+    };
+
+    terminalFontSize = lib.mkOption {
+      type = lib.types.int;
+      default = selectedPreset.terminalFontSize;
+      description = "Terminal font size";
+    };
+
+    ghosttyTheme = lib.mkOption {
+      type = lib.types.str;
+      default = selectedPreset.ghosttyTheme;
+      description = "Ghostty terminal theme";
     };
   };
 

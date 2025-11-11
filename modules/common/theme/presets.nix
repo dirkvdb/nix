@@ -10,7 +10,10 @@
     uiFontSize = 10;
     uiFontBold = "Ubuntu Sans Bold";
     codeFont = "CaskaydiaMono Nerd Font Mono";
+    codeFontSize = 14;
     terminalFont = "FiraMono Nerd Font Mono";
+    terminalFontSize = 12;
+    ghosttyTheme = "Everforest Dark Hard";
     fonts = with pkgs; [
       ubuntu-sans
       nerd-fonts.caskaydia-mono
@@ -30,7 +33,10 @@
   #   uiFontSize = 11;
   #   uiFontBold = "Inter Bold";
   #   codeFont = "JetBrainsMono Nerd Font";
+  codeFontSize = 14;
   #   terminalFont = "JetBrainsMono Nerd Font";
+  #   terminalFontSize = 14;
+  #   ghosttyTheme = "catppuccin-mocha";
   #   fonts = with pkgs; [
   #     inter
   #     nerd-fonts.jetbrains-mono

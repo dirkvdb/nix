@@ -99,7 +99,6 @@
       };
 
       apps = {
-        ghostty.enable = true;
         bitwarden.enable = false;
         prusa-slicer.enable = false;
         brave.enable = true;
@@ -109,6 +108,8 @@
       };
 
       home-manager = {
+        ghostty.enable = true;
+
         keepassxc = {
           enable = true;
           databasePaths = [
