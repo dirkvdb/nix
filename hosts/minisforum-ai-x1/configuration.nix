@@ -31,9 +31,7 @@
         shell.package = pkgs.fish;
       };
 
-      theme = {
-        name = "everforest";
-      };
+      theme.preset = "everforest";
 
       system = {
         cpu.cores = 20;

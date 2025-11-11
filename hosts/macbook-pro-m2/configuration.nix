@@ -1,6 +1,5 @@
 {
   pkgs,
-  themeConfig,
   ...
 }:
 {
@@ -23,7 +22,7 @@
         shell.package = pkgs.fish;
       };
 
-      theme = themeConfig;
+      theme.preset = "everforest";
 
       apps = {
         raycast.enable = true;

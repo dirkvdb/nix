@@ -1,53 +1,68 @@
-{ lib, ... }:
+{ lib, config, ... }:
+
+let
+  presets = import ./presets.nix;
+
+  cfg = config.local.theme;
+
+  # Get the selected preset, or use everforest as default
+  selectedPreset = presets.${cfg.preset} or presets.everforest;
+
+in
 {
   options.local.theme = {
+    preset = lib.mkOption {
+      type = lib.types.enum (builtins.attrNames presets);
+      default = "everforest";
+      description = "Theme preset to use";
+    };
+
     name = lib.mkOption {
       type = lib.types.str;
-      default = "everforest";
+      default = selectedPreset.name;
       description = "Theme name";
     };
 
     gtkTheme = lib.mkOption {
       type = lib.types.str;
-      default = "Adwaita-dark";
+      default = selectedPreset.gtkTheme;
       description = "GTK theme name";
     };
 
     iconTheme = lib.mkOption {
       type = lib.types.str;
-      default = "Tela nord";
+      default = selectedPreset.iconTheme;
       description = "Icon theme name";
     };
 
     uiFont = lib.mkOption {
       type = lib.types.str;
-      default = "Ubuntu Sans";
+      default = selectedPreset.uiFont;
       description = "UI font family";
     };
 
     uiFontSize = lib.mkOption {
       type = lib.types.int;
-      default = 10;
-      description = "UI font sizee";
+      default = selectedPreset.uiFontSize;
+      description = "UI font size";
     };
 
     uiFontBold = lib.mkOption {
       type = lib.types.str;
-      default = "Ubuntu Sans Bold";
+      default = selectedPreset.uiFontBold;
       description = "UI font family (bold variant)";
     };
 
     codeFont = lib.mkOption {
       type = lib.types.str;
-      default = "CaskaydiaMono Nerd Font Mono";
+      default = selectedPreset.codeFont;
       description = "Code font family";
     };
 
     terminalFont = lib.mkOption {
       type = lib.types.str;
-      default = "FiraMono Nerd Font Mono";
+      default = selectedPreset.terminalFont;
       description = "Terminal font family";
     };
   };
-
 }
