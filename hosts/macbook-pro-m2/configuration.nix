@@ -28,7 +28,6 @@
         karabiner.enable = true;
         bitwarden.enable = false;
         localsend.enable = true;
-        vscode.enable = true;
       };
 
       tools = {
@@ -69,9 +68,6 @@
       };
     };
 
-    # targets.darwin.linkApps.enable = true;
-    # targets.darwin.copyApps.enable = true;
-
     # Create /etc/zshrc that loads the nix-darwin environment.
     programs = {
       gnupg.agent.enable = true;
@@ -105,6 +101,7 @@
         "microsoft-outlook"
         "microsoft-excel"
         "microsoft-auto-update"
+        "visual-studio-code"
         "orbstack"
         #"qgis"
         # autodesk-fusion

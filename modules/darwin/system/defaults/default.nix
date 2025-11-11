@@ -27,9 +27,19 @@ in
 
         dock = {
           autohide = true;
+          autohide-time-modifier = 0.25; # speed up autohide/show animation
           orientation = "bottom";
           show-recents = false; # disable recent apps
           static-only = false;
+
+          persistent-apps = [
+            "/Applications/Ghostty.app"
+            "/Applications/Zen.app"
+            "/Applications/Zed.app"
+            "/Applications/Visual Studio Code.app"
+            "/Applications/Fork.app"
+            "/Applications/Whatsapp.app"
+          ];
         };
 
         finder = {
