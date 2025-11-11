@@ -175,7 +175,7 @@ in
               "<span color='#e69875'>▇</span>"
               "<span color='#e67e80'>█</span>"
             ];
-            on-click = "ghostty -e btop";
+            on-click = "xdg-terminal-exec -- btop";
           };
 
           clock = {

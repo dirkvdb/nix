@@ -28,7 +28,6 @@
         raycast.enable = true;
         karabiner.enable = true;
         bitwarden.enable = false;
-        ghostty.enable = true;
         localsend.enable = true;
         vscode.enable = true;
       };
@@ -52,8 +51,11 @@
 
       home-manager = {
         skhd.enable = true;
+        ghostty.enable = true;
+
         keepassxc = {
           enable = true;
+
           databasePaths = [
             "/Users/dirk/Secrets/Desktop.kdbx"
           ];
