@@ -76,7 +76,7 @@ in
           # Save power on short time away
           {
             timeout = 150; # 2.5min.
-            on-timeout = "brightnessctl -s set 10"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
+            on-timeout = "brightnessctl -s set 0"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
             on-resume = "brightnessctl -r"; # monitor backlight restore.
           }
           # Power of the monitor after some time
@@ -87,17 +87,18 @@ in
               bash -lc '
                 hyprctl dispatch dpms on
                 # give the link time to train
+                sleep 2.0
+                hyprctl dispatch dpms on
                 sleep 1.0
                 # restore brightness *after* DPMS is up
-                brightnessctl -r
-                # belt-and-suspenders: one more dpms on after brightness restore
                 hyprctl dispatch dpms on
+                brightnessctl -r
               '
             '';
           }
           # Long time away - lock the screen
           {
-            timeout = 3600; # 1hr
+            timeout = 3600; # 60min
             on-timeout = "hyprlock";
           }
         ];
