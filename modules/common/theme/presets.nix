@@ -4,7 +4,7 @@
     name = "everforest";
     gtkTheme = "Adwaita-dark";
     gtkThemePackage = pkgs.gnome-themes-extra;
-    iconTheme = "Tela nord";
+    iconTheme = "Tela-nord";
     iconThemePackage = pkgs.tela-icon-theme;
     uiFont = "Ubuntu Sans";
     uiFontSerif = "Noto Serif";
