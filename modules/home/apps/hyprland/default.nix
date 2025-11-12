@@ -7,6 +7,7 @@
 let
   inherit (config.local) user;
   isLinux = pkgs.stdenv.isLinux;
+  isDesktop = config.local.desktop.enable;
   # hyprexpo uses x86-only function hooks and doesn't work on ARM
   # See: https://github.com/hyprwm/hyprland-plugins/issues/438
   isX86 = pkgs.stdenv.isx86_64;
@@ -17,8 +18,7 @@ in
     ./waybar.nix
   ];
 
-  home-manager.users.${user.name} = lib.mkIf isLinux {
-
+  home-manager.users.${user.name} = lib.mkIf (isLinux && isDesktop) {
     xdg.configFile."walker".source = ../../dotfiles/walker;
     xdg.configFile."sunsetr".source = ../../dotfiles/sunsetr;
 

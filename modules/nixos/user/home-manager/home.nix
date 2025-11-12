@@ -1,16 +1,19 @@
 {
   pkgs,
+  lib,
   system,
   user,
   config,
   elephant,
   walker,
   theme,
+  isDesktop,
   ...
 }:
 {
   imports = [
     ./scripts/linux.nix
+  ] ++ lib.optionals isDesktop [
     walker.homeManagerModules.default
   ];
 
@@ -32,7 +35,7 @@
       stateVersion = "25.05";
       homeDirectory = "${user.homeDir}";
 
-      packages = [
+      packages = lib.optionals isDesktop [
         # Elephant with all providers for walker
         elephant.packages.${system}.elephant-with-providers
       ];
@@ -50,12 +53,10 @@
       source = ../../../home/themes/${theme.name};
       recursive = true;
     };
-
-    # Configure walker from flake
+  } // lib.optionalAttrs isDesktop {
     programs.walker = {
       enable = true;
       runAsService = true;
     };
-
   };
 }

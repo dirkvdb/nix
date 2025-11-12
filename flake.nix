@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
     # prebuilt database for nix-index (find packages for missing binaries)
     nix-index-database = {
@@ -49,6 +50,7 @@
       nixpkgs,
       nix-index-database,
       nixos-hardware,
+      nixos-wsl,
       darwin,
       home-manager,
       elephant,
@@ -106,6 +108,27 @@
             }
           ];
         };
+
+        nixosConfigurations.wsl =
+          let
+            system = "x86_64-linux";
+          in
+          nixpkgs.lib.nixosSystem {
+            specialArgs = {
+              inherit
+                inputs
+                system
+                ;
+            };
+            modules = [
+              ./hosts/wsl/configuration.nix
+              nix-index-database.nixosModules.nix-index
+              {
+                nixpkgs.overlays = [ overlay ];
+              }
+              nixos-wsl.nixosModules.default
+            ];
+          };
 
       # Build darwin flake using:
       # darwin-rebuild build --flake ~/.config/nix/#MacBook-Pro
