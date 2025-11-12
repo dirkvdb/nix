@@ -29,6 +29,7 @@ in
         walker = inputs.walker;
         zen-browser = inputs.zen-browser;
         theme = config.local.theme;
+        isDesktop = config.local.desktop.enable or false;
       };
       sharedModules = [
         inputs.zen-browser.homeModules.default
