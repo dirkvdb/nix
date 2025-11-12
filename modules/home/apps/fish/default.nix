@@ -33,7 +33,7 @@ in
         man = "batman";
         nrs = if pkgs.stdenv.isDarwin then "nh darwin switch ~/nix" else "nh os switch ~/nix";
         tree = "lsd --tree";
-        zed = if pkgs.stdenv.isDarwin then "zed" else "zeditor";
+        zed = if pkgs.stdenv.isDarwin || config.wsl.enable then "zed" else "zeditor";
       };
 
       plugins = [
