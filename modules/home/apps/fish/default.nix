@@ -1,6 +1,7 @@
 { pkgs, config, ... }:
 let
   inherit (config.local) user;
+  isWsl = config.wsl.enable or false;
 in
 {
   home-manager.users.${user.name} = {
@@ -31,9 +32,15 @@ in
         ll = "lsd -la";
         ls = "lsd";
         man = "batman";
-        nrs = if pkgs.stdenv.isDarwin then "nh darwin switch ~/nix" else if config.wsl.enable then "nh os switch -H wsl" else "nh os switch ~/nix";
+        nrs =
+          if pkgs.stdenv.isDarwin then
+            "nh darwin switch ~/nix"
+          else if isWsl then
+            "nh os switch -H wsl"
+          else
+            "nh os switch ~/nix";
         tree = "lsd --tree";
-        zed = if pkgs.stdenv.isDarwin || config.wsl.enable then "zed" else "zeditor";
+        zed = if pkgs.stdenv.isDarwin || isWsl then "zed" else "zeditor";
       };
 
       plugins = [
