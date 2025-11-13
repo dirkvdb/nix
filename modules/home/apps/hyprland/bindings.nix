@@ -99,6 +99,9 @@ in
         "$mod, L, Move focus right, movefocus, r"
         "$mod, K, Move focus up, movefocus, u"
         "$mod, J, Move focus down, movefocus, d"
+        # Move workspace with CTRL + arrow keys
+        "CTRL, LEFT, Navigate workspace left, workspace, -1"
+        "CTRL, RIGHT, Navigate workspace right, workspace, +1"
 
         # Switch workspaces with SUPER + [0-9]
         "$mod, code:10, Switch to workspace 1, workspace, 1"
