@@ -39,6 +39,13 @@ in
             "nh os switch -H wsl"
           else
             "nh os switch ~/nix";
+        update =
+          if pkgs.stdenv.isDarwin then
+            "nh darwin switch -u ~/nix"
+          else if isWsl then
+            "nh os switch -u -H wsl"
+          else
+            "nh os switch -u ~/nix";
         tree = "lsd --tree";
         zed = if pkgs.stdenv.isDarwin || isWsl then "zed" else "zeditor";
       };
