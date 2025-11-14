@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
     # prebuilt database for nix-index (find packages for missing binaries)
     nix-index-database = {
@@ -45,90 +46,79 @@
 
   outputs =
     {
-      self,
       nixpkgs,
       nix-index-database,
-      nixos-hardware,
+      nixos-wsl,
       darwin,
-      home-manager,
-      elephant,
-      walker,
-      zen-browser,
-      apple-silicon,
+      ...
     }@inputs:
     let
       # Custom packages overlay
       overlay = final: prev: {
         plymouth-theme-nixos = prev.callPackage ./pkgs/plymouth-theme-nixos { };
       };
-    in
-    {
-      nixosConfigurations.mini =
-        let
-          system = "x86_64-linux";
-        in
+
+      # Helper function for NixOS configurations
+      mkNixos =
+        {
+          system,
+          hostPath,
+          extraModules ? [ ],
+          extraOverlays ? [ ],
+        }:
         nixpkgs.lib.nixosSystem {
           specialArgs = {
-            inherit
-              inputs
-              system
-              ;
+            inherit inputs system;
           };
           modules = [
-            ./hosts/minisforum-ai-x1/configuration.nix
+            hostPath
             nix-index-database.nixosModules.nix-index
-            {
-              nixpkgs.overlays = [ overlay ];
-            }
-          ];
+            { nixpkgs.overlays = [ overlay ] ++ extraOverlays; }
+          ]
+          ++ extraModules;
         };
 
-      nixosConfigurations.macbook-pro =
-        let
-          system = "aarch64-linux";
-        in
-        nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit
-              inputs
-              system
-              ;
-          };
-          modules = [
-            ./hosts/macbook-pro-m2-nixos/configuration.nix
-            nix-index-database.nixosModules.nix-index
-
-            {
-              nixpkgs.overlays = [
-                overlay
-                inputs.apple-silicon.overlays.apple-silicon-overlay
-              ];
-            }
-          ];
-        };
-
-      # Build darwin flake using:
-      # darwin-rebuild build --flake ~/.config/nix/#MacBook-Pro
-      # sudo darwin-rebuild switch --flake ~/.config/nix/#MacBook-Pro
-      darwinConfigurations."macbook-pro" =
-        let
-          system = "aarch64-darwin";
-        in
+      # Helper function for Darwin configurations
+      mkDarwin =
+        {
+          system,
+          hostPath,
+          extraOverlays ? [ ],
+        }:
         darwin.lib.darwinSystem {
           specialArgs = {
-            inherit
-              inputs
-              system
-              ;
+            inherit inputs system;
           };
           modules = [
-            ./hosts/macbook-pro-m2/configuration.nix
+            hostPath
             nix-index-database.darwinModules.nix-index
-
-            {
-              nixpkgs.overlays = [ overlay ];
-            }
+            { nixpkgs.overlays = [ overlay ] ++ extraOverlays; }
           ];
         };
+    in
+    {
+      nixosConfigurations = {
+        mini = mkNixos {
+          system = "x86_64-linux";
+          hostPath = ./hosts/minisforum-ai-x1/configuration.nix;
+        };
+
+        macbook-pro = mkNixos {
+          system = "aarch64-linux";
+          hostPath = ./hosts/macbook-pro-m2-nixos/configuration.nix;
+          extraOverlays = [ inputs.apple-silicon.overlays.apple-silicon-overlay ];
+        };
+
+        wsl = mkNixos {
+          system = "x86_64-linux";
+          hostPath = ./hosts/wsl/configuration.nix;
+          extraModules = [ nixos-wsl.nixosModules.default ];
+        };
+      };
+
+      darwinConfigurations."macbook-pro" = mkDarwin {
+        system = "aarch64-darwin";
+        hostPath = ./hosts/macbook-pro-m2/configuration.nix;
+      };
     };
 }

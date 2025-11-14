@@ -160,6 +160,12 @@ in
 
       userKeymaps = [
         {
+          "bindings" = {
+            "ctrl-p" = "file_finder::Toggle";
+            "alt-o" = "editor::SwitchSourceHeader";
+          };
+        }
+        {
           context = "Workspace";
           bindings = {
             "secondary-shift-t" = [
@@ -169,11 +175,6 @@ in
                 reveal_target = "dock";
               }
             ];
-          };
-        }
-        {
-          context = "Workspace";
-          bindings = {
             "secondary-shift-b" = [
               "task::Spawn"
               {
@@ -181,11 +182,13 @@ in
                 reveal_target = "dock";
               }
             ];
+            "alt-e" = "project_panel::ToggleFocus";
           };
         }
         {
+          context = "Terminal";
           bindings = {
-            "alt-o" = "editor::SwitchSourceHeader";
+            "alt-e" = "terminal_panel::ToggleFocus";
           };
         }
       ];
