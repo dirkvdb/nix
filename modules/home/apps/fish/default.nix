@@ -41,11 +41,11 @@ in
             "nh os switch ~/nix";
         update =
           if pkgs.stdenv.isDarwin then
-            "nh darwin switch -u ~/nix"
+            "nh darwin switch --update --commit-lock-file ~/nix"
           else if isWsl then
-            "nh os switch -u -H wsl"
+            "nh os switch --update --commit-lock-file -H wsl"
           else
-            "nh os switch -u ~/nix";
+            "nh os switch --update --commit-lock-file ~/nix";
         tree = "lsd --tree";
         zed = if pkgs.stdenv.isDarwin || isWsl then "zed" else "zeditor";
       };
