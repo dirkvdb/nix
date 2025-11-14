@@ -17,10 +17,6 @@
     wsl.enable = true;
     wsl.defaultUser = "dirk";
 
-    services = {
-      openssh.enable = true;
-    };
-
     environment.variables = {
       SSH_AUTH_SOCK = "/mnt/wsl/ssh-agent.sock";
     };
