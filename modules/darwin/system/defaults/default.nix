@@ -43,11 +43,13 @@ in
         };
 
         finder = {
-          _FXShowPosixPathInTitle = true; # show full path in finder title
+          _FXShowPosixPathInTitle = false; # show full path in finder title
+          _FXSortFoldersFirst = true;
+          NewWindowTarget = "Home";
           AppleShowAllExtensions = true;
-          QuitMenuItem = true; # enable quit menu item
+          QuitMenuItem = true;
           ShowPathbar = true;
-          ShowStatusBar = true; # show status bar
+          ShowStatusBar = true;
           FXEnableExtensionChangeWarning = false;
         };
 
