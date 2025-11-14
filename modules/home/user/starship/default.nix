@@ -10,7 +10,7 @@ in
         add_newline = false;
         palette = "default";
 
-        format = ''[╭](fg:separator)$status$hostname$directory$git_branch$cmd_duration$line_break[╰](fg:separator)$character'';
+        format = ''[╭](fg:separator)$status$hostname$custom$directory$git_branch$cmd_duration$line_break[╰](fg:separator)$character'';
 
         palettes.default = {
           prompt_ok = "#D3C6AA";
@@ -75,6 +75,11 @@ in
           ssh_only = true;
           format = "[─](fg:separator)[](fg:host)[󰍹](fg:icon bg:host)[](fg:host bg:background)[ $hostname](bg:background)[](fg:background)";
           disabled = false;
+        };
+
+        custom.wsl = {
+          when = ''[ -n "$WSL_DISTRO_NAME" ]'';
+          format = "[─](fg:separator)[](fg:host)[](fg:icon bg:host)[](fg:host bg:background)[ WSL](bg:background)[](fg:background)";
         };
 
         time = {
