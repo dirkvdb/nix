@@ -41,9 +41,9 @@ in
           "zen.theme.gradient.show-custom-colors" = false;
           "zen.theme.accent-color" = "AccentColor";
           "zen.urlbar.behavior" = "float";
-          "zen.view.compact.enable-at-startup" = false;
-          "zen.view.compact.hide-tabbar" = true;
-          "zen.view.compact.hide-toolbar" = false;
+          "zen.view.compact.enable-at-startup" = true;
+          "zen.view.compact.hide-tabbar" = false;
+          "zen.view.compact.hide-toolbar" = true;
           "zen.view.compact.toolbar-flash-popup" = false;
           "zen.view.sidebar-expanded" = false;
           "zen.view.show-newtab-button-top" = false;
