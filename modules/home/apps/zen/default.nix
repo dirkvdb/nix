@@ -53,7 +53,7 @@ in
           "zen.workspaces.continue-where-left-off" = true;
           "sidebar.visibility" = "hide-sidebar";
           "browser.translations.neverTranslateLanguages" = "nl";
-          "browser.toolbars.bookmarks.visibility" = "newtab";
+          "browser.toolbars.bookmarks.visibility" = "always";
           "extensions.ui.dictionary.hidden" = true;
           "font.name.serif.x-western" = theme.uiFontSerif;
           "font.name.sans-serif.x-western" = theme.uiFont;
