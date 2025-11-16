@@ -1,6 +1,12 @@
-{ lib, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
   cfg = config.local.services.docker;
+  inherit (config.local) user;
 in
 {
   options.local.services.docker = {
@@ -14,10 +20,16 @@ in
       docker = {
         enable = true;
         rootless = {
-          enable = true;
+          enable = false;
           setSocketVariable = true;
         };
       };
     };
+
+    environment.systemPackages = [ pkgs.lazydocker ];
+
+    users.users.${user.name}.extraGroups = [
+      "docker"
+    ];
   };
 }
