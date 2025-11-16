@@ -38,7 +38,7 @@ in
           else if isWsl then
             "nh os switch -H wsl"
           else
-            "nh os switch ~/nix";
+            "nh os switch ~/nix && nixcfg-reload";
         update =
           if pkgs.stdenv.isDarwin then
             "nh darwin switch --update --commit-lock-file ~/nix"

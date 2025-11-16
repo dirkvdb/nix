@@ -72,6 +72,13 @@
       fi
     '')
 
+    # Make sure config changes get applied for apps that do not auto-reload
+    (pkgs.writeShellScriptBin "nixcfg-reload" ''
+      systemctl --user restart waybar.service
+      systemctl --user restart elephant.service
+      systemctl --user restart walker.service
+    '')
+
     # Toggle idle lock
     (pkgs.writeShellScriptBin "nixcfg-toggle-idle" ''
       if systemctl --user is-active --quiet hypridle.service; then
