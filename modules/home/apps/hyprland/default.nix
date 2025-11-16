@@ -401,6 +401,7 @@ in
           # Define terminal tag to style them uniformly
           "tag +terminal, class:(Alacritty|kitty|com.mitchellh.ghostty)"
           "float, class:org.gnome.Calculato"
+          "float, class:com.github.finefindus.eyedropper"
           "tag +floating-window, class:(blueberry.py|io.github.kaii_lb.Overskride|Impala|Wiremix|org.gnome.NautilusPreviewer|com.gabm.satty|About|TUI.float|org.keepassxc.KeePassXC)"
           "tag +floating-window, class:(xdg-desktop-portal-gtk|sublime_text|DesktopEditors|org.gnome.Nautilus), title:^(Open.*Files?|Open [F|f]older.*|Save.*Files?|Save.*As|Save|All Files)"
           # Browser types
@@ -430,8 +431,8 @@ in
 
           # Open Zed editor on workspace 3
           "workspace 3, class:(dev.zed.Zed)"
-          # Open File explorers on workspace 3
-          "workspace 4, class:(org.gnome.Nautilus|thunar)"
+          # Open File explorers on workspace 5
+          "workspace 5, class:(org.gnome.Nautilus|thunar)"
 
           "workspace 6, class:(sublime_merge)"
           "workspace 7, class:(Slack)"
