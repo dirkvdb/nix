@@ -102,6 +102,7 @@
         ssh.enable = true;
         fwupd.enable = true;
         printing.enable = true;
+        docker.enable = true;
         power-profiles-daemon.enable = true;
       };
 
@@ -136,6 +137,7 @@
     environment.systemPackages = with pkgs; [
       slack
       teams-for-linux
+      winboat
     ];
   };
 }
