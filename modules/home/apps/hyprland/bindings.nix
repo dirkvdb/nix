@@ -54,6 +54,7 @@ in
       ]
       ++ [
         "$mod ALT, SPACE, Menu, exec, nixcfg-menu"
+        "ALT, X, Special workspace, togglespecialworkspace"
 
         "$mod, ESCAPE, Power menu, exec, nixcfg-menu system"
         "$mod, RETURN, Terminal, exec, $terminal --working-directory=\"$(nixcfg-cmd-terminal-cwd)\""
