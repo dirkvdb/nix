@@ -38,6 +38,7 @@ in
 
     environment.systemPackages = with pkgs; [
       glib # for gsettings to work
+      eyedropper
       gsettings-qt
       nautilus
       file-roller # archive manager
