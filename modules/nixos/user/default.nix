@@ -71,7 +71,7 @@ in
 
     environment.variables = {
       EDITOR = "micro";
-      VISUAL = "nvim";
+      VISUAL = "zeditor";
     };
 
     # systemd.user.extraConfig = ''
@@ -84,10 +84,6 @@ in
       isNormalUser = true;
       createHome = true;
       uid = 1000;
-      # openssh.authorizedKeys.keyFiles = [ inputs.ssh-keys.outPath ];
-      # openssh.authorizedKeys.keys = [
-      #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMsmsLubwu6s0wkeKTsM2EIuJRKFsg2nZdRCVtQHk9LT thurs"
-      # ];
       group = "${user.name}";
       extraGroups = [
         "wheel"
