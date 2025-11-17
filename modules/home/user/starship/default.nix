@@ -10,7 +10,7 @@ in
         add_newline = false;
         palette = "default";
 
-        format = ''[╭](fg:separator)$status$hostname$custom$directory$nix_shell$git_branch$cmd_duration$line_break[╰](fg:separator)$character'';
+        format = ''[╭](fg:separator)$status$hostname$custom$directory$git_branch$nix_shell$cmd_duration$line_break[╰](fg:separator)$character'';
 
         palettes.default = {
           prompt_ok = "#D3C6AA";
