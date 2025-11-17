@@ -3,6 +3,6 @@
     "editor_path": "zeditor",
     "expand_untracked_files_by_default": true,
     "hardware_acceleration": "opengl",
-    "render_commit_dialog_message_at_top": false,
+    "render_commit_dialog_message_at_top": true,
     "time_format": "24h",
 }
