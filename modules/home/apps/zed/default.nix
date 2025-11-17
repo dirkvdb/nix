@@ -116,8 +116,13 @@ in
           Nix = {
             language_servers = [
               "nil"
-              "nixd"
+              "!nixd"
             ];
+            formatter = {
+              external = {
+                command = "nixfmt";
+              };
+            };
           };
         };
         diagnostics = {
