@@ -72,7 +72,7 @@ in
         "$mod, W, Close active window, killactive,"
         "$mod, K, Show key bindings, exec, nixcfg-menu-keybindings"
         "$mod, T, Activity, exec, $terminal -e btop"
-        "CONTROL SHIFT, V, Clipboard, exec, walker --provider clipboard --theme clipboard"
+        "CTRL SHIFT, V, Clipboard, exec, walker --provider clipboard --theme clipboard"
         "$mod SHIFT, O, Office applications, exec, systemctl --user start work.target"
         "$mod SHIFT ALT, O, Close office applications, exec, systemctl --user stop work.target"
 
@@ -101,8 +101,8 @@ in
         "$mod, K, Move focus up, movefocus, u"
         "$mod, J, Move focus down, movefocus, d"
         # Move workspace with CTRL + arrow keys
-        "CTRL, LEFT, Navigate workspace left, workspace, -1"
-        "CTRL, RIGHT, Navigate workspace right, workspace, +1"
+        "CTRL ALT, LEFT, Navigate workspace left, workspace, -1"
+        "CTRL ALT, RIGHT, Navigate workspace right, workspace, +1"
 
         # Switch workspaces with SUPER + [0-9]
         "$mod, code:10, Switch to workspace 1, workspace, 1"
