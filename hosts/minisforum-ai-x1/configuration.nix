@@ -119,6 +119,7 @@
         spotify.enable = true;
         localsend.enable = true;
         vscode.enable = true;
+        whatsapp.enable = true;
       };
 
       home-manager = {
