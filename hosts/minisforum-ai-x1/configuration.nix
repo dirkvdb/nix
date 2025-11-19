@@ -113,7 +113,6 @@
       };
 
       apps = {
-        bitwarden.enable = true;
         prusa-slicer.enable = true;
         vivaldi.enable = true;
         spotify.enable = true;
