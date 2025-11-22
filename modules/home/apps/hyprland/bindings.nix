@@ -72,7 +72,7 @@ in
         "$mod, W, Close active window, killactive,"
         "$mod, K, Show key bindings, exec, nixcfg-menu-keybindings"
         "$mod, T, Activity, exec, $terminal -e btop"
-        "CTRL SHIFT, V, Clipboard, exec, walker --provider clipboard --theme clipboard"
+        "CTRL SHIFT, V, Clipboard, exec, walker --provider clipboard --theme default"
         "$mod SHIFT, O, Office applications, exec, systemctl --user start work.target"
         "$mod SHIFT ALT, O, Close office applications, exec, systemctl --user stop work.target"
 
