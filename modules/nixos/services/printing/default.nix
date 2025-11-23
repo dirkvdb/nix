@@ -33,7 +33,7 @@ in
         {
           name = "Photosmart-Premium-C310";
           location = "Home Office";
-          deviceUri = "ipps://my-printer.local:631/ipp/print";
+          deviceUri = "ipps://192.168.1.15:631/ipp/print";
           model = "HP-Photosmart-Prem-C310-series.ppd";
         }
       ];
