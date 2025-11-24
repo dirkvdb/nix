@@ -136,6 +136,7 @@
 
     environment.systemPackages = with pkgs; [
       slack
+      gnumeric
       teams-for-linux
       #winboat
     ];
