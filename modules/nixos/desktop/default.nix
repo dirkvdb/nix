@@ -43,7 +43,6 @@ in
       nautilus
       file-roller # archive manager
       notify-desktop # cmd for sending notifications
-      ungoogled-chromium # needed for the web apps
       xdg-terminal-exec
     ];
 
