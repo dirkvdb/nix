@@ -56,7 +56,7 @@
 
         audio.pipewire = {
           enable = true;
-          airplay = true;
+          airplay = false;
         };
 
         video.amd.enable = true;
