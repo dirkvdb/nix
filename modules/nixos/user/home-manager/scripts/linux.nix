@@ -21,14 +21,7 @@
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-launch-webapp" ''
-      browser=$(xdg-settings get default-web-browser)
-
-      case $browser in
-      google-chrome* | brave-browser* | microsoft-edge* | opera* | vivaldi* | helium-browser*) ;;
-      *) browser="chromium-browser.desktop" ;;
-      esac
-
-      exec setsid $(sed -n 's/^Exec=\([^ ]*\).*/\1/p' {~/.local,~/.nix-profile,/run/current-system/sw}/share/applications/$browser 2>/dev/null | head -1) --app="$1" "''${@:2}"
+        exec setsid ${pkgs.chromium}/bin/chromium --app="$1" "''${@:2}"
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-launch-or-focus-webapp" ''
