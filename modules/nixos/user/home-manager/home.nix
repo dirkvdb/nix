@@ -48,7 +48,6 @@
       };
     };
 
-    xdg.configFile."mako".source = ../../../home/dotfiles/mako;
     xdg.dataFile."theme" = {
       source = ../../../home/themes/${theme.name};
       recursive = true;
