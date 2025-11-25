@@ -57,7 +57,7 @@
 
         audio.pipewire = {
           enable = true;
-          airplay = true;
+          airplay = false;
         };
 
         network = {
