@@ -17,6 +17,7 @@ in
   imports = [
     ./bindings.nix
     ./waybar.nix
+    ./mako.nix
   ];
 
   home-manager.users.${user.name} = lib.mkIf (isLinux && isDesktop) {
@@ -169,7 +170,6 @@ in
           # ''
 
           "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
-          "mako" # Notification daemon
           "swayosd-server" # On-screen display for volume/brightness
           "sunsetr"
           "hyprctl dismissnotify" # Dismiss the plugin loaded notification

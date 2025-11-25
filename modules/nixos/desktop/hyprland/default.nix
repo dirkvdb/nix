@@ -40,7 +40,6 @@ in
       hyprpicker
       hyprshot
       hyprcursor
-      mako
       mesa
       nwg-displays
       satty # screenshot annotation tool
