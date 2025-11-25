@@ -14,3 +14,6 @@ update:
 
 switch_on_boot:
     nh {{os_cmd}} boot  .
+
+check:
+    nix flake check -L

@@ -28,6 +28,12 @@ in
       description = "Theme name";
     };
 
+    base16Scheme = lib.mkOption {
+      type = lib.types.str;
+      default = selectedPreset.base16Scheme;
+      description = "Base16 color scheme";
+    };
+
     gtkTheme = lib.mkOption {
       type = lib.types.str;
       default = selectedPreset.gtkTheme;
@@ -114,32 +120,17 @@ in
     stylix = {
       polarity = "dark";
       image = ./wallpapers/wallpaper-1.jpg;
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/${selectedPreset.base16Scheme}.yaml";
 
       fonts = {
         sizes = {
           applications = selectedPreset.uiFontSize;
           terminal = selectedPreset.terminalFontSize;
         };
-        serif = {
-          #package = pkgs.dejavu_fonts;
-          name = selectedPreset.uiFontSerif;
-        };
 
-        sansSerif = {
-          # package = pkgs.dejavu_fonts;
-          name = selectedPreset.uiFont;
-        };
-
-        monospace = {
-          # package = pkgs.dejavu_fonts;
-          name = selectedPreset.terminalFont;
-        };
-
-        # emoji = {
-        #   package = pkgs.noto-fonts-color-emoji;
-        #   name = "Noto Color Emoji";
-        # };
-
+        serif.name = selectedPreset.uiFontSerif;
+        sansSerif.name = selectedPreset.uiFont;
+        monospace.name = selectedPreset.terminalFont;
       };
 
       icons = {

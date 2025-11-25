@@ -8,11 +8,17 @@
   imports = [
     ../../modules/nixos/import.nix
     ../../modules/home/import.nix
+
+    inputs.stylix.nixosModules.stylix
   ];
 
   config = {
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
     system.stateVersion = "25.05"; # Version at install time, never change
+
+    stylix = {
+      enable = true;
+    };
 
     wsl.enable = true;
     wsl.defaultUser = "dirk";
@@ -23,7 +29,11 @@
 
     systemd.user.services.ssh-agent-proxy = {
       description = "Windows SSH agent proxy";
-      path = [ pkgs.wslu pkgs.coreutils pkgs.bash ];
+      path = [
+        pkgs.wslu
+        pkgs.coreutils
+        pkgs.bash
+      ];
       serviceConfig = {
         ExecStartPre = [
           "${pkgs.coreutils}/bin/mkdir -p /mnt/wsl"
