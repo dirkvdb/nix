@@ -77,9 +77,9 @@ in
       #   "Library/Application Support/KeePassXC/keepassxc.ini".text = keepassxcConfig;
       # };
 
-      # xdg.configFile = lib.mkIf pkgs.stdenv.isLinux {
-      #   "keepassxc/keepassxc.immutable.ini".text = keepassxcConfig;
-      # };
+      xdg.configFile = lib.mkIf pkgs.stdenv.isLinux {
+        "keepassxc/keepassxc.ini".text = keepassxcConfig;
+      };
 
       # Systemd user service for KeePassXC with Secret Service
       # KeePassXC will register org.freedesktop.secrets on D-Bus once running
