@@ -9,6 +9,7 @@
     ../../modules/nixos/import.nix
     ../../modules/home/import.nix
 
+    inputs.stylix.nixosModules.stylix
     inputs.nixos-hardware.nixosModules.common-cpu-amd
     inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
     inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
@@ -19,6 +20,10 @@
 
   config = {
     system.stateVersion = "25.05"; # Version at install time, never change
+
+    stylix = {
+      enable = true;
+    };
 
     # Use the latest kernel from unstable (for better AMD CPU support)
     boot.kernelPackages = pkgs.linuxPackages_latest;

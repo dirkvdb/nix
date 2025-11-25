@@ -17,7 +17,8 @@ in
       "$browser" = "zen-beta";
       "$osdclient" =
         ''swayosd-client --monitor "$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')"'';
-      "$applauncher" = "nc -U /run/user/1000/walker/walker.sock";
+      #"$applauncher" = "nc -U /run/user/1000/walker/walker.sock";
+      "$applauncher" = "walker";
 
       bind = [
         # scrolling layout controls
