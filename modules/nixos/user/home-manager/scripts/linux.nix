@@ -1,6 +1,26 @@
 { pkgs, ... }:
 {
   home.packages = [
+    # convet tabular geospatial files to sqlite format for easier inspection
+    (pkgs.writeShellScriptBin "geo-to-sqlite" ''
+        set -euo pipefail
+
+        if [ "$#" -ne 1 ]; then
+            echo "Usage: geo-to-sqlite <input-file>"
+            exit 1
+        fi
+
+        input="$1"
+
+        # Strip extension (if any) and add .sqlite
+        base="$(basename "$input")"
+        dir="$(dirname "$input")"
+        name_without_ext="''${base%.*}"
+        output="$dir/$name_without_ext.db"
+
+        nix-shell -p gdal --run "ogr2ogr -f SQLite \"$output\" \"$input\""
+    '')
+
     (pkgs.writeShellScriptBin "worktunnel" ''
       autossh -f -M 0 -D 1080 vito
     '')
