@@ -8,6 +8,7 @@ let
   inherit (config.local) user;
   inherit (config.local) theme;
   isLinux = pkgs.stdenv.isLinux;
+  keepassEnabled = config.local.home-manager.keepassxc.enable;
 in
 {
   home-manager.users.${user.name} = lib.mkIf isLinux {
@@ -65,6 +66,20 @@ in
           force = true;
           default = "google";
         };
+      };
+    };
+
+    home.file = lib.mkIf (keepassEnabled && isLinux) {
+      ".mozilla/native-messaging-hosts/org.keepassxc.keepassxc_browser.json".text =
+      builtins.toJSON {
+        allowed_extensions = [
+          "keepassxc-browser@keepassxc.org"
+        ];
+
+        description = "KeePassXC integration with native messaging support";
+        name = "org.keepassxc.keepassxc_browser";
+        path = "${pkgs.keepassxc}/bin/keepassxc-proxy";
+        type = "stdio";
       };
     };
   };
