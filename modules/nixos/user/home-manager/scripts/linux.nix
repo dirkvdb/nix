@@ -3,22 +3,22 @@
   home.packages = [
     # convet tabular geospatial files to sqlite format for easier inspection
     (pkgs.writeShellScriptBin "geo-to-sqlite" ''
-        set -euo pipefail
+      set -euo pipefail
 
-        if [ "$#" -ne 1 ]; then
-            echo "Usage: geo-to-sqlite <input-file>"
-            exit 1
-        fi
+      if [ "$#" -ne 1 ]; then
+          echo "Usage: geo-to-sqlite <input-file>"
+          exit 1
+      fi
 
-        input="$1"
+      input="$1"
 
-        # Strip extension (if any) and add .sqlite
-        base="$(basename "$input")"
-        dir="$(dirname "$input")"
-        name_without_ext="''${base%.*}"
-        output="$dir/$name_without_ext.db"
+      # Strip extension (if any) and add .sqlite
+      base="$(basename "$input")"
+      dir="$(dirname "$input")"
+      name_without_ext="''${base%.*}"
+      output="$dir/$name_without_ext.db"
 
-        nix-shell -p gdal --run "ogr2ogr -f SQLite \"$output\" \"$input\""
+      nix-shell -p gdal --run "ogr2ogr -f SQLite \"$output\" \"$input\""
     '')
 
     (pkgs.writeShellScriptBin "worktunnel" ''
@@ -41,7 +41,7 @@
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-launch-webapp" ''
-        exec setsid ${pkgs.chromium}/bin/chromium --app="$1" "''${@:2}"
+      exec setsid ${pkgs.chromium}/bin/chromium --app="$1" "''${@:2}"
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-launch-or-focus-webapp" ''

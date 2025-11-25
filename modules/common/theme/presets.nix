@@ -35,7 +35,7 @@
   #   uiFontBold = "Inter Bold";
   #   uiFontSerif = "Noto Serif";
   #   codeFont = "JetBrainsMono Nerd Font";
-  codeFontSize = 14;
+  #   codeFontSize = 14;
   #   terminalFont = "JetBrainsMono Nerd Font";
   #   terminalFontSize = 14;
   #   ghosttyTheme = "catppuccin-mocha";

@@ -1,9 +1,12 @@
 { config, ... }:
 let
   inherit (config.local) user;
+  inherit (config.lib.stylix) colors;
 in
 {
   home-manager.users.${user.name} = {
+    stylix.targets.starship.enable = false;
+
     programs.starship = {
       enable = true;
       settings = {
@@ -13,17 +16,17 @@ in
         format = ''[╭](fg:separator)$status$hostname$custom$directory$git_branch$nix_shell$cmd_duration$line_break[╰](fg:separator)$character'';
 
         palettes.default = {
-          prompt_ok = "#D3C6AA";
-          prompt_err = "#E67E80";
-          icon = "#1E2326";
-          separator = "#737aa2";
-          background = "#4F5B58";
-          host = "#D699B6";
-          directory = "#A7C080";
-          nixshell = "#82BCE5";
-          gitbranch = "#7FBBB3";
-          duration = "#E69875";
-          status = "#E67E80";
+          prompt_ok = "#${colors.base0B}";
+          prompt_err = "#${colors.base08}";
+          icon = "#${colors.base00}";
+          background = "#${colors.base03}";
+          separator = "#${colors.base03}";
+          host = "#${colors.base0D}";
+          directory = "#${colors.base06}";
+          nixshell = "#${colors.base0E}";
+          gitbranch = "#${colors.base05}";
+          duration = "#${colors.base0A}";
+          status = "#${colors.base0F}";
         };
 
         character = {

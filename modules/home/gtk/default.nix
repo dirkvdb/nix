@@ -19,35 +19,35 @@ in
       gtk = {
         enable = true;
 
-        theme = {
-          name = theme.gtkTheme;
-          package = theme.gtkThemePackage;
-        };
+        # theme = {
+        #   name = theme.gtkTheme;
+        #   package = theme.gtkThemePackage;
+        # };
 
-        iconTheme = {
-          name = theme.iconTheme;
-          package = theme.iconThemePackage;
-        };
+        # iconTheme = {
+        #   name = theme.iconTheme;
+        #   package = theme.iconThemePackage;
+        # };
 
-        font = {
-          name = theme.uiFont;
-          size = theme.uiFontSize;
-        };
+        # font = {
+        #   name = theme.uiFont;
+        #   size = theme.uiFontSize;
+        # };
 
-        gtk3.extraConfig = {
-          gtk-application-prefer-dark-theme = true;
-        };
+        # gtk3.extraConfig = {
+        #   gtk-application-prefer-dark-theme = true;
+        # };
 
-        gtk4.extraConfig = {
-          gtk-application-prefer-dark-theme = true;
-        };
+        # gtk4.extraConfig = {
+        #   gtk-application-prefer-dark-theme = true;
+        # };
       };
 
-      dconf.settings = {
-        "org/gnome/desktop/interface" = {
-          color-scheme = "prefer-dark";
-        };
-      };
+      # dconf.settings = {
+      #   "org/gnome/desktop/interface" = {
+      #     color-scheme = "prefer-dark";
+      #   };
+      # };
     };
   };
 }

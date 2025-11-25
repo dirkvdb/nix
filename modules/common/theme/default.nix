@@ -110,5 +110,44 @@ in
   config = {
     # Automatically install fonts required by the selected preset
     fonts.packages = selectedPreset.fonts or [ ];
+
+    stylix = {
+      polarity = "dark";
+      image = ./wallpapers/wallpaper-1.jpg;
+
+      fonts = {
+        sizes = {
+          applications = selectedPreset.uiFontSize;
+          terminal = selectedPreset.terminalFontSize;
+        };
+        serif = {
+          #package = pkgs.dejavu_fonts;
+          name = selectedPreset.uiFontSerif;
+        };
+
+        sansSerif = {
+          # package = pkgs.dejavu_fonts;
+          name = selectedPreset.uiFont;
+        };
+
+        monospace = {
+          # package = pkgs.dejavu_fonts;
+          name = selectedPreset.terminalFont;
+        };
+
+        # emoji = {
+        #   package = pkgs.noto-fonts-color-emoji;
+        #   name = "Noto Color Emoji";
+        # };
+
+      };
+
+      icons = {
+        enable = true;
+        dark = selectedPreset.iconTheme;
+        light = selectedPreset.iconTheme;
+        package = selectedPreset.iconThemePackage;
+      };
+    };
   };
 }

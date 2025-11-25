@@ -42,6 +42,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -61,7 +65,7 @@
         # This avoids error messages at startup that the browser connection files cannot be written
         # They are readonly because they are managed by the Nix config
         keepassxc = prev.keepassxc.overrideAttrs (old: {
-          patches = (old.patches or []) ++ [
+          patches = (old.patches or [ ]) ++ [
             ./modules/home/apps/keepassxc/NativeMessageInstaller.patch
           ];
         });
