@@ -208,8 +208,6 @@ in
         # Variables
         "$activeBorderColor" = "rgb(d3c6aa)";
         "$inactiveBorderColor" = "rgba(595959aa)";
-        "$osdclient" =
-          ''swayosd-client --monitor "$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')"'';
 
         dwindle = {
           #single_window_aspect_ratio = "4 3";
