@@ -5,6 +5,8 @@ let
 in
 {
   home-manager.users.${user.name} = {
+    stylix.targets.zed.enable = false;
+
     programs.zed-editor = {
       enable = true;
       package = if pkgs.stdenv.isDarwin then null else pkgs.zed-editor;
@@ -24,11 +26,14 @@ in
         "tombi"
       ];
 
-      extraPackages = pkgs.lib.mkIf (!pkgs.stdenv.isDarwin) (with pkgs; [
-        nil
-        nixd
-        biome
-      ]);
+      extraPackages = pkgs.lib.mkIf (!pkgs.stdenv.isDarwin) (
+        with pkgs;
+        [
+          nil
+          nixd
+          biome
+        ]
+      );
 
       userSettings = {
         #ui_font_family = "Roboto";

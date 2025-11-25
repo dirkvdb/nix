@@ -9,6 +9,7 @@
     ../../modules/nixos/import.nix
     ../../modules/home/import.nix
 
+    inputs.stylix.nixosModules.stylix
     inputs.apple-silicon.nixosModules.apple-silicon-support
     inputs.nixos-hardware.nixosModules.common-hidpi
     inputs.nixos-hardware.nixosModules.common-pc-ssd
@@ -16,6 +17,11 @@
 
   config = {
     system.stateVersion = "25.05"; # Version at install time, never change
+
+    stylix = {
+      enable = true;
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/ayu-mirage.yaml";
+    };
 
     local = {
       user = {

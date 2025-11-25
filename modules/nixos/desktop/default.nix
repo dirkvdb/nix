@@ -32,8 +32,8 @@ in
 
     qt = {
       enable = true;
-      platformTheme = "gtk2";
-      style = "adwaita-dark";
+      #platformTheme = "gtk2";
+      #style = "adwaita-dark";
     };
 
     environment.systemPackages = with pkgs; [

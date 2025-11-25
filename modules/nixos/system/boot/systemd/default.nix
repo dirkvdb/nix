@@ -20,6 +20,7 @@ in
   };
 
   config = lib.mkIf cfg.enable (
+
     lib.mkMerge [
       {
         boot.loader = {
@@ -47,6 +48,8 @@ in
           "video=efifb:nobgrt" # disable firmware vendor logo
         ]
         ++ lib.optionals amd [ "amdgpu.modeset=1" ];
+
+        stylix.targets.plymouth.enable = false;
 
         # plymouth, showing after LUKS unlock
         boot.plymouth.enable = true;

@@ -21,6 +21,8 @@ in
   ];
 
   home-manager.users.${user.name} = lib.mkIf (isLinux && isDesktop) {
+    stylix.targets.hyprland.enable = false;
+
     xdg.configFile."walker".source = ../../dotfiles/walker;
     xdg.configFile."sunsetr".source = ../../dotfiles/sunsetr;
 
@@ -34,8 +36,8 @@ in
       settings = {
         source = "~/.local/share/theme/hyprlock.conf";
         background = {
-          color = "$color";
-          path = "~/.local/share/theme/wallpapers/wallpaper-1.jpg";
+          #color = "$color";
+          #path = "~/.local/share/theme/wallpapers/wallpaper-1.jpg";
           blur_passes = 3;
         };
 
@@ -47,15 +49,15 @@ in
           halign = "center";
           valign = "center";
 
-          inner_color = "$inner_color";
-          outer_color = "$outer_color";
+          #inner_color = "$inner_color";
+          #outer_color = "$outer_color";
           outline_thickness = 4;
 
-          font_family = "CaskaydiaMono Nerd Font Propo";
-          font_color = "$font_color";
+          #font_family = "CaskaydiaMono Nerd Font Propo";
+          #font_color = "$font_color";
 
           placeholder_text = "Enter Password";
-          check_color = "$check_color";
+          #check_color = "$check_color";
           fail_text = "<i>$FAIL ($ATTEMPTS)</i>";
 
           rounding = 8;
@@ -102,13 +104,13 @@ in
         ipc = "on";
         splash = false;
 
-        preload = [
-          "~/.local/share/theme/wallpapers/wallpaper-1.jpg"
-        ];
+        # preload = [
+        #   "~/.local/share/theme/wallpapers/wallpaper-1.jpg"
+        # ];
 
-        wallpaper = [
-          ",~/.local/share/theme/wallpapers/wallpaper-1.jpg" # The comma means "all monitors"
-        ];
+        # wallpaper = [
+        #   ",~/.local/share/theme/wallpapers/wallpaper-1.jpg" # The comma means "all monitors"
+        # ];
       };
     };
 
@@ -331,7 +333,6 @@ in
             tap-to-click = true;
             # Disable tap and drag (helps prevent accidental drags)
             drag_lock = false;
-            # Tap and drag
             tap-and-drag = true;
           };
         };
@@ -384,6 +385,10 @@ in
           "6, name:vcs, persistent:true"
           "7, name:chat, persistent:true"
           "8, name:com, persistent:true"
+        ];
+
+        windowrulev2 = [
+          "bordercolor rgb(FFCC66) rgb(DEC186), fullscreen:1"
         ];
 
         windowrule = [
