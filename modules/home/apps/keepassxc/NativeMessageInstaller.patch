@@ -1,0 +1,12 @@
+diff --git a/src/browser/NativeMessageInstaller.cpp b/src/browser/NativeMessageInstaller.cpp
+index bf0ad5ab..c5cb05e4 100644
+--- a/src/browser/NativeMessageInstaller.cpp
++++ b/src/browser/NativeMessageInstaller.cpp
+@@ -107,6 +107,7 @@ void NativeMessageInstaller::setBrowserEnabled(SupportedBrowsers browser, bool e
+ #endif
+         // Always create the script file
++        return;
+         if (!createNativeMessageFile(browser)) {
+             QMessageBox::critical(
+                 nullptr,
+                 QObject::tr("Browser Plugin Failure"),

@@ -56,6 +56,15 @@
       # Custom packages overlay
       overlay = final: prev: {
         plymouth-theme-nixos = prev.callPackage ./pkgs/plymouth-theme-nixos { };
+
+        # Patch keepassxc to include NativeMessageInstaller.patch
+        # This avoids error messages at startup that the browser connection files cannot be written
+        # They are readonly because they are managed by the Nix config
+        keepassxc = prev.keepassxc.overrideAttrs (old: {
+          patches = (old.patches or []) ++ [
+            ./modules/home/apps/keepassxc/NativeMessageInstaller.patch
+          ];
+        });
       };
 
       # Helper function for NixOS configurations
