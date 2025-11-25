@@ -82,7 +82,7 @@ in
 
         # Control tiling
         "$mod SHIFT, V, Toggle floating, togglefloating"
-        "$mod SHIFT, F, Maximize App Window, fullscreen, 1"
+        "$mod, F, Maximize App Window, fullscreen, 1"
         "$mod ALT, F, Full width, fullscreen, 0"
 
         "$mod, code:20, Expand window left, resizeactive, -100 0" # - key
