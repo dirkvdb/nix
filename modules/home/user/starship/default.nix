@@ -19,14 +19,14 @@ in
           prompt_ok = "#${colors.base0B}";
           prompt_err = "#${colors.base08}";
           icon = "#${colors.base00}";
-          background = "#${colors.base03}";
+          background = "#${colors.base02}";
           separator = "#${colors.base03}";
           host = "#${colors.base0D}";
-          directory = "#${colors.base06}";
+          directory = "#${colors.base0F}";
           nixshell = "#${colors.base0E}";
           gitbranch = "#${colors.base05}";
           duration = "#${colors.base0A}";
-          status = "#${colors.base0F}";
+          status = "#${colors.base08}";
         };
 
         character = {
