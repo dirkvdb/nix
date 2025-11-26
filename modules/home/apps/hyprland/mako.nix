@@ -1,12 +1,16 @@
 {
+  lib,
+  pkgs,
   config,
   ...
 }:
 let
   inherit (config.local) user;
+  isLinux = pkgs.stdenv.isLinux;
+  isDesktop = config.local.desktop.enable;
 in
 {
-  home-manager.users.${user.name} = {
+  home-manager.users.${user.name} = lib.mkIf (isLinux && isDesktop) {
     services.mako = {
       enable = true;
       settings = {

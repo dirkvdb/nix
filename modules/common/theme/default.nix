@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  system,
   ...
 }:
 
@@ -9,6 +10,7 @@ let
   presets = import ./presets.nix { inherit pkgs; };
 
   cfg = config.local.theme;
+  isLinux = lib.hasInfix "linux" system;
 
   # Get the selected preset, or use everforest as default
   selectedPreset = presets.${cfg.preset} or presets.everforest;
@@ -132,7 +134,7 @@ in
         sansSerif.name = selectedPreset.uiFont;
         monospace.name = selectedPreset.terminalFont;
       };
-
+    } // lib.optionalAttrs isLinux {
       icons = {
         enable = true;
         dark = selectedPreset.iconTheme;
