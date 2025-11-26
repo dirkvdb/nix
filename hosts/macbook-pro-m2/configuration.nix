@@ -1,9 +1,11 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 {
   imports = [
+    inputs.stylix.darwinModules.stylix
     ../../modules/darwin/import.nix
     ../../modules/home/import.nix
   ];
@@ -12,6 +14,10 @@
     # Fix GID mismatch for nixbld group: remove on next clean install
     ids.gids.nixbld = 350;
     system.stateVersion = 6;
+
+    stylix = {
+      enable = true;
+    };
 
     local = {
       user = {
