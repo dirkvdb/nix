@@ -12,14 +12,17 @@ let
 in
 {
   options.local.apps.vivaldi = {
-    enable = lib.mkEnableOption "Enable Vivaldi home-manager configuration";
+    enable = lib.mkEnableOption "Vivaldi browser";
   };
 
   config = lib.mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      vivaldi
+    ];
+
     home-manager.users.${user.name} = {
       xdg.configFile = lib.mkIf (keepassEnabled && isLinux) {
-        "vivaldi/NativeMessagingHosts/org.keepassxc.keepassxc_browser.json".text =
-        builtins.toJSON {
+        "vivaldi/NativeMessagingHosts/org.keepassxc.keepassxc_browser.json".text = builtins.toJSON {
           allowed_origins = [
             "chrome-extension://pdffhmdngciaglkoonimfcmckehcpafo/"
             "chrome-extension://oboonakemofpalcgghocfoadofidjkkk/"
