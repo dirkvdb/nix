@@ -123,6 +123,7 @@
         spotify.enable = true;
         localsend.enable = true;
         vscode.enable = true;
+        neovim.enable = true;
         whatsapp.enable = true;
       };
 
