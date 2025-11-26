@@ -92,6 +92,10 @@
       systemctl --user restart walker.service
     '')
 
+    (pkgs.writeShellScriptBin "nixcfg-lock-screen" ''
+      hyprlock
+    '')
+
     # Toggle idle lock
     (pkgs.writeShellScriptBin "nixcfg-toggle-idle" ''
       if systemctl --user is-active --quiet hypridle.service; then
