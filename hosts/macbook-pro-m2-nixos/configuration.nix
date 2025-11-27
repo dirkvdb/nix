@@ -13,6 +13,10 @@
     inputs.apple-silicon.nixosModules.apple-silicon-support
     inputs.nixos-hardware.nixosModules.common-hidpi
     inputs.nixos-hardware.nixosModules.common-pc-ssd
+
+    {
+      _module.args.unstablePkgs = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
+    }
   ];
 
   config = {

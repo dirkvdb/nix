@@ -8,6 +8,9 @@
     inputs.stylix.darwinModules.stylix
     ../../modules/darwin/import.nix
     ../../modules/home/import.nix
+    {
+      _module.args.unstablePkgs = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
+    }
   ];
 
   config = {
