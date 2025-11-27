@@ -6,15 +6,20 @@
 }:
 let
   inherit (config.local) user;
+  inherit (config.local) theme;
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable;
 in
 {
   home-manager.users.${user.name} = lib.mkIf (isLinux && isDesktop) {
+    stylix.targets.mako.enable = false;
+
     services.mako = {
       enable = true;
       settings = {
-        # include = "~/.local/share/theme/mako.ini";
+        text-color = theme.uiAccentColor;
+        border-color = theme.uiAccentColor;
+        background-color = theme.uiBaseColor;
 
         anchor = "top-right";
         default-timeout = 5000;
@@ -34,7 +39,7 @@ in
           anchor = "bottom-right";
           ignore-timeout = 1;
           default-timeout = 1500;
-          width = 215;
+          width = 250;
           format = "<b>%s</b> Accessed a secret";
         };
 
