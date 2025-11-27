@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  unstablePkgs,
+  config,
+  ...
+}:
 let
   inherit (config.local) user;
   inherit (config.local) theme;
@@ -9,7 +14,7 @@ in
 
     programs.zed-editor = {
       enable = true;
-      package = if pkgs.stdenv.isDarwin then null else pkgs.zed-editor;
+      package = if pkgs.stdenv.isDarwin then null else unstablePkgs.zed-editor;
 
       extensions = [
         "biome"
