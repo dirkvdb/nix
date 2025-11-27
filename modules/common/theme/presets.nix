@@ -16,6 +16,8 @@
     terminalFont = "FiraMono Nerd Font Mono";
     terminalFontSize = 12;
     ghosttyTheme = "Everforest Dark Hard";
+    uiAccentColor = "#d3c6aa";
+    uiBaseColor = "#2d353b";
     fonts = with pkgs; [
       ubuntu-sans
       nerd-fonts.caskaydia-mono

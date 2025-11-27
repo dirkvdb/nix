@@ -36,6 +36,18 @@ in
       description = "Base16 color scheme";
     };
 
+    uiAccentColor = lib.mkOption {
+      type = lib.types.str;
+      default = selectedPreset.uiAccentColor;
+      description = "Base16 color scheme";
+    };
+
+    uiBaseColor = lib.mkOption {
+      type = lib.types.str;
+      default = selectedPreset.uiBaseColor;
+      description = "Base16 color scheme";
+    };
+
     gtkTheme = lib.mkOption {
       type = lib.types.str;
       default = selectedPreset.gtkTheme;
@@ -134,7 +146,8 @@ in
         sansSerif.name = selectedPreset.uiFont;
         monospace.name = selectedPreset.terminalFont;
       };
-    } // lib.optionalAttrs isLinux {
+    }
+    // lib.optionalAttrs isLinux {
       icons = {
         enable = true;
         dark = selectedPreset.iconTheme;
