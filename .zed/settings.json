@@ -3,5 +3,17 @@
     "CSS": {
       "language_servers": []
     }
+  },
+  "lsp": {
+    "nixd": {
+      "settings": {
+        "nixos": {
+          "expr": "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.mini.options"
+        },
+        "home-manager": {
+          "expr": "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.mini.options.home-manager.users.type.getSubOptions []"
+        }
+      }
+    }
   }
 }
