@@ -34,7 +34,6 @@ in
       extraPackages = pkgs.lib.mkIf (!pkgs.stdenv.isDarwin) (
         with pkgs;
         [
-          nil
           nixd
           biome
         ]
@@ -125,8 +124,8 @@ in
           };
           Nix = {
             language_servers = [
-              "nil"
-              "!nixd"
+              "!nil"
+              "nixd"
             ];
             formatter = {
               external = {
@@ -156,19 +155,6 @@ in
           presentation = {
             buffer_font_size = 20;
             ui_font_size = 18;
-          };
-        };
-        lsp = {
-          nil = {
-            settings = {
-              nil = {
-                nix = {
-                  flake = {
-                    autoArchive = true;
-                  };
-                };
-              };
-            };
           };
         };
       };
