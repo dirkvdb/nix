@@ -52,7 +52,6 @@
   outputs =
     {
       nixpkgs,
-      nixpkgs-unstable,
       nix-index-database,
       nixos-wsl,
       darwin,
@@ -88,6 +87,7 @@
           modules = [
             hostPath
             nix-index-database.nixosModules.nix-index
+            { nixpkgs.hostPlatform = system; }
             { nixpkgs.overlays = [ overlay ] ++ extraOverlays; }
           ]
           ++ extraModules;
