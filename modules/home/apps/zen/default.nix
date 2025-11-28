@@ -79,12 +79,16 @@ in
         pins =
           let
             spaces = config.home-manager.users.${user.name}.programs.zen-browser.profiles."default".spaces;
+            containers =
+              config.home-manager.users.${user.name}.programs.zen-browser.profiles."default".containers;
           in
           {
+            # Personal
             gmail = {
               title = "Gmail";
               url = "https://mail.google.com/";
               id = "2884bea2-d686-42a4-a86d-567ed4582b7c";
+              container = containers."Personal".id;
               workspace = spaces."Personal".id;
               position = 1000;
               isEssential = true;
@@ -93,6 +97,7 @@ in
               title = "Youtube";
               url = "https://www.youtube.com/";
               id = "fd41d042-1e88-451e-9426-24ce1621b8c7";
+              container = containers."Personal".id;
               workspace = spaces."Personal".id;
               position = 2000;
               isEssential = true;
@@ -101,6 +106,7 @@ in
               title = "Reddit";
               url = "https://www.reddit.com/";
               id = "7c22eb73-9aed-4350-80b4-63740a153a6f";
+              container = containers."Personal".id;
               workspace = spaces."Personal".id;
               position = 3000;
               isEssential = true;
@@ -109,10 +115,46 @@ in
               title = "Reddit";
               url = "https://www.chatgpt.com/";
               id = "eca9b96a-78ca-4f1f-84f5-c738ff9ee886";
+              container = containers."Personal".id;
               workspace = spaces."Personal".id;
               position = 4000;
               isEssential = true;
             };
+            # Work
+            vitogit = {
+              title = "Git";
+              url = "https://git.vito.be/";
+              id = "25b1ce57-bc9c-4f41-8737-222cbce11095";
+              container = containers."Work".id;
+              workspace = spaces."Work".id;
+              position = 1000;
+              isEssential = true;
+            };
+            jira = {
+              title = "Jira";
+              url = "https://jira.vito.be/";
+              id = "32c266a0-0ee0-41e5-90ca-6acff76f461b";
+              container = containers."Work".id;
+              workspace = spaces."Work".id;
+              position = 2000;
+              isEssential = true;
+            };
+            # reddit = {
+            #   title = "Reddit";
+            #   url = "https://www.reddit.com/";
+            #   id = "02c03a1a-1203-4c4a-9548-cdc908eca723";
+            #   workspace = spaces."Work".id;
+            #   position = 3000;
+            #   isEssential = true;
+            # };
+            # chatgpt = {
+            #   title = "Reddit";
+            #   url = "https://www.chatgpt.com/";
+            #   id = "a5c2c041-8bac-4686-9118-ee2dc0f89c17";
+            #   workspace = spaces."Work".id;
+            #   position = 4000;
+            #   isEssential = true;
+            # };
           };
 
         settings = {
