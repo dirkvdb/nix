@@ -135,6 +135,7 @@ in
       polarity = "dark";
       image = ./wallpapers/wallpaper-1.jpg;
       base16Scheme = "${pkgs.base16-schemes}/share/themes/${selectedPreset.base16Scheme}.yaml";
+      override.base0D = selectedPreset.uiAccentColor;
 
       fonts = {
         sizes = {

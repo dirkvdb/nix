@@ -13,8 +13,11 @@ let
 in
 {
   home-manager.users.${user.name} = lib.mkIf (isLinux && isDesktop) {
+
     programs.zen-browser = {
       enable = true;
+
+      nativeMessagingHosts = [ pkgs.firefoxpwa ];
 
       policies = {
         AutofillAddressEnabled = true;
@@ -37,6 +40,81 @@ in
 
       profiles.default = {
         isDefault = true;
+        containersForce = true;
+
+        containers = {
+          Personal = {
+            color = "purple";
+            icon = "fingerprint";
+            id = 1;
+          };
+          Work = {
+            color = "blue";
+            icon = "briefcase";
+            id = 2;
+          };
+        };
+
+        spacesForce = true;
+        spaces =
+          let
+            containers =
+              config.home-manager.users.${user.name}.programs.zen-browser.profiles."default".containers;
+          in
+          {
+            "Personal" = {
+              id = "c6de089c-410d-4206-961d-ab11f988d40a";
+              icon = "chrome://browser/skin/zen-icons/selectable/people.svg";
+              position = 1000;
+            };
+            "Work" = {
+              id = "cdd10fab-4fc5-494b-9041-325e5759195b";
+              icon = "chrome://browser/skin/zen-icons/selectable/briefcase.svg";
+              container = containers."Work".id;
+              position = 2000;
+            };
+          };
+
+        pinsForce = true;
+        pins =
+          let
+            spaces = config.home-manager.users.${user.name}.programs.zen-browser.profiles."default".spaces;
+          in
+          {
+            gmail = {
+              title = "Gmail";
+              url = "https://mail.google.com/";
+              id = "2884bea2-d686-42a4-a86d-567ed4582b7c";
+              workspace = spaces."Personal".id;
+              position = 1000;
+              isEssential = true;
+            };
+            youtube = {
+              title = "Youtube";
+              url = "https://www.youtube.com/";
+              id = "fd41d042-1e88-451e-9426-24ce1621b8c7";
+              workspace = spaces."Personal".id;
+              position = 2000;
+              isEssential = true;
+            };
+            reddit = {
+              title = "Reddit";
+              url = "https://www.reddit.com/";
+              id = "7c22eb73-9aed-4350-80b4-63740a153a6f";
+              workspace = spaces."Personal".id;
+              position = 3000;
+              isEssential = true;
+            };
+            chatgpt = {
+              title = "Reddit";
+              url = "https://www.chatgpt.com/";
+              id = "eca9b96a-78ca-4f1f-84f5-c738ff9ee886";
+              workspace = spaces."Personal".id;
+              position = 4000;
+              isEssential = true;
+            };
+          };
+
         settings = {
           "zen.tabs.show-newtab-vertical" = false;
           "zen.theme.gradient" = true;
@@ -69,6 +147,8 @@ in
         };
       };
     };
+
+    stylix.targets.zen-browser.profileNames = [ "default" ];
 
     home.file = lib.mkIf (keepassEnabled && isLinux) {
       ".mozilla/native-messaging-hosts/org.keepassxc.keepassxc_browser.json".text = builtins.toJSON {
