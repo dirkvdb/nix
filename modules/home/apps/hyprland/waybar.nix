@@ -6,6 +6,8 @@
 }:
 let
   inherit (config.local) user;
+  inherit (config.local) theme;
+
   isLinux = pkgs.stdenv.isLinux;
   # Get CPU core count from system config
   cpuCores = config.local.system.cpu.cores;
@@ -22,7 +24,8 @@ in
         target = "hyprland-session.target";
       };
       style = ''
-        @import "../../.local/share/theme/waybar.css";
+        @define-color foreground ${theme.uiAccentColor};
+        @define-color background ${theme.uiBaseColor};
 
         * {
             background-color: @background;
