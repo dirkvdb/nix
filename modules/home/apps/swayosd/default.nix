@@ -16,6 +16,12 @@ in
       enable = true;
     };
 
+    xdg.configFile."swayosd/config.toml".text = builtins.toString ''
+      [server]
+      show_percentage = true
+      max_volume = 100
+    '';
+
     xdg.configFile."swayosd/style.css".text = builtins.toString ''
       @define-color background-color ${theme.uiBaseColor};
       @define-color border-color ${theme.uiAccentColor};
