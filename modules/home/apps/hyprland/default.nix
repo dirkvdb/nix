@@ -28,18 +28,10 @@ in
     xdg.configFile."walker".source = ../../dotfiles/walker;
     xdg.configFile."sunsetr".source = ../../dotfiles/sunsetr;
 
-    xdg.configFile."swayosd" = {
-      source = ../../dotfiles/swayosd;
-      recursive = true;
-    };
-
     programs.hyprlock = {
       enable = true;
       settings = {
-        source = "~/.local/share/theme/hyprlock.conf";
         background = {
-          #color = "$color";
-          #path = "~/.local/share/theme/wallpapers/wallpaper-1.jpg";
           blur_passes = 3;
         };
 
@@ -174,7 +166,6 @@ in
           # ''
 
           "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
-          "swayosd-server" # On-screen display for volume/brightness
           "sunsetr"
           "hyprctl dismissnotify" # Dismiss the plugin loaded notification
         ];
