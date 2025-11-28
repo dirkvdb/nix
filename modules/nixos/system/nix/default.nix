@@ -9,5 +9,6 @@
 
   environment.systemPackages = with pkgs; [
     nixfmt-rfc-style
+    nix-output-monitor
   ];
 }
