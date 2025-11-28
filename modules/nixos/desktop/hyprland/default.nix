@@ -45,7 +45,6 @@ in
       satty # screenshot annotation tool
       slurp # for region selection (screen shot, etc)
       sunsetr
-      swayosd
       hyprsunset
       waypaper
       wayfreeze # for screenshots
