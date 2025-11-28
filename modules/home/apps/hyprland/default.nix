@@ -6,6 +6,8 @@
 }:
 let
   inherit (config.local) user;
+  inherit (config.local) theme;
+  inherit (config.lib.stylix) colors;
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable;
   # hyprexpo uses x86-only function hooks and doesn't work on ARM
@@ -208,8 +210,8 @@ in
         monitor = ",preferred,auto,${toString (config.local.desktop.displayScale or 1.75)}";
 
         # Variables
-        "$activeBorderColor" = "rgb(d3c6aa)";
-        "$inactiveBorderColor" = "rgba(595959aa)";
+        "$activeBorderColor" = "rgb(${lib.strings.removePrefix "#" theme.uiAccentColor})";
+        "$inactiveBorderColor" = "rgba(${lib.strings.removePrefix "#" colors.base04}aa)";
 
         dwindle = {
           #single_window_aspect_ratio = "4 3";
