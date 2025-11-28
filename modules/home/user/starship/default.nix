@@ -1,6 +1,7 @@
 { config, ... }:
 let
   inherit (config.local) user;
+  inherit (config.local) theme;
   inherit (config.lib.stylix) colors;
 in
 {
@@ -22,7 +23,7 @@ in
           background = "#${colors.base02}";
           separator = "#${colors.base03}";
           host = "#${colors.base0D}";
-          directory = "#${colors.base0F}";
+          directory = "${theme.uiAccentColor}";
           nixshell = "#${colors.base0E}";
           gitbranch = "#${colors.base05}";
           duration = "#${colors.base0A}";
