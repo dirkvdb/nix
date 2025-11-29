@@ -176,6 +176,7 @@ in
           "sidebar.visibility" = "hide-sidebar";
           "browser.translations.neverTranslateLanguages" = "nl";
           "browser.toolbars.bookmarks.visibility" = "always";
+          "browser.download.autohideButton" = true;
           "extensions.ui.dictionary.hidden" = true;
           "font.name.serif.x-western" = theme.uiFontSerif;
           "font.name.sans-serif.x-western" = theme.uiFont;
