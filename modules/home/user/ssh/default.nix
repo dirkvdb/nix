@@ -4,9 +4,11 @@ let
 in
 {
   home-manager.users.${user.name} = {
+
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
+
       matchBlocks = {
         mini = {
           hostname = "mini.local";
