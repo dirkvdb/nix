@@ -39,12 +39,6 @@ in
       ];
     };
 
-    # Optional but recommended: Allow network printer discovery
-    services.avahi = {
-      enable = true;
-      nssmdns4 = true;
-    };
-
     programs.system-config-printer.enable = true;
   };
 }

@@ -37,9 +37,18 @@ in
         enable = true;
         nssmdns4 = true;
         openFirewall = true;
+        publish = {
+          enable = true;
+          domain = true;
+          addresses = true;
+          workstation = true;
+        };
       };
 
-      resolved.enable = true;
+      resolved = {
+        enable = true;
+        llmnr = "false"; # optional, but avoids conflicts
+      };
     };
   };
 }
