@@ -22,7 +22,7 @@ in
           icon = "#${colors.base00}";
           background = "#${colors.base02}";
           separator = "#${colors.base03}";
-          host = "#${colors.base0D}";
+          host = "#${colors.base0B}";
           directory = "${theme.uiAccentColor}";
           nixshell = "#${colors.base0E}";
           gitbranch = "#${colors.base05}";
