@@ -76,10 +76,6 @@ in
       isHidden = false;
       shell = user.shell.package;
       uid = 501;
-      # openssh.authorizedKeys.keyFiles = [ inputs.ssh-keys.outPath ];
-      # openssh.authorizedKeys.keys = [
-      #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMsmsLubwu6s0wkeKTsM2EIuJRKFsg2nZdRCVtQHk9LT thurs"
-      # ];
     };
 
     environment.shells = [
