@@ -36,6 +36,7 @@ in
         [
           nixd
           biome
+          color-lsp
         ]
       );
 
