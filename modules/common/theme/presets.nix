@@ -14,7 +14,7 @@
     codeFont = "CaskaydiaMono Nerd Font Mono";
     codeFontSize = 14;
     terminalFont = "FiraMono Nerd Font Mono";
-    terminalFontSize = 12;
+    terminalFontSize = 13;
     ghosttyTheme = "Everforest Dark Hard";
     uiAccentColor = "#d3c6aa";
     uiBaseColor = "#2d353b";
@@ -38,7 +38,7 @@
     codeFont = "CaskaydiaMono Nerd Font Mono";
     codeFontSize = 14;
     terminalFont = "FiraMono Nerd Font Mono";
-    terminalFontSize = 12;
+    terminalFontSize = 13;
     ghosttyTheme = "Everforest Dark Hard";
     fonts = with pkgs; [
       ubuntu-sans
