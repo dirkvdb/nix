@@ -135,7 +135,9 @@ in
       polarity = "dark";
       image = ./wallpapers/wallpaper-1.jpg;
       base16Scheme = "${pkgs.base16-schemes}/share/themes/${selectedPreset.base16Scheme}.yaml";
-      override.base0D = selectedPreset.uiAccentColor;
+
+      override.base0E = "#7fbbb3"; # replace the pink with base0D blue color
+      override.base0D = selectedPreset.uiAccentColor; # make base0D accent color to avoid screaming blues in the ui
 
       fonts = {
         sizes = {
