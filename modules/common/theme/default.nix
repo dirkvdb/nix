@@ -139,6 +139,12 @@ in
       override.base0E = "#7fbbb3"; # replace the pink with base0D blue color
       override.base0D = selectedPreset.uiAccentColor; # make base0D accent color to avoid screaming blues in the ui
 
+      cursor = {
+        name = "macOS";
+        size = 24;
+        package = pkgs.apple-cursor;
+      };
+
       fonts = {
         sizes = {
           applications = selectedPreset.uiFontSize;

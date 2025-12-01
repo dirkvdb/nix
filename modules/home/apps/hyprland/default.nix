@@ -171,11 +171,6 @@ in
         ];
         # Cursor size
         env = [
-          "XCURSOR_SIZE,24"
-          "HYPRCURSOR_SIZE,24"
-          "XCURSOR_THEME,macOS"
-          "HYPRCURSOR_THEME,macOS"
-
           # Force all apps to use Wayland
           "GDK_BACKEND,wayland,x11,*"
           "QT_QPA_PLATFORM,wayland;xcb"

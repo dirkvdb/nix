@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   system,
   user,
@@ -13,7 +12,8 @@
 {
   imports = [
     ./scripts/linux.nix
-  ] ++ lib.optionals isDesktop [
+  ]
+  ++ lib.optionals isDesktop [
     walker.homeManagerModules.default
   ];
 
@@ -39,20 +39,14 @@
         # Elephant with all providers for walker
         elephant.packages.${system}.elephant-with-providers
       ];
-
-      pointerCursor = {
-        package = pkgs.apple-cursor;
-        name = "macOS";
-        size = 24;
-        gtk.enable = true;
-      };
     };
 
     xdg.dataFile."theme" = {
       source = ../../../home/themes/${theme.name};
       recursive = true;
     };
-  } // lib.optionalAttrs isDesktop {
+  }
+  // lib.optionalAttrs isDesktop {
     programs.walker = {
       enable = true;
       runAsService = true;
