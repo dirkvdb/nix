@@ -22,7 +22,7 @@
     '')
 
     (pkgs.writeShellScriptBin "worktunnel" ''
-      autossh -f -M 0 -D 1080 vito
+      autossh -f -M 0 -o "ServerAliveInterval 10" -D localhost:1080 -N vito
     '')
 
     (pkgs.writeShellScriptBin "workbrowser" ''
