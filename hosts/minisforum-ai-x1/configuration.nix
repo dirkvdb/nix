@@ -148,6 +148,7 @@
       slack
       gnumeric
       teams-for-linux
+      (remmina.override { withKf5Wallet = false; })
       #winboat
     ];
   };
