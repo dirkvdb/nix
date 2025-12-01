@@ -17,3 +17,6 @@ switch_on_boot:
 
 check:
     nix flake check -L
+
+color-lsp:
+    nix-build -E 'with import <nixpkgs> { overlays = [ (final: prev: { color-lsp = prev.callPackage ./pkgs/color-lsp { }; }) ]; }; color-lsp'

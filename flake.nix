@@ -61,6 +61,7 @@
       # Custom packages overlay
       overlay = final: prev: {
         plymouth-theme-nixos = prev.callPackage ./pkgs/plymouth-theme-nixos { };
+        color-lsp = prev.callPackage ./pkgs/color-lsp { };
 
         # Patch keepassxc to include NativeMessageInstaller.patch
         # This avoids error messages at startup that the browser connection files cannot be written
