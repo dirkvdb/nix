@@ -31,7 +31,13 @@ in
     };
 
     base16Scheme = lib.mkOption {
-      type = lib.types.str;
+      type =
+        with lib.types;
+        oneOf [
+          path
+          lines
+          attrs
+        ];
       default = selectedPreset.base16Scheme;
       description = "Base16 color scheme";
     };
@@ -134,10 +140,7 @@ in
     stylix = {
       polarity = "dark";
       image = ./wallpapers/wallpaper-1.jpg;
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/${selectedPreset.base16Scheme}.yaml";
-
-      override.base0E = "#7fbbb3"; # replace the pink with base0D blue color
-      override.base0D = selectedPreset.uiAccentColor; # make base0D accent color to avoid screaming blues in the ui
+      base16Scheme = selectedPreset.base16Scheme;
 
       cursor = {
         name = "macOS";
@@ -148,6 +151,8 @@ in
       fonts = {
         sizes = {
           applications = selectedPreset.uiFontSize;
+          desktop = selectedPreset.uiFontSize - 1;
+          popups = selectedPreset.uiFontSize - 2;
           terminal = selectedPreset.terminalFontSize;
         };
 

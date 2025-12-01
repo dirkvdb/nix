@@ -169,7 +169,6 @@ in
           "sunsetr"
           "hyprctl dismissnotify" # Dismiss the plugin loaded notification
         ];
-        # Cursor size
         env = [
           # Force all apps to use Wayland
           "GDK_BACKEND,wayland,x11,*"
