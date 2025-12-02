@@ -185,6 +185,7 @@ in
               }
             ];
             "alt-e" = "project_panel::ToggleFocus";
+            "alt-`" = "terminal_panel::Toggle";
           };
         }
         {
