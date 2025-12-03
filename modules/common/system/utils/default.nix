@@ -9,9 +9,7 @@ let
   hasDesktop = config.local.desktop.enable or false;
   dev = with pkgs; [
     devenv
-    mise
     just
-    pixi
     lazygit
   ];
   sysadmin = with pkgs; [
