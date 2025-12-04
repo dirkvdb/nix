@@ -45,7 +45,7 @@ in
           else if isWsl then
             "nh os switch --update --commit-lock-file -H wsl"
           else
-            "nh os switch --update --commit-lock-file ~/nix";
+            "git -C ~/nix pull -r --autostash && nh os switch --update --commit-lock-file ~/nix";
         tree = "lsd --tree";
         zed = if pkgs.stdenv.isDarwin || isWsl then "zed" else "zeditor";
       };
