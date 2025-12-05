@@ -10,6 +10,7 @@ let
   dev = with pkgs; [
     devenv
     just
+    pixi
     lazygit
   ];
   sysadmin = with pkgs; [
