@@ -112,6 +112,7 @@
         "microsoft-auto-update"
         "visual-studio-code"
         "orbstack"
+        "db-browser-for-sqlite"
         #"qgis"
         # autodesk-fusion
         "raycast"
