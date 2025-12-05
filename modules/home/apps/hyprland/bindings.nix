@@ -65,6 +65,7 @@ in
         "$mod SHIFT, B, Browser (new instance), exec, $browser"
         "$mod, D, Dev editor, exec, zeditor"
         "$mod, E, File manager, exec, nautilus --new-window"
+        "$mod SHIFT, G, Sublime merge, exec, sublime_merge"
         "$mod SHIFT, A, ChatGPT, exec, nixcfg-launch-or-focus-webapp ChatGPT \"https://chatgpt.com\""
         "$mod SHIFT, M, Music, exec, nixcfg-launch-or-focus spotify"
         "$mod SHIFT, Y, Youtube, exec, nixcfg-launch-or-focus-webapp Youtube \"https://youtube.com/\""
