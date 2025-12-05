@@ -142,12 +142,6 @@ in
       image = ./wallpapers/wallpaper-1.jpg;
       base16Scheme = selectedPreset.base16Scheme;
 
-      cursor = {
-        name = "macOS";
-        size = 24;
-        package = pkgs.apple-cursor;
-      };
-
       fonts = {
         sizes = {
           applications = selectedPreset.uiFontSize;
@@ -167,6 +161,12 @@ in
         dark = selectedPreset.iconTheme;
         light = selectedPreset.iconTheme;
         package = selectedPreset.iconThemePackage;
+      };
+
+      cursor = {
+        name = "macOS";
+        size = 24;
+        package = pkgs.apple-cursor;
       };
     };
   };
