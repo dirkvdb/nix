@@ -15,11 +15,15 @@ in
           user = "dirk";
           extraOptions = {
             requestTTY = "true";
+            ForwardAgent = "yes";
           };
         };
         inky = {
           hostname = "inky.local";
           user = "dirk";
+          extraOptions = {
+            ForwardAgent = "yes";
+          };
         };
         vito = {
           hostname = "192.168.1.43";
@@ -41,15 +45,19 @@ in
           hostname = "develop.marvin.vito.local";
           user = "vdboerd";
           proxyCommand = "nc -x localhost:1080 -X 5 %h %p";
-          # extraOptions = {
-          #   remoteCommand = "fish";
-          #   requestTTY = "true";
-          # };
+          extraOptions = {
+            ForwardAgent = "yes";
+            #   remoteCommand = "fish";
+            #   requestTTY = "true";
+          };
         };
         clusterfs = {
           hostname = "develop.marvin.vito.local";
           proxyCommand = "nc -x localhost:1080 -X 5 %h %p";
           user = "vdboerd";
+          extraOptions = {
+            ForwardAgent = "yes";
+          };
         };
       };
     };
