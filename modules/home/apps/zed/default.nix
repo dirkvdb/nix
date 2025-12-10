@@ -184,6 +184,13 @@ in
                 reveal_target = "dock";
               }
             ];
+            "secondary-shift-y" = [
+              "task::Spawn"
+              {
+                task_name = "Run project";
+                reveal_target = "dock";
+              }
+            ];
             "alt-e" = "project_panel::ToggleFocus";
             "alt-`" = "terminal_panel::Toggle";
           };
