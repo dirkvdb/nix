@@ -155,42 +155,6 @@
       teams-for-linux
       vulkan-tools
       brightnessctl
-      (psst.overrideAttrs (old: {
-        src = pkgs.fetchFromGitHub {
-          owner = "jpochyla";
-          repo = "psst";
-          rev = "3846f9c736ee771342622df86aafb34286dab2aa";
-          hash = "sha256-HtDRtQVrEzpyE06eU5ekGxyFpQ3qnU9DCfpvHpI/ESA=";
-        };
-        cargoDeps = pkgs.rustPlatform.importCargoLock {
-          lockFile = pkgs.fetchurl {
-            url = "https://raw.githubusercontent.com/jpochyla/psst/3846f9c736ee771342622df86aafb34286dab2aa/Cargo.lock";
-            hash = "sha256-Ey4Y/kHOYdgIoFFPZg9sZAivKZdGvkhtXZJhIeFLFRc=";
-          };
-          outputHashes = {
-            "cubeb-0.27.0" = "sha256-qq+AM9GbD0DAVcr2VrbtxDpSkb/FOMY75IQylXVG5Uw=";
-            "cubeb-core-0.27.0" = "sha256-qq+AM9GbD0DAVcr2VrbtxDpSkb/FOMY75IQylXVG5Uw=";
-            "cubeb-sys-0.27.0" = "sha256-qq+AM9GbD0DAVcr2VrbtxDpSkb/FOMY75IQylXVG5Uw=";
-            "druid-0.8.3" = "sha256-O9CBDRHcyDxa0MAqTtOipn0EPnm7o//bdQX/3hZpSJM=";
-            "druid-derive-0.5.1" = "sha256-O9CBDRHcyDxa0MAqTtOipn0EPnm7o//bdQX/3hZpSJM=";
-            "druid-enums-0.1.0" = "sha256-KJvAgKxicx/g+4QRZq3iHt6MGVQbfOpyN+EhS6CyDZk=";
-            "druid-shell-0.8.3" = "sha256-O9CBDRHcyDxa0MAqTtOipn0EPnm7o//bdQX/3hZpSJM=";
-          };
-        };
-        patches = [ ];
-        postPatch = ''
-                    # Patch the git_version macro to always return "dev"
-                    substituteInPlace psst-core/src/lib.rs \
-                      --replace 'pub const GIT_VERSION: &str = git_version!();' 'pub const GIT_VERSION: &str = "dev";'
-
-                    # Create a fake .git directory structure for the build script
-                    mkdir -p .git
-                    cat > .git/config << 'EOF'
-          [remote "origin"]
-          	url = https://github.com/jpochyla/psst
-          EOF
-        '';
-      }))
     ];
   };
 }
