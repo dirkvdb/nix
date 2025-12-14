@@ -58,6 +58,7 @@ in
         }
 
         #cpu,
+        #memory,
         #battery,
         #pulseaudio,
         #custom-omarchy,
@@ -123,6 +124,7 @@ in
           modules-center = [ "clock" ];
           modules-right = [
             "cpu"
+            "memory"
             "tray"
             "battery"
             "bluetooth"
@@ -178,6 +180,13 @@ in
               "<span color='#e69875'>▇</span>"
               "<span color='#e67e80'>█</span>"
             ];
+            on-click = "xdg-terminal-exec -- btop";
+          };
+
+          memory = {
+            interval = 2;
+            format = "󰍛 {percentage}%";
+            tooltip-format = "{used:0.1f}GiB / {total:0.1f}GiB used";
             on-click = "xdg-terminal-exec -- btop";
           };
 
