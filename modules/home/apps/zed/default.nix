@@ -107,7 +107,7 @@ in
         };
         terminal = {
           dock = "bottom";
-          font_size = theme.terminalFontSize;
+          font_size = theme.terminalFontSize + 1;
           line_height = "standard";
           font_family = theme.terminalFont;
         };
