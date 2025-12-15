@@ -283,16 +283,23 @@ in
           enable_hyprcursor = true;
         };
 
-        device = {
-          name = "apple-mtp-multi-touch";
-          # Keep palm brushes from registering as taps/clicks
-          tap-to-click = false;
-          clickfinger_behavior = true;
+        device = [
+          {
+            name = "apple-mtp-multi-touch";
+            # Keep palm brushes from registering as taps/clicks
+            tap-to-click = false;
+            clickfinger_behavior = true;
 
-          # Disable touchpad while typing to prevent accidental palm touches
-          disable_while_typing = true;
-          scroll_factor = 0.3;
-        };
+            # Disable touchpad while typing to prevent accidental palm touches
+            disable_while_typing = true;
+            scroll_factor = 0.3;
+          }
+          {
+            name = "apple-mtp-keyboard";
+            # map caps lock to escape
+            kb_options = "caps:escape";
+          }
+        ];
 
         # Control your input devices
         # See https://wiki.hypr.land/Configuring/Variables/#input
