@@ -15,7 +15,8 @@
     inputs.nixos-hardware.nixosModules.common-pc-ssd
 
     {
-      _module.args.unstablePkgs = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
+      _module.args.unstablePkgs =
+        inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
     }
   ];
 

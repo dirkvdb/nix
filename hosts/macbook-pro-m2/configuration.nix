@@ -9,7 +9,8 @@
     ../../modules/darwin/import.nix
     ../../modules/home/import.nix
     {
-      _module.args.unstablePkgs = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
+      _module.args.unstablePkgs =
+        inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
     }
   ];
 
