@@ -107,9 +107,7 @@
       };
 
       apps = {
-        bitwarden.enable = false;
-        prusa-slicer.enable = false;
-        spotify.enable = false;
+        mqtt.enable = true;
         localsend.enable = true;
         vscode.enable = true;
       };
