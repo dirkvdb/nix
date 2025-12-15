@@ -110,6 +110,7 @@
         mqtt.enable = true;
         localsend.enable = true;
         vscode.enable = true;
+        vlc.enable = true;
       };
 
       home-manager = {
