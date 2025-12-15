@@ -125,6 +125,7 @@
         mqtt.enable = true;
         prusa-slicer.enable = true;
         vivaldi.enable = true;
+        slack.enable = true;
         spotify.enable = true;
         localsend.enable = true;
         vscode.enable = true;
@@ -146,7 +147,6 @@
     };
 
     environment.systemPackages = with pkgs; [
-      slack
       gnumeric
       teams-for-linux
       (remmina.override { withKf5Wallet = false; })
