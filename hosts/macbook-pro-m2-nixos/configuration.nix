@@ -109,7 +109,6 @@
       apps = {
         bitwarden.enable = false;
         prusa-slicer.enable = false;
-        brave.enable = true;
         spotify.enable = false;
         localsend.enable = true;
         vscode.enable = true;
