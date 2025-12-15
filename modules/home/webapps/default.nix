@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (config.local) user;
 in
@@ -38,6 +43,7 @@ in
         "icons/hicolor/256x256/apps/youtube.png".source = ./icons/youtube.png;
         "icons/hicolor/256x256/apps/gmail.png".source = ./icons/gmail.png;
         "icons/hicolor/256x256/apps/outlook.png".source = ./icons/outlook.png;
+        "icons/hicolor/256x256/apps/slack.png".source = ./icons/slack.png;
       }
 
       (mkWebApp {
@@ -64,6 +70,12 @@ in
         url = "https://outlook.office365.com/";
         icon = "outlook";
       })
+
+      (lib.optionalAttrs (pkgs.stdenv.hostPlatform.system == "aarch64-linux") (mkWebApp {
+        name = "Slack";
+        url = "https://app.slack.com/client";
+        icon = "slack";
+      }))
     ];
   };
 }
