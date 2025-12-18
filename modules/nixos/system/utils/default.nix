@@ -24,7 +24,7 @@ in
     environment.systemPackages =
       with pkgs;
       [
-
+        age
         nix-ld # required for running certain binaries not meant for NixOS
       ]
       ++ lib.optionals cfg.dev dev
