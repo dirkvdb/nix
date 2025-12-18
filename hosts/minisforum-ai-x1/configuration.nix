@@ -124,13 +124,13 @@
 
       apps = {
         mqtt.enable = true;
+        neovim.enable = true;
         prusa-slicer.enable = true;
-        vivaldi.enable = true;
         slack.enable = true;
         spotify.enable = true;
         localsend.enable = true;
         vscode.enable = true;
-        neovim.enable = true;
+        vivaldi.enable = true;
         whatsapp.enable = true;
       };
 

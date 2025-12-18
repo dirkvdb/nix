@@ -47,6 +47,11 @@
       url = "github:nix-community/stylix/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -54,6 +59,7 @@
       nixpkgs,
       nix-index-database,
       nixos-wsl,
+      sops-nix,
       darwin,
       ...
     }@inputs:
@@ -88,6 +94,7 @@
           modules = [
             hostPath
             nix-index-database.nixosModules.nix-index
+            sops-nix.nixosModules.sops
             { nixpkgs.hostPlatform = system; }
             { nixpkgs.overlays = [ overlay ] ++ extraOverlays; }
           ]
