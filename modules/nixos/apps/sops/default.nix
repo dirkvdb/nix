@@ -35,11 +35,13 @@ in
 
         defaultSopsFile = ./secrets.yaml;
         defaultSopsFormat = "yaml";
-        #defaultSymlinkPath = "/run/user/1000/secrets";
-        #defaultSecretsMountPoint = "/run/user/1000/secrets.d";
 
         secrets.openai_api_key = {
-          # sopsFile = ./secrets.yml.enc; # optionally define per-secret files
+          owner = user.name;
+        };
+
+        secrets.github_token = {
+          owner = user.name;
         };
       };
     }
