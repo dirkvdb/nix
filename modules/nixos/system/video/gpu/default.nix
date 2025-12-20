@@ -32,5 +32,7 @@ in
       # AMD GPU firmware
       enableRedistributableFirmware = true;
     };
+
+    nixpkgs.config.rocmSupport = true;
   };
 }
