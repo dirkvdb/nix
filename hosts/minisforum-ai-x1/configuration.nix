@@ -96,6 +96,12 @@
             "/nas/ssd" = {
               device = "nas.local:/volume2/ssd";
             };
+            "/nas/downloads" = {
+              device = "nas.local:/volume1/downloads";
+            };
+            "/nas/data" = {
+              device = "nas.local:/volume1/data";
+            };
           };
         };
 
