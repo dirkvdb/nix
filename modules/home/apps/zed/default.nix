@@ -14,6 +14,7 @@ in
 
     programs.zed-editor = {
       enable = true;
+      mutableUserSettings = true;
       package = if pkgs.stdenv.isDarwin then null else unstablePkgs.zed-editor;
 
       extensions = [
@@ -37,6 +38,7 @@ in
           nixd
           biome
           color-lsp
+          codex-acp
         ]
       );
 
@@ -158,6 +160,19 @@ in
             ui_font_size = 18;
           };
         };
+
+        agent_servers = {
+          codex = {
+            default_model = "gpt-5.2/high";
+          };
+        };
+
+        # context_servers = pkgs.lib.mkIf config.local.apps.ollama.enable {
+        #   ollama = {
+        #     enabled = true;
+        #     url = "http://localhost:11434";
+        #   };
+        # };
       };
 
       userKeymaps = [

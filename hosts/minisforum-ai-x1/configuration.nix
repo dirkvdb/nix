@@ -129,15 +129,17 @@
       };
 
       apps = {
+        localsend.enable = true;
         mqtt.enable = true;
+        neovim.enable = true;
+        ollama.enable = true;
         prusa-slicer.enable = true;
-        vivaldi.enable = true;
         slack.enable = true;
         spotify.enable = true;
-        localsend.enable = true;
+        vivaldi.enable = true;
         vscode.enable = true;
-        neovim.enable = true;
         whatsapp.enable = true;
+        vlc.enable = true;
       };
 
       home-manager = {
