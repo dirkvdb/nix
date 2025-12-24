@@ -39,6 +39,8 @@ in
           biome
           color-lsp
           codex-acp
+          nil
+          nixfmt-rfc-style
         ]
       );
 
@@ -166,13 +168,6 @@ in
             default_model = "gpt-5.2/high";
           };
         };
-
-        # context_servers = pkgs.lib.mkIf config.local.apps.ollama.enable {
-        #   ollama = {
-        #     enabled = true;
-        #     url = "http://localhost:11434";
-        #   };
-        # };
       };
 
       userKeymaps = [

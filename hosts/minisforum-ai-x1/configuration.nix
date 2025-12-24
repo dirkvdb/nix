@@ -132,7 +132,6 @@
         localsend.enable = true;
         mqtt.enable = true;
         neovim.enable = true;
-        ollama.enable = true;
         prusa-slicer.enable = true;
         slack.enable = true;
         spotify.enable = true;
