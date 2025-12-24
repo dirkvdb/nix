@@ -129,6 +129,7 @@
       };
 
       apps = {
+        jan.enable = true;
         localsend.enable = true;
         mqtt.enable = true;
         neovim.enable = true;
@@ -158,7 +159,6 @@
       gnumeric
       teams-for-linux
       (remmina.override { withKf5Wallet = false; })
-      jan
       #winboat
     ];
   };
