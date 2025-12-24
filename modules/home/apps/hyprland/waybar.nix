@@ -9,6 +9,7 @@ let
   inherit (config.local) theme;
 
   isLinux = pkgs.stdenv.isLinux;
+  hasAmdGpu = config.local.system.video.amd.enable or false;
   # Get CPU core count from system config
   cpuCores = config.local.system.cpu.cores;
   # Generate CPU icon placeholders based on core count
@@ -125,6 +126,9 @@ in
           modules-right = [
             "cpu"
             "memory"
+          ]
+          ++ lib.optionals hasAmdGpu [ "custom/gpumemory" ]
+          ++ [
             "tray"
             "battery"
             "bluetooth"
@@ -187,6 +191,14 @@ in
             interval = 2;
             format = "󰍛 {percentage}%";
             tooltip-format = "{used:0.1f}GiB / {total:0.1f}GiB used";
+            on-click = "xdg-terminal-exec -- btop";
+          };
+
+          "custom/gpumemory" = {
+            format = " {}% ";
+            interval = 5;
+            exec = "awk -v total=$(cat /sys/class/drm/card1/device/mem_info_vram_total) -v used=$(cat /sys/class/drm/card1/device/mem_info_vram_used) 'BEGIN { printf \"{\\\"text\\\":\\\"%.0f\\\",\\\"tooltip\\\":\\\"%.1fGiB / %.1fGiB used\\\"}\", (used/total)*100, used/1024/1024/1024, total/1024/1024/1024 }'";
+            return-type = "json";
             on-click = "xdg-terminal-exec -- btop";
           };
 
