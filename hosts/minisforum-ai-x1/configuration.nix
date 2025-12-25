@@ -1,5 +1,6 @@
 {
   pkgs,
+  unstablePkgs,
   inputs,
   ...
 }:
@@ -18,8 +19,10 @@
     inputs.nixos-hardware.nixosModules.common-pc-ssd
 
     {
-      _module.args.unstablePkgs =
-        inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+      _module.args.unstablePkgs = import inputs.nixpkgs-unstable {
+        system = pkgs.stdenv.hostPlatform.system;
+        config.allowUnfree = true;
+      };
     }
   ];
 
@@ -159,6 +162,7 @@
       gnumeric
       teams-for-linux
       (remmina.override { withKf5Wallet = false; })
+      unstablePkgs.lmstudio
       #winboat
     ];
   };
