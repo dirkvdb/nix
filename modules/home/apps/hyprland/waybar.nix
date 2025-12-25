@@ -7,6 +7,7 @@
 let
   inherit (config.local) user;
   inherit (config.local) theme;
+  inherit (config.lib.stylix) colors;
 
   isLinux = pkgs.stdenv.isLinux;
   hasAmdGpu = config.local.system.video.amd.enable or false;
@@ -127,7 +128,10 @@ in
             "cpu"
             "memory"
           ]
-          ++ lib.optionals hasAmdGpu [ "custom/gpumemory" ]
+          ++ lib.optionals hasAmdGpu [
+            "custom/gpuusage"
+            "custom/gpumemory"
+          ]
           ++ [
             "tray"
             "battery"
@@ -199,6 +203,26 @@ in
             interval = 5;
             exec = "awk -v total=$(cat /sys/class/drm/card1/device/mem_info_vram_total) -v used=$(cat /sys/class/drm/card1/device/mem_info_vram_used) 'BEGIN { printf \"{\\\"text\\\":\\\"%.0f\\\",\\\"tooltip\\\":\\\"%.1fGiB / %.1fGiB used\\\"}\", (used/total)*100, used/1024/1024/1024, total/1024/1024/1024 }'";
             return-type = "json";
+            on-click = "xdg-terminal-exec -- btop";
+          };
+
+          "custom/gpuusage" = {
+            interval = 2;
+            exec = "bash -c 'gpu=$(cat /sys/class/drm/card1/device/gpu_busy_percent 2>/dev/null || echo 0); gpu_int=$(echo $gpu | tr -d \",\" | cut -d\".\" -f1); level=$((gpu_int * 8 / 100)); if [ $level -gt 7 ]; then level=7; fi; printf \"{\\\"text\\\":\\\"%d\\\",\\\"tooltip\\\":\\\"GPU Usage: %d%%\\\"}\" $level $gpu_int'";
+            return-type = "json";
+            format = "{icon} ";
+            format-icons = [
+              "<span> </span>"
+              "<span color='#a7c080'>▁</span>"
+              "<span color='#a7c080'>▂</span>"
+              "<span color='#83c092'>▃</span>"
+              "<span color='#83c092'>▄</span>"
+              "<span color='#dbbc7f'>▅</span>"
+              "<span color='#dbbc7f'>▆</span>"
+              "<span color='#e69875'>▇</span>"
+              "<span color='#e67e80'>█</span>"
+            ];
+            tooltip-format = "GPU Usage: {text}%";
             on-click = "xdg-terminal-exec -- btop";
           };
 
