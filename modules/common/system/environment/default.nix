@@ -1,6 +1,5 @@
 { ... }:
 {
   environment = {
-    variables.EDITOR = "micro";
   };
 }
