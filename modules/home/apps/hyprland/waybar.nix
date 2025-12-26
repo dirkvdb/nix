@@ -200,14 +200,14 @@ in
           "custom/gpumemory" = {
             format = " {}% ";
             interval = 5;
-            exec = "awk -v total=$(cat /sys/class/drm/card1/device/mem_info_vram_total) -v used=$(cat /sys/class/drm/card1/device/mem_info_vram_used) 'BEGIN { printf \"{\\\"text\\\":\\\"%.0f\\\",\\\"tooltip\\\":\\\"%.1fGiB / %.1fGiB used\\\"}\", (used/total)*100, used/1024/1024/1024, total/1024/1024/1024 }'";
+            exec = "nixcfg-gpu-memory";
             return-type = "json";
             on-click = "xdg-terminal-exec -- btop";
           };
 
           "custom/gpuusage" = {
             interval = 2;
-            exec = "bash -c 'gpu=$(cat /sys/class/drm/card1/device/gpu_busy_percent 2>/dev/null || echo 0); gpu_int=$(echo $gpu | tr -d \",\" | cut -d\".\" -f1); level=$((gpu_int * 8 / 100)); if [ $level -gt 7 ]; then level=7; fi; printf \"{\\\"text\\\":\\\"%d\\\",\\\"tooltip\\\":\\\"GPU Usage: %d%%\\\"}\" $level $gpu_int'";
+            exec = "nixcfg-gpu-usage";
             return-type = "json";
             format = "{icon} ";
             format-icons = [
@@ -221,7 +221,6 @@ in
               "<span color='#e69875'>▇</span>"
               "<span color='#e67e80'>█</span>"
             ];
-            tooltip-format = "GPU Usage: {text}%";
             on-click = "xdg-terminal-exec -- btop";
           };
 

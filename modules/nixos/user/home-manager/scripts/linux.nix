@@ -142,6 +142,40 @@
       xdg-terminal-exec --app-id=TUI.float -- impala "$@"
     '')
 
+    (pkgs.writeShellScriptBin "nixcfg-gpu-usage" ''
+      GPU_BUSY_FILE="/sys/class/drm/card1/device/gpu_busy_percent"
+      if [[ -r "$GPU_BUSY_FILE" ]]; then
+          percent=$(<"$GPU_BUSY_FILE")
+      else
+          exit 1
+      fi
+
+      printf '{"text":"%d","tooltip":"GPU %d%%","percentage":%d}' $percent $percent $percent
+    '')
+
+    (pkgs.writeShellScriptBin "nixcfg-gpu-memory" ''
+      GPU_PATH="/sys/class/drm/card1/device"
+      GPU_TOTAL_MEM="$GPU_PATH/mem_info_vram_total"
+      GPU_USED_MEM="$GPU_PATH/mem_info_vram_used"
+      if [[ -r "$GPU_PATH" ]]; then
+          total_bytes=$(<"$GPU_TOTAL_MEM")
+          used_bytes=$(<"$GPU_USED_MEM")
+
+          # Convert to MiB first to avoid overflow, then calculate GiB * 10 for one decimal
+          total_mib=$(( total_bytes / 1024 / 1024 ))
+          used_mib=$(( used_bytes / 1024 / 1024 ))
+          total=$(( total_mib * 10 / 1024 ))
+          used=$(( used_mib * 10 / 1024 ))
+
+          percentage=$(( used_bytes * 100 / total_bytes ))
+      else
+          exit 1
+      fi
+
+      awk -v pct="$percentage" -v used="$used" -v total="$total" \
+        'BEGIN {printf "{\"text\":\"%d\",\"tooltip\":\"%.1fGib / %.1fGib used\",\"percentage\":%d}", pct, used/10, total/10, pct}'
+    '')
+
     (pkgs.writeShellScriptBin "nixcfg-cmd-share" ''
       if (($# == 0)); then
         echo "Usage: nixcfg-cmd-share [clipboard|file|folder]"
