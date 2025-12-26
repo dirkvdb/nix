@@ -70,7 +70,8 @@ in
     programs.fish.enable = lib.mkIf (user.shell.package == pkgs.fish) true;
 
     environment.variables = {
-      EDITOR = "micro";
+      TERMINAL = "ghostty";
+      EDITOR = "nvim";
       VISUAL = "zeditor";
     };
 

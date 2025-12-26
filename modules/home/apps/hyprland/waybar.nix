@@ -7,7 +7,6 @@
 let
   inherit (config.local) user;
   inherit (config.local) theme;
-  inherit (config.lib.stylix) colors;
 
   isLinux = pkgs.stdenv.isLinux;
   hasAmdGpu = config.local.system.video.amd.enable or false;
