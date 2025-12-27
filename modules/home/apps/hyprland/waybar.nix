@@ -14,6 +14,9 @@ let
   cpuCores = config.local.system.cpu.cores;
   # Generate CPU icon placeholders based on core count
   cpuIconPlaceholders = lib.concatStrings (lib.genList (i: "{icon${toString i}}") cpuCores);
+  # Set waybar height based on hostname (32 for macbook-pro due to notch, 26 for others)
+  hostname = config.local.system.network.hostname or "";
+  waybarHeight = if hostname == "macbook-pro" then 32 else 26;
 in
 {
   home-manager.users.${user.name} = lib.mkIf isLinux {
@@ -117,12 +120,13 @@ in
           layer = "top";
           position = "top";
           spacing = 0;
-          height = 26;
+          height = waybarHeight;
           modules-left = [
             "custom/nixmenu"
             "hyprland/workspaces"
-          ];
-          modules-center = [ "clock" ];
+          ]
+          ++ lib.optionals (hostname == "macbook-pro") [ "clock" ];
+          modules-center = lib.optionals (hostname != "macbook-pro") [ "clock" ];
           modules-right = [
             "cpu"
             "memory"
