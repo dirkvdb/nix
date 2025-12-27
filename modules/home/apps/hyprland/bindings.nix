@@ -61,6 +61,8 @@ in
 
         "$mod, ESCAPE, Power menu, exec, nixcfg-menu system"
         "$mod, RETURN, Terminal, exec, $terminal --working-directory=\"$(nixcfg-cmd-terminal-cwd)\""
+        "$mod, S, Browser, exec, nixcfg-launch-or-focus $browser"
+        "$mod SHIFT, S, Browser (new instance), exec, $browser"
         "$mod, B, Browser, exec, nixcfg-launch-or-focus $browser"
         "$mod SHIFT, B, Browser (new instance), exec, $browser"
         "$mod, D, Dev editor, exec, zeditor"
