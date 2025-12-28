@@ -35,6 +35,18 @@ in
   home-manager.users.${user.name} = {
     xdg.enable = true;
 
+    # Set Zen as the default browser
+    xdg.mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "text/html" = "zen-beta.desktop";
+        "x-scheme-handler/http" = "zen-beta.desktop";
+        "x-scheme-handler/https" = "zen-beta.desktop";
+        "x-scheme-handler/about" = "zen-beta.desktop";
+        "x-scheme-handler/unknown" = "zen-beta.desktop";
+      };
+    };
+
     # Per-directory XDG config entries for dotfiles
     xdg.configFile."btop".source = ./dotfiles/btop;
     xdg.configFile."wezterm".source = ./dotfiles/wezterm;
@@ -44,6 +56,10 @@ in
     home.sessionPath = [
       "${user.homeDir}/.local/bin"
     ];
+
+    home.sessionVariables = {
+      BROWSER = "zen";
+    };
 
     home.packages = with pkgs; [
       age
