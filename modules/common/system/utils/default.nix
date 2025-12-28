@@ -51,6 +51,7 @@ in
       ++ lib.optionals cfg.sysadmin sysadmin
       ++ lib.optionals hasDesktop [
         sublime-merge
+        pinta # image editor
       ];
 
     programs.direnv = {
