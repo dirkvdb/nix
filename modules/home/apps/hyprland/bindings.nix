@@ -17,8 +17,8 @@ in
       "$browser" = "zen-beta";
       "$osdclient" =
         ''swayosd-client --monitor "$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')"'';
-      #"$applauncher" = "nc -U /run/user/1000/walker/walker.sock";
-      "$applauncher" = "walker";
+      # "$applauncher" = "nc -U /run/user/1000/walker/walker.sock";
+      "$applauncher" = "walker -N";
 
       bind = [
         # scrolling layout controls
@@ -78,7 +78,7 @@ in
         "$mod, W, Close active window, killactive,"
         "$mod, K, Show key bindings, exec, nixcfg-menu-keybindings"
         "$mod, T, Activity, exec, $terminal -e btop"
-        "CTRL SHIFT, V, Clipboard, exec, walker --provider clipboard --theme default"
+        "CTRL SHIFT, V, Clipboard, exec, walker --provider clipboard --theme clipboard"
         "$mod SHIFT, O, Office applications, exec, systemctl --user start work.target"
         "$mod SHIFT ALT, O, Close office applications, exec, systemctl --user stop work.target"
 

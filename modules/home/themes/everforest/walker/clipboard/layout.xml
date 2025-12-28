@@ -62,6 +62,7 @@
                     <style>
                       <class name="elephant-hint"></class>
                     </style>
+                    <property name="visible">false</property>
                     <property name="hexpand">true</property>
                     <property name="height-request">100</property>
                     <property name="label">Waiting for elephant...</property>

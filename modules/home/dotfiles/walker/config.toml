@@ -18,11 +18,6 @@ anchor_right = true
 "default" = { input = " Search...", list = "No Results" } # placeholders for input and empty list, key is the providers name, so f.e. "desktopapplications" or "menus:other"
 
 [keybinds]
-close = ["Escape"]
-next = ["Down"]
-previous = ["Up"]
-toggle_exact = ["ctrl e"]
-resume_last_query = ["ctrl r"]
 quick_activate = []
 
 [providers]
@@ -61,8 +56,9 @@ provider = "websearch"
 prefix = "$"
 provider = "clipboard"
 
-[providers.actions] # This will be MERGED/OVEWRITTEN with what the user specifies
-dmenu = [{ action = "select", default = true, bind = "Return" }]
+[[emergencies]]
+text = "Restart Walker"
+command = "omarchy-restart-walker"
 
 providerlist = [
   { action = "activate", default = true, bind = "Return", after = "ClearReload" },
