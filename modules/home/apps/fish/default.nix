@@ -36,16 +36,16 @@ in
           if pkgs.stdenv.isDarwin then
             "nh darwin switch ~/nix"
           else if isWsl then
-            "nh os switch -H wsl"
+            "nh os switch -j2 -H wsl"
           else
-            "nh os switch ~/nix && nixcfg-reload";
+            "nh os switch -j2 ~/nix && nixcfg-reload";
         update =
           if pkgs.stdenv.isDarwin then
-            "nh darwin switch --update --commit-lock-file ~/nix"
+            "nh darwin switch -j2 --update --commit-lock-file ~/nix"
           else if isWsl then
-            "nh os switch --update --commit-lock-file -H wsl"
+            "nh os switch -j2 --update --commit-lock-file -H wsl"
           else
-            "git -C ~/nix pull -r --autostash && nh os switch --update --commit-lock-file ~/nix";
+            "git -C ~/nix pull -r --autostash && nh os switch -j2 --update --commit-lock-file ~/nix";
         tree = "lsd --tree";
         zed = if pkgs.stdenv.isDarwin || isWsl then "zed" else "zeditor";
       };
