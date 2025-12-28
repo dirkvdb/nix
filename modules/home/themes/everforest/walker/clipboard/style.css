@@ -34,6 +34,14 @@ scrollbar {
     border-radius: 8px;
 }
 
+.preview {
+    border: 1px solid alpha(@accent_bg_color, 0.25);
+    padding: 10px;
+    border-radius: 2px;
+    color: @selected-text;
+    background: darker(@background);
+}
+
 .preview-box {
 }
 
@@ -50,6 +58,10 @@ scrollbar {
 }
 
 .input {
+    background: @background;
+    filter: brightness(110%);
+    padding: 10px;
+    border-radius: 4px;
 }
 
 .input:focus,
@@ -112,12 +124,37 @@ child:selected .item-box * {
     font-style: italic;
 }
 
+.keybinds {
+    padding-top: 10px;
+    border-top: 1px solid lighter(@background);
+    font-size: 12px;
+    color: @foreground;
+}
+
 .keybind-hints {
     background: @background;
     padding: 10px;
     margin-top: 10px;
 }
 
-.preview {
-    background: @background;
+.keybind-button {
+    opacity: 0.5;
+}
+
+.keybind-button:hover {
+    opacity: 0.75;
+    cursor: pointer;
+}
+
+.keybind-bind {
+    text-transform: lowercase;
+    opacity: 0.35;
+    color: @selected-text;
+}
+
+.keybind-label {
+    padding: 2px 4px;
+    border-radius: 4px;
+    color: @selected-text;
+    border: 1px solid @text;
 }
