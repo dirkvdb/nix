@@ -6,16 +6,16 @@
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "color-lsp";
-  version = "0.2.0";
+  version = "0.2.2";
 
   src = fetchFromGitHub {
     owner = "huacnlee";
     repo = "color-lsp";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-m26eIA+K5ERmmlDaX6gJp+ABL4bLnsQF/R8A+tzmpZw=";
+    hash = "sha256-U0pTzW2PCgMxVsa1QX9MC249PXXL2KvRSN1Em2WvIeI=";
   };
 
-  cargoHash = "sha256-RUQmjM/DLBrsvn9/1BnP0V7VduP4UHrmnPiqUhzFimo=";
+  cargoHash = "sha256-etK+9fcKS+y+0C36vJrMkQ0yyVSpCW/DLKg4nTw3LrE=";
 
   passthru.updateScript = nix-update-script { };
 
