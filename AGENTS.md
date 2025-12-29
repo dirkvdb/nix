@@ -14,7 +14,7 @@ just build
 
 To perform a validity test for all the configs run:
 ```bash
-just test
+just check
 ```
 
 # Guidelines
