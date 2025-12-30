@@ -1,8 +1,12 @@
 {
   pkgs,
   inputs,
+  config,
   ...
 }:
+let
+  inherit (config.local) user;
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -117,8 +121,15 @@
       apps = {
         mqtt.enable = true;
         localsend.enable = true;
+        neovim.enable = true;
         vscode.enable = true;
         vlc.enable = true;
+        sops = {
+          enable = true;
+          ageKeyFile = {
+            path = "${user.homeDir}/.config/sops/age/keys.txt";
+          };
+        };
       };
 
       home-manager = {

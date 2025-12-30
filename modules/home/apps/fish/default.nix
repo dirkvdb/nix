@@ -1,7 +1,13 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
   inherit (config.local) user;
   isWsl = config.wsl.enable or false;
+  sopsEnabled = config.local.apps.sops.enable or false;
 in
 {
   home-manager.users.${user.name} = {
@@ -16,6 +22,11 @@ in
 
       shellInit = ''
         set -g fish_greeting
+
+        ${lib.optionalString sopsEnabled ''
+          set -gx OPENAI_API_KEY (cat ${config.sops.secrets.openai_api_key.path} | string trim)
+          set -gx GITHUB_TOKEN (cat ${config.sops.secrets.github_token.path} | string trim)
+        ''}
 
         bind \cx beginning-of-line
         bind \cb backward-word
