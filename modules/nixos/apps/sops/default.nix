@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (lib)
     types
@@ -30,6 +35,9 @@ in
       inherit (config.local) user;
     in
     {
+      environment.systemPackages = with pkgs; [
+        sops
+      ];
       sops = {
         age.keyFile = "/home/${user.name}/.config/sops/age/keys.txt";
 
@@ -41,6 +49,10 @@ in
         };
 
         secrets.github_token = {
+          owner = user.name;
+        };
+
+        secrets.mqtt_pass = {
           owner = user.name;
         };
       };
