@@ -39,6 +39,7 @@
 
       system = {
         cpu.cores = 12;
+        binfmt.enable = true;
 
         nix = {
           unfree.enable = true;
