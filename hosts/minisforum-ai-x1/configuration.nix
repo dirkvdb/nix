@@ -48,6 +48,7 @@
 
       system = {
         cpu.cores = 20;
+        binfmt.enable = true;
 
         nix = {
           unfree.enable = true;
@@ -138,6 +139,7 @@
         neovim.enable = true;
         prusa-slicer.enable = true;
         slack.enable = true;
+        sops.enable = true;
         spotify.enable = true;
         vivaldi.enable = true;
         vscode.enable = true;
