@@ -26,10 +26,19 @@ in
       };
     };
 
-    environment.systemPackages = [ pkgs.lazydocker ];
+    environment.systemPackages = with pkgs; [
+      lazydocker
+      docker-credential-helpers
+    ];
 
     users.users.${user.name}.extraGroups = [
       "docker"
     ];
+
+    home-manager.users.${user.name} = {
+      home.file.".docker/config.json".text = builtins.toJSON {
+        credsStore = "secretservice";
+      };
+    };
   };
 }
