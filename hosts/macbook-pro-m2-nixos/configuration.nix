@@ -2,6 +2,7 @@
   pkgs,
   inputs,
   config,
+  lib,
   ...
 }:
 let
@@ -150,7 +151,6 @@ in
 
     # Disable peripheral firmware extraction
     hardware.asahi.enable = true;
-    # hardware.asahi.extractPeripheralFirmware = true;
     hardware.asahi.peripheralFirmwareDirectory = ./firmware;
 
     # Swap fn and left ctrl keys on MacBook keyboard
@@ -176,6 +176,11 @@ in
       teams-for-linux
       vulkan-tools
       brightnessctl
+      asahi-audio # belongs to the workaround below
     ];
+
+    # workaround for audio volume not restoring on reboot (https://github.com/nix-community/nixos-apple-silicon/issues/352)
+    services.pipewire.configPackages = lib.mkForce [ ];
+    services.pipewire.wireplumber.configPackages = lib.mkForce [ ];
   };
 }
