@@ -93,6 +93,9 @@ in
             "/nas/data" = {
               device = "nas.local:/volume1/data";
             };
+            "/nas/media" = {
+              device = "nas.local:/volume1/media";
+            };
           };
         };
 
