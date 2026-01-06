@@ -73,11 +73,19 @@ in
         network = {
           enable = true;
           hostname = "macbook-pro";
-
-          wifi = {
+          networkmanager = {
             enable = true;
           };
         };
+
+        # network = {
+        #   enable = true;
+        #   hostname = "macbook-pro";
+
+        #   wifi = {
+        #     enable = true;
+        #   };
+        # };
 
         nfs-mounts = {
           enable = true;
