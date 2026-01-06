@@ -139,7 +139,7 @@ in
       };
 
       plugins = [
-        pkgs.hyprlandPlugins.hyprscrolling
+        #pkgs.hyprlandPlugins.hyprscrolling
       ]
       ++ lib.optionals isX86 [
         # hyprexpo only works on x86_64 due to function hooking limitations
