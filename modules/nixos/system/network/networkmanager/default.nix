@@ -67,6 +67,16 @@ in
         ];
         description = "VPN plugins to install";
       };
+
+      nordvpn = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Enable NordVPN support via OpenVPN plugin.
+          This ensures the OpenVPN plugin is installed for importing NordVPN configs.
+          Download OpenVPN configs from NordVPN and import them via NetworkManager.
+        '';
+      };
     };
   };
 
@@ -85,7 +95,7 @@ in
         powersave = cfg.wifi.powersave;
       };
       dns = "systemd-resolved";
-      plugins = lib.mkIf cfg.vpn.enable cfg.vpn.plugins;
+      plugins = lib.mkIf cfg.vpn.enable [ pkgs.networkmanager-openvpn ];
     };
 
     # When NetworkManager uses iwd backend, it manages iwd internally
