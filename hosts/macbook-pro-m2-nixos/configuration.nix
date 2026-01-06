@@ -75,6 +75,10 @@ in
           hostname = "macbook-pro";
           networkmanager = {
             enable = true;
+            vpn = {
+              enable = true;
+              nordvpn = true;
+            };
           };
         };
 
