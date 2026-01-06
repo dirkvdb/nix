@@ -88,9 +88,11 @@ in
           Description = "KeePassXC password manager with Secret Service";
           After = [
             "graphical-session.target"
+            "network-online.target"
             "waybar.service" # ensure the tray icon can be shown
             "ssh-agent.service"
           ];
+          Wants = [ "network-online.target" ];
           Requires = [ "ssh-agent.service" ];
           PartOf = [ "graphical-session.target" ];
         };
@@ -99,7 +101,6 @@ in
           Type = "simple";
           ExecStartPre = [
             "${pkgs.coreutils}/bin/sleep 2"
-            "${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online --timeout=30"
             # browser integration cannot be enabled if the config file is read-only, so we make a writable copy
             # "${pkgs.coreutils}/bin/cp %h/.config/keepassxc/keepassxc.immutable.ini %h/.config/keepassxc/keepassxc.ini"
             # "${pkgs.coreutils}/bin/chmod u+w %h/.config/keepassxc/keepassxc.ini"
