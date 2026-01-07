@@ -1,4 +1,5 @@
 {
+    "update_check": false,
     "hide_menu": true,
     "editor_path": "zeditor",
     "expand_untracked_files_by_default": true,
