@@ -135,6 +135,7 @@ in
       };
 
       apps = {
+        direnv.enable = true;
         mqtt.enable = true;
         localsend.enable = true;
         neovim.enable = true;

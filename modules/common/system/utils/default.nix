@@ -53,10 +53,6 @@ in
         sublime-merge
         pinta # image editor
       ];
-
-    programs.direnv = {
-      enable = cfg.dev;
-    };
   };
 
 }
