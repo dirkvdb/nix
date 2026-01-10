@@ -16,8 +16,9 @@ let
       pkgs.makeWrapper
     ];
 
+    # unset DISPLAY to force VLC to use wayland instead of xwayland
     postBuild = ''
-      wrapProgram "$out/bin/vlc" --set QT_SCALE_FACTOR 2.0
+      wrapProgram "$out/bin/vlc" --unset DISPLAY
 
       if [ -f "$out/share/applications/vlc.desktop" ]; then
         if [ -L "$out/share/applications/vlc.desktop" ]; then
