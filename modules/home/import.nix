@@ -64,7 +64,6 @@ in
     home.packages = with pkgs; [
       age
       autossh
-      #btop
       bitwarden-cli
       dust
       fd

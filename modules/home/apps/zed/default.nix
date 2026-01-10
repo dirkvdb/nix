@@ -15,7 +15,7 @@ in
     programs.zed-editor = {
       enable = true;
       mutableUserSettings = true;
-      package = if pkgs.stdenv.isDarwin then null else unstablePkgs.zed-editor;
+      #package = if pkgs.stdenv.isDarwin then null else unstablePkgs.zed-editor;
 
       extensions = [
         "biome"
