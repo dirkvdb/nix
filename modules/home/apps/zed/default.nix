@@ -47,6 +47,7 @@ in
       userSettings = {
         #ui_font_family = "Roboto";
         vim_mode = false;
+        colorize_brackets = true;
         ui_font_features = {
           calt = 0;
         };
