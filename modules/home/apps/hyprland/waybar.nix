@@ -229,7 +229,7 @@ in
           };
 
           clock = {
-            format = "{:L%A %H:%M}";
+            format = "{:L%d %b %H:%M}";
             format-alt = "{:L%d %B W%V %Y}";
             tooltip = false;
           };
