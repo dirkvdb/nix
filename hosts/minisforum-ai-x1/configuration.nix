@@ -133,7 +133,7 @@
       };
 
       apps = {
-        jan.enable = true;
+        direnv.enable = true;
         localsend.enable = true;
         mqtt.enable = true;
         neovim.enable = true;
@@ -161,6 +161,7 @@
     };
 
     environment.systemPackages = with pkgs; [
+      qgis
       gnumeric
       teams-for-linux
       (remmina.override { withKf5Wallet = false; })
