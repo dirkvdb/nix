@@ -23,6 +23,22 @@ in
     # Enable polkit for privilege escalation
     security.polkit.enable = true;
 
+    fonts.fontconfig = {
+      enable = true;
+
+      antialias = true;
+
+      subpixel = {
+        rgba = "none";
+        lcdfilter = "none";
+      };
+
+      hinting = {
+        enable = true;
+        style = "slight"; # or "none" if you prefer shape fidelity
+      };
+    };
+
     xdg.terminal-exec = {
       enable = true;
       settings = {
@@ -39,6 +55,7 @@ in
     environment.systemPackages = with pkgs; [
       glib # for gsettings to work
       eyedropper
+      font-manager
       gsettings-qt
       nautilus
       file-roller # archive manager
