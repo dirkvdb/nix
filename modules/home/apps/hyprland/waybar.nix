@@ -38,7 +38,8 @@ in
             border: none;
             border-radius: 0;
             min-height: 0;
-            font-family: "CaskaydiaMono Nerd Font Propo";
+            font-family: "RobotoMono Nerd Font Propo";
+            font-weight: 600;
             font-size: 12px;
         }
 
