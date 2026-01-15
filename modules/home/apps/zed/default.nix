@@ -23,7 +23,6 @@ in
         "color-highlight"
         "dockerfile"
         "git-firefly"
-        "groovy"
         "just"
         "log"
         "neocmake"
@@ -39,7 +38,6 @@ in
           biome
           color-lsp
           codex-acp
-          groovy
           nil
           nixfmt-rfc-style
         ]
@@ -125,7 +123,9 @@ in
         languages = {
           Python = {
             language_servers = [
-              "pyright"
+              "!basedpyright"
+              "!pyright"
+              "ty"
               "ruff"
             ];
           };
