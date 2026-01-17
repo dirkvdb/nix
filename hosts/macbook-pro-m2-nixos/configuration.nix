@@ -172,7 +172,7 @@ in
       options hid-apple swap_fn_leftctrl=1
       options hid-apple swap_opt_cmd=1
       options hid_apple fnmode=2
-      options apple_dcp show_notch=1
+      options appledrm show_notch=1
     '';
 
     services.libinput = {
