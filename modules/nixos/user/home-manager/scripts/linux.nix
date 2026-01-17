@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
+let
+  # Use the chromium package with WideVine support from home-manager config
+  chromiumPkg = config.programs.chromium.package;
+in
 {
   home.packages = [
     # convet tabular geospatial files to sqlite format for easier inspection
@@ -41,7 +45,7 @@
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-launch-webapp" ''
-      exec setsid ${pkgs.chromium}/bin/chromium --app="$1" "''${@:2}"
+      exec setsid ${chromiumPkg}/bin/chromium --app="$1" "''${@:2}"
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-launch-or-focus-webapp" ''
