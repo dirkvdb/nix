@@ -19,14 +19,16 @@ in
       extensions = lib.mkIf keepassEnabled [
         "oboonakemofpalcgghocfoadofidjkkk" # keepassxc
       ];
+
+      # widevine support for DRM content (Netflix, Disney+, Spotify, etc)
+      package = pkgs.chromium.override { enableWideVine = true; };
     };
   };
 
   # System-wide native messaging host for KeePassXC + Chromium
   # Installed system wide to avoid conflicts with home-manager managef config directory
   environment.etc = lib.mkIf (keepassEnabled && isLinux && isDesktop) {
-    "chromium/native-messaging-hosts/org.keepassxc.keepassxc_browser.json".text =
-    builtins.toJSON {
+    "chromium/native-messaging-hosts/org.keepassxc.keepassxc_browser.json".text = builtins.toJSON {
       allowed_origins = [
         "chrome-extension://pdffhmdngciaglkoonimfcmckehcpafo/"
         "chrome-extension://oboonakemofpalcgghocfoadofidjkkk/"
