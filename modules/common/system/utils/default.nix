@@ -12,6 +12,7 @@ let
     just
     pixi
     lazygit
+    serie
   ];
   sysadmin = with pkgs; [
     bind
