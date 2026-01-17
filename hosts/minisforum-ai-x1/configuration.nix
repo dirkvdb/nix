@@ -119,7 +119,10 @@
       };
 
       services = {
-        ssh.enable = true;
+        ssh = {
+          enable = true;
+          disablePasswordAuth = true;
+        };
         fwupd.enable = true;
         printing.enable = true;
         docker.enable = true;

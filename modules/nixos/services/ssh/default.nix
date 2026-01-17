@@ -6,6 +6,12 @@ in
 {
   options.local.services.ssh = {
     enable = lib.mkEnableOption "Enable SSH server";
+
+    disablePasswordAuth = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Disable password-based authentication (only allow key-based auth)";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -14,7 +20,14 @@ in
     ];
 
     services = {
-      openssh.enable = true;
+      openssh = {
+        enable = true;
+        settings = {
+          PermitRootLogin = "no";
+          PasswordAuthentication = !cfg.disablePasswordAuth;
+          KbdInteractiveAuthentication = !cfg.disablePasswordAuth;
+        };
+      };
     };
 
     programs.ssh.startAgent = true;
