@@ -53,6 +53,8 @@ in
 
         #workspaces button {
             all: initial;
+            background-color: transparent;
+            color: @foreground;
             padding: 0 6px;
             margin: 0 1.5px;
             min-width: 9px;
@@ -90,7 +92,58 @@ in
         }
 
         tooltip {
-            padding: 2px;
+            margin: 0;
+            padding: 0;
+            border: none;
+            background-color: transparent;
+        }
+
+        tooltip.background {
+            background-color: transparent;
+            border: none;
+        }
+
+        tooltip * {
+            background-color: transparent;
+        }
+
+        tooltip label {
+            margin: 0;
+            padding: 3px 6px;
+            border: 1px solid @foreground;
+            border-radius: 6px;
+            background-color: @background;
+            color: @foreground;
+        }
+
+        window.popup {
+            background-color: transparent;
+        }
+
+        menu {
+            background-color: @background;
+            border: 1px solid @foreground;
+            border-radius: 6px;
+            padding: 4px 0;
+        }
+
+        menu > .background {
+            background-color: @background;
+            border-radius: 6px;
+        }
+
+        menu * {
+            background-color: transparent;
+        }
+
+        menu menuitem {
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        menu menuitem:hover,
+        menu menuitem:selected {
+            background-color: alpha(@foreground, 0.12);
         }
 
         #custom-update {
