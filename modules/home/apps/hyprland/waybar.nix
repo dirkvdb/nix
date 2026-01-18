@@ -227,6 +227,7 @@ in
 
           "custom/nixmenu" = {
             format = "<span font='omarchy'></span>";
+            tooltip = false;
             on-click = "nixcfg-launch-walker";
             on-click-right = "nixcfg-launch-terminal";
           };
