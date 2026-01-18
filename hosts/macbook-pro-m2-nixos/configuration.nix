@@ -137,6 +137,7 @@ in
       apps = {
         direnv.enable = true;
         mqtt.enable = true;
+        foliate.enable = true;
         localsend.enable = true;
         neovim.enable = true;
         vscode.enable = true;
