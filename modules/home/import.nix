@@ -37,7 +37,7 @@ in
 
     # Set Zen as the default browser
     xdg.mimeApps = {
-      enable = true;
+      enable = !pkgs.stdenv.isDarwin;
       defaultApplications = {
         "text/html" = "zen-beta.desktop";
         "x-scheme-handler/http" = "zen-beta.desktop";
@@ -46,6 +46,7 @@ in
         "x-scheme-handler/unknown" = "zen-beta.desktop";
       };
     };
+
 
     # Per-directory XDG config entries for dotfiles
     xdg.configFile."btop".source = ./dotfiles/btop;
