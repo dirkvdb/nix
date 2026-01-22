@@ -110,6 +110,10 @@
         };
       };
 
+      apps = {
+        direnv.enable = true;
+      };
+
       home-manager = {
         # keepassxc = {
         #   enable = true;
