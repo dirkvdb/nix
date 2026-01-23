@@ -34,6 +34,7 @@
       theme.preset = "everforest";
 
       apps = {
+        direnv.enable = true;
         raycast.enable = true;
         karabiner.enable = true;
         bitwarden.enable = false;
