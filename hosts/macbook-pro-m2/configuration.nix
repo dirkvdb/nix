@@ -49,7 +49,7 @@
         defaults.enable = true;
 
         network = {
-          hostname = "macbook-pro";
+          hostname = "macbook-pro-osx";
         };
 
         nix = {
@@ -98,6 +98,7 @@
         Amphetalocal = 937984704;
         Pages = 409201541;
         Numbers = 409203825;
+        WindowsApp = 1295203466;
       };
 
       casks = [
