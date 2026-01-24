@@ -13,6 +13,7 @@ let
     pixi
     lazygit
     serie
+    binsider
   ];
   sysadmin = with pkgs; [
     bind
