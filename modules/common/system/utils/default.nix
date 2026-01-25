@@ -14,6 +14,7 @@ let
     lazygit
     serie
     binsider
+    nixd # to avoid nixd not found errors in zed
   ];
   sysadmin = with pkgs; [
     bind

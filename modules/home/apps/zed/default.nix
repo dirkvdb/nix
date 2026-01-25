@@ -38,7 +38,6 @@ in
           biome
           color-lsp
           codex-acp
-          nil
           nixfmt-rfc-style
         ]
       );
