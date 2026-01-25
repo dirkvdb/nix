@@ -309,7 +309,7 @@ in
 
           # Change speed of keyboard repeat
           repeat_rate = 35;
-          repeat_delay = 200;
+          repeat_delay = 300;
 
           # Start with numlock on by default
           numlock_by_default = true;
