@@ -20,6 +20,7 @@ in
         nerd-fonts.caskaydia-mono
         nerd-fonts.roboto-mono
         iosevka
+        inter-nerdfont
         cascadia-code
         fira-sans
         fira-code
