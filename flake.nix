@@ -139,7 +139,7 @@
         };
       };
 
-      darwinConfigurations."macbook-pro" = mkDarwin {
+      darwinConfigurations."macbook-pro-osx" = mkDarwin {
         system = "aarch64-darwin";
         hostPath = ./hosts/macbook-pro-m2/configuration.nix;
       };
