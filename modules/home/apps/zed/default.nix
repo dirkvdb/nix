@@ -47,7 +47,7 @@ in
       userSettings = {
         ui_font_size = 13.0;
         ui_font_family = "RobotoMono Nerd Font Propo";
-        vim_mode = false;
+        vim_mode = true;
         colorize_brackets = true;
         ui_font_features = {
           calt = 0;
