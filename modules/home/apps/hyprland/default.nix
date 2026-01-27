@@ -202,8 +202,8 @@ in
 
         general = {
           # No gaps between windows
-          gaps_in = 5;
-          gaps_out = 10;
+          gaps_in = 3;
+          gaps_out = 6;
 
           border_size = 2;
 
