@@ -59,6 +59,7 @@ in
             "git -C ~/nix pull -r --autostash && nh os switch -j2 --update --commit-lock-file ~/nix";
         tree = "lsd --tree";
         zed = if pkgs.stdenv.isDarwin || isWsl then "zed" else "zeditor";
+        nodenv = "direnv exec / fish --no-config";
       };
 
       plugins = [
