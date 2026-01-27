@@ -41,8 +41,8 @@ scrollbar {
 }
 
 .search-container {
-    background: @base;
-    padding: 10px;
+    background: transparent;
+    padding: 0;
 }
 
 .input placeholder {
@@ -53,6 +53,7 @@ scrollbar {
     background: @background;
     filter: brightness(110%);
     padding: 10px;
+    border: 1px solid alpha(@foreground, 0.3);
     border-radius: 4px;
 }
 
