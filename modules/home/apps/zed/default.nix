@@ -1,5 +1,6 @@
 {
   pkgs,
+  unstablePkgs,
   config,
   ...
 }:
@@ -14,7 +15,7 @@ in
     programs.zed-editor = {
       enable = true;
       mutableUserSettings = true;
-      #package = if pkgs.stdenv.isDarwin then null else unstablePkgs.zed-editor;
+      package = if pkgs.stdenv.isDarwin then null else unstablePkgs.zed-editor;
 
       extensions = [
         "biome"
@@ -36,6 +37,7 @@ in
         [
           nixd
           biome
+          tombi
           color-lsp
           codex-acp
           nixfmt-rfc-style
@@ -43,7 +45,8 @@ in
       );
 
       userSettings = {
-        #ui_font_family = "Roboto";
+        ui_font_size = 13.0;
+        ui_font_family = "RobotoMono Nerd Font Propo";
         vim_mode = false;
         colorize_brackets = true;
         ui_font_features = {
@@ -95,7 +98,6 @@ in
         telemetry = {
           metrics = false;
         };
-        ui_font_size = 15.0;
         buffer_font_family = theme.codeFont;
         buffer_font_weight = 600.0;
         buffer_font_size = theme.codeFontSize;
