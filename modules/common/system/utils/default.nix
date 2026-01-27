@@ -2,20 +2,23 @@
   lib,
   config,
   pkgs,
+  unstablePkgs,
   ...
 }:
 let
   cfg = config.local.system.utils;
   hasDesktop = config.local.desktop.enable or false;
-  dev = with pkgs; [
-    devenv
-    just
-    pixi
-    lazygit
-    serie
-    binsider
-    nixd # to avoid nixd not found errors in zed
-  ];
+  dev =
+    with pkgs;
+    [
+      devenv
+      just
+      lazygit
+      serie
+      binsider
+      nixd # to avoid nixd not found errors in zed
+    ]
+    ++ [ unstablePkgs.pixi ];
   sysadmin = with pkgs; [
     bind
     killall
