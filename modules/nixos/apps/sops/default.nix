@@ -55,6 +55,10 @@ in
         secrets.mqtt_pass = {
           owner = user.name;
         };
+
+        secrets.ssh_websocat_host = {
+          owner = user.name;
+        };
       };
     }
   );

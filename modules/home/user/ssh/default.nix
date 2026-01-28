@@ -1,10 +1,18 @@
-{ config, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   inherit (config.local) user;
+  sopsEnabled = config.local.apps.sops.enable or false;
 in
 {
   home-manager.users.${user.name} = {
-
+    home.packages = with pkgs; [
+      websocat
+    ];
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
@@ -16,6 +24,15 @@ in
           extraOptions = {
             requestTTY = "true";
             ForwardAgent = "yes";
+          };
+        };
+        mini-remote = lib.mkIf sopsEnabled {
+          user = "dirk";
+          extraOptions = {
+            ProxyCommand = "websocat -b $(cat ${config.sops.secrets.ssh_websocat_host.path})";
+            ControlMaster = "no";
+            ControlPath = "none";
+            ControlPersist = "no";
           };
         };
         inky = {
