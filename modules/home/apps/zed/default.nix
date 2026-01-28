@@ -41,6 +41,8 @@ in
           color-lsp
           codex-acp
           nixfmt-rfc-style
+          just-formatter
+          just-lsp
         ]
       );
 
@@ -48,6 +50,8 @@ in
         ui_font_size = 13.0;
         ui_font_family = "RobotoMono Nerd Font Propo";
         vim_mode = true;
+        relative_line_numbers = "enabled";
+
         colorize_brackets = true;
         ui_font_features = {
           calt = 0;
