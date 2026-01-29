@@ -112,6 +112,7 @@
 
       apps = {
         direnv.enable = true;
+        sops.enable = true;
       };
 
       home-manager = {
