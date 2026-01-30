@@ -185,6 +185,15 @@ in
           };
         }
         {
+          context = "Editor && vim_mode == insert && !VimWaiting && !menu";
+          bindings = {
+            "j k" = [
+              "workspace::SendKeystrokes"
+              "escape : w enter"
+            ];
+          };
+        }
+        {
           context = "Editor && vim_mode == insert";
           bindings = {
             "j k" = [
