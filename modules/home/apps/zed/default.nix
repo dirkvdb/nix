@@ -185,6 +185,15 @@ in
           };
         }
         {
+          context = "Editor && vim_mode == insert";
+          bindings = {
+            "j k" = [
+              "vim::NormalBefore"
+              "editor::Save"
+            ];
+          };
+        }
+        {
           context = "Workspace";
           bindings = {
             "secondary-shift-t" = [
