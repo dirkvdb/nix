@@ -2,11 +2,14 @@
   lib,
   config,
   pkgs,
+  mkHome,
   ...
 }:
 let
   inherit (config.local) user;
   cfg = config.local.home-manager.keepassxc;
+  mkUserHome = mkHome user.name;
+  isHeadless = config.local.headless;
 
   keepassxcConfig = ''
     [FdoSecrets]
@@ -62,59 +65,57 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    home-manager.users.${user.name} = {
-      programs.keepassxc = {
-        enable = true;
+  config = lib.mkIf (cfg.enable && !isHeadless) (mkUserHome {
+    programs.keepassxc = {
+      enable = true;
+    };
+
+    programs.git-credential-keepassxc = {
+      enable = true;
+    };
+
+    # KeePassXC configuration to enable Secret Service by default
+    # home.file = lib.mkIf pkgs.stdenv.isDarwin {
+    #   "Library/Application Support/KeePassXC/keepassxc.ini".text = keepassxcConfig;
+    # };
+
+    xdg.configFile = lib.mkIf pkgs.stdenv.isLinux {
+      "keepassxc/keepassxc.ini".text = keepassxcConfig;
+    };
+
+    # Systemd user service for KeePassXC with Secret Service
+    # KeePassXC will register org.freedesktop.secrets on D-Bus once running
+    systemd.user.services.keepassxc = lib.mkIf pkgs.stdenv.isLinux {
+      Unit = {
+        Description = "KeePassXC password manager with Secret Service";
+        After = [
+          "graphical-session.target"
+          "network-online.target"
+          "waybar.service" # ensure the tray icon can be shown
+          "ssh-agent.service"
+        ];
+        Wants = [ "network-online.target" ];
+        Requires = [ "ssh-agent.service" ];
+        PartOf = [ "graphical-session.target" ];
       };
 
-      programs.git-credential-keepassxc = {
-        enable = true;
+      Service = {
+        Type = "simple";
+        ExecStartPre = [
+          "${pkgs.coreutils}/bin/sleep 2"
+          # browser integration cannot be enabled if the config file is read-only, so we make a writable copy
+          # "${pkgs.coreutils}/bin/cp %h/.config/keepassxc/keepassxc.immutable.ini %h/.config/keepassxc/keepassxc.ini"
+          # "${pkgs.coreutils}/bin/chmod u+w %h/.config/keepassxc/keepassxc.ini"
+        ];
+        Environment = [ "SSH_AUTH_SOCK=%t/ssh-agent" ];
+        ExecStart = "${pkgs.keepassxc}/bin/keepassxc --minimized --keyfile ${cfg.keyfilePath} ${lib.concatStringsSep " " cfg.databasePaths}";
+        Restart = "on-failure";
+        RestartSec = 3;
       };
 
-      # KeePassXC configuration to enable Secret Service by default
-      # home.file = lib.mkIf pkgs.stdenv.isDarwin {
-      #   "Library/Application Support/KeePassXC/keepassxc.ini".text = keepassxcConfig;
-      # };
-
-      xdg.configFile = lib.mkIf pkgs.stdenv.isLinux {
-        "keepassxc/keepassxc.ini".text = keepassxcConfig;
-      };
-
-      # Systemd user service for KeePassXC with Secret Service
-      # KeePassXC will register org.freedesktop.secrets on D-Bus once running
-      systemd.user.services.keepassxc = lib.mkIf pkgs.stdenv.isLinux {
-        Unit = {
-          Description = "KeePassXC password manager with Secret Service";
-          After = [
-            "graphical-session.target"
-            "network-online.target"
-            "waybar.service" # ensure the tray icon can be shown
-            "ssh-agent.service"
-          ];
-          Wants = [ "network-online.target" ];
-          Requires = [ "ssh-agent.service" ];
-          PartOf = [ "graphical-session.target" ];
-        };
-
-        Service = {
-          Type = "simple";
-          ExecStartPre = [
-            "${pkgs.coreutils}/bin/sleep 2"
-            # browser integration cannot be enabled if the config file is read-only, so we make a writable copy
-            # "${pkgs.coreutils}/bin/cp %h/.config/keepassxc/keepassxc.immutable.ini %h/.config/keepassxc/keepassxc.ini"
-            # "${pkgs.coreutils}/bin/chmod u+w %h/.config/keepassxc/keepassxc.ini"
-          ];
-          Environment = [ "SSH_AUTH_SOCK=%t/ssh-agent" ];
-          ExecStart = "${pkgs.keepassxc}/bin/keepassxc --minimized --keyfile ${cfg.keyfilePath} ${lib.concatStringsSep " " cfg.databasePaths}";
-          Restart = "on-failure";
-          RestartSec = 3;
-        };
-
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
       };
     };
-  };
+  });
 }

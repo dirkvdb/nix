@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.local.system.utils;
-  hasAmdVideo = config.local.system.video.amd.enable or false;
+  hasAmdVideo = config.local.system.video.amd.enable;
   hasDesktop = config.local.desktop.enable or false;
   supportCpuFreqUtils = pkgs.stdenv.hostPlatform.system == "x86_64-linux";
   dev = [ ];

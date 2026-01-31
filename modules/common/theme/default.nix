@@ -135,9 +135,6 @@ in
   };
 
   config = {
-    # Automatically install fonts required by the selected preset
-    fonts.packages = selectedPreset.fonts or [ ];
-
     stylix = {
       polarity = "dark";
       image = ./wallpapers/wallpaper-1.jpg;

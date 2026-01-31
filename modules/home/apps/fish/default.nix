@@ -2,15 +2,16 @@
   pkgs,
   config,
   lib,
+  mkHome,
   ...
 }:
 let
   inherit (config.local) user;
-  isWsl = config.wsl.enable or false;
   sopsEnabled = config.local.apps.sops.enable or false;
+  mkUserHome = mkHome user.name;
 in
 {
-  home-manager.users.${user.name} = {
+  config = mkUserHome {
 
     home.packages = with pkgs; [
       fzf
@@ -46,19 +47,15 @@ in
         nrs =
           if pkgs.stdenv.isDarwin then
             "nh darwin switch ~/nix"
-          else if isWsl then
-            "nh os switch -j2 -H wsl"
           else
             "nh os switch -j2 ~/nix && nixcfg-reload";
         update =
           if pkgs.stdenv.isDarwin then
             "nh darwin switch -j2 --update --commit-lock-file ~/nix"
-          else if isWsl then
-            "nh os switch -j2 --update --commit-lock-file -H wsl"
           else
             "git -C ~/nix pull -r --autostash && nh os switch -j2 --update --commit-lock-file ~/nix";
         tree = "lsd --tree";
-        zed = if pkgs.stdenv.isDarwin || isWsl then "zed" else "zeditor";
+        zed = lib.mkIf (config.local.desktop.enable or false) "zeditor";
         nodenv = "direnv exec / fish --no-config";
       };
 

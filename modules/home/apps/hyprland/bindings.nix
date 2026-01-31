@@ -2,15 +2,19 @@
   config,
   lib,
   pkgs,
+  mkHome,
   ...
 }:
 let
   inherit (config.local) user;
   isLinux = pkgs.stdenv.isLinux;
+  isDesktop = config.local.desktop.enable or false;
+  isHeadless = config.local.headless or false;
   isX86 = pkgs.stdenv.isx86_64;
+  mkUserHome = mkHome user.name;
 in
 {
-  home-manager.users.${user.name} = lib.mkIf isLinux {
+  config = lib.mkIf (isLinux && isDesktop && !isHeadless) (mkUserHome {
     wayland.windowManager.hyprland.settings = {
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
@@ -187,5 +191,5 @@ in
         "ALT, XF86MonBrightnessDown, Brightness down precise, exec, $osdclient --brightness -1"
       ];
     };
-  };
+  });
 }

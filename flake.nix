@@ -79,6 +79,23 @@
         });
       };
 
+      hpcSystem = "x86_64-linux";
+      hpcOverlay = final: prev: {
+        yazi = prev.yazi-unwrapped;
+      };
+      hpcPkgs = import nixpkgs {
+        system = hpcSystem;
+        overlays = [
+          overlay
+          hpcOverlay
+        ];
+        config.allowUnfree = true;
+      };
+      hpcUnstablePkgs = import inputs.nixpkgs-unstable {
+        system = hpcSystem;
+        config.allowUnfree = true;
+      };
+
       # Helper function for NixOS configurations
       mkNixos =
         {
@@ -90,6 +107,7 @@
         nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs system;
+            mkHome = userName: attrs: { home-manager.users.${userName} = attrs; };
           };
           modules = [
             hostPath
@@ -111,6 +129,7 @@
         darwin.lib.darwinSystem {
           specialArgs = {
             inherit inputs system;
+            mkHome = userName: attrs: { home-manager.users.${userName} = attrs; };
           };
           modules = [
             hostPath
@@ -142,6 +161,19 @@
       darwinConfigurations."macbook-pro-osx" = mkDarwin {
         system = "aarch64-darwin";
         hostPath = ./hosts/macbook-pro-m2/configuration.nix;
+      };
+
+      homeConfigurations = {
+        hpc = inputs.home-manager.lib.homeManagerConfiguration {
+          pkgs = hpcPkgs;
+          modules = [ ./hosts/hpc/home.nix ];
+          extraSpecialArgs = {
+            inherit inputs;
+            system = hpcSystem;
+            mkHome = _: attrs: attrs;
+            unstablePkgs = hpcUnstablePkgs;
+          };
+        };
       };
     };
 }

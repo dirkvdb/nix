@@ -2,14 +2,18 @@
   pkgs,
   unstablePkgs,
   config,
+  lib,
+  mkHome,
   ...
 }:
 let
   inherit (config.local) user;
   inherit (config.local) theme;
+  mkUserHome = mkHome user.name;
+  isHeadless = config.local.headless;
 in
 {
-  home-manager.users.${user.name} = {
+  config = lib.mkIf (!isHeadless) (mkUserHome {
     stylix.targets.zed.enable = false;
 
     programs.zed-editor = {
@@ -282,5 +286,5 @@ in
         }
       ];
     };
-  };
+  });
 }

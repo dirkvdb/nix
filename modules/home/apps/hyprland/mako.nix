@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  mkHome,
   ...
 }:
 let
@@ -9,9 +10,10 @@ let
   inherit (config.local) theme;
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable;
+  mkUserHome = mkHome user.name;
 in
 {
-  home-manager.users.${user.name} = lib.mkIf (isLinux && isDesktop) {
+  config = lib.mkIf (isLinux && isDesktop) (mkUserHome {
     stylix.targets.mako.enable = false;
 
     services.mako = {
@@ -56,5 +58,5 @@ in
         };
       };
     };
-  };
+  });
 }

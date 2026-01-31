@@ -2,14 +2,16 @@
   config,
   pkgs,
   lib,
+  mkHome,
   ...
 }:
 let
   inherit (config.local) user;
   sopsEnabled = config.local.apps.sops.enable or false;
+  mkUserHome = mkHome user.name;
 in
 {
-  home-manager.users.${user.name} = {
+  config = mkUserHome {
     home.packages = with pkgs; [
       websocat
     ];

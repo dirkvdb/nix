@@ -8,10 +8,6 @@ let
   cfg = config.local.system.video.amd;
 in
 {
-  options.local.system.video.amd = {
-    enable = lib.mkEnableOption "Enable AMD graphics support";
-  };
-
   config = lib.mkIf cfg.enable {
     hardware = {
       graphics = {

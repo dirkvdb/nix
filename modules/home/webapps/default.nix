@@ -2,10 +2,13 @@
   lib,
   config,
   pkgs,
+  mkHome,
   ...
 }:
 let
   inherit (config.local) user;
+  mkUserHome = mkHome user.name;
+  isHeadless = config.local.headless;
 in
 let
   mkWebApp =
@@ -36,7 +39,7 @@ let
     };
 in
 {
-  home-manager.users.${user.name} = {
+  config = lib.mkIf (!isHeadless) (mkUserHome {
     xdg.dataFile = lib.mkMerge [
       {
         "icons/hicolor/256x256/apps/chatgpt.png".source = ./icons/ChatGPT.png;
@@ -84,5 +87,5 @@ in
         icon = "spotify";
       }))
     ];
-  };
+  });
 }

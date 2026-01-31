@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.local.system.boot.systemd;
-  amd = config.local.system.video.amd.enable or false;
+  amd = config.local.system.video.amd.enable;
 in
 {
   options.local.system.boot.systemd = {

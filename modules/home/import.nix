@@ -2,10 +2,13 @@
   pkgs,
   lib,
   config,
+  mkHome,
   ...
 }:
 let
   inherit (config.local) user;
+  mkUserHome = mkHome user.name;
+  isHeadless = config.local.headless or false;
 
   # Credit: @infinisil
   # https://github.com/Infinisil/system/blob/df9232c4b6cec57874e531c350157c37863b91a0/config/new-modules/default.nix
@@ -30,9 +33,11 @@ let
 
 in
 {
+  options.local.home-manager.standalone = lib.mkEnableOption "Use home-manager in standalone mode";
+
   imports = getDefaultNix ./.;
 
-  home-manager.users.${user.name} = {
+  config = mkUserHome {
     xdg.enable = true;
 
     # Set Zen as the default browser
@@ -46,7 +51,6 @@ in
         "x-scheme-handler/unknown" = "zen-beta.desktop";
       };
     };
-
 
     # Per-directory XDG config entries for dotfiles
     xdg.configFile."btop".source = ./dotfiles/btop;
@@ -62,23 +66,29 @@ in
       BROWSER = "zen";
     };
 
-    home.packages = with pkgs; [
-      age
-      autossh
-      bitwarden-cli
-      dust
-      fd
-      fzf
-      gh
-      lsd
-      micro
-      rsync
-      sd
-      sqlitebrowser
-      tabiew
-      yazi
-      wezterm
-    ];
+    home.packages =
+      (with pkgs; [
+        age
+        autossh
+        bitwarden-cli
+        dust
+        fd
+        fzf
+        gh
+        lsd
+        micro
+        rsync
+        sd
+        tabiew
+        yazi
+      ])
+      ++ lib.optionals (!isHeadless) (
+        with pkgs;
+        [
+          sqlitebrowser
+          wezterm
+        ]
+      );
 
     programs = {
       git.enable = true;
