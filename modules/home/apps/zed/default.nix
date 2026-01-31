@@ -179,7 +179,7 @@ in
 
       userKeymaps = [
         {
-          "bindings" = {
+          bindings = {
             "ctrl-p" = "file_finder::Toggle";
             "alt-o" = "editor::SwitchSourceHeader";
           };
@@ -190,15 +190,6 @@ in
             "j k" = [
               "workspace::SendKeystrokes"
               "escape : w enter"
-            ];
-          };
-        }
-        {
-          context = "Editor && vim_mode == insert";
-          bindings = {
-            "j k" = [
-              "vim::NormalBefore"
-              "editor::Save"
             ];
           };
         }
