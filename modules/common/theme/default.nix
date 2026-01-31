@@ -11,6 +11,7 @@ let
 
   cfg = config.local.theme;
   isLinux = lib.hasInfix "linux" system;
+  isDesktop = config.local.desktop.enable or false;
 
   # Get the selected preset, or use everforest as default
   selectedPreset = presets.${cfg.preset} or presets.everforest;
@@ -155,7 +156,7 @@ in
         monospace.name = selectedPreset.terminalFont;
       };
     }
-    // lib.optionalAttrs isLinux {
+    // lib.optionalAttrs (isLinux && isDesktop) {
       icons = {
         enable = true;
         dark = selectedPreset.iconTheme;
