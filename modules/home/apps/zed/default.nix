@@ -231,12 +231,12 @@ in
           context = "vim_operator == a || vim_operator == i || vim_operator == cs";
           bindings = {
             # Traditional Vim behavior
-            q = "vim::AnyQuotes";
-            b = "vim::AnyBrackets";
+            # q = "vim::AnyQuotes";
+            # b = "vim::AnyBrackets";
 
             # mini.ai plugin behavior
-            Q = "vim::MiniQuotes";
-            B = "vim::MiniBrackets";
+            q = "vim::MiniQuotes";
+            b = "vim::MiniBrackets";
           };
         }
       ];
