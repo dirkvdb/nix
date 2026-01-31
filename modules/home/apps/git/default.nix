@@ -1,9 +1,14 @@
-{ config, ... }:
+{
+  config,
+  mkHome,
+  ...
+}:
 let
   inherit (config.local) user;
+  mkUserHome = mkHome user.name;
 in
 {
-  home-manager.users.${user.name} = {
+  config = mkUserHome {
     programs.git = {
       enable = true;
       lfs.enable = true;

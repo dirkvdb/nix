@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  mkHome,
   ...
 }:
 let
@@ -10,9 +11,15 @@ let
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable;
   keepassEnabled = config.local.home-manager.keepassxc.enable;
+  mkUserHome = mkHome user.name;
+  userConfig =
+    if config.local.home-manager.standalone or false then
+      config
+    else
+      config.home-manager.users.${user.name};
 in
 {
-  home-manager.users.${user.name} = lib.mkIf (isLinux && isDesktop) {
+  config = lib.mkIf (isLinux && isDesktop) (mkUserHome {
 
     programs.zen-browser = {
       enable = true;
@@ -58,8 +65,7 @@ in
         spacesForce = true;
         spaces =
           let
-            containers =
-              config.home-manager.users.${user.name}.programs.zen-browser.profiles."default".containers;
+            containers = userConfig.programs.zen-browser.profiles."default".containers;
           in
           {
             "Personal" = {
@@ -78,9 +84,8 @@ in
         pinsForce = true;
         pins =
           let
-            spaces = config.home-manager.users.${user.name}.programs.zen-browser.profiles."default".spaces;
-            containers =
-              config.home-manager.users.${user.name}.programs.zen-browser.profiles."default".containers;
+            spaces = userConfig.programs.zen-browser.profiles."default".spaces;
+            containers = userConfig.programs.zen-browser.profiles."default".containers;
           in
           {
             # Personal
@@ -205,5 +210,5 @@ in
         type = "stdio";
       };
     };
-  };
+  });
 }

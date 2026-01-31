@@ -8,17 +8,6 @@ let
   cfg = config.local.desktop;
 in
 {
-  options.local.desktop = {
-    enable = lib.mkEnableOption "Enable desktop environment support";
-
-    displayScale = lib.mkOption {
-      type = lib.types.number;
-      default = 1.0;
-      example = 1.5;
-      description = "Global display scale factor (e.g., 1.0 for normal, 1.5 for 150% scaling).";
-    };
-  };
-
   config = lib.mkIf cfg.enable {
     # Enable polkit for privilege escalation
     security.polkit.enable = true;

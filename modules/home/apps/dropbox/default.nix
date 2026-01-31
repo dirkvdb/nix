@@ -2,11 +2,14 @@
   config,
   pkgs,
   lib,
+  mkHome,
   ...
 }:
 let
   inherit (config.local) user;
   cfg = config.local.home-manager.dropbox;
+  mkUserHome = mkHome user.name;
+  isHeadless = config.local.headless;
 in
 {
   options.local.home-manager.dropbox = {
@@ -19,12 +22,10 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    home-manager.users.${user.name} =  {
-      services.dropbox = {
-        enable = true;
-        path = cfg.path or "${config.home.homeDirectory}/Dropbox";
-      };
+  config = lib.mkIf (cfg.enable && !isHeadless) (mkUserHome {
+    services.dropbox = {
+      enable = true;
+      path = cfg.path or "${config.home.homeDirectory}/Dropbox";
     };
-  };
+  });
 }

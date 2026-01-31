@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  mkHome,
   ...
 }:
 let
@@ -9,7 +10,9 @@ let
   inherit (config.local) theme;
 
   isLinux = pkgs.stdenv.isLinux;
-  hasAmdGpu = config.local.system.video.amd.enable or false;
+  isDesktop = config.local.desktop.enable or false;
+  isHeadless = config.local.headless or false;
+  hasAmdGpu = config.local.system.video.amd.enable;
   # Get CPU core count from system config
   cpuCores = config.local.system.cpu.cores;
   # Generate CPU icon placeholders based on core count
@@ -17,9 +20,10 @@ let
   # Set waybar height based on hostname (32 for macbook-pro due to notch, 26 for others)
   hostname = config.local.system.network.hostname or "";
   waybarHeight = if hostname == "macbook-pro" then 32 else 26;
+  mkUserHome = mkHome user.name;
 in
 {
-  home-manager.users.${user.name} = lib.mkIf isLinux {
+  config = lib.mkIf (isLinux && isDesktop && !isHeadless) (mkUserHome {
     # Configure waybar with systemd service
     programs.waybar = {
       enable = true;
@@ -399,5 +403,5 @@ in
         }
       ];
     };
-  };
+  });
 }

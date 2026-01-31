@@ -1,11 +1,16 @@
-{ config, ... }:
+{
+  config,
+  mkHome,
+  ...
+}:
 let
   inherit (config.local) user;
   inherit (config.local) theme;
   inherit (config.lib.stylix) colors;
+  mkUserHome = mkHome user.name;
 in
 {
-  home-manager.users.${user.name} = {
+  config = mkUserHome {
     stylix.targets.starship.enable = false;
 
     programs.starship = {

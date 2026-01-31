@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  mkHome,
   ...
 }:
 let
@@ -13,6 +14,7 @@ let
   # hyprexpo uses x86-only function hooks and doesn't work on ARM
   # See: https://github.com/hyprwm/hyprland-plugins/issues/438
   isX86 = pkgs.stdenv.isx86_64;
+  mkUserHome = mkHome user.name;
 
 in
 {
@@ -22,7 +24,7 @@ in
     ./mako.nix
   ];
 
-  home-manager.users.${user.name} = lib.mkIf (isLinux && isDesktop) {
+  config = lib.mkIf (isLinux && isDesktop) (mkUserHome {
     stylix.targets.hyprland.enable = false;
 
     xdg.configFile."walker".source = ../../dotfiles/walker;
@@ -436,5 +438,5 @@ in
         ];
       };
     };
-  };
+  });
 }
