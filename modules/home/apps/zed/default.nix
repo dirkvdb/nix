@@ -180,8 +180,15 @@ in
       userKeymaps = [
         {
           bindings = {
-            "ctrl-p" = "file_finder::Toggle";
             "alt-o" = "editor::SwitchSourceHeader";
+          };
+        }
+        {
+          context = "vim_mode == normal || ProjectPanel || EmptyPane";
+          bindings = {
+            "space f" = "file_finder::Toggle";
+            "space t" = "project_symbols::Toggle";
+            "space s" = "outline::Toggle";
           };
         }
         {
