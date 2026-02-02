@@ -32,6 +32,7 @@ in
           systemd-boot = {
             enable = true;
             consoleMode = lib.mkDefault "2"; # use 2 unless overridden elsewhere
+            configurationLimit = lib.mkDefault 6;
           };
 
           # refind = {
