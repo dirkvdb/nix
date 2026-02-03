@@ -16,7 +16,6 @@ in
 
     environment.variables = {
       TERMINAL = "ghostty";
-      EDITOR = "nvim";
       VISUAL = "zeditor";
     };
 
