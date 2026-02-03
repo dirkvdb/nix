@@ -57,6 +57,7 @@ in
         lualine-nvim
         bufferline-nvim
         indent-blankline-nvim
+        neoscroll-nvim
 
         # File navigation
         telescope-nvim
@@ -483,6 +484,62 @@ in
         -- Colorizer
         require('colorizer').setup()
 
+        -- Neoscroll (smooth scrolling)
+        require('neoscroll').setup({
+          mappings = {},  -- We'll set up custom mappings manually
+          hide_cursor = true,
+          stop_eof = true,
+          respect_scrolloff = false,
+          cursor_scrolls_alone = true,
+          easing_function = 'quadratic',
+          performance_mode = false,
+        })
+
+        -- Setup smooth scrolling with modern helper functions
+        local neoscroll = require('neoscroll')
+
+        -- Half-page scrolling with centering
+        vim.keymap.set('n', '<C-u>', function()
+          neoscroll.scroll(-vim.wo.scroll, { move_cursor = true, duration = 150 })
+          vim.cmd('normal! zz')
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set('n', '<C-d>', function()
+          neoscroll.scroll(vim.wo.scroll, { move_cursor = true, duration = 150 })
+          vim.cmd('normal! zz')
+        end, { noremap = true, silent = true })
+
+        -- Full-page scrolling
+        vim.keymap.set('n', '<C-b>', function()
+          neoscroll.scroll(-vim.api.nvim_win_get_height(0), { move_cursor = true, duration = 250 })
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set('n', '<C-f>', function()
+          neoscroll.scroll(vim.api.nvim_win_get_height(0), { move_cursor = true, duration = 250 })
+        end, { noremap = true, silent = true })
+
+        -- Line scrolling
+        vim.keymap.set('n', '<C-y>', function()
+          neoscroll.scroll(-0.10, { move_cursor = false, duration = 100 })
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set('n', '<C-e>', function()
+          neoscroll.scroll(0.10, { move_cursor = false, duration = 100 })
+        end, { noremap = true, silent = true })
+
+        -- Repositioning
+        vim.keymap.set('n', 'zt', function()
+          neoscroll.zt({ half_win_duration = 150 })
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set('n', 'zz', function()
+          neoscroll.zz({ half_win_duration = 150 })
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set('n', 'zb', function()
+          neoscroll.zb({ half_win_duration = 150 })
+        end, { noremap = true, silent = true })
+
         -- ============================================================================
         -- KEYMAPS (Zed-style)
         -- ============================================================================
@@ -562,9 +619,7 @@ in
         keymap('v', '<', '<gv', opts)
         keymap('v', '>', '>gv', opts)
 
-        -- Keep cursor centered when scrolling
-        keymap('n', '<C-d>', '<C-d>zz', opts)
-        keymap('n', '<C-u>', '<C-u>zz', opts)
+        -- Keep cursor centered when searching (neoscroll handles <C-d> and <C-u>)
         keymap('n', 'n', 'nzzzv', opts)
         keymap('n', 'N', 'Nzzzv', opts)
 
