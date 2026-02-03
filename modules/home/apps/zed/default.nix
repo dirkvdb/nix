@@ -107,7 +107,7 @@ in
           metrics = false;
         };
         buffer_font_family = theme.codeFont;
-        buffer_font_weight = 600.0;
+        buffer_font_weight = 400.0;
         buffer_font_size = theme.codeFontSize;
         buffer_font_features = {
           liga = true;
@@ -183,8 +183,85 @@ in
 
       userKeymaps = [
         {
+          context = "Editor";
           bindings = {
             "alt-o" = "editor::SwitchSourceHeader";
+            "ctrl-h" = [
+              "workspace::ActivatePaneInDirection"
+              "Left"
+            ];
+            "ctrl-l" = [
+              "workspace::ActivatePaneInDirection"
+              "Right"
+            ];
+            "ctrl-k" = [
+              "workspace::ActivatePaneInDirection"
+              "Up"
+            ];
+            "ctrl-j" = [
+              "workspace::ActivatePaneInDirection"
+              "Down"
+            ];
+          };
+        }
+        {
+          context = "Editor && vim_mode == normal";
+          bindings = {
+            "space e" = "workspace::ToggleLeftDock";
+            "space a" = "workspace::ToggleRightDock";
+            "space p" = "editor::Format";
+            "space g" = "git_panel::ToggleFocus";
+            "shift-l" = "pane::ActivateNextItem";
+            "shift-h" = "pane::ActivatePrevItem";
+            "space v" = "pane::SplitRight";
+            "space w" = "pane::CloseActiveItem";
+            "space h" = "workspace::ActivateNextPane";
+            "space l" = "workspace::ActivatePreviousPane";
+          };
+        }
+        {
+          context = "Editor && vim_mode == insert";
+          bindings = {
+            "alt-h" = "vim::Left";
+            "alt-l" = "vim::Right";
+            "alt-j" = "vim::Down";
+            "alt-k" = "vim::Up";
+          };
+        }
+        {
+          context = "Editor && vim_mode == visual";
+          bindings = {
+            "shift-j" = "editor::MoveLineDown";
+            "shift-k" = "editor::MoveLineUp";
+            "shift-s" = "vim::PushAddSurrounds";
+          };
+        }
+        {
+          context = "ProjectPanel";
+          bindings = {
+            "space e" = "workspace::ToggleLeftDock";
+          };
+        }
+        {
+          context = "Dock";
+          bindings = {
+            "alt-e" = "editor::ToggleFocus";
+            "ctrl-h" = [
+              "workspace::ActivatePaneInDirection"
+              "Left"
+            ];
+            "ctrl-l" = [
+              "workspace::ActivatePaneInDirection"
+              "Right"
+            ];
+            "ctrl-k" = [
+              "workspace::ActivatePaneInDirection"
+              "Up"
+            ];
+            "ctrl-j" = [
+              "workspace::ActivatePaneInDirection"
+              "Down"
+            ];
           };
         }
         {
@@ -196,7 +273,7 @@ in
           };
         }
         {
-          context = "Editor && vim_mode == insert && !VimWaiting && !menu";
+          context = "Editor && vim_mode == insert && !VimWaiting";
           bindings = {
             "j k" = [
               "workspace::SendKeystrokes"
@@ -228,14 +305,7 @@ in
                 reveal_target = "dock";
               }
             ];
-            "alt-e" = "project_panel::ToggleFocus";
             "alt-`" = "terminal_panel::Toggle";
-          };
-        }
-        {
-          context = "Terminal";
-          bindings = {
-            "alt-e" = "terminal_panel::ToggleFocus";
           };
         }
         {
