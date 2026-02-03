@@ -29,9 +29,12 @@ in
           set -gx GITHUB_TOKEN (cat ${config.sops.secrets.github_token.path} | string trim)
         ''}
 
-        bind \cx beginning-of-line
-        bind \cb backward-word
-        bind \cf forward-word
+        # Enable vi mode
+        fish_vi_key_bindings
+
+        # Atuin vi mode bindings
+        bind -M default k _atuin_search
+        bind -M default j down-or-search
       '';
 
       shellAbbrs = {

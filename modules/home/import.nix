@@ -113,6 +113,7 @@ in
           enter_accept = true;
           inline_height = 15;
           history_format = "{command}\t{duration}";
+          keymap_mode = "vim-normal";
         };
       };
 
