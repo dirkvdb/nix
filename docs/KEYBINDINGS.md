@@ -1,6 +1,12 @@
 # Keybindings Documentation
 
-This document describes the unified keybindings between Zed and Neovim configurations, ensuring both editors behave consistently.
+This document describes the unified keybindings between Zed and Neovim configurations. The Neovim setup uses **LazyVim** as the base with Zed-specific keybindings applied on top.
+
+## Overview
+
+- **Base**: LazyVim (a well-maintained Neovim distribution)
+- **Customization**: Zed-style keybindings overlaid on top
+- **Philosophy**: Minimal custom config, let LazyVim handle the complexity
 
 ## Leader Key
 
@@ -24,24 +30,19 @@ The leader key is set to `Space` in both editors.
 - `Alt+k` - Move cursor up (without leaving insert mode)
 - `Alt+l` - Move cursor right (without leaving insert mode)
 
-### Smooth Scrolling (Neovim)
-The following commands have smooth scrolling enabled:
-- `Ctrl+u` - Scroll up half page (smooth + auto-centered)
-- `Ctrl+d` - Scroll down half page (smooth + auto-centered)
+### Smooth Scrolling
+LazyVim includes `mini.animate` which provides smooth scrolling out of the box for:
+- `Ctrl+u` - Scroll up half page (smooth)
+- `Ctrl+d` - Scroll down half page (smooth)
 - `Ctrl+b` - Scroll up full page (smooth)
 - `Ctrl+f` - Scroll down full page (smooth)
-- `Ctrl+y` - Scroll up one line (smooth)
-- `Ctrl+e` - Scroll down one line (smooth)
-- `zt` - Move current line to top (smooth)
-- `zz` - Move current line to center (smooth)
-- `zb` - Move current line to bottom (smooth)
 
 ## File Management
 
 ### Panels & Docks
-- `Space+e` - Toggle file explorer (left dock)
-- `Space+a` - Toggle outline/symbols (right dock)
-- `Space+s` - Toggle symbols outline (when in a buffer with LSP support)
+- `Space+e` - Toggle file explorer (Neo-tree)
+- `Space+a` - Toggle outline/symbols on right side (Aerial)
+- `Space+s` - Toggle symbols outline (Aerial)
 
 ### File Operations
 - `Space+w` - Close current buffer/file
@@ -49,55 +50,56 @@ The following commands have smooth scrolling enabled:
 
 ## Finding & Searching
 
-- `Space+f` - Find files (fuzzy finder)
-- `Space+t` - Find document symbols
-- `Space+/` - Live grep/search in project
-- `Space+b` - Find open buffers
+- `Space+f` or `Space+ff` - Find files (Telescope fuzzy finder)
+- `Space+t` or `Space+ft` - Find document symbols (Telescope)
+- `Space+/` or `Space+fg` - Live grep/search in project (global search)
+- `Space+b` - Find buffers (Telescope)
+
+**Note**: For global search across all files in your project, use `Space+/` or `Space+fg` (not `g+/`)
 
 ## Code Editing
 
 ### Formatting & LSP
 - `Space+p` - Format document
-- `gd` - Go to definition
-- `gD` - Go to declaration
-- `gi` - Go to implementation
-- `gr` - Go to references
-- `K` - Show hover documentation
-- `Ctrl+k` - Show signature help
-- `Space+rn` - Rename symbol
-- `Space+ca` - Code actions
+- `gd` - Go to definition (LazyVim default)
+- `gD` - Go to declaration (LazyVim default)
+- `gi` - Go to implementation (LazyVim default)
+- `gr` - Go to references (LazyVim default)
+- `K` - Show hover documentation (LazyVim default)
+- `Space+rn` - Rename symbol (LazyVim default)
+- `Space+ca` - Code actions (LazyVim default)
 
 ### Diagnostics
-- `[d` - Previous diagnostic
-- `]d` - Next diagnostic
+- `[d` - Previous diagnostic (LazyVim default)
+- `]d` - Next diagnostic (LazyVim default)
 - `Space+d` - Show diagnostic float
 
 ### Visual Mode Operations
 - `Shift+j` (or `J` in visual) - Move selected lines down
 - `Shift+k` (or `K` in visual) - Move selected lines up
-- `S` - Surround selection (in visual mode)
+- `S` - Surround selection (mini.surround)
 
 ### Text Objects & Surrounds
-- `ys{motion}` - Add surround
-- `ds{char}` - Delete surround
-- `cs{old}{new}` - Change surround
-- `yss` - Surround entire line
-- `yS{motion}` - Add surround on new lines
-- `ySS` - Surround entire line on new lines
+LazyVim includes `mini.surround` for surround operations:
+- `sa{motion}` - Add surround
+- `sd{char}` - Delete surround
+- `sr{old}{new}` - Replace surround
+- Full documentation: `:help mini.surround`
 
 ## Window Management
 
 - `Space+v` - Split window vertically (right)
-- `Space+h` - Next window
-- `Space+l` - Previous window
+- `Ctrl+h/j/k/l` - Navigate between splits
 
 ## Terminal
 
-- `Alt+\`` - Toggle terminal
+- `Alt+\`` - Toggle terminal (ToggleTerm)
 
 ## Git Integration
 
-- `Space+g` - Open Git panel
+- `Space+g` - Open LazyGit (full-featured Git UI)
+- `]h` - Next git hunk (LazyVim default)
+- `[h` - Previous git hunk (LazyVim default)
 
 ## Special Bindings
 
@@ -106,91 +108,130 @@ The following commands have smooth scrolling enabled:
 
 ### Normal Mode
 - `Space+x` - Make current file executable
-- `Esc` - Clear search highlighting
-- `:w` - Save file (standard Vim command)
+- `Esc` - Clear search highlighting (LazyVim default)
+- `:w` - Save file (standard Vim)
 
 ### Better Editing
 - `<` in visual mode - Decrease indent (stays in visual mode)
 - `>` in visual mode - Increase indent (stays in visual mode)
-- `Ctrl+d` - Scroll down half page (smooth animation + auto-centered)
-- `Ctrl+u` - Scroll up half page (smooth animation + auto-centered)
 - `n` - Next search result (centered)
 - `N` - Previous search result (centered)
 
-## Plugin-Specific Features
+## LazyVim Features
 
-### Completion (Insert Mode)
-- `Ctrl+Space` - Trigger completion
-- `Ctrl+n` - Next completion item
-- `Ctrl+p` - Previous completion item
-- `Enter` - Confirm completion
+LazyVim provides many additional features out of the box:
+
+### Additional Keybindings
+- `gcc` - Toggle comment line
+- `gbc` - Toggle comment block
+- `Space+ff` - Find files (alternative to Space+f)
+- `Space+fg` - Find in files / Global search (alternative to Space+/)
+- `Space+ftur` - Toggle relative line numbers
+- `Space+uw` - Toggle word wrap
+
+### Auto-completion
 - `Tab` - Next completion item or expand snippet
-- `Shift+Tab` - Previous completion item or jump back in snippet
+- `Shift+Tab` - Previous completion item
+- `Ctrl+Space` - Trigger completion
+- `Enter` - Confirm completion
 
-### Treesitter Text Objects
-- `aa` - Around argument/parameter
-- `ia` - Inside argument/parameter
-- `af` - Around function
-- `if` - Inside function
-- `ac` - Around class
-- `ic` - Inside class
+### LSP Extras
+- `Space+cl` - LSP info
+- `Space+cf` - Format document (alternative to Space+p)
+- `Space+cr` - Rename (alternative to Space+rn)
 
-### Function/Class Navigation
-- `]m` - Next function start
-- `]M` - Next function end
-- `[m` - Previous function start
-- `[M` - Previous function end
-- `]]` - Next class start
-- `][` - Next class end
-- `[[` - Previous class start
-- `[]` - Previous class end
+### Telescope Extras
+- `Space+ff` - Find files (alternative to Space+f)
+- `Space+fr` - Recent files
+- `Space+fb` - Find buffers
+- `Space+fg` - Live grep (alternative to Space+/)
+- `Space+fc` - Find config files
+- `Space+fh` - Help tags
 
-## Neovim-Specific Features
+## LazyVim Extras Enabled
 
-While most keybindings are identical to Zed, Neovim includes these additional features:
+The configuration includes these LazyVim extras:
 
-1. **LSP Navigation**: More granular LSP keybindings (gd, gD, gi, gr) compared to Zed's simpler navigation
-2. **Treesitter Text Objects**: Enhanced text object selections using treesitter
-3. **Additional Motions**: Neovim includes vim-native motions and text objects
-4. **Which-key**: Shows available keybindings after pressing leader key (with ~300ms delay)
-5. **Smooth Scrolling**: All scroll commands animate smoothly for better visual tracking
-6. **Operator Overlaps**: Some keybindings like `ys`, `ds`, `cs` are operators that wait for motions (this is expected Vim behavior)
+1. **coding.mini-surround** - Surround operations
+2. **editor.aerial** - Symbols outline
+3. **ui.mini-animate** - Smooth scrolling and animations
+4. **lang.nix** - Nix language support
+5. **lang.rust** - Rust language support
+6. **lang.python** - Python language support
+7. **lang.typescript** - TypeScript/JavaScript support
 
 ## Configuration Files
 
-- **Zed**: `nix/modules/home/apps/zed/default.nix` (lines 182-318)
-- **Neovim**: `nix/modules/home/apps/neovim/default.nix` (lines 100-600)
+### Zed
+- **Main config**: `nix/modules/home/apps/zed/default.nix`
+- **Keymaps section**: Lines 182-318
 
-### Note on Neovim LSP Configuration
+### Neovim (LazyVim-based)
+- **Main config**: `nix/modules/home/apps/neovim/default.nix`
+- **Options**: `~/.config/nvim/lua/config/options.lua` (generated)
+- **Custom keybindings**: `~/.config/nvim/lua/plugins/zed-keybindings.lua` (generated)
+- **Lazy bootstrap**: `~/.config/nvim/lua/config/lazy.lua` (generated)
 
-The Neovim configuration uses the modern `vim.lsp.config` API (introduced in Neovim 0.11) instead of the deprecated `require('lspconfig')` framework. This provides better integration with Neovim's built-in LSP client.
+## Why LazyVim?
 
-### Known Warnings
+### Benefits
+1. **Less maintenance** - LazyVim handles plugin updates and compatibility
+2. **Best practices** - Curated plugin selection and configuration
+3. **Performance** - Optimized lazy-loading of plugins
+4. **Documentation** - Extensive built-in help and which-key integration
+5. **Community** - Large user base and active development
+6. **Extensibility** - Easy to add/remove plugins and features
 
-- **Which-key overlapping keymaps**: Some warnings about overlapping keymaps (e.g., `<Space>` with `<Space>g`, `y` with `ys`, etc.) are expected and normal. These are operator-pending keymaps that wait for additional input, which is standard Vim behavior.
+### What LazyVim Provides
+- **Plugin management** - Lazy.nvim for fast, lazy-loading plugins
+- **LSP configuration** - Auto-configured language servers
+- **Treesitter** - Syntax highlighting and code analysis
+- **Telescope** - Fuzzy finder and picker
+- **Neo-tree** - File explorer
+- **Which-key** - Keybinding hints
+- **Auto-completion** - nvim-cmp with multiple sources
+- **Git integration** - Gitsigns, LazyGit, and more
+- **UI enhancements** - Bufferline, Lualine, indent guides, etc.
+- **Smooth scrolling** - mini.animate for smooth animations
 
 ## Customization
 
-To add new keybindings:
+### Adding Zed-style Keybindings
+Edit `~/.config/nvim/lua/plugins/zed-keybindings.lua` or modify the Nix configuration at `nix/modules/home/apps/neovim/default.nix`.
 
-1. For Zed: Add to `userKeymaps` array in the Zed configuration
-2. For Neovim: Add to the keymaps section in `extraLuaConfig`
+### Adding LazyVim Extras
+Add to the `spec` section in the Nix config:
+```lua
+{ import = "lazyvim.plugins.extras.lang.rust" }
+```
 
-Ensure both configurations are updated to maintain consistency across editors.
+Browse available extras: https://www.lazyvim.org/extras
 
-## Smooth Scrolling Configuration
+### Disabling Features
+Create a plugin spec with `enabled = false`:
+```lua
+{
+  "plugin-name",
+  enabled = false,
+}
+```
 
-Neovim's smooth scrolling is powered by `neoscroll.nvim` using modern helper functions API with the following settings:
-- **Easing**: Quadratic (smooth acceleration/deceleration)
-- **Hide cursor during scroll**: Yes (reduces visual noise)
-- **Stop at end of file**: Yes (prevents over-scrolling)
-- **Auto-centering**: Enabled for `Ctrl+u` and `Ctrl+d` (cursor stays centered)
-- **Animation duration**: 
-  - Half-page scrolls (`Ctrl+u`/`Ctrl+d`): 150ms with auto-centering
-  - Full-page scrolls (`Ctrl+b`/`Ctrl+f`): 250ms
-  - Line scrolls (`Ctrl+y`/`Ctrl+e`): 100ms
-  - Repositioning (`zt`/`zz`/`zb`): 150ms
-- **Performance mode**: Disabled (prioritizes smoothness)
-- **API**: Uses modern helper functions (`neoscroll.scroll()`, `neoscroll.zt()`, etc.) instead of deprecated `set_mappings()`
+## Learning More
 
-You can adjust the scrolling behavior by modifying the neoscroll setup in the Neovim configuration file. Each command is configured with explicit duration and cursor behavior options.
+- **LazyVim docs**: https://www.lazyvim.org
+- **LazyVim keymaps**: `:help lazyvim.keymaps`
+- **Which-key**: Press `Space` and wait to see available keybindings
+- **Lazy plugin manager**: `Space+l` to open the UI
+
+## Migration Notes
+
+### Previous Custom Config
+This setup replaced a large custom Neovim configuration with LazyVim to reduce maintenance burden. All Zed-style keybindings are preserved while gaining LazyVim's benefits.
+
+### First Launch
+On first launch, LazyVim will:
+1. Clone lazy.nvim plugin manager
+2. Install all configured plugins
+3. Set up language servers and tools
+
+This is automatic and may take a minute on first run.
