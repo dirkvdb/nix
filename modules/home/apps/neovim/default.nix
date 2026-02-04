@@ -193,6 +193,9 @@ in
           (mkKeymap "v" "J" ":m '>+1<CR>gv=gv" "Move line down")
           (mkKeymap "v" "K" ":m '<-2<CR>gv=gv" "Move line up")
 
+          # Visual mode: add surrounds (Zed-style)
+          (mkKeymap "v" "S" "<Plug>(nvim-surround-visual)" "Add surrounds to selection")
+
           # Insert mode: navigation without exiting
           (mkKeymap "i" "<M-h>" "<Left>" "Move left in insert mode")
           (mkKeymap "i" "<M-j>" "<Down>" "Move down in insert mode")
