@@ -70,7 +70,6 @@ in
       (with pkgs; [
         age
         autossh
-        bitwarden-cli
         dust
         fd
         fzf
