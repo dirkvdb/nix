@@ -13,6 +13,7 @@ in
   imports = [
     inputs.stylix.homeModules.stylix
     inputs.zen-browser.homeModules.default
+    inputs.nvf.homeManagerModules.default
     ../../modules/common/options
     ../../modules/common/theme
     ../../modules/home/import.nix
