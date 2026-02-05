@@ -64,7 +64,10 @@ in
       # Use everforest theme (only terminal/CLI styling, no GUI)
       theme.preset = "everforest";
 
-      home-manager.standalone = true;
+      home-manager = {
+        standalone = true;
+        configName = "hpc";
+      };
 
       apps = {
         direnv.enable = true;

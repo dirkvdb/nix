@@ -9,6 +9,7 @@ let
   inherit (config.local) user;
   sopsEnabled = config.local.apps.sops.enable or false;
   isStandalone = config.local.home-manager.standalone or false;
+  configName = config.local.home-manager.configName or user.name;
   mkUserHome = mkHome user.name;
 in
 {
@@ -61,12 +62,16 @@ in
         dd = "zeditor .";
         man = "batman";
         nrs =
-          if pkgs.stdenv.isDarwin then
+          if isStandalone then
+            "nix run home-manager/release-25.11 -- switch -b backup --flake ~/nix#${configName}"
+          else if pkgs.stdenv.isDarwin then
             "nh darwin switch ~/nix"
           else
             "nh os switch -j2 ~/nix && nixcfg-reload";
         update =
-          if pkgs.stdenv.isDarwin then
+          if isStandalone then
+            "git -C ~/nix pull -r --autostash && nrs"
+          else if pkgs.stdenv.isDarwin then
             "nh darwin switch -j2 --update --commit-lock-file ~/nix"
           else
             "git -C ~/nix pull -r --autostash && nh os switch -j2 --update --commit-lock-file ~/nix";

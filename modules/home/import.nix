@@ -33,7 +33,16 @@ let
 
 in
 {
-  options.local.home-manager.standalone = lib.mkEnableOption "Use home-manager in standalone mode";
+  options.local.home-manager = {
+    standalone = lib.mkEnableOption "Use home-manager in standalone mode";
+
+    configName = lib.mkOption {
+      type = lib.types.str;
+      default = user.name;
+      description = "Name of the home-manager flake configuration (used in standalone mode)";
+      example = "hpc";
+    };
+  };
 
   imports = getDefaultNix ./.;
 
