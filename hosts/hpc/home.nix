@@ -65,6 +65,11 @@ in
       theme.preset = "everforest";
 
       home-manager.standalone = true;
+
+      apps = {
+        direnv.enable = true;
+        neovim.enable = true;
+      };
     };
   };
 }
