@@ -31,6 +31,11 @@ in
       shellInit = ''
         set -g fish_greeting
 
+        ${lib.optionalString isStandalone ''
+          # In standalone home-manager, ensure ~/.nix-profile/bin is in PATH
+          fish_add_path --path --prepend ~/.nix-profile/bin
+        ''}
+
         ${lib.optionalString sopsEnabled ''
           set -gx OPENAI_API_KEY (cat ${config.sops.secrets.openai_api_key.path} | string trim)
           set -gx GITHUB_TOKEN (cat ${config.sops.secrets.github_token.path} | string trim)
