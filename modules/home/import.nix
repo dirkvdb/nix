@@ -3,12 +3,14 @@
   lib,
   config,
   mkHome,
+  unstablePkgs,
   ...
 }:
 let
   inherit (config.local) user;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless or false;
+  isStandalone = config.local.home-manager.standalone or false;
 
   # Credit: @infinisil
   # https://github.com/Infinisil/system/blob/df9232c4b6cec57874e531c350157c37863b91a0/config/new-modules/default.nix
@@ -90,6 +92,18 @@ in
         tabiew
         yazi
       ])
+      ++ lib.optionals isStandalone (
+        (with pkgs; [
+          # Dev tools that would normally be in system.utils.dev
+          devenv
+          just
+          lazygit
+          serie
+          binsider
+          nixd
+        ])
+        ++ [ unstablePkgs.pixi ]
+      )
       ++ lib.optionals (!isHeadless) (
         with pkgs;
         [
