@@ -46,6 +46,7 @@ in
         k = "kubectl";
         ll = "lsd -la";
         ls = "lsd";
+        dd = "zeditor .";
         man = "batman";
         nrs =
           if pkgs.stdenv.isDarwin then
