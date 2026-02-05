@@ -56,6 +56,10 @@ in
         vim_mode = true;
         relative_line_numbers = "enabled";
 
+        vim = {
+          highlight_on_yank_duration = 500;
+        };
+
         colorize_brackets = true;
         ui_font_features = {
           calt = 0;
@@ -186,33 +190,26 @@ in
           context = "Editor";
           bindings = {
             "alt-o" = "editor::SwitchSourceHeader";
-            "ctrl-h" = [
-              "workspace::ActivatePaneInDirection"
-              "Left"
-            ];
-            "ctrl-l" = [
-              "workspace::ActivatePaneInDirection"
-              "Right"
-            ];
-            "ctrl-k" = [
-              "workspace::ActivatePaneInDirection"
-              "Up"
-            ];
-            "ctrl-j" = [
-              "workspace::ActivatePaneInDirection"
-              "Down"
-            ];
           };
         }
         {
-          context = "Editor && vim_mode == normal";
+          context = "Editor || Dock";
+          bindings = {
+            "ctrl-h" = "workspace::ActivatePaneLeft";
+            "ctrl-l" = "workspace::ActivatePaneRight";
+            "ctrl-k" = "workspace::ActivatePaneUp";
+            "ctrl-j" = "workspace::ActivatePaneDown";
+          };
+        }
+        {
+          context = "vim_mode == normal";
           bindings = {
             "space e" = "workspace::ToggleLeftDock";
             "space a" = "workspace::ToggleRightDock";
             "space p" = "editor::Format";
             "space g" = "git_panel::ToggleFocus";
             "shift-l" = "pane::ActivateNextItem";
-            "shift-h" = "pane::ActivatePrevItem";
+            "shift-h" = "pane::ActivatePreviousItem";
             "space v" = "pane::SplitRight";
             "space w" = "pane::CloseActiveItem";
             "space h" = "workspace::ActivateNextPane";
@@ -220,7 +217,7 @@ in
           };
         }
         {
-          context = "Editor && vim_mode == insert";
+          context = "vim_mode == insert";
           bindings = {
             "alt-h" = "vim::Left";
             "alt-l" = "vim::Right";
@@ -229,7 +226,7 @@ in
           };
         }
         {
-          context = "Editor && vim_mode == visual";
+          context = "vim_mode == visual";
           bindings = {
             "shift-j" = "editor::MoveLineDown";
             "shift-k" = "editor::MoveLineUp";
@@ -246,22 +243,6 @@ in
           context = "Dock";
           bindings = {
             "alt-e" = "editor::ToggleFocus";
-            "ctrl-h" = [
-              "workspace::ActivatePaneInDirection"
-              "Left"
-            ];
-            "ctrl-l" = [
-              "workspace::ActivatePaneInDirection"
-              "Right"
-            ];
-            "ctrl-k" = [
-              "workspace::ActivatePaneInDirection"
-              "Up"
-            ];
-            "ctrl-j" = [
-              "workspace::ActivatePaneInDirection"
-              "Down"
-            ];
           };
         }
         {
