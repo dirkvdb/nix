@@ -8,15 +8,22 @@
 let
   inherit (config.local) user;
   sopsEnabled = config.local.apps.sops.enable or false;
+  isStandalone = config.local.home-manager.standalone or false;
   mkUserHome = mkHome user.name;
 in
 {
   config = mkUserHome {
 
-    home.packages = with pkgs; [
-      fzf
-      fishPlugins.fzf
-    ];
+    home.packages =
+      with pkgs;
+      [
+        fzf
+        fishPlugins.fzf
+      ]
+      ++ lib.optionals isStandalone [
+        # In standalone home-manager, fish needs to be explicitly installed
+        pkgs.fish
+      ];
 
     programs.fish = {
       enable = true;
