@@ -89,6 +89,7 @@ in
           {
             timeout = 3600; # 60min
             on-timeout = "hyprlock";
+            on-resume = "hyprctl dispatch focuswindow"; # Trigger a repaint to avoid empty workspace after unlocking
           }
         ];
       };
