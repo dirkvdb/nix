@@ -91,6 +91,14 @@ in
         vim.mini = {
           ai.enable = true; # Better text objects
           pairs.enable = true; # Auto-pair brackets/quotes
+          surround = {
+            enable = true; # Add/change/delete surroundings
+            setupOpts = {
+              mappings = {
+                add_visual = "S";
+              };
+            };
+          };
         };
 
         # LSP diagnostics configuration
