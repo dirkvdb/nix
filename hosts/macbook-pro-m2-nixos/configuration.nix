@@ -186,6 +186,37 @@ in
       };
     };
 
+    # Remap Caps Lock to Escape (tap) / arrow layer (hold) using kanata (only for built-in keyboard)
+    # The hardware address (2a9b30000) is stable for this M2 MacBook Pro model
+    # If it changes on a different MacBook model, find it with:
+    # ls -la /dev/input/by-path/ | grep kbd
+    services.kanata = {
+      enable = true;
+      keyboards.default = {
+        devices = [
+          "/dev/input/by-path/platform-2a9b30000.input-event-kbd"
+        ];
+        extraDefCfg = "process-unmapped-keys yes";
+        config = ''
+          (defsrc
+            caps h j k l
+          )
+
+          (deflayer base
+            @cap h j k l
+          )
+
+          (defalias
+            cap (tap-hold-release 200 200 esc (layer-while-held arrows))
+          )
+
+          (deflayer arrows
+            _ left down up rght
+          )
+        '';
+      };
+    };
+
     environment.systemPackages = with pkgs; [
       teams-for-linux
       vulkan-tools
