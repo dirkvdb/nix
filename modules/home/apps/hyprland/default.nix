@@ -297,8 +297,9 @@ in
           }
           {
             name = "apple-mtp-keyboard";
-            # map caps lock to escape
-            kb_options = "caps:escape";
+            # Note: Caps Lock -> Escape and Right Alt -> Caps Lock are handled by kanata
+            # See services.kanata configuration in the host configuration
+            kb_options = "";
           }
         ];
 
@@ -308,7 +309,7 @@ in
           # Use multiple keyboard layouts and switch between them with Left Alt + Right Alt
           # kb_layout = us,dk,eu
           kb_layout = "us";
-          kb_options = "compose:ralt"; # ,grp:alts_toggle
+          kb_options = "caps:escape"; # Map Caps Lock to Escape
 
           # Change speed of keyboard repeat
           repeat_rate = 35;
