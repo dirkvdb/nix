@@ -28,6 +28,13 @@ in
   config = {
     system.stateVersion = "25.05"; # Version at install time, never change
 
+    # Enable ZRAM for memory compression
+    zramSwap = {
+      enable = true;
+      memoryPercent = 50; # Use up to 50% of RAM for compressed swap
+      algorithm = "zstd"; # Modern, fast compression algorithm
+    };
+
     stylix = {
       enable = true;
     };
