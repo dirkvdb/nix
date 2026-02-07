@@ -309,6 +309,70 @@ in
       fi
     '')
 
+    (pkgs.writeShellScriptBin "nixcfg-cmd-screenrecord" ''
+      [[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
+      OUTPUT_DIR="''${NIXCFG_SCREENRECORD_DIR:-''${XDG_VIDEOS_DIR:-$HOME/videos}}"
+
+      if [[ ! -d "$OUTPUT_DIR" ]]; then
+        mkdir -p "$OUTPUT_DIR" || {
+          notify-desktop "Screenrecord directory does not exist: $OUTPUT_DIR" -u critical -t 3000
+          exit 1
+        }
+      fi
+
+      # Check if already recording - if so, stop it
+      if pkill -SIGINT wf-recorder; then
+        notify-desktop "Screen recording stopped" -t 2000
+        exit 0
+      fi
+
+      # Cancel any pending slurp selection
+      pkill slurp && exit 0
+
+      MODE="''${1:-region}"
+      WITH_AUDIO=false
+      WITH_WEBCAM=false
+
+      shift || true
+      while [[ $# -gt 0 ]]; do
+        case "$1" in
+          --with-audio) WITH_AUDIO=true ;;
+          --with-webcam) WITH_WEBCAM=true ;;
+        esac
+        shift
+      done
+
+      OUTPUT_FILE="$OUTPUT_DIR/screenrecord-$(date +'%Y-%m-%d_%H-%M-%S').mp4"
+
+      # Build wf-recorder command
+      CMD="wf-recorder -f \"$OUTPUT_FILE\""
+
+      if [[ "$WITH_AUDIO" == "true" ]]; then
+        # Use default PulseAudio/PipeWire source
+        CMD="$CMD --audio"
+      fi
+
+      case "$MODE" in
+        region)
+          SELECTION=$(slurp 2>/dev/null)
+          [ -z "$SELECTION" ] && exit 0
+          CMD="$CMD -g \"$SELECTION\""
+          ;;
+        output)
+          # Get the focused monitor
+          MONITOR=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true) | .name')
+          CMD="$CMD -o \"$MONITOR\""
+          ;;
+      esac
+
+      notify-desktop "Screen recording started" "Press Super+Alt+5 again to stop" -t 2000
+
+      # Run wf-recorder
+      eval $CMD
+
+      notify-desktop "Screen recording saved" "$OUTPUT_FILE" -t 3000
+    '')
+
     (pkgs.writeShellScriptBin "nixcfg-powerprofiles-list" ''
       powerprofilesctl list |
         awk '/^\s*[* ]\s*[a-zA-Z0-9\-]+:$/ { gsub(/^[*[:space:]]+|:$/,""); print }' |

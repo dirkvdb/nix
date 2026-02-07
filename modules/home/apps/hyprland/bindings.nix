@@ -160,8 +160,11 @@ in
         "$mod ALT, 3, Screenshot of window, exec, nixcfg-cmd-screenshot window"
         "$mod ALT, 2, Screenshot of display, exec, nixcfg-cmd-screenshot output"
 
+        # Screen recording
+        "$mod ALT, 5, Record screen region, exec, nixcfg-cmd-screenrecord"
+
         # Color picker
-        "$mod ALT, 5, Color picker, exec, pkill hyprpicker || hyprpicker -a"
+        "$mod ALT, 6, Color picker, exec, pkill hyprpicker || hyprpicker -a"
       ];
 
       # Touchpad gesture bindings for workspace switching
