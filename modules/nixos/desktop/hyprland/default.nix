@@ -44,6 +44,7 @@ in
       nwg-displays
       satty # screenshot annotation tool
       slurp # for region selection (screen shot, etc)
+      wf-recorder # screen recording for Wayland
       sunsetr
       hyprsunset
       waypaper
