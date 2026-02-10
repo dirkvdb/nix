@@ -87,8 +87,8 @@ in
         "$mod CTRL, S, Share, exec, nixcfg-menu share"
 
         # Control tiling
-        "$mod SHIFT, V, Toggle floating, togglefloating"
         "$mod, F, Maximize App Window, fullscreen, 1"
+        "$mod SHIFT, F, Toggle floating, togglefloating"
         "$mod ALT, F, Full width, fullscreen, 0"
 
         "$mod, code:20, Expand window left, resizeactive, -100 0" # - key
