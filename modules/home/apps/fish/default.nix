@@ -59,7 +59,7 @@ in
         k = "kubectl";
         ll = "lsd -la";
         ls = "lsd";
-        dd = "zeditor .";
+        dv = "zeditor .";
         man = "batman";
         nrs =
           if isStandalone then
