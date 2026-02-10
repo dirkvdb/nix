@@ -6,6 +6,9 @@
 }:
 let
   inherit (config.local) user;
+
+  # Check if neovim is enabled in the local.apps config
+  neovimEnabled = config.local.apps.neovim.enable or false;
 in
 {
   config = lib.mkIf user.enable {
@@ -17,6 +20,7 @@ in
     environment.variables = {
       TERMINAL = "ghostty";
       VISUAL = "zeditor";
+      EDITOR = if neovimEnabled then "nvim" else "micro";
     };
 
     # systemd.user.extraConfig = ''
