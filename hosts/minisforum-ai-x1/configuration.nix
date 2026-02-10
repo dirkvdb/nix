@@ -165,7 +165,7 @@
     environment.systemPackages = with pkgs; [
       qgis
       gnumeric
-      teams-for-linux
+      teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
       (remmina.override { withKf5Wallet = false; })
       unstablePkgs.lmstudio
       #winboat
