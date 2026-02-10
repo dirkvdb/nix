@@ -108,7 +108,6 @@
         "dropbox"
         # bruno
         "ghostty"
-        "vivaldi"
         "fork"
         "microsoft-teams"
         "microsoft-outlook"

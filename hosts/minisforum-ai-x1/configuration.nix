@@ -144,7 +144,6 @@
         slack.enable = true;
         sops.enable = true;
         spotify.enable = true;
-        vivaldi.enable = true;
         vscode.enable = true;
         whatsapp.enable = true;
         vlc.enable = true;
