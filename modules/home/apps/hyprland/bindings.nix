@@ -71,7 +71,12 @@ in
         "$mod, E, File manager, exec, nautilus --new-window"
         "$mod SHIFT, G, Sublime merge, exec, sublime_merge"
         "$mod SHIFT, A, ChatGPT, exec, nixcfg-launch-or-focus-webapp ChatGPT \"https://chatgpt.com\""
-        "$mod SHIFT, M, Music, exec, nixcfg-launch-or-focus spotify"
+        "$mod SHIFT, M, Music, exec, ${
+          if isX86 then
+            "nixcfg-launch-or-focus spotify"
+          else
+            "nixcfg-launch-or-focus-webapp Spotify \"https://open.spotify.com\""
+        }"
         "$mod SHIFT, Y, Youtube, exec, nixcfg-launch-or-focus-webapp Youtube \"https://youtube.com/\""
         "$mod SHIFT, W, Whatsapp, exec, nixcfg-launch-or-focus-webapp Whatsapp \"https://web.whatsapp.com/\""
         "$mod SHIFT, E, Email, exec, nixcfg-launch-or-focus-webapp GMail \"https://mail.google.com\""
