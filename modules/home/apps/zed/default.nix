@@ -252,6 +252,19 @@ in
           };
         }
         {
+          context = "(VimControl && !menu)";
+          bindings = {
+            "ctrl-d" = [
+              "workspace::SendKeystrokes"
+              "ctrl-d z z"
+            ];
+            "ctrl-u" = [
+              "workspace::SendKeystrokes"
+              "ctrl-u z z"
+            ];
+          };
+        }
+        {
           context = "vim_mode == normal && !Terminal";
           bindings = {
             "space f" = "file_finder::Toggle";
