@@ -133,8 +133,12 @@ in
           filter_mode_shell_up_key_binding = "session";
           prefers_reduced_motion = true;
           enter_accept = true;
-          inline_height = 15;
-          history_format = "{command}\t{duration}";
+          inline_height = 20;
+          history_format = "{command}";
+          columns = [
+            "duration"
+            "command"
+          ];
           keymap_mode = "vim-normal";
         };
       };
