@@ -180,7 +180,7 @@ in
 
         agent_servers = {
           codex = {
-            default_model = "gpt-5.2/high";
+            default_model = "gpt-5.3-codex/high";
           };
         };
       };
@@ -193,7 +193,7 @@ in
           };
         }
         {
-          context = "Workspace";
+          context = "Workspace || Editor";
           bindings = {
             "ctrl-h" = "workspace::ActivatePaneLeft";
             "ctrl-l" = "workspace::ActivatePaneRight";
@@ -242,14 +242,22 @@ in
           bindings = {
             "ctrl-shift-h" = "pane::ActivatePreviousItem";
             "ctrl-shift-l" = "pane::ActivateNextItem";
+            "alt-`" = "editor::ToggleFocus";
           };
         }
         {
-          context = "vim_mode == normal || ProjectPanel || EmptyPane";
+          context = "Workspace && !Terminal";
+          bindings = {
+            "alt-`" = "terminal_panel::ToggleFocus";
+          };
+        }
+        {
+          context = "vim_mode == normal && !Terminal";
           bindings = {
             "space f" = "file_finder::Toggle";
             "space t" = "project_symbols::Toggle";
             "space s" = "outline::Toggle";
+            "space k" = "workspace::ToggleZoom";
           };
         }
         {
@@ -285,7 +293,6 @@ in
                 reveal_target = "dock";
               }
             ];
-            "alt-`" = "terminal_panel::Toggle";
           };
         }
         {
