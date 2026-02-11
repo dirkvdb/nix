@@ -51,6 +51,35 @@ in
           vim.g.loaded_netrw = 1
           vim.g.loaded_netrwPlugin = 1
         '';
+        vim.luaConfigRC.reload-config = ''
+          local function reload_config()
+            local candidates = {
+              vim.env.MYVIMRC,
+              vim.fn.stdpath("config") .. "/init.lua",
+              vim.fn.expand("~/.config/nvim/init.lua"),
+              vim.fn.expand("~/.config/nvf/init.lua"),
+            }
+
+            for _, file in ipairs(candidates) do
+              if file and file ~= "" and vim.fn.filereadable(file) == 1 then
+                vim.cmd("source " .. vim.fn.fnameescape(file))
+                vim.notify("Reloaded config: " .. file, vim.log.levels.INFO)
+                return
+              end
+            end
+
+            local runtime_init = vim.api.nvim_get_runtime_file("init.lua", false)[1]
+            if runtime_init and runtime_init ~= "" and vim.fn.filereadable(runtime_init) == 1 then
+              vim.cmd("source " .. vim.fn.fnameescape(runtime_init))
+              vim.notify("Reloaded config: " .. runtime_init, vim.log.levels.INFO)
+              return
+            end
+
+            vim.notify("Could not find an init.lua to reload", vim.log.levels.ERROR)
+          end
+
+          vim.api.nvim_create_user_command("ReloadConfig", reload_config, {})
+        '';
 
         vim.visuals.cinnamon-nvim = {
           enable = true;
@@ -178,6 +207,13 @@ in
           (mkKeymap "i" "jk" "<Esc><cmd>w<CR>" "Exit insert mode and save (Zed-style)")
           (mkKeymap "n" "<C-s>" "<cmd>w<CR>" "Save file")
           (mkKeymap "i" "<C-s>" "<Esc><cmd>w<CR>a" "Save file from insert mode")
+          (mkKeymap "n" "<leader>O" "<cmd>ReloadConfig<CR>" "Reload Neovim config")
+          (mkKeymap "n" "<C-d>" "<cmd>lua require('cinnamon').scroll('<C-d>zz')<CR>"
+            "Smooth scroll half-page down and center cursor"
+          )
+          (mkKeymap "n" "<C-u>" "<cmd>lua require('cinnamon').scroll('<C-u>zz')<CR>"
+            "Smooth scroll half-page up and center cursor"
+          )
 
           # Window management
           (mkKeymap "n" "<leader>v" "<cmd>vsplit<CR>" "Split window vertically")
