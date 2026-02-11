@@ -143,6 +143,14 @@ in
           enable = true;
         };
 
+        vim.languages = {
+          clang.enable = true;
+          lua.enable = true;
+          nix.enable = true;
+          python.enable = true;
+          rust.enable = true;
+        };
+
         vim.treesitter = {
           enable = true;
           fold = true;
@@ -216,6 +224,15 @@ in
         vim.options.number = true;
         vim.options.relativenumber = true;
         vim.languages.enableTreesitter = true;
+        vim.diagnostics = {
+          enable = true;
+          config = {
+            virtual_text = true;
+            underline = true;
+            signs = true;
+            update_in_insert = true;
+          };
+        };
 
         vim.assistant.copilot = {
           enable = true;
@@ -476,12 +493,6 @@ in
           (mkKeymap "i" "<M-l>" "<Right>" "Move right in insert mode")
         ];
 
-        vim.languages = {
-          lua.enable = true;
-          nix.enable = true;
-          python.enable = true;
-          rust.enable = true;
-        };
       };
     };
   });
