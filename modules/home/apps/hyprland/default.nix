@@ -83,7 +83,7 @@ in
           {
             timeout = 600; # 10min
             on-timeout = "hyprctl dispatch dpms off";
-            on-resume = "hyprctl dispatch dpms on && sleep 2.0 && hyprctl dispatch dpms on && sleep 1.0 && hyprctl dispatch dpms on && brightnessctl -r";
+            on-resume = "hyprctl dispatch dpms on && sleep 2.0 && hyprctl dispatch dpms on && sleep 1.0 && hyprctl dispatch dpms on && brightnessctl -r && hyprctl dispatch focuswindow"; # Trigger a repaint to avoid empty workspace after waking up
           }
           # Long time away - lock the screen
           {
