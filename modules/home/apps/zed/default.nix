@@ -193,19 +193,20 @@ in
           };
         }
         {
-          context = "Editor || Dock";
+          context = "Workspace";
           bindings = {
             "ctrl-h" = "workspace::ActivatePaneLeft";
             "ctrl-l" = "workspace::ActivatePaneRight";
             "ctrl-k" = "workspace::ActivatePaneUp";
             "ctrl-j" = "workspace::ActivatePaneDown";
+            "alt-h" = "workspace::ToggleLeftDock";
+            "alt-l" = "workspace::ToggleRightDock";
+            "alt-j" = "workspace::ToggleBottomDock";
           };
         }
         {
           context = "vim_mode == normal";
           bindings = {
-            "space e" = "workspace::ToggleLeftDock";
-            "space a" = "workspace::ToggleRightDock";
             "space p" = "editor::Format";
             "space g" = "git_panel::ToggleFocus";
             "shift-l" = "pane::ActivateNextItem";
@@ -214,15 +215,6 @@ in
             "space w" = "pane::CloseActiveItem";
             "space h" = "workspace::ActivateNextPane";
             "space l" = "workspace::ActivatePreviousPane";
-          };
-        }
-        {
-          context = "vim_mode == insert";
-          bindings = {
-            "alt-h" = "vim::Left";
-            "alt-l" = "vim::Right";
-            "alt-j" = "vim::Down";
-            "alt-k" = "vim::Up";
           };
         }
         {
@@ -243,6 +235,13 @@ in
           context = "Dock";
           bindings = {
             "alt-e" = "editor::ToggleFocus";
+          };
+        }
+        {
+          context = "Terminal";
+          bindings = {
+            "ctrl-shift-h" = "pane::ActivatePreviousItem";
+            "ctrl-shift-l" = "pane::ActivateNextItem";
           };
         }
         {
