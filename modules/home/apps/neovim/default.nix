@@ -149,6 +149,7 @@ in
           nix.enable = true;
           python.enable = true;
           rust.enable = true;
+          enableTreesitter = true;
         };
 
         vim.treesitter = {
@@ -220,10 +221,16 @@ in
           enable = true;
         };
 
-        vim.options.wrap = false;
-        vim.options.number = true;
-        vim.options.relativenumber = true;
-        vim.languages.enableTreesitter = true;
+        vim.options = {
+          wrap = false;
+          tabstop = 8;
+          shiftwidth = 8;
+          number = true;
+          relativenumber = true;
+          cursorline = true;
+          cursorlineopt = "both";
+        };
+
         vim.diagnostics = {
           enable = true;
           config = {
@@ -242,91 +249,6 @@ in
             };
           };
         };
-
-        # Disable netrw to prevent directory listing on startup
-        vim.luaConfigRC.disable-netrw = ''
-          vim.g.loaded_netrw = 1
-          vim.g.loaded_netrwPlugin = 1
-        '';
-        vim.luaConfigRC.reload-config = ''
-          local function reload_config()
-            local candidates = {
-              vim.env.MYVIMRC,
-              vim.fn.stdpath("config") .. "/init.lua",
-              vim.fn.expand("~/.config/nvim/init.lua"),
-              vim.fn.expand("~/.config/nvf/init.lua"),
-            }
-
-            for _, file in ipairs(candidates) do
-              if file and file ~= "" and vim.fn.filereadable(file) == 1 then
-                vim.cmd("source " .. vim.fn.fnameescape(file))
-                vim.notify("Reloaded config: " .. file, vim.log.levels.INFO)
-                return
-              end
-            end
-
-            local runtime_init = vim.api.nvim_get_runtime_file("init.lua", false)[1]
-            if runtime_init and runtime_init ~= "" and vim.fn.filereadable(runtime_init) == 1 then
-              vim.cmd("source " .. vim.fn.fnameescape(runtime_init))
-              vim.notify("Reloaded config: " .. runtime_init, vim.log.levels.INFO)
-              return
-            end
-
-            vim.notify("Could not find an init.lua to reload", vim.log.levels.ERROR)
-          end
-
-          vim.api.nvim_create_user_command("ReloadConfig", reload_config, {})
-        '';
-        vim.luaConfigRC.treesitter-zed-textobjects = ''
-          local function setup_zed_treesitter()
-            -- nvf currently exposes some grammar parsers under
-            -- parser/vimplugin_treesitter_grammar_<lang>.so/<lang>.so.
-            -- Register those parsers under their canonical language names.
-            local function ensure_lang_parser(lang)
-              local ok = vim.treesitter.language.add(lang)
-              if ok then
-                return
-              end
-
-              local nested = vim.api.nvim_get_runtime_file(
-                "parser/vimplugin_treesitter_grammar_" .. lang .. ".so",
-                false
-              )[1]
-              if not nested then
-                return
-              end
-
-              local parser_path = nested .. "/" .. lang .. ".so"
-              pcall(vim.treesitter.language.add, lang, { path = parser_path })
-            end
-
-            ensure_lang_parser("python")
-            ensure_lang_parser("rust")
-            ensure_lang_parser("nix")
-            ensure_lang_parser("cpp")
-
-            require("nvim-treesitter.configs").setup({
-              incremental_selection = {
-                enable = true,
-                keymaps = {
-                  init_selection = "[x",
-                  node_incremental = "[x",
-                  node_decremental = "]x",
-                },
-              },
-            })
-
-          end
-
-          if vim.v.vim_did_enter == 1 then
-            setup_zed_treesitter()
-          else
-            vim.api.nvim_create_autocmd("VimEnter", {
-              once = true,
-              callback = setup_zed_treesitter,
-            })
-          end
-        '';
 
         vim.visuals.cinnamon-nvim = {
           enable = true;
@@ -492,6 +414,91 @@ in
           (mkKeymap "i" "<M-k>" "<Up>" "Move up in insert mode")
           (mkKeymap "i" "<M-l>" "<Right>" "Move right in insert mode")
         ];
+
+        # Disable netrw to prevent directory listing on startup
+        vim.luaConfigRC.disable-netrw = ''
+          vim.g.loaded_netrw = 1
+          vim.g.loaded_netrwPlugin = 1
+        '';
+        vim.luaConfigRC.reload-config = ''
+          local function reload_config()
+            local candidates = {
+              vim.env.MYVIMRC,
+              vim.fn.stdpath("config") .. "/init.lua",
+              vim.fn.expand("~/.config/nvim/init.lua"),
+              vim.fn.expand("~/.config/nvf/init.lua"),
+            }
+
+            for _, file in ipairs(candidates) do
+              if file and file ~= "" and vim.fn.filereadable(file) == 1 then
+                vim.cmd("source " .. vim.fn.fnameescape(file))
+                vim.notify("Reloaded config: " .. file, vim.log.levels.INFO)
+                return
+              end
+            end
+
+            local runtime_init = vim.api.nvim_get_runtime_file("init.lua", false)[1]
+            if runtime_init and runtime_init ~= "" and vim.fn.filereadable(runtime_init) == 1 then
+              vim.cmd("source " .. vim.fn.fnameescape(runtime_init))
+              vim.notify("Reloaded config: " .. runtime_init, vim.log.levels.INFO)
+              return
+            end
+
+            vim.notify("Could not find an init.lua to reload", vim.log.levels.ERROR)
+          end
+
+          vim.api.nvim_create_user_command("ReloadConfig", reload_config, {})
+        '';
+        vim.luaConfigRC.treesitter-zed-textobjects = ''
+          local function setup_zed_treesitter()
+            -- nvf currently exposes some grammar parsers under
+            -- parser/vimplugin_treesitter_grammar_<lang>.so/<lang>.so.
+            -- Register those parsers under their canonical language names.
+            local function ensure_lang_parser(lang)
+              local ok = vim.treesitter.language.add(lang)
+              if ok then
+                return
+              end
+
+              local nested = vim.api.nvim_get_runtime_file(
+                "parser/vimplugin_treesitter_grammar_" .. lang .. ".so",
+                false
+              )[1]
+              if not nested then
+                return
+              end
+
+              local parser_path = nested .. "/" .. lang .. ".so"
+              pcall(vim.treesitter.language.add, lang, { path = parser_path })
+            end
+
+            ensure_lang_parser("python")
+            ensure_lang_parser("rust")
+            ensure_lang_parser("nix")
+            ensure_lang_parser("cpp")
+
+            require("nvim-treesitter.configs").setup({
+              incremental_selection = {
+                enable = true,
+                keymaps = {
+                  init_selection = "[x",
+                  node_incremental = "[x",
+                  node_decremental = "]x",
+                },
+              },
+            })
+
+          end
+
+          if vim.v.vim_did_enter == 1 then
+            setup_zed_treesitter()
+          else
+            vim.api.nvim_create_autocmd("VimEnter", {
+              once = true,
+              callback = setup_zed_treesitter,
+            })
+          end
+        '';
 
       };
     };
