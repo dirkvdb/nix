@@ -111,6 +111,7 @@
       };
 
       apps = {
+        neovim.enable = true;
         direnv.enable = true;
         sops.enable = true;
       };
