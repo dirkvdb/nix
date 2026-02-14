@@ -114,7 +114,7 @@ in
 
         vim.options = {
           wrap = false;
-          tabstop = 8;
+          tabstop = 4;
           shiftwidth = 8;
           number = true;
           relativenumber = true;
