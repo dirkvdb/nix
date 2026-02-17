@@ -207,19 +207,47 @@ in
         extraDefCfg = "process-unmapped-keys yes";
         config = ''
           (defsrc
-            caps h j k l
+            caps
+            1 2 3 4 5 6 7 8 9 0
+            q w e r t y u i o p
+            a s d f g h j k l ; ' \
+            z x c v b n m , . /
           )
 
           (deflayer base
-            @cap h j k l
+            @cap
+            1 2 3 4 5 6 7 8 9 0
+            q w e r t y u i o p
+            (chord chords a) s d f g h j k l (chord chords ;) ' \
+            z x c v b n m , . /
+          )
+
+          (defchords chords 200
+            (a ;) S-min
+            (a) @syma
+            (;) @symsemi
           )
 
           (defalias
             cap (tap-hold-release 200 200 esc (layer-while-held arrows))
+            syma (tap-hold-release 200 200 a (layer-while-held symbols))
+            symsemi (tap-hold-release 200 200 ; (layer-while-held symbols))
           )
 
           (deflayer arrows
-            _ left down up rght
+            _
+            _ _ _ _ _ _ _ _ _ _
+            _ _ _ _ _ _ _ _ _ _
+            _ _ left down up rght _ _ _ _ _ _
+            _ _ _ _ _ _ _ _ _ _
+          )
+
+          (deflayer symbols
+            _
+            _ _ _ _ _ _ _ _ _ _
+            grv S-grv S-3 S-7 S-\ S-6 S-[ S-] [ ]
+            S-min S-1 S-; = S-4 S-2 S-9 S-0 S-' S-min _ _
+            S-5 S-/ S-8 S-= \ / - S-, S-. '
           )
         '';
       };
