@@ -238,7 +238,7 @@ in
             _
             _ _ _ _ _ _ _ _ _ _
             _ _ _ _ _ _ _ _ _ _
-            _ _ left down up rght _ _ _ _ _ _
+            _ _ _ _ _ left down up rght _ _ _
             _ _ _ _ _ _ _ _ _ _
           )
 

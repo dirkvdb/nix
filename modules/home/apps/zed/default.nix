@@ -226,12 +226,6 @@ in
           };
         }
         {
-          context = "ProjectPanel";
-          bindings = {
-            "space e" = "workspace::ToggleLeftDock";
-          };
-        }
-        {
           context = "Dock";
           bindings = {
             "alt-e" = "editor::ToggleFocus";
