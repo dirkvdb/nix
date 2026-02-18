@@ -130,9 +130,9 @@ in
           font_family = theme.terminalFont;
         };
         theme = {
-          mode = "light";
-          light = "Ayu Mirage";
-          dark = "Ayu Dark";
+          mode = "system";
+          light = "Ayu Light";
+          dark = "Ayu Mirage";
         };
         languages = {
           Python = {
