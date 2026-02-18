@@ -149,6 +149,7 @@ in
         neovim.enable = true;
         vscode.enable = true;
         vlc.enable = true;
+        zathura.enable = true;
         zellij.enable = true;
         sops = {
           enable = true;

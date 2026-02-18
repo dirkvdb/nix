@@ -147,6 +147,7 @@
         vscode.enable = true;
         whatsapp.enable = true;
         vlc.enable = true;
+        zathura.enable = true;
       };
 
       home-manager = {
