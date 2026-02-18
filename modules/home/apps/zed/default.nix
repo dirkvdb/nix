@@ -29,6 +29,7 @@ in
         "dockerfile"
         "git-firefly"
         "just"
+        "glsl"
         "log"
         "neocmake"
         "nix"
