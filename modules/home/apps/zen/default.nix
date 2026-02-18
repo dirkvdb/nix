@@ -142,6 +142,7 @@ in
             "zen.theme.gradient.show-custom-colors" = false;
             "zen.theme.accent-color" = "AccentColor";
             "zen.urlbar.behavior" = "float";
+            "zen.urlbar.replace-newtab" = false;
             "zen.view.compact.enable-at-startup" = true;
             "zen.view.compact.hide-tabbar" = true;
             "zen.view.compact.hide-toolbar" = true;
