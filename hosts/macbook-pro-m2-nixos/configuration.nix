@@ -3,6 +3,7 @@
   inputs,
   config,
   lib,
+  unstablePkgs,
   ...
 }:
 let
@@ -201,6 +202,7 @@ in
     # ls -la /dev/input/by-path/ | grep kbd
     services.kanata = {
       enable = true;
+      package = unstablePkgs.kanata;
       keyboards.default = {
         devices = [
           "/dev/input/by-path/platform-2a9b30000.input-event-kbd"
@@ -231,8 +233,12 @@ in
 
           (defalias
             cap (tap-hold-release 200 200 esc (layer-while-held arrows))
-            syma (tap-hold-release 200 200 a (layer-while-held symbols))
-            symsemi (tap-hold-release 200 200 ; (layer-while-held symbols))
+            ;; tap: a    hold: symbols layer    early tap if same hand keys are pressed
+            ;; other keys (like space) do NOT trigger early hold - waits for full timeout
+            syma (tap-hold-tap-keys 200 200 a (layer-while-held symbols) (1 2 3 4 5 q w e r t s d f g z x c v b spc))
+            ;; tap: ;    hold: symbols layer    early tap if same hand keys are pressed
+            ;; other keys (like space) do NOT trigger early hold - waits for full timeout
+            symsemi (tap-hold-tap-keys 200 200 ; (layer-while-held symbols) (6 7 8 9 0 y u i o p h j k l ' \ n m , . / spc))
           )
 
           (deflayer arrows
