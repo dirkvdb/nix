@@ -88,8 +88,8 @@ in
             model = "claude-sonnet-4.5";
           };
         };
-        features = {
-          edit_prediction_provider = "copilot";
+        edit_predictions = {
+          provider = "copilot";
         };
         git = {
           inline_blame = {
@@ -191,6 +191,7 @@ in
           context = "Editor";
           bindings = {
             "alt-o" = "editor::SwitchSourceHeader";
+            "alt-d" = "editor::SelectNext";
           };
         }
         {
