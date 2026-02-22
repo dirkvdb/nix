@@ -190,8 +190,23 @@ in
         {
           context = "Editor";
           bindings = {
-            "alt-o" = "editor::SwitchSourceHeader";
+            "alt-u" = "editor::SwitchSourceHeader";
             "alt-d" = "editor::SelectNext";
+          };
+        }
+        {
+          context = "Editor && vim_mode != insert";
+          bindings = {
+            "alt-o" = "editor::SelectLargerSyntaxNode";
+            "alt-i" = "editor::SelectSmallerSyntaxNode";
+            "alt-m" = [
+              "workspace::SendKeystrokes"
+              "] m z z"
+            ];
+            "alt-M" = [
+              "workspace::SendKeystrokes"
+              "[ m z z"
+            ];
           };
         }
         {
@@ -264,7 +279,7 @@ in
           context = "vim_mode == normal && !Terminal";
           bindings = {
             "space f" = "file_finder::Toggle";
-            "space t" = "project_symbols::Toggle";
+            "space S" = "project_symbols::Toggle";
             "space s" = "outline::Toggle";
             "space k" = "workspace::ToggleZoom";
           };
