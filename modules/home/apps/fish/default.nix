@@ -59,6 +59,7 @@ in
         k = "kubectl";
         ll = "lsd -la";
         ls = "lsd";
+        lg = "lazygit";
         dv = "zeditor .";
         man = "batman";
         nrs =
