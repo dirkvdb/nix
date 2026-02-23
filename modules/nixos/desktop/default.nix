@@ -47,6 +47,7 @@ in
       font-manager
       gsettings-qt
       nautilus
+      ffmpegthumbnailer
       file-roller # archive manager
       notify-desktop # cmd for sending notifications
       xdg-terminal-exec
