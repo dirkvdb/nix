@@ -292,6 +292,27 @@
         "type": "github"
       }
     },
+    "lan-mouse": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1771778753,
+        "narHash": "sha256-5pyZQbceDRBh2xYYcMf39WeyMp7z7z7X1ydFpyt+kGU=",
+        "owner": "feschber",
+        "repo": "lan-mouse",
+        "rev": "27225ed56435681b18cfbb0499320fc626359730",
+        "type": "github"
+      },
+      "original": {
+        "owner": "feschber",
+        "repo": "lan-mouse",
+        "type": "github"
+      }
+    },
     "mnw": {
       "locked": {
         "lastModified": 1770419553,
@@ -505,6 +526,7 @@
         "darwin": "darwin",
         "elephant": "elephant",
         "home-manager": "home-manager",
+        "lan-mouse": "lan-mouse",
         "nix-index-database": "nix-index-database",
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
@@ -515,6 +537,27 @@
         "stylix": "stylix",
         "walker": "walker",
         "zen-browser": "zen-browser"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "lan-mouse",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1752806774,
+        "narHash": "sha256-4cHeoR2roN7d/3J6gT+l6o7J2hTrBIUiCwVdDNMeXzE=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "3c90219b3ba1c9790c45a078eae121de48a39c55",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
       }
     },
     "sops-nix": {
@@ -745,11 +788,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771839226,
-        "narHash": "sha256-oV17HfmV3rlvZmr3m34VWfxGyt9Z8VVx2FcoK/PQO9s=",
+        "lastModified": 1771840410,
+        "narHash": "sha256-fxtvkgQLVhHAjWXPhqahYrVky6KjmS3hwhsb1UX/c/8=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "9ee8fb00d7333b1b2b65d686b160da19a57d5730",
+        "rev": "24e003a8ad4ab99cabbba6821bd985bb81dbe656",
         "type": "github"
       },
       "original": {

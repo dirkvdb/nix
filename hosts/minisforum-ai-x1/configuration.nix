@@ -137,6 +137,7 @@
 
       apps = {
         direnv.enable = true;
+        lan-mouse.enable = true;
         localsend.enable = true;
         mqtt.enable = true;
         neovim.enable = true;
