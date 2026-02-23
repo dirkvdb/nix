@@ -75,10 +75,25 @@
       ...
     }@inputs:
     let
+      # Import unstable for ROCm packages
+      unstablePkgs =
+        system:
+        import inputs.nixpkgs-unstable {
+          inherit system;
+          config.allowUnfree = true;
+        };
+
       # Custom packages overlay
       overlay = final: prev: {
         plymouth-theme-nixos = prev.callPackage ./pkgs/plymouth-theme-nixos { };
         color-lsp = prev.callPackage ./pkgs/color-lsp { };
+        cpp-httplib = prev.callPackage ./pkgs/cpp-httplib { };
+        lemonade-server = prev.callPackage ./pkgs/lemonade/server.nix {
+          rocmPackages = (unstablePkgs prev.stdenv.hostPlatform.system).rocmPackages;
+          stable-diffusion-cpp-rocm =
+            (unstablePkgs prev.stdenv.hostPlatform.system).stable-diffusion-cpp-rocm;
+        };
+        lemonade-app = prev.callPackage ./pkgs/lemonade/app.nix { };
 
         # Patch keepassxc to include NativeMessageInstaller.patch
         # This avoids error messages at startup that the browser connection files cannot be written
