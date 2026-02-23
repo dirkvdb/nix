@@ -44,10 +44,10 @@ in
           biome
           tombi
           color-lsp
-          codex-acp
           nixfmt-rfc-style
           just-formatter
           just-lsp
+          unstablePkgs.codex-acp
         ]
       );
 
@@ -180,9 +180,14 @@ in
         };
 
         agent_servers = {
-          codex = {
-            default_model = "gpt-5.3-codex/high";
-          };
+          codex = lib.mkMerge [
+            {
+              default_model = "gpt-5.3-codex/high";
+            }
+            (lib.mkIf (!pkgs.stdenv.isDarwin) {
+              command = "${unstablePkgs.codex-acp}/bin/codex-acp";
+            })
+          ];
         };
       };
 
