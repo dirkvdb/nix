@@ -138,6 +138,12 @@
       apps = {
         direnv.enable = true;
         lan-mouse.enable = true;
+        lemonade = {
+          enable = true;
+          llamacppBackend = "rocm";
+          contextSize = 16000;
+          extraModelsDir = /models;
+        };
         localsend.enable = true;
         mqtt.enable = true;
         neovim.enable = true;
