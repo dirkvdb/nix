@@ -35,6 +35,7 @@ in
         "nix"
         "rainbow-csv"
         "tombi"
+        "toml"
       ];
 
       extraPackages = pkgs.lib.mkIf (!pkgs.stdenv.isDarwin) (
@@ -136,6 +137,26 @@ in
           light = "Ayu Light";
           dark = "Ayu Mirage";
         };
+        lsp = {
+          tombi = lib.mkMerge [
+            {
+              binary = {
+                arguments = [
+                  "lsp"
+                  "-v"
+                ];
+                env = {
+                  NO_COLOR = "true";
+                };
+              };
+            }
+            (lib.mkIf (!pkgs.stdenv.isDarwin) {
+              binary = {
+                path = "${unstablePkgs.tombi}/bin/tombi";
+              };
+            })
+          ];
+        };
         languages = {
           Python = {
             language_servers = [
@@ -153,6 +174,13 @@ in
             formatter = {
               external = {
                 command = "nixfmt";
+              };
+            };
+          };
+          TOML = {
+            formatter = {
+              language_server = {
+                name = "tombi";
               };
             };
           };
