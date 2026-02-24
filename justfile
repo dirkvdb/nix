@@ -33,10 +33,6 @@ update:
 check:
     nix flake check -L
 
-# Build custom color-lsp package
-color-lsp:
-    nix-build -E 'with import <nixpkgs> { overlays = [ (final: prev: { color-lsp = prev.callPackage ./pkgs/color-lsp { }; }) ]; }; color-lsp'
-
 # ===== Docker Testing for HPC Home-Manager Config =====
 
 # Test HPC home-manager config in Docker (builds image if needed and launches shell)
