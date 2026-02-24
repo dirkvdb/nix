@@ -38,7 +38,7 @@ in
       ];
 
       extraPackages = pkgs.lib.mkIf (!pkgs.stdenv.isDarwin) (
-        with pkgs;
+        with unstablePkgs;
         [
           nixd
           biome
@@ -47,7 +47,7 @@ in
           nixfmt-rfc-style
           just-formatter
           just-lsp
-          unstablePkgs.codex-acp
+          codex-acp
         ]
       );
 
@@ -82,7 +82,9 @@ in
             provider = "copilot_chat";
             model = "claude-sonnet-4.5";
           };
-          always_allow_tool_actions = true;
+          tool_permissions = {
+            default = "allow";
+          };
           default_model = {
             provider = "copilot_chat";
             model = "claude-sonnet-4.5";

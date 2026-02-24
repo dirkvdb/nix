@@ -86,7 +86,6 @@
       # Custom packages overlay
       overlay = final: prev: {
         plymouth-theme-nixos = prev.callPackage ./pkgs/plymouth-theme-nixos { };
-        color-lsp = prev.callPackage ./pkgs/color-lsp { };
         cpp-httplib = prev.callPackage ./pkgs/cpp-httplib { };
         lemonade-server = prev.callPackage ./pkgs/lemonade/server.nix {
           rocmPackages = (unstablePkgs prev.stdenv.hostPlatform.system).rocmPackages;
