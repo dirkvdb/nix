@@ -45,7 +45,7 @@ in
           biome
           tombi
           color-lsp
-          nixfmt-rfc-style
+          nixfmt
           just-formatter
           just-lsp
           codex-acp
