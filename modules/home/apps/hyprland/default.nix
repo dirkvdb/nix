@@ -423,7 +423,7 @@ in
           # No password manager screenshare
           "noscreenshare, class:^(Bitwarden|org.keepassxc.KeePassXC)$"
 
-          # Open browsers on workspace 2 when launched with SUPER+B
+          # Open browsers on workspace 2 when launched
           "workspace 2, class:(vivaldi-stable)"
           "workspace 2, class:(firefox|Firefox|librewolf)"
           "workspace 2, class:(zen|zen-beta)"
@@ -432,6 +432,9 @@ in
           "workspace 3, class:(dev.zed.Zed)"
           # Open File explorers on workspace 5
           "workspace 5, class:(org.gnome.Nautilus|thunar)"
+
+          # Open Spotify on workspace 9
+          "workspace 9, class:(Spotify)"
 
           "workspace 6, class:(sublime_merge)"
           "workspace 7, class:(Slack)"
