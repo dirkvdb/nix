@@ -311,7 +311,7 @@ in
           };
         }
         {
-          context = "(vim_mode == normal && !Terminal) || GitPanel";
+          context = "(vim_mode == normal && !Terminal) || (GitPanel && vim_mode == normal)";
           bindings = {
             "space f" = "file_finder::Toggle";
             "space S" = "project_symbols::Toggle";
