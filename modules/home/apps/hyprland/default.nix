@@ -433,8 +433,8 @@ in
           # Open File explorers on workspace 5
           "workspace 5, class:(org.gnome.Nautilus|thunar)"
 
-          # Open Spotify on workspace 9
-          "workspace 9, class:(Spotify)"
+          # Open Spotify on workspace 9 (web app class is derived from URL by Chromium on Wayland)
+          "workspace 9, class:(Spotify|chrome-open\.spotify\.com__.*)"
 
           "workspace 6, class:(sublime_merge)"
           "workspace 7, class:(Slack)"
