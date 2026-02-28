@@ -81,14 +81,14 @@ in
           play_sound_when_agent_done = true;
           inline_assistant_model = {
             provider = "copilot_chat";
-            model = "claude-sonnet-4.5";
+            model = "claude-sonnet-4.6";
           };
           tool_permissions = {
             default = "allow";
           };
           default_model = {
             provider = "copilot_chat";
-            model = "claude-sonnet-4.5";
+            model = "claude-sonnet-4.6";
           };
         };
         edit_predictions = {
