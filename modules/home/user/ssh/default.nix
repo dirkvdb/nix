@@ -58,6 +58,7 @@ in
           port = 6987;
           extraOptions = {
             requestTTY = "true";
+            SetEnv = "TERM=vt100";
           };
         };
         cluster = {
