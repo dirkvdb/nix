@@ -86,7 +86,16 @@
       # Custom packages overlay
       overlay = final: prev: {
         plymouth-theme-nixos = prev.callPackage ./pkgs/plymouth-theme-nixos { };
-        cpp-httplib = prev.callPackage ./pkgs/cpp-httplib { };
+        cpp-httplib = prev.callPackage ./pkgs/cpp-httplib {
+          zlib = prev."zlib-ng".override {
+            withZlibCompat = true;
+          };
+        };
+        ixwebsocket = prev.callPackage ./pkgs/ixwebsocket {
+          zlib = prev."zlib-ng".override {
+            withZlibCompat = true;
+          };
+        };
         lemonade-server = prev.callPackage ./pkgs/lemonade/server.nix {
           rocmPackages = (unstablePkgs prev.stdenv.hostPlatform.system).rocmPackages;
           stable-diffusion-cpp-rocm =
