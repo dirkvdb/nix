@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  unstablePkgs,
   ...
 }:
 let
@@ -9,7 +10,10 @@ let
   hasAmdVideo = config.local.system.video.amd.enable;
   hasDesktop = config.local.desktop.enable or false;
   supportCpuFreqUtils = pkgs.stdenv.hostPlatform.system == "x86_64-linux";
-  dev = [ ];
+  dev = [
+    unstablePkgs.ec
+    unstablePkgs.codex
+  ];
   sysadmin =
     with pkgs;
     [

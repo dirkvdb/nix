@@ -119,6 +119,12 @@ in
       description = "Lemonade LLM Server";
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
+      path = with pkgs; [
+        coreutils
+        gnutar
+        gzip
+        unzip
+      ];
 
       environment = {
         LEMONADE_CACHE_DIR = "/var/cache/lemonade";

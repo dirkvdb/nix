@@ -18,6 +18,7 @@
   zstd,
   cli11,
   cpp-httplib,
+  ixwebsocket,
 }:
 let
   versionInfo = import ./version.nix;
@@ -55,6 +56,7 @@ stdenv.mkDerivation (finalAttrs: {
     zstd
     cli11
     cpp-httplib
+    ixwebsocket
   ];
 
   # Set CMAKE_PREFIX_PATH and PKG_CONFIG_PATH to help find dependencies
@@ -66,6 +68,7 @@ stdenv.mkDerivation (finalAttrs: {
         zstd.dev
         cli11
         cpp-httplib
+        ixwebsocket
       ]
     }"
     export PKG_CONFIG_PATH="${
@@ -90,6 +93,8 @@ stdenv.mkDerivation (finalAttrs: {
     "-DUSE_SYSTEM_HTTPLIB=ON"
     # Help CMake find cpp-httplib via its CMake config
     "-Dhttplib_DIR=${cpp-httplib}/lib/cmake/httplib"
+    # Help CMake find ixwebsocket via its CMake config
+    "-Dixwebsocket_DIR=${ixwebsocket}/lib/cmake/ixwebsocket"
   ];
 
   # Build only the server components
@@ -105,7 +110,26 @@ stdenv.mkDerivation (finalAttrs: {
     substituteInPlace CMakeLists.txt \
       --replace-fail '/usr/bin' "''${out}/bin" \
       --replace-fail '/usr/lib' "''${out}/lib" \
-      --replace-fail '/usr/share' "''${out}/share" || true
+      --replace-fail '/usr/share' "''${out}/share" \
+      --replace-fail '/etc/lemonade' "''${out}/etc/lemonade" || true
+
+    # v9.4.1 declares IXWebSocket via FetchContent on Linux but gates include(FetchContent)
+    # behind USE_SYSTEM_* flags. Ensure FetchContent is included for Linux/Windows too.
+    substituteInPlace CMakeLists.txt \
+      --replace-fail \
+      'if(NOT USE_SYSTEM_JSON OR NOT USE_SYSTEM_CURL OR NOT USE_SYSTEM_ZSTD OR NOT USE_SYSTEM_CLI11 OR NOT USE_SYSTEM_HTTPLIB)' \
+      'if(NOT USE_SYSTEM_JSON OR NOT USE_SYSTEM_CURL OR NOT USE_SYSTEM_ZSTD OR NOT USE_SYSTEM_CLI11 OR NOT USE_SYSTEM_HTTPLIB OR WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Linux")'
+
+    # Replace IXWebSocket FetchContent usage with system package lookup.
+    sed -i '/^# === IXWebSocket (for WebSocket support: Windows and Linux) ===$/,/^endif()$/c\
+    # === IXWebSocket (for WebSocket support: Windows and Linux) ===\
+    if(WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Linux")\
+        find_package(ixwebsocket CONFIG REQUIRED)\
+        message(STATUS "Using system IXWebSocket package")\
+    endif()' CMakeLists.txt
+
+    # Link against exported CMake target from system ixwebsocket package.
+    sed -i 's/target_link_libraries(\$'{EXECUTABLE_NAME}' PRIVATE ixwebsocket)/target_link_libraries(\$'{EXECUTABLE_NAME}' PRIVATE ixwebsocket::ixwebsocket)/g' CMakeLists.txt
 
     # Add find_package(httplib) after the pkg_check_modules line in root CMakeLists.txt
     sed -i '/pkg_check_modules(HTTPLIB QUIET cpp-httplib/a find_package(httplib QUIET)' CMakeLists.txt
