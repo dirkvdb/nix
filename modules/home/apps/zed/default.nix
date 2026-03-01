@@ -53,28 +53,31 @@ in
       );
 
       userSettings = {
-        ui_font_size = 13.0;
-        ui_font_family = "RobotoMono Nerd Font Propo";
         vim_mode = true;
-        relative_line_numbers = "enabled";
-
         vim = {
           highlight_on_yank_duration = 500;
         };
-
+        relative_line_numbers = "enabled";
+        autosave = "on_focus_change";
         colorize_brackets = true;
+        scroll_sensitivity = 3.0;
+
+        ui_font_size = 13.0;
+        ui_font_family = "RobotoMono Nerd Font Propo";
         ui_font_features = {
           calt = 0;
         };
+
         icon_theme = {
           mode = "light";
           light = "Catppuccin Mocha";
           dark = "Catppuccin Mocha";
         };
+
         title_bar = {
           show_branch_icon = true;
         };
-        autosave = "on_focus_change";
+
         agent = {
           use_modifier_to_send = false;
           default_profile = "write";
