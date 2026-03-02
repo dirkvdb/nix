@@ -215,7 +215,11 @@ in
         agent_servers = {
           codex = lib.mkMerge [
             {
-              default_model = "gpt-5.3-codex/high";
+              default_model = "gpt-5.3-codex";
+              default_config_options = {
+                mode = "full-access";
+                reasoning_effort = "high";
+              };
             }
             (lib.mkIf (!pkgs.stdenv.isDarwin) {
               command = "${unstablePkgs.codex-acp}/bin/codex-acp";
