@@ -144,6 +144,7 @@
           contextSize = 16000;
           extraModelsDir = /models;
         };
+        librepods.enable = true;
         localsend.enable = true;
         mqtt.enable = true;
         neovim.enable = true;

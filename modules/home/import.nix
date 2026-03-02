@@ -91,19 +91,21 @@ in
         sd
         tabiew
         yazi
+        unstablePkgs.ec
       ])
       ++ lib.optionals isStandalone (
-        (with pkgs; [
-          # Dev tools that would normally be in system.utils.dev
+        with pkgs;
+        [
           devenv
           just
           lazygit
           serie
           binsider
           nixd
-        ])
-        ++ [ unstablePkgs.pixi ]
+          unstablePkgs.pixi
+        ]
       )
+
       ++ lib.optionals (!isHeadless) (
         with pkgs;
         [

@@ -63,6 +63,11 @@
       url = "github:feschber/lan-mouse";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    librepods = {
+      url = "github:kavishdevar/librepods/linux/rust";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -102,6 +107,7 @@
             (unstablePkgs prev.stdenv.hostPlatform.system).stable-diffusion-cpp-rocm;
         };
         lemonade-app = prev.callPackage ./pkgs/lemonade/app.nix { };
+        librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
 
         # Patch keepassxc to include NativeMessageInstaller.patch
         # This avoids error messages at startup that the browser connection files cannot be written
