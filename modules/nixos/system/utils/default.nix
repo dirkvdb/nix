@@ -11,7 +11,6 @@ let
   hasDesktop = config.local.desktop.enable or false;
   supportCpuFreqUtils = pkgs.stdenv.hostPlatform.system == "x86_64-linux";
   dev = [
-    unstablePkgs.ec
     unstablePkgs.codex
   ];
   sysadmin =
