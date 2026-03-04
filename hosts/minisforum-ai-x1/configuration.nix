@@ -156,6 +156,10 @@
         whatsapp.enable = true;
         vlc.enable = true;
         zathura.enable = true;
+        zed = {
+          enable = true;
+          useLatestUpstream = true;
+        };
       };
 
       home-manager = {
