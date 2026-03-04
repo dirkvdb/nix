@@ -7,19 +7,64 @@
   ...
 }:
 let
+  cfg = config.local.apps.zed;
   inherit (config.local) user;
   inherit (config.local) theme;
   mkUserHome = mkHome user.name;
-  isHeadless = config.local.headless;
+  zedPinnedVersion = "0.225.13";
+  zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
+    version = zedPinnedVersion;
+    doCheck = false;
+    src = unstablePkgs.fetchFromGitHub {
+      owner = "zed-industries";
+      repo = "zed";
+      tag = "v${version}";
+      hash = "sha256-ozuycL8dnBtgyYYjsz9C+CDtZQzbXWWZVOkxbOs7hho=";
+    };
+    cargoDeps = unstablePkgs.rustPlatform.fetchCargoVendor {
+      inherit src;
+      name = "${old.pname}-${version}-vendor";
+      hash = "sha256-G5U0APQNNEe2qpshqX4QpQGbqIAHllatbbsaVAhDoG0=";
+      # Match nixpkgs workaround for a broken Cargo.toml in candle-book.
+      postBuild = ''
+        rm -r $out/git/*/candle-book/
+      '';
+    };
+    env = (old.env or { }) // {
+      NIX_CFLAGS_COMPILE = lib.concatStringsSep " " [
+        (old.env.NIX_CFLAGS_COMPILE or "")
+        "-march=native"
+      ];
+    };
+  });
+  zedEditorPackage =
+    if cfg.useLatestUpstream && lib.versionOlder unstablePkgs.zed-editor.version zedPinnedVersion then
+      zedEditorPinned
+    else
+      unstablePkgs.zed-editor;
 in
 {
-  config = lib.mkIf (!isHeadless) (mkUserHome {
+  options.local.apps.zed = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable Zed editor configuration.";
+    };
+
+    useLatestUpstream = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Use the pinned upstream Zed version when newer than unstable.";
+    };
+  };
+
+  config = lib.mkIf (cfg.enable) (mkUserHome {
     stylix.targets.zed.enable = false;
 
     programs.zed-editor = {
       enable = true;
       mutableUserSettings = true;
-      package = if pkgs.stdenv.isDarwin then null else unstablePkgs.zed-editor;
+      package = if pkgs.stdenv.isDarwin then null else zedEditorPackage;
 
       extensions = [
         "biome"

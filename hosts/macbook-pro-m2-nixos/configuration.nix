@@ -151,6 +151,7 @@ in
         vscode.enable = true;
         vlc.enable = true;
         zathura.enable = true;
+        zed.enable = true;
         zellij.enable = true;
         sops = {
           enable = true;
