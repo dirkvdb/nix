@@ -11,6 +11,7 @@ let
   inherit (config.local) user;
   inherit (config.local) theme;
   mkUserHome = mkHome user.name;
+  isHeadless = config.local.headless;
   zedPinnedVersion = "0.225.13";
   zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
     version = zedPinnedVersion;
@@ -64,7 +65,7 @@ in
     programs.zed-editor = {
       enable = true;
       mutableUserSettings = true;
-      package = if pkgs.stdenv.isDarwin then null else zedEditorPackage;
+      package = if pkgs.stdenv.isDarwin || isHeadless then null else zedEditorPackage;
 
       extensions = [
         "biome"
