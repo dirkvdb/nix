@@ -8,17 +8,15 @@
 let
   cfg = config.local.system.utils;
   hasDesktop = config.local.desktop.enable or false;
-  dev =
-    with pkgs;
-    [
-      devenv
-      just
-      lazygit
-      serie
-      binsider
-      nixd # to avoid nixd not found errors in zed
-    ]
-    ++ [ unstablePkgs.pixi ];
+  dev = with pkgs; [
+    just
+    lazygit
+    serie
+    binsider
+    nixd # to avoid nixd not found errors in zed
+    unstablePkgs.devenv
+    unstablePkgs.pixi
+  ];
   sysadmin = with pkgs; [
     bind
     killall

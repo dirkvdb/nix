@@ -133,8 +133,8 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1770910218,
-        "narHash": "sha256-IyHoHbhLFuIgFG+n7dqHwJaXuNnRaEsxCfAsfudV1KY=",
+        "lastModified": 1772866605,
+        "narHash": "sha256-r2ucLztXQFRu70VrGtNcL3PONyazxDPwq/hSn7opD+I=",
         "owner": "abenz1267",
         "repo": "elephant",
         "rev": "c354a596ec7a7e34e9c26478dc7ef9680bc23e6d",
