@@ -61,6 +61,7 @@ in
         "x-scheme-handler/about" = "zen-beta.desktop";
         "x-scheme-handler/unknown" = "zen-beta.desktop";
         "inode/directory" = "org.gnome.Nautilus.desktop";
+        "application/pdf" = "zen-beta.desktop";
         "application/zip" = "org.gnome.FileRoller.desktop";
         "application/x-tar" = "org.gnome.FileRoller.desktop";
         "application/x-7z-compressed" = "org.gnome.FileRoller.desktop";
