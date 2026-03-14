@@ -7,6 +7,7 @@
   git,
   makeWrapper,
   pkg-config,
+  libdrm,
   llama-cpp-rocm ? null,
   stable-diffusion-cpp-rocm ? null,
   openssl,
@@ -45,6 +46,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   buildInputs = [
     openssl
+    libdrm
     stdenv.cc.cc.lib
     rocmPackages.clr
     rocmPackages.rocm-runtime
@@ -113,7 +115,7 @@ stdenv.mkDerivation (finalAttrs: {
       --replace-fail '/usr/share' "''${out}/share" \
       --replace-fail '/etc/lemonade' "''${out}/etc/lemonade" || true
 
-    # v9.4.1 declares IXWebSocket via FetchContent on Linux but gates include(FetchContent)
+    # IXWebSocket uses FetchContent on Linux but gates include(FetchContent)
     # behind USE_SYSTEM_* flags. Ensure FetchContent is included for Linux/Windows too.
     substituteInPlace CMakeLists.txt \
       --replace-fail \
