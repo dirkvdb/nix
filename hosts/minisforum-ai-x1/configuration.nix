@@ -106,6 +106,12 @@
             "/nas/data" = {
               device = "nas.local:/volume1/data";
             };
+            "/nas/media" = {
+              device = "nas.local:/volume1/media";
+            };
+            "/nas/arr" = {
+              device = "nas.local:/volume1/arr";
+            };
           };
         };
 
@@ -136,6 +142,7 @@
       };
 
       apps = {
+        eden.enable = true;
         direnv.enable = true;
         lan-mouse.enable = true;
         lemonade = {
@@ -181,6 +188,16 @@
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
       (remmina.override { withKf5Wallet = false; })
       unstablePkgs.lmstudio
+      (retroarch.withCores (
+        cores: with cores; [
+          snes9x
+          ppsspp
+          dolphin
+          beetle-psx-hw
+        ]
+      ))
+      retroarch-joypad-autoconfig
+      unstablePkgs.cemu
       #winboat
     ];
   };
