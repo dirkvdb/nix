@@ -1,18 +1,18 @@
 {
   lib,
   config,
-  pkgs,
   unstablePkgs,
   ...
 }:
 let
-  cfg = config.local.apps.eden;
+  cfg = config.local.apps.retro-emulation;
+  esDe = unstablePkgs.callPackage ../../../../pkgs/es-de { };
 
-  edenWrapped = pkgs.symlinkJoin {
+  edenWrapped = unstablePkgs.symlinkJoin {
     name = "eden-wrapped";
     paths = [ unstablePkgs.eden ];
 
-    nativeBuildInputs = [ pkgs.makeWrapper ];
+    nativeBuildInputs = [ unstablePkgs.makeWrapper ];
 
     postBuild = ''
       for bin in eden eden-room; do
@@ -37,12 +37,26 @@ let
   };
 in
 {
-  options.local.apps.eden = {
-    enable = lib.mkEnableOption "Eden emulator";
+  options.local.apps.retro-emulation = {
+    enable = lib.mkEnableOption "retro emulation stack";
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ edenWrapped ];
+    environment.systemPackages = [
+      esDe
+      edenWrapped
+      (unstablePkgs.retroarch.withCores (
+        cores: with cores; [
+          snes9x
+          ppsspp
+          dolphin
+          beetle-psx-hw
+        ]
+      ))
+      unstablePkgs.retroarch-joypad-autoconfig
+      unstablePkgs.cemu
+      unstablePkgs.ppsspp
+    ];
 
     services.udev.packages = [ edenWrapped ];
   };
