@@ -142,7 +142,6 @@
       };
 
       apps = {
-        eden.enable = true;
         direnv.enable = true;
         lan-mouse.enable = true;
         lemonade = {
@@ -156,6 +155,7 @@
         mqtt.enable = true;
         neovim.enable = true;
         prusa-slicer.enable = true;
+        retro-emulation.enable = true;
         slack.enable = true;
         sops.enable = true;
         spotify.enable = true;
@@ -183,21 +183,12 @@
     };
 
     environment.systemPackages = with pkgs; [
+      appimage-run
       qgis
       gnumeric
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
       (remmina.override { withKf5Wallet = false; })
       unstablePkgs.lmstudio
-      (retroarch.withCores (
-        cores: with cores; [
-          snes9x
-          ppsspp
-          dolphin
-          beetle-psx-hw
-        ]
-      ))
-      retroarch-joypad-autoconfig
-      unstablePkgs.cemu
       #winboat
     ];
   };
