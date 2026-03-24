@@ -74,5 +74,8 @@ in
         neovim.enable = true;
       };
     };
+
+    # Atuin times out on NFS mounts
+    programs.atuin.enable = lib.mkForce false;
   };
 }
