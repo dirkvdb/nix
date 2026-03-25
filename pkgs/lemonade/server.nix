@@ -19,7 +19,7 @@
   zstd,
   cli11,
   cpp-httplib,
-  ixwebsocket,
+  libwebsockets,
 }:
 let
   versionInfo = import ./version.nix;
@@ -58,7 +58,8 @@ stdenv.mkDerivation (finalAttrs: {
     zstd
     cli11
     cpp-httplib
-    ixwebsocket
+    libwebsockets
+    libwebsockets.dev
   ];
 
   # Set CMAKE_PREFIX_PATH and PKG_CONFIG_PATH to help find dependencies
@@ -70,13 +71,14 @@ stdenv.mkDerivation (finalAttrs: {
         zstd.dev
         cli11
         cpp-httplib
-        ixwebsocket
+        libwebsockets.dev
       ]
     }"
     export PKG_CONFIG_PATH="${
       lib.concatStringsSep ":" [
         "${curl.dev}/lib/pkgconfig"
         "${zstd.dev}/lib/pkgconfig"
+        "${libwebsockets.dev}/lib/pkgconfig"
       ]
     }"
   '';
@@ -95,8 +97,6 @@ stdenv.mkDerivation (finalAttrs: {
     "-DUSE_SYSTEM_HTTPLIB=ON"
     # Help CMake find cpp-httplib via its CMake config
     "-Dhttplib_DIR=${cpp-httplib}/lib/cmake/httplib"
-    # Help CMake find ixwebsocket via its CMake config
-    "-Dixwebsocket_DIR=${ixwebsocket}/lib/cmake/ixwebsocket"
   ];
 
   # Build only the server components
@@ -115,24 +115,6 @@ stdenv.mkDerivation (finalAttrs: {
       --replace-fail '/usr/share' "''${out}/share" \
       --replace-fail '/etc/lemonade' "''${out}/etc/lemonade" || true
 
-    # IXWebSocket uses FetchContent on Linux but gates include(FetchContent)
-    # behind USE_SYSTEM_* flags. Ensure FetchContent is included for Linux/Windows too.
-    substituteInPlace CMakeLists.txt \
-      --replace-fail \
-      'if(NOT USE_SYSTEM_JSON OR NOT USE_SYSTEM_CURL OR NOT USE_SYSTEM_ZSTD OR NOT USE_SYSTEM_CLI11 OR NOT USE_SYSTEM_HTTPLIB)' \
-      'if(NOT USE_SYSTEM_JSON OR NOT USE_SYSTEM_CURL OR NOT USE_SYSTEM_ZSTD OR NOT USE_SYSTEM_CLI11 OR NOT USE_SYSTEM_HTTPLIB OR WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Linux")'
-
-    # Replace IXWebSocket FetchContent usage with system package lookup.
-    sed -i '/^# === IXWebSocket (for WebSocket support: Windows and Linux) ===$/,/^endif()$/c\
-    # === IXWebSocket (for WebSocket support: Windows and Linux) ===\
-    if(WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Linux")\
-        find_package(ixwebsocket CONFIG REQUIRED)\
-        message(STATUS "Using system IXWebSocket package")\
-    endif()' CMakeLists.txt
-
-    # Link against exported CMake target from system ixwebsocket package.
-    sed -i 's/target_link_libraries(\$'{EXECUTABLE_NAME}' PRIVATE ixwebsocket)/target_link_libraries(\$'{EXECUTABLE_NAME}' PRIVATE ixwebsocket::ixwebsocket)/g' CMakeLists.txt
-
     # Add find_package(httplib) after the pkg_check_modules line in root CMakeLists.txt
     sed -i '/pkg_check_modules(HTTPLIB QUIET cpp-httplib/a find_package(httplib QUIET)' CMakeLists.txt
 
@@ -141,9 +123,18 @@ stdenv.mkDerivation (finalAttrs: {
       -e 's/target_link_libraries(\$'{EXECUTABLE_NAME}' PRIVATE cpp-httplib)/target_link_libraries(\$'{EXECUTABLE_NAME}' PRIVATE httplib::httplib)/g' \
       -e 's/target_link_libraries(lemonade-server PRIVATE cpp-httplib)/target_link_libraries(lemonade-server PRIVATE httplib::httplib)/g' \
       -e 's/target_link_libraries(lemonade-router PRIVATE cpp-httplib)/target_link_libraries(lemonade-router PRIVATE httplib::httplib)/g' \
+      -e 's/target_link_libraries(lemonade PRIVATE cpp-httplib)/target_link_libraries(lemonade PRIVATE httplib::httplib)/g' \
       {} +
 
-    # Also check for install commands
+    # Remove the install(CODE) block in CLI CMakeLists.txt that creates a
+    # /usr/bin/lemonade -> $out/bin/lemonade symlink. When postPatch rewrites
+    # /usr/bin to $CMAKE_INSTALL_PREFIX/bin the destination becomes identical
+    # to the source, producing a reflexive (self-referencing) symlink that
+    # breaks the Nix noBrokenSymlinks check.
+    sed -i '/# Create symlink in standard bin path only if not installing to \/usr/,/^endif()$/d' \
+      src/cpp/cli/CMakeLists.txt
+
+    # Rewrite remaining hardcoded /usr paths in all CMakeLists.txt files
     find . -name CMakeLists.txt -exec sed -i \
       -e 's|/usr/bin|''${CMAKE_INSTALL_PREFIX}/bin|g' \
       -e 's|/usr/lib|''${CMAKE_INSTALL_PREFIX}/lib|g' \
@@ -159,6 +150,8 @@ stdenv.mkDerivation (finalAttrs: {
       rm "$out/bin/lemonade-server"
       ln -s lemonade-router "$out/bin/lemonade-server"
     fi
+
+
 
     # Fix reflexive symlink for systemd service if it exists
     if [ -L "$out/lib/systemd/system/lemonade-server.service" ] && [ ! -e "$out/lib/systemd/system/lemonade-server.service" ]; then

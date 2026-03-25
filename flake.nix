@@ -96,11 +96,7 @@
             withZlibCompat = true;
           };
         };
-        ixwebsocket = prev.callPackage ./pkgs/ixwebsocket {
-          zlib = prev."zlib-ng".override {
-            withZlibCompat = true;
-          };
-        };
+
         es-de = prev.callPackage ./pkgs/es-de { };
         lemonade-server = prev.callPackage ./pkgs/lemonade/server.nix {
           rocmPackages = (unstablePkgs prev.stdenv.hostPlatform.system).rocmPackages;
