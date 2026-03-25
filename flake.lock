@@ -347,11 +347,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1774361163,
-        "narHash": "sha256-p/QSRpEqlCzZuWvdmk6tUUZy5aboXGcRrOGp2VUFQRc=",
+        "lastModified": 1774442217,
+        "narHash": "sha256-ktAx2SUj30DNEc4UQAyjAJsX3ZBGsfbb4zN+jjy1bwo=",
         "owner": "feschber",
         "repo": "lan-mouse",
-        "rev": "9af5f9452efe30a715823320088b6d70fd31b83d",
+        "rev": "2e1b5278ce789ac5388ea5548800856303a0372b",
         "type": "github"
       },
       "original": {
@@ -445,11 +445,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1774018263,
-        "narHash": "sha256-HHYEwK1A22aSaxv2ibhMMkKvrDGKGlA/qObG4smrSqc=",
+        "lastModified": 1774422943,
+        "narHash": "sha256-o1xgNumjljdBBfOrcQX95hhKGFOJQYNZqpF3EfaScMk=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "2d4b4717b2534fad5c715968c1cece04a172b365",
+        "rev": "632e4bfc21c01e5be900d0d8255a5368a5d6082f",
         "type": "github"
       },
       "original": {
@@ -926,11 +926,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774352774,
-        "narHash": "sha256-gibUM0pSnLxEeuFrYA8T1oEaixk+fjQpqXbYaxcEX/4=",
+        "lastModified": 1774455577,
+        "narHash": "sha256-lDZB7bb5nrxqlmCI8Ga03ZQZeOnC1zeXtJbUsr43JqI=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "a0f3d47dbd8f8618a1920d5a5ca09b7993415895",
+        "rev": "0aa993a5bd3734e147b40344336983b141f3aac0",
         "type": "github"
       },
       "original": {
