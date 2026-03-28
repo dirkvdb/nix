@@ -96,8 +96,13 @@ in
         sd
         tabiew
         yazi
-        unstablePkgs.ec
       ])
+      ++ lib.optionals (!pkgs.stdenv.isDarwin) (
+        with unstablePkgs;
+        [
+          ec
+        ]
+      )
       ++ lib.optionals isStandalone (
         with pkgs;
         [

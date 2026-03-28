@@ -38,11 +38,6 @@ let
       ];
     };
   });
-  zedEditorPackage =
-    if cfg.useLatestUpstream && lib.versionOlder unstablePkgs.zed-editor.version zedPinnedVersion then
-      zedEditorPinned
-    else
-      unstablePkgs.zed-editor;
 in
 {
   options.local.apps.zed = {
@@ -65,7 +60,13 @@ in
     programs.zed-editor = {
       enable = true;
       mutableUserSettings = true;
-      package = if pkgs.stdenv.isDarwin || isHeadless then null else zedEditorPackage;
+      package =
+        if pkgs.stdenv.isDarwin || isHeadless then
+          null
+        else if cfg.useLatestUpstream && lib.versionOlder unstablePkgs.zed-editor.version zedPinnedVersion then
+          zedEditorPinned
+        else
+          unstablePkgs.zed-editor;
 
       extensions = [
         "biome"

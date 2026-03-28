@@ -21,7 +21,7 @@ in
       enable = true;
       config = ''
         alt - return : ${pkgs.wezterm}/bin/wezterm
-        alt - d : ${pkgs.zed-editor}/bin/zeditor
+        alt - d : zed¡
         alt - b : open -na zen
         alt - e : open ${user.homeDir}
       '';
