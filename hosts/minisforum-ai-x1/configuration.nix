@@ -120,7 +120,10 @@
           sysadmin = true;
         };
 
-        bluetooth.enable = true;
+        bluetooth = {
+          enable = true;
+          sixaxis = true;
+        };
         fonts.enable = true;
       };
 
