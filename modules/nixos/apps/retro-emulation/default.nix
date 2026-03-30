@@ -8,9 +8,24 @@ let
   cfg = config.local.apps.retro-emulation;
   esDe = unstablePkgs.callPackage ../../../../pkgs/es-de { };
 
+  eden = unstablePkgs.eden.overrideAttrs (old: {
+    version = "0.2.0-rc2";
+    src = old.src.override {
+      tag = "v0.2.0-rc2";
+      hash = "sha256-keLkB5qeQch+tM2J6zVh9oQGhP5TuxItqrZRN24apJw=";
+    };
+    # Drop the aarch64-disable-fastmem patch - it no longer applies to 0.2.0-rc2
+    # and is irrelevant on x86_64 anyway
+    patches = [ ];
+    # 0.2.0-rc2 added a dependency on Qt6Charts
+    buildInputs = old.buildInputs ++ [ unstablePkgs.qt6.qtcharts ];
+    # Build with -march=native for maximum performance on this machine
+    NIX_CFLAGS_COMPILE = (old.NIX_CFLAGS_COMPILE or "") + " -march=native";
+  });
+
   edenWrapped = unstablePkgs.symlinkJoin {
     name = "eden-wrapped";
-    paths = [ unstablePkgs.eden ];
+    paths = [ eden ];
 
     nativeBuildInputs = [ unstablePkgs.makeWrapper ];
 
@@ -26,13 +41,29 @@ let
       if [ -f "$desktopFile" ]; then
         if [ -L "$desktopFile" ]; then
           rm "$desktopFile"
-          cp "${unstablePkgs.eden}/share/applications/dev.eden_emu.eden.desktop" "$desktopFile"
+          cp "${eden}/share/applications/dev.eden_emu.eden.desktop" "$desktopFile"
           chmod u+w "$desktopFile"
         fi
 
         sed -i "s|^Exec=.*|Exec=$out/bin/eden %f|" "$desktopFile"
         sed -i "s|^TryExec=.*|TryExec=$out/bin/eden|" "$desktopFile"
       fi
+    '';
+  };
+  dolphinEmuWrapped = unstablePkgs.symlinkJoin {
+    name = "dolphin-emu-wrapped";
+    paths = [ unstablePkgs.dolphin-emu ];
+
+    nativeBuildInputs = [ unstablePkgs.makeWrapper ];
+
+    postBuild = ''
+      for bin in dolphin-emu dolphin-emu-nogui dolphin-tool; do
+        if [ -f "$out/bin/$bin" ]; then
+          wrapProgram "$out/bin/$bin" \
+            --set QT_STYLE_OVERRIDE Fusion \
+            --set QT_SCALE_FACTOR 1.75
+        fi
+      done
     '';
   };
 in
@@ -55,6 +86,7 @@ in
       ))
       unstablePkgs.retroarch-joypad-autoconfig
       unstablePkgs.cemu
+      dolphinEmuWrapped
       unstablePkgs.ppsspp
     ];
 
