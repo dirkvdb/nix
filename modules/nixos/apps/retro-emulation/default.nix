@@ -73,6 +73,33 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    users.groups.uinput = { };
+    users.users.${config.local.user.name}.extraGroups = [ "uinput" ];
+    services.udev.extraRules = ''
+      KERNEL=="uinput", MODE="0660", GROUP="uinput"
+    '';
+
+    services.sunshine = {
+      enable = true;
+      autoStart = true;
+      capSysAdmin = true;
+      openFirewall = true;
+
+      applications.apps = [
+        {
+          name = "Desktop";
+          image-path = "desktop.png";
+        }
+        {
+          name = "ES-DE";
+          detached = [ "sudo -u ${config.local.user.name} ${esDe}/bin/es-de" ];
+          image-path = "${./esde.png}";
+          exclude-global-prep-cmd = "false";
+          auto-detach = "true";
+        }
+      ];
+    };
+
     environment.systemPackages = [
       esDe
       edenWrapped
