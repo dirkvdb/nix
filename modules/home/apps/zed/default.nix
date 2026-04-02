@@ -12,7 +12,7 @@ let
   inherit (config.local) theme;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
-  zedPinnedVersion = "0.229.0";
+  zedPinnedVersion = "0.230.0";
   zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
     version = zedPinnedVersion;
     doCheck = false;
@@ -20,12 +20,12 @@ let
       owner = "zed-industries";
       repo = "zed";
       tag = "v${version}";
-      hash = "sha256-ZO4HzzzTb5rlBbzVCpE14DEzLkE3a7v2IKdyzlCTpaA=";
+      hash = "sha256-vZCaaTsQedHA+5twcVVpFHqQUD/RArmbHKQtbr33mb4=";
     };
     cargoDeps = unstablePkgs.rustPlatform.fetchCargoVendor {
       inherit src;
       name = "${old.pname}-${version}-vendor";
-      hash = "sha256-Q7sjd5u1jPIK6WogCByaXAVU7D6jcev1oRmfQ7y39i4=";
+      hash = "sha256-eSEk/6iHwtZF9Qx7dQN3l2/uaC8MR28lFwbBEUWVNs0=";
       # Match nixpkgs workaround for a broken Cargo.toml in candle-book.
       postBuild = ''
         rm -r $out/git/*/candle-book/
@@ -63,7 +63,9 @@ in
       package =
         if pkgs.stdenv.isDarwin || isHeadless then
           null
-        else if cfg.useLatestUpstream && lib.versionOlder unstablePkgs.zed-editor.version zedPinnedVersion then
+        else if
+          cfg.useLatestUpstream && lib.versionOlder unstablePkgs.zed-editor.version zedPinnedVersion
+        then
           zedEditorPinned
         else
           unstablePkgs.zed-editor;
