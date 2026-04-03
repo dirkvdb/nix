@@ -1,12 +1,14 @@
 {
   lib,
   config,
+  pkgs,
   unstablePkgs,
   ...
 }:
 let
   cfg = config.local.apps.retro-emulation;
-  esDe = unstablePkgs.callPackage ../../../../pkgs/es-de { };
+
+  esDe = pkgs.es-de;
 
   eden = unstablePkgs.eden.overrideAttrs (old: {
     version = "0.2.0-rc2";
@@ -30,7 +32,7 @@ let
     nativeBuildInputs = [ unstablePkgs.makeWrapper ];
 
     postBuild = ''
-      for bin in eden eden-room; do
+      for bin in eden eden-cli eden-room; do
         if [ -f "$out/bin/$bin" ]; then
           wrapProgram "$out/bin/$bin" \
             --set QT_STYLE_OVERRIDE Fusion
@@ -85,10 +87,27 @@ in
       capSysAdmin = true;
       openFirewall = true;
 
+      settings = {
+        fps = 60;
+        min_fps_factor = 1;
+        channels = 2;
+        output_name = 1;
+      };
+
       applications.apps = [
         {
           name = "Desktop";
           image-path = "desktop.png";
+        }
+        {
+          name = "Desktop 1080p";
+          image-path = "desktop.png";
+          prep-cmd = [
+            {
+              do = "hyprctl keyword monitor ',1920x1080,auto,1'";
+              undo = "hyprctl keyword monitor ',preferred,auto,${toString config.local.desktop.displayScale}'";
+            }
+          ];
         }
         {
           name = "ES-DE";
@@ -101,6 +120,7 @@ in
     };
 
     environment.systemPackages = [
+      pkgs.ffmpeg
       esDe
       edenWrapped
       (unstablePkgs.retroarch.withCores (
