@@ -4,6 +4,9 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Pinned nixpkgs with freeimage (removed from newer nixpkgs due to vulnerabilities).
+    # Needed to build ES-DE from source.
+    nixpkgs-freeimage.url = "github:nixos/nixpkgs/nixos-24.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
@@ -97,7 +100,15 @@
           };
         };
 
-        es-de = prev.callPackage ./pkgs/es-de { };
+        freeimage-pinned =
+          let
+            legacyPkgs = import inputs.nixpkgs-freeimage {
+              system = prev.stdenv.hostPlatform.system;
+              config.permittedInsecurePackages = [ "freeimage-unstable-2021-11-01" ];
+            };
+          in
+          legacyPkgs.freeimage;
+        es-de = prev.callPackage ./pkgs/es-de { freeimage = final.freeimage-pinned; };
         lemonade-server = prev.callPackage ./pkgs/lemonade/server.nix {
           rocmPackages = (unstablePkgs prev.stdenv.hostPlatform.system).rocmPackages;
           stable-diffusion-cpp-rocm =
