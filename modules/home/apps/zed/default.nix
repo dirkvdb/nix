@@ -12,7 +12,7 @@ let
   inherit (config.local) theme;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
-  zedPinnedVersion = "0.230.0";
+  zedPinnedVersion = "0.230.1";
   zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
     version = zedPinnedVersion;
     doCheck = false;
@@ -20,12 +20,12 @@ let
       owner = "zed-industries";
       repo = "zed";
       tag = "v${version}";
-      hash = "sha256-vZCaaTsQedHA+5twcVVpFHqQUD/RArmbHKQtbr33mb4=";
+      hash = "sha256-J+WnR0xGMWS5m8FWQfTwRCZckxt2Y5kQy06TvpYZks4=";
     };
     cargoDeps = unstablePkgs.rustPlatform.fetchCargoVendor {
       inherit src;
       name = "${old.pname}-${version}-vendor";
-      hash = "sha256-eSEk/6iHwtZF9Qx7dQN3l2/uaC8MR28lFwbBEUWVNs0=";
+      hash = "sha256-EbRLFIKpPnfyGeh7jHVDilez++4elZ1rz2iO3U9XOpQ=";
       # Match nixpkgs workaround for a broken Cargo.toml in candle-book.
       postBuild = ''
         rm -r $out/git/*/candle-book/
