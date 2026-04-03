@@ -24,13 +24,6 @@ in
       }
 
       (lib.mkIf cfg.sixaxis {
-        # Load the hid_sony kernel module for SixAxis/DualShock 3 protocol support
-        boot.kernelModules = [ "hid_sony" ];
-
-        # High-frequency USB polling (1ms = 1000Hz) for when the controller is
-        # plugged in via USB (required for initial Bluetooth pairing)
-        boot.kernelParams = [ "usbhid.jspoll=1" ];
-
         hardware.bluetooth = {
           # Use the bluez package with experimental features for sixaxis plugin
           package = pkgs.bluez;
@@ -38,24 +31,17 @@ in
           settings = {
             General = {
               # Ensure the sixaxis plugin is not excluded
-              ClassicBondedOnly = false;
+              # ClassicBondedOnly = false;
               FastConnectable = true;
-            };
-
-            # Lower connection intervals for reduced input latency over Bluetooth
-            # Units are in 1.25ms increments (6 = 7.5ms, 9 = 11.25ms)
-            LE = {
-              MinConnectionInterval = 6;
-              MaxConnectionInterval = 9;
-              ConnectionLatency = 0;
+              # Battery level updates require experimental features
+              Experimental = true;
             };
           };
 
           input = {
             General = {
-              # Process HID events in userspace for better compatibility
-              UserspaceHID = true;
-              # Never disconnect idle controllers
+              # Needed for sixaxis according to arch wiki
+              UserspaceHID = false;
               IdleTimeout = 0;
             };
           };
