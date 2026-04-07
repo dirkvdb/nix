@@ -164,7 +164,7 @@
         spotify.enable = true;
         vscode.enable = true;
         whatsapp.enable = true;
-        vlc.enable = true;
+        celluloid.enable = true;
         zathura.enable = true;
         zed = {
           enable = true;
