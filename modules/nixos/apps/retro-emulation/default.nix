@@ -75,16 +75,22 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    boot.kernelModules = [ "uhid" ];
+
     users.groups.uinput = { };
-    users.users.${config.local.user.name}.extraGroups = [ "uinput" ];
+    users.users.${config.local.user.name}.extraGroups = [
+      "input"
+      "uinput"
+    ];
     services.udev.extraRules = ''
       KERNEL=="uinput", MODE="0660", GROUP="uinput"
+      KERNEL=="uhid", MODE="0660", GROUP="input"
     '';
 
     services.sunshine = {
       enable = true;
       autoStart = true;
-      capSysAdmin = true;
+
       openFirewall = true;
 
       settings = {
@@ -92,6 +98,7 @@ in
         min_fps_factor = 1;
         channels = 2;
         output_name = 1;
+        encoder = "vaapi";
       };
 
       applications.apps = [
@@ -100,20 +107,25 @@ in
           image-path = "desktop.png";
         }
         {
-          name = "Desktop 1080p";
+          name = "Desktop 2160p";
           image-path = "desktop.png";
           prep-cmd = [
             {
-              do = "hyprctl keyword monitor ',1920x1080,auto,1'";
-              undo = "hyprctl keyword monitor ',preferred,auto,${toString config.local.desktop.displayScale}'";
+              do = "hyprctl keyword monitor ,3840x2160@60,auto,1.66666667";
+              undo = "hyprctl keyword monitor ,preferred,auto,${toString config.local.desktop.displayScale}";
             }
           ];
         }
         {
           name = "ES-DE";
-          detached = [ "sudo -u ${config.local.user.name} ${esDe}/bin/es-de" ];
+          detached = [ "${esDe}/bin/es-de" ];
           image-path = "${./esde.png}";
-          exclude-global-prep-cmd = "false";
+          prep-cmd = [
+            {
+              do = "hyprctl keyword monitor ,3840x2160@60,auto,1.4";
+              undo = "hyprctl keyword monitor ,preferred,auto,${toString config.local.desktop.displayScale}";
+            }
+          ];
           auto-detach = "true";
         }
       ];
