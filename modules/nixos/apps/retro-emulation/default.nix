@@ -111,7 +111,17 @@ in
           image-path = "desktop.png";
           prep-cmd = [
             {
-              do = "hyprctl keyword monitor ,3840x2160@60,auto,1.66666667";
+              do = "hyprctl keyword monitor ,3840x2160@30,auto,1.66666667";
+              undo = "hyprctl keyword monitor ,preferred,auto,${toString config.local.desktop.displayScale}";
+            }
+          ];
+        }
+        {
+          name = "Desktop 1080p";
+          image-path = "desktop.png";
+          prep-cmd = [
+            {
+              do = "hyprctl keyword monitor ,1920x1080@30,auto,1";
               undo = "hyprctl keyword monitor ,preferred,auto,${toString config.local.desktop.displayScale}";
             }
           ];
