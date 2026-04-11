@@ -118,21 +118,22 @@ stdenv.mkDerivation (finalAttrs: {
     # Add find_package(httplib) after the pkg_check_modules line in root CMakeLists.txt
     sed -i '/pkg_check_modules(HTTPLIB QUIET cpp-httplib/a find_package(httplib QUIET)' CMakeLists.txt
 
-    # Replace the conditional httplib linking with always using the CMake target in all CMakeLists.txt files
+    # Replace the conditional httplib linking with the CMake imported target in all CMakeLists.txt
+    # files. This covers: lemond (via lemonade-server-core PUBLIC), lemonade-server (legacy-cli
+    # PRIVATE), lemonade CLI (cli PRIVATE), and lemonade-tray (apply_tray_deps function PRIVATE).
     find . -name CMakeLists.txt -exec sed -i \
-      -e 's/target_link_libraries(\$'{EXECUTABLE_NAME}' PRIVATE cpp-httplib)/target_link_libraries(\$'{EXECUTABLE_NAME}' PRIVATE httplib::httplib)/g' \
-      -e 's/target_link_libraries(lemonade-server PRIVATE cpp-httplib)/target_link_libraries(lemonade-server PRIVATE httplib::httplib)/g' \
-      -e 's/target_link_libraries(lemonade-router PRIVATE cpp-httplib)/target_link_libraries(lemonade-router PRIVATE httplib::httplib)/g' \
-      -e 's/target_link_libraries(lemonade PRIVATE cpp-httplib)/target_link_libraries(lemonade PRIVATE httplib::httplib)/g' \
+      -e 's/PRIVATE cpp-httplib)/PRIVATE httplib::httplib)/g' \
+      -e 's/PUBLIC cpp-httplib)/PUBLIC httplib::httplib)/g' \
       {} +
 
-    # Remove the install(CODE) block in CLI CMakeLists.txt that creates a
-    # /usr/bin/lemonade -> $out/bin/lemonade symlink. When postPatch rewrites
-    # /usr/bin to $CMAKE_INSTALL_PREFIX/bin the destination becomes identical
-    # to the source, producing a reflexive (self-referencing) symlink that
-    # breaks the Nix noBrokenSymlinks check.
+    # Remove the install(CODE) blocks in cli and legacy-cli CMakeLists.txt that create reflexive
+    # /usr/bin symlinks. When postPatch rewrites /usr/bin to ''${CMAKE_INSTALL_PREFIX}/bin the
+    # symlink destination becomes identical to the source, producing a self-referencing symlink
+    # that breaks the Nix noBrokenSymlinks check.
     sed -i '/# Create symlink in standard bin path only if not installing to \/usr/,/^endif()$/d' \
       src/cpp/cli/CMakeLists.txt
+    sed -i '/# Create symlink in standard bin path only if not installing to \/usr/,/^endif()$/d' \
+      src/cpp/legacy-cli/CMakeLists.txt
 
     # Rewrite remaining hardcoded /usr paths in all CMakeLists.txt files
     find . -name CMakeLists.txt -exec sed -i \
@@ -144,15 +145,6 @@ stdenv.mkDerivation (finalAttrs: {
 
   # Fix reflexive symlinks after installation
   postInstall = ''
-    # Fix reflexive symlink to lemonade-server if it exists
-    if [ -L "$out/bin/lemonade-server" ] && [ ! -e "$out/bin/lemonade-server" ]; then
-      # If it's a broken symlink, likely pointing to itself, create proper symlink to router
-      rm "$out/bin/lemonade-server"
-      ln -s lemonade-router "$out/bin/lemonade-server"
-    fi
-
-
-
     # Fix reflexive symlink for systemd service if it exists
     if [ -L "$out/lib/systemd/system/lemonade-server.service" ] && [ ! -e "$out/lib/systemd/system/lemonade-server.service" ]; then
       # If the service file is a broken symlink, we need to investigate the actual file
@@ -169,7 +161,7 @@ stdenv.mkDerivation (finalAttrs: {
 
     # Wrap binaries to set environment variables for backend binaries if provided
     ${lib.optionalString (llama-cpp-rocm != null || stable-diffusion-cpp-rocm != null) ''
-      for bin in $out/bin/lemonade-server $out/bin/lemonade-router; do
+      for bin in $out/bin/lemonade-server $out/bin/lemond; do
         if [ -f "$bin" ] && [ ! -L "$bin" ]; then
           mv "$bin" "$bin.unwrapped"
           makeWrapper "$bin.unwrapped" "$bin" \
