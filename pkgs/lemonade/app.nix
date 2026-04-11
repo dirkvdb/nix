@@ -21,7 +21,7 @@ buildNpmPackage {
 
   sourceRoot = "source/src/app";
 
-  npmDepsHash = "sha256-nhe/JNOtvsQMVtt0OBhIqfOj4XlcGKAwCFRoZpXSgKY=";
+  npmDepsHash = "sha256-PfnY1m9sV4pe+xdQ/WHyWAc+NH3nL7vn6DlvC/tHAIg=";
 
   nativeBuildInputs = [ makeWrapper ];
 
