@@ -117,6 +117,9 @@ in
             "/nas/media" = {
               device = "nas.local:/volume1/media";
             };
+            "/nas/arr" = {
+              device = "nas.local:/volume1/arr";
+            };
           };
         };
 
