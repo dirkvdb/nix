@@ -94,12 +94,7 @@
     ];
 
     homebrew = {
-      masApps = {
-        Amphetalocal = 937984704;
-        Pages = 409201541;
-        Numbers = 409203825;
-        WindowsApp = 1295203466;
-      };
+      onActivation.upgrade = true;
 
       casks = [
         # Not available for macOS in nixpkgs:
