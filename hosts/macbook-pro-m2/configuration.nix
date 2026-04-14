@@ -101,6 +101,8 @@
         "balenaetcher"
         "cyberduck"
         "dropbox"
+        "es-de"
+        "cemu"
         # bruno
         "ghostty"
         "fork"
@@ -113,6 +115,7 @@
         "db-browser-for-sqlite"
         #"qgis"
         # autodesk-fusion
+        "prusaslicer"
         "raycast"
         "spotify"
         "passepartout"
