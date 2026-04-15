@@ -33,6 +33,9 @@ update:
 check:
     nix flake check -L
 
+secrets_edit:
+    sops modules/nixos/apps/sops/secrets.yaml
+
 # ===== Docker Testing for HPC Home-Manager Config =====
 
 # Test HPC home-manager config in Docker (builds image if needed and launches shell)
