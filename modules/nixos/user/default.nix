@@ -35,6 +35,7 @@ in
       uid = 1000;
       group = "${user.name}";
       extraGroups = [
+        "audio"
         "wheel"
         "hidraw"
         "i2c"

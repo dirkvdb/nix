@@ -146,13 +146,13 @@ in
       };
 
       apps = {
+        celluloid.enable = true;
         direnv.enable = true;
         mqtt.enable = true;
         foliate.enable = true;
         localsend.enable = true;
         neovim.enable = true;
         vscode.enable = true;
-        vlc.enable = true;
         zathura.enable = true;
         zed.enable = true;
         zellij.enable = true;
