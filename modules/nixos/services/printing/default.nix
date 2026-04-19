@@ -22,8 +22,13 @@ in
             name = "share/cups/model/HP-Photosmart-Prem-C310-series.ppd";
             path = ./printers/HP-Photosmart-Prem-C310-series.ppd;
           }
+          {
+            name = "share/cups/model/HP/HP-LaserJet-MFP-M426fdw.ppd";
+            path = ./printers/HP-LaserJet-MFP-M426fdw.ppd;
+          }
         ])
         pkgs.gutenprint
+        pkgs.hplip
       ];
     };
 
@@ -35,6 +40,13 @@ in
           location = "Home Office";
           deviceUri = "ipps://192.168.1.15:631/ipp/print";
           model = "HP-Photosmart-Prem-C310-series.ppd";
+        }
+        {
+          name = "HP-LaserJet-MFP-M426fdw";
+          location = "Office";
+          deviceUri = "ipp://192.168.1.45/ipp/print";
+          model = "HP/HP-LaserJet-MFP-M426fdw.ppd";
+          ppdOptions = { InputSlot = "Tray2"; };
         }
       ];
     };
