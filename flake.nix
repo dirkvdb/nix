@@ -204,6 +204,11 @@
           hostPath = ./hosts/wsl/configuration.nix;
           extraModules = [ nixos-wsl.nixosModules.default ];
         };
+
+        mediastation = mkNixos {
+          system = "x86_64-linux";
+          hostPath = ./hosts/mediastation/configuration.nix;
+        };
       };
 
       darwinConfigurations."macbook-pro-osx" = mkDarwin {
