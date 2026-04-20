@@ -39,6 +39,7 @@ in
         "hidraw"
         "i2c"
         "users"
+        "audio"
         "video"
       ];
       shell = user.shell.package;
