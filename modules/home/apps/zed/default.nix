@@ -124,13 +124,23 @@ in
         };
 
         title_bar = {
-          show_branch_icon = true;
+          show_branch_status_icon = true;
+        };
+
+        collaboration_panel = {
+          dock = "left";
+        };
+
+        git_panel = {
+          dock = "left";
         };
 
         agent = {
+          dock = "right";
+          sidebar_side = "right";
           use_modifier_to_send = false;
           default_profile = "write";
-          play_sound_when_agent_done = true;
+          play_sound_when_agent_done = "always";
           inline_assistant_model = {
             provider = "copilot_chat";
             model = "claude-sonnet-4.6";
@@ -156,6 +166,7 @@ in
           min_line_number_digits = 3;
         };
         project_panel = {
+          dock = "left";
           hide_gitignore = true;
           entry_spacing = "standard";
           indent_size = 13;
@@ -244,8 +255,10 @@ in
         };
         profiles = {
           laptop = {
-            buffer_font_size = 14;
-            ui_font_size = 14;
+            settings = {
+              buffer_font_size = 14;
+              ui_font_size = 14;
+            };
             terminal = pkgs.lib.mkIf pkgs.stdenv.isDarwin {
               shell = {
                 program = "nu";
@@ -256,8 +269,10 @@ in
             };
           };
           presentation = {
-            buffer_font_size = 20;
-            ui_font_size = 18;
+            settings = {
+              buffer_font_size = 20;
+              ui_font_size = 18;
+            };
           };
         };
 
