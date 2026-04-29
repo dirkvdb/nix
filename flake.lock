@@ -627,11 +627,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1777150561,
-        "narHash": "sha256-YLVqyn6LpFa+h697TmZIk0qVIbe7MxMpL8UTF4K+efA=",
+        "lastModified": 1777478067,
+        "narHash": "sha256-2vZnUuv8fg2sIE6pXgGxZQQ3ZhQW1XE7Sxieg8gK2p4=",
         "owner": "NotAShelf",
         "repo": "nvf",
-        "rev": "5b4f9c63205e5b0ef180a2b0e4cc844111f96fa6",
+        "rev": "13c4ad4b4bb926c22945e2fb8862769fe51f27f1",
         "type": "github"
       },
       "original": {
@@ -943,11 +943,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777356688,
-        "narHash": "sha256-fOhJpz7QAkBWAAih72CmnIfIN0pHfuZjhZQ/hBLNWxo=",
+        "lastModified": 1777484394,
+        "narHash": "sha256-03QK/lM/m4f1FjC4ldYtp8NobTGRdwGC24XBY6Vcdqo=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "b3c972b3d8537a9cf7a0db96b164c9c3e580884a",
+        "rev": "274e039947393bc90f45b8fc6d1af23e45937af0",
         "type": "github"
       },
       "original": {
