@@ -109,10 +109,9 @@
           in
           legacyPkgs.freeimage;
         es-de = prev.callPackage ./pkgs/es-de { freeimage = final.freeimage-pinned; };
-        lemonade-server = prev.callPackage ./pkgs/lemonade/server.nix {
-          rocmPackages = (unstablePkgs prev.stdenv.hostPlatform.system).rocmPackages;
-          stable-diffusion-cpp-rocm =
-            (unstablePkgs prev.stdenv.hostPlatform.system).stable-diffusion-cpp-rocm;
+        nmrs-gui = prev.callPackage ./pkgs/nmrs-gui {
+          rustPlatform =
+            (import inputs.nixpkgs-unstable { system = prev.stdenv.hostPlatform.system; }).rustPlatform;
         };
         lemonade-app = prev.callPackage ./pkgs/lemonade/app.nix { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
