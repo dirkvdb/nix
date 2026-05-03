@@ -46,8 +46,8 @@ in
     extraPackages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
       default = with pkgs; [
-        impala
         networkmanagerapplet
+        nmrs-gui
       ];
       description = "Additional packages to install with NetworkManager";
     };
