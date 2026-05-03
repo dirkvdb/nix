@@ -186,6 +186,7 @@
     };
 
     environment.systemPackages = with pkgs; [
+      nmrs-gui
       appimage-run
       qgis
       gnumeric
