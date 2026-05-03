@@ -2,7 +2,6 @@
   pkgs,
   inputs,
   config,
-  lib,
   unstablePkgs,
   ...
 }:
@@ -155,7 +154,7 @@ in
         vscode.enable = true;
         zathura.enable = true;
         zed.enable = true;
-        zellij.enable = true;
+        zellij.enable = false;
         sops = {
           enable = true;
           ageKeyFile = {
@@ -264,15 +263,22 @@ in
       };
     };
 
+    # The NixOS hardening default sets vm.mmap_rnd_bits=33, but the Apple Silicon
+    # kernel only supports a maximum of 18 for this value on aarch64.
+    boot.kernel.sysctl."vm.mmap_rnd_bits" = 18;
+
     environment.systemPackages = with pkgs; [
       teams-for-linux
       vulkan-tools
       brightnessctl
-      asahi-audio # belongs to the workaround below
+      #asahi-audio # belongs to the workaround below
     ];
 
     # workaround for audio volume not restoring on reboot (https://github.com/nix-community/nixos-apple-silicon/issues/352)
-    services.pipewire.configPackages = lib.mkForce [ ];
-    services.pipewire.wireplumber.configPackages = lib.mkForce [ ];
+    # Only clear pipewire configPackages to prevent the bad 99-asahi.conf from being installed.
+    # Do NOT clear wireplumber.configPackages — asahi-audio DSP profiles must remain there
+    # or wireplumber won't load them and sound will be of poor quality.
+    # See: https://github.com/nix-community/nixos-apple-silicon/issues/442
+    #services.pipewire.configPackages = lib.mkForce [ ];
   };
 }

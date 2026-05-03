@@ -143,7 +143,7 @@ in
 
     # Launch or the wifi selection
     (pkgs.writeShellScriptBin "nixcfg-launch-wifi" ''
-      xdg-terminal-exec --app-id=TUI.float -- impala "$@"
+      nmrs-gui "$@"
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-gpu-usage" ''
