@@ -113,6 +113,7 @@
           rustPlatform =
             (import inputs.nixpkgs-unstable { system = prev.stdenv.hostPlatform.system; }).rustPlatform;
         };
+        lemonade-server = prev.callPackage ./pkgs/lemonade/server.nix { };
         lemonade-app = prev.callPackage ./pkgs/lemonade/app.nix { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
 

@@ -8,8 +8,6 @@
   makeWrapper,
   pkg-config,
   libdrm,
-  llama-cpp-rocm ? null,
-  stable-diffusion-cpp-rocm ? null,
   openssl,
   elfutils,
   rocmPackages,
@@ -146,10 +144,10 @@ stdenv.mkDerivation (finalAttrs: {
   # Fix reflexive symlinks after installation
   postInstall = ''
     # Fix reflexive symlink for systemd service if it exists
-    if [ -L "$out/lib/systemd/system/lemonade-server.service" ] && [ ! -e "$out/lib/systemd/system/lemonade-server.service" ]; then
+    if [ -L "$out/lib/systemd/system/lemond.service" ] && [ ! -e "$out/lib/systemd/system/lemond.service" ]; then
       # If the service file is a broken symlink, we need to investigate the actual file
       # For now, if it's reflexive, just remove it - the NixOS module will handle it
-      rm "$out/lib/systemd/system/lemonade-server.service"
+      rm "$out/lib/systemd/system/lemond.service"
       rmdir "$out/lib/systemd/system" 2>/dev/null || true
       rmdir "$out/lib/systemd" 2>/dev/null || true
       rmdir "$out/lib" 2>/dev/null || true
@@ -158,24 +156,6 @@ stdenv.mkDerivation (finalAttrs: {
     # Create symlink from bin/resources to share/lemonade-server/resources
     # so lemonade-server can find its resources relative to the binary
     ln -s "$out/share/lemonade-server/resources" "$out/bin/resources"
-
-    # Wrap binaries to set environment variables for backend binaries if provided
-    ${lib.optionalString (llama-cpp-rocm != null || stable-diffusion-cpp-rocm != null) ''
-      for bin in $out/bin/lemonade-server $out/bin/lemond; do
-        if [ -f "$bin" ] && [ ! -L "$bin" ]; then
-          mv "$bin" "$bin.unwrapped"
-          makeWrapper "$bin.unwrapped" "$bin" \
-            ${
-              lib.optionalString (
-                llama-cpp-rocm != null
-              ) ''--set LEMONADE_LLAMACPP_ROCM_BIN "${llama-cpp-rocm}/bin/llama-server"''
-            } \
-            ${lib.optionalString (
-              stable-diffusion-cpp-rocm != null
-            ) ''--set LEMONADE_SDCPP_ROCM_BIN "${stable-diffusion-cpp-rocm}/bin/sd-server"''}
-        fi
-      done
-    ''}
   '';
 
   meta = {
