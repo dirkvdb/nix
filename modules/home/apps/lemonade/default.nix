@@ -33,6 +33,37 @@ let
   };
 
   configFile = pkgs.writeText "lemonade-config.json" (builtins.toJSON lemonadeConfig);
+
+  # Libraries that externally-downloaded binaries may need at runtime.
+  # These are exposed via LD_LIBRARY_PATH so that both Nix-built binaries
+  # (which use a Nix glibc interpreter + RUNPATH) and FHS binaries (via
+  # nix-ld) can find them.
+  runtimeLibs =
+    with pkgs;
+    [
+      stdenv.cc.cc.lib # libstdc++, libatomic.so.1, libgomp, etc.
+      zlib
+      openssl
+      curl
+      libdrm
+      libGL
+      vulkan-loader
+    ]
+    ++ lib.optionals (cfg.llamacppBackend == "rocm") [
+      rocmPackages.clr
+      rocmPackages.rocm-runtime
+      rocmPackages.rocblas
+      rocmPackages.hipblas
+      rocmPackages.rocsolver
+      rocmPackages.rocrand
+      rocmPackages.clr.icd
+    ]
+    ++ lib.optionals (cfg.llamacppBackend == "cuda") [
+      cudaPackages.cudatoolkit
+      cudaPackages.cudnn
+    ];
+
+  runtimeLibPath = lib.makeLibraryPath runtimeLibs;
 in
 {
   options.local.apps.lemonade = {
@@ -108,6 +139,12 @@ in
       Service = {
         Type = "simple";
         ExecStart = "${cfg.package}/bin/lemond";
+        # Expose common runtime libraries so that externally-downloaded
+        # binaries launched by lemond can find them.  This covers both
+        # Nix-built binaries with incomplete RUNPATH and FHS binaries
+        # that rely on nix-ld (NIX_LD / NIX_LD_LIBRARY_PATH are
+        # inherited from the login session).
+        Environment = [ "LD_LIBRARY_PATH=${runtimeLibPath}" ];
         Restart = "on-failure";
         RestartSec = "5s";
         StandardOutput = "journal";
