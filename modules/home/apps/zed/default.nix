@@ -13,72 +13,6 @@ let
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
   zedPinnedVersion = "1.0.0";
-  codexAcpPinnedVersion = "0.12.0";
-  codexAcpPinned =
-    let
-      codexRev = "e9fb49366c93a1478ec71cc41ecee415a197d036";
-      nodeVersionFile = unstablePkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/openai/codex/${codexRev}/codex-rs/node-version.txt";
-        hash = "sha256-QTcJTneSy0n+Gv3cP4cgjw70rf7306zR3vAZh4bTk8I=";
-      };
-      codexSrc = unstablePkgs.fetchFromGitHub {
-        owner = "openai";
-        repo = "codex";
-        rev = codexRev;
-        hash = "sha256-YFnzzwCm9/b30qLDMbkf/rEizuTjeqdCgoBZeS0wNBo=";
-      };
-      v8Version = "146.4.0";
-      v8Hashes = {
-        x86_64-unknown-linux-gnu = "sha256-5ktNmeSuKTouhGJEqJuAF4uhA4LBP7WRwfppaPUpEVM=";
-        aarch64-unknown-linux-gnu = "sha256-2/FlsHyBvbBUvARrQ9I+afz3vMGkwbW0d2mDpxBi7Ng=";
-      };
-    in
-    unstablePkgs.codex-acp.overrideAttrs (old: rec {
-      version = codexAcpPinnedVersion;
-      src = unstablePkgs.fetchFromGitHub {
-        owner = "zed-industries";
-        repo = "codex-acp";
-        rev = "v${version}";
-        hash = "sha256-qPqg95FpXHBtyHBJtrfJUwu9GokfmOJgKgqLKQ48u+8=";
-      };
-      cargoDeps = unstablePkgs.rustPlatform.fetchCargoVendor {
-        inherit src;
-        name = "codex-acp-${version}";
-        hash = "sha256-/BZ82qiTy/mPwhf5v5CFrNSB6AxCRFdmHB72L0+KjJw=";
-      };
-      # codex-acp's preBuild copies node-version.txt to the vendor root, but
-      # codex-core (fetched from git) lives under source-git-0/ inside that root,
-      # so include_str!("../../../../node-version.txt") misses by one level.
-      # Copy the file into the git-vendor sub-directory as well.
-      preBuild = ''
-        cp ${nodeVersionFile} "$NIX_BUILD_TOP/codex-acp-${version}-vendor/node-version.txt"
-        cp "$NIX_BUILD_TOP/codex-acp-${version}-vendor/node-version.txt" \
-           "$NIX_BUILD_TOP/codex-acp-${version}-vendor/source-git-0/node-version.txt"
-      '';
-      env = lib.optionalAttrs (!pkgs.stdenv.isDarwin) {
-        CODEX_BWRAP_SOURCE_DIR = "${codexSrc}/codex-rs/vendor/bubblewrap";
-        # v8 tries to download its pre-built static lib at compile time; provide
-        # it upfront so the Nix sandbox doesn't block the network fetch.
-        RUSTY_V8_ARCHIVE = unstablePkgs.fetchurl {
-          url = "https://github.com/denoland/rusty_v8/releases/download/v${v8Version}/librusty_v8_release_${pkgs.stdenv.hostPlatform.rust.rustcTarget}.a.gz";
-          hash = v8Hashes.${pkgs.stdenv.hostPlatform.rust.rustcTarget};
-        };
-      };
-    });
-  codexAcp =
-    if lib.versionOlder unstablePkgs.codex-acp.version codexAcpPinnedVersion then
-      codexAcpPinned
-    else
-      # Apply the source-git-0 fix to the nixpkgs-unstable version.
-      # codex-acp's preBuild copies node-version.txt to the vendor root, but
-      # codex-core (fetched from git) lives under source-git-0/ inside that root,
-      # so include_str!("../../../../node-version.txt") misses by one level.
-      unstablePkgs.codex-acp.overrideAttrs (old: {
-        preBuild = old.preBuild + ''
-          cp "$NIX_BUILD_TOP/codex-acp-${old.version}-vendor/node-version.txt" \
-             "$NIX_BUILD_TOP/codex-acp-${old.version}-vendor/source-git-0/node-version.txt"
-        '';
-      });
 
   zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
     version = zedPinnedVersion;
@@ -164,7 +98,7 @@ in
           nixfmt
           just-formatter
           just-lsp
-          codexAcp
+          unstablePkgs.codex-acp
         ]
       );
 
@@ -354,7 +288,7 @@ in
               };
             }
             (lib.mkIf (!pkgs.stdenv.isDarwin) {
-              command = "${codexAcp}/bin/codex-acp";
+              command = "${unstablePkgs.codex-acp}/bin/codex-acp";
             })
           ];
         };
