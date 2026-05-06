@@ -195,7 +195,7 @@ in
             {
               name = "eDP-1";
               path = "/sys/class/backlight/apple-panel-bl";
-              capturer = "wayland";
+              capturer = "none";
             }
           ];
         };
