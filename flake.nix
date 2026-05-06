@@ -125,6 +125,22 @@
             ./modules/home/apps/keepassxc/NativeMessageInstaller.patch
           ];
         });
+
+        # Upgrade wluma to 4.11.0 which adds Apple Silicon ALS sensor support
+        # https://github.com/maximbaz/wluma/releases/tag/4.11.0
+        wluma = prev.wluma.overrideAttrs (old: rec {
+          version = "4.11.0";
+          src = prev.fetchFromGitHub {
+            owner = "maximbaz";
+            repo = "wluma";
+            rev = version;
+            hash = "sha256-kisxv+CYouYpVTULmjvDEGucha+/T+gQJEsGyTQkQLk=";
+          };
+          cargoDeps = prev.rustPlatform.fetchCargoVendor {
+            inherit src;
+            hash = "sha256-qL+OnnPlQoGj7gvpYegjwN42skKUsbg+FV3cnTBwNpo=";
+          };
+        });
       };
 
       hpcSystem = "x86_64-linux";
