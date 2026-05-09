@@ -1,8 +1,8 @@
 {
-  version = "10.3.0";
+  version = "10.4.0";
   src = {
     owner = "lemonade-sdk";
     repo = "lemonade";
-    hash = "sha256-IQE8E/88yI8MoqyTvoDSNjbPX9F7yW2ckne2PaDewxk=";
+    hash = "sha256-NQmNdpeC38k0RdGs4WeYnWRomsr0/r98GeDcgt5TzNs=";
   };
 }
