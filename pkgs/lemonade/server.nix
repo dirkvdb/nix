@@ -18,6 +18,7 @@
   cli11,
   cpp-httplib,
   libwebsockets,
+  lemonade-web-app-bundle,
 }:
 let
   versionInfo = import ./version.nix;
@@ -87,6 +88,7 @@ stdenv.mkDerivation (finalAttrs: {
     "-DCMAKE_INSTALL_BINDIR=bin"
     "-DCMAKE_INSTALL_LIBDIR=lib"
     "-DCMAKE_INSTALL_DATADIR=share"
+    "-DBUILD_WEB_APP=OFF"
     # Force use of system dependencies instead of FetchContent
     "-DUSE_SYSTEM_JSON=ON"
     "-DUSE_SYSTEM_CURL=ON"
@@ -143,6 +145,11 @@ stdenv.mkDerivation (finalAttrs: {
 
   # Fix reflexive symlinks after installation
   postInstall = ''
+    # Copy the pre-built web-app bundle into the resources tree so lemond
+    # can find it at bin/resources/web-app (via the bin->share symlink).
+    mkdir -p "$out/share/lemonade-server/resources/web-app"
+    cp -r ${lemonade-web-app-bundle}/. "$out/share/lemonade-server/resources/web-app/"
+
     # Fix reflexive symlink for systemd service if it exists
     if [ -L "$out/lib/systemd/system/lemond.service" ] && [ ! -e "$out/lib/systemd/system/lemond.service" ]; then
       # If the service file is a broken symlink, we need to investigate the actual file
