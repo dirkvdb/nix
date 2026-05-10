@@ -76,8 +76,12 @@ in
           # Save power on short time away
           {
             timeout = 150; # 2.5min.
-            on-timeout = "brightnessctl -s set 0"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
-            on-resume = "brightnessctl -r"; # monitor backlight restore.
+            on-timeout =
+              (lib.optionalString config.local.services.wluma.enable "systemctl --user stop wluma.service && ")
+              + "brightnessctl -s set 0"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
+            on-resume =
+              "brightnessctl -r"
+              + (lib.optionalString config.local.services.wluma.enable " && systemctl --user start wluma.service"); # monitor backlight restore.
           }
           # Power of the monitor after some time
           {

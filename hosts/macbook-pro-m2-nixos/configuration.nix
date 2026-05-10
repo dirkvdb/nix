@@ -89,15 +89,6 @@ in
           };
         };
 
-        # network = {
-        #   enable = true;
-        #   hostname = "macbook-pro";
-
-        #   wifi = {
-        #     enable = true;
-        #   };
-        # };
-
         nfs-mounts = {
           enable = true;
           mounts = {
@@ -136,6 +127,13 @@ in
         fwupd.enable = true;
         printing.enable = true;
         power-profiles-daemon.enable = true;
+        wluma = {
+          enable = true;
+          alsIioPath = "/sys/devices/platform/soc/2a6c00000.aop/als.1.auto";
+          backlightName = "eDP-1";
+          backlightPath = "/sys/class/backlight/apple-panel-bl";
+          logLevel = "info";
+        };
       };
 
       desktop = {
@@ -176,41 +174,13 @@ in
       };
     };
 
-    # Wluma automatic brightness adjustment using ALS sensor
-    home-manager.users.${user.name} = {
-      services.wluma = {
-        enable = true;
-        settings = {
-          als.iio = {
-            path = "/sys/devices/platform/soc/2a6c00000.aop/als.1.auto";
-            thresholds = {
-              "0" = "night";
-              "30" = "dim";
-              "200" = "normal";
-              "800" = "bright";
-              "2500" = "outdoor";
-            };
-          };
-          output.backlight = [
-            {
-              name = "eDP-1";
-              path = "/sys/class/backlight/apple-panel-bl";
-              capturer = "none";
-            }
-          ];
-        };
-      };
-
-      systemd.user.services.wluma.Service.Environment = [ "RUST_LOG=debug" ];
-    };
-
     # Disable peripheral firmware extraction
     hardware.asahi.enable = true;
     hardware.asahi.peripheralFirmwareDirectory = ./firmware;
 
     # Inject ALS calibration firmware not handled by asahi-fwextract
     hardware.firmware = [
-      (pkgs.runCommandNoCC "aop-als-cal-firmware" { } ''
+      (pkgs.runCommand "aop-als-cal-firmware" { } ''
         mkdir -p $out/lib/firmware/apple
         cp ${./firmware/aop-als-cal.bin} $out/lib/firmware/apple/aop-als-cal.bin
       '')
