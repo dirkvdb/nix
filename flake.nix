@@ -131,7 +131,14 @@
 
         # Upgrade wluma to 4.11.0 which adds Apple Silicon ALS sensor support
         # https://github.com/maximbaz/wluma/releases/tag/4.11.0
+        # Apply patch to ignore 0 brightness level
         wluma = prev.wluma.overrideAttrs (old: rec {
+          patches = (old.patches or [ ]) ++ [
+            (prev.fetchpatch {
+              url = "https://github.com/dirkvdb/wluma/commit/9fa4fd353d318639b8b9571541576b3061a7df5a.patch";
+              hash = "sha256-fLVoMpMz/b56UrmtotkqG6hk32AdItKTUTJAJN4tQcc=";
+            })
+          ];
           version = "4.11.0";
           src = prev.fetchFromGitHub {
             owner = "maximbaz";
