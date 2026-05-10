@@ -136,8 +136,8 @@
         wluma = prev.wluma.overrideAttrs (old: rec {
           patches = (old.patches or [ ]) ++ [
             (prev.fetchpatch {
-              url = "https://github.com/dirkvdb/wluma/commit/9fa4fd353d318639b8b9571541576b3061a7df5a.patch";
-              hash = "sha256-fLVoMpMz/b56UrmtotkqG6hk32AdItKTUTJAJN4tQcc=";
+              url = "https://github.com/max-baz/wluma/commit/d147833706eff058840fb2c53206e223380fbf3b.patch";
+              hash = "sha256-iRYYzpe7aq1/urhZjPqKQEnSTJTH5A1OjeYq+fALNeo=";
             })
           ];
           version = "4.11.0";
