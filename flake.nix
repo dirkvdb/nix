@@ -118,6 +118,7 @@
         };
         lemonade-app = prev.callPackage ./pkgs/lemonade/app.nix { };
         lemonade-web-app-bundle = prev.callPackage ./pkgs/lemonade/web-app-bundle.nix { };
+        decentpaste = prev.callPackage ./pkgs/decentpaste { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
 
         # Patch keepassxc to include NativeMessageInstaller.patch
