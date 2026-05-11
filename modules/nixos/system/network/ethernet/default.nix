@@ -5,21 +5,11 @@
 }:
 let
   cfg = config.local.system.network.ethernet;
+  net = config.local.system.network;
 in
 {
   options.local.system.network.ethernet = {
     enable = lib.mkEnableOption "Enable ethernet networking";
-    interface = lib.mkOption {
-      type = lib.types.str;
-      description = "Name of the ethernet interface";
-      example = "enp195s0";
-    };
-
-    wakeOnLan = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Enable Wake-on-LAN for the ethernet interface";
-    };
 
     dhcp = lib.mkOption {
       type = lib.types.enum [
@@ -34,19 +24,15 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    networking = {
-      interfaces.${cfg.interface}.wakeOnLan.enable = cfg.wakeOnLan;
-    };
-
     systemd.network.networks."10-lan" = {
-      matchConfig.Name = cfg.interface;
+      matchConfig.Name = net.interface;
       networkConfig.DHCP = cfg.dhcp;
     };
 
     assertions = [
       {
-        assertion = cfg.interface != "";
-        message = "config.local.system.network.ethernet.interface must be set (non-empty) when nixCfg.ethernet.enable is true";
+        assertion = net.interface != null;
+        message = "local.system.network.interface must be set when ethernet is enabled";
       }
     ];
   };
