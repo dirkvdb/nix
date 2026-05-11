@@ -68,16 +68,12 @@
           enable = true;
           airplay = false;
         };
-
         network = {
           enable = true;
           hostname = "mediastation";
-
-          ethernet = {
+          wakeOnLan = true;
+          networkmanager = {
             enable = true;
-            wakeOnLan = true;
-            interface = "en2ps0";
-            dhcp = "ipv4";
           };
         };
 
@@ -131,6 +127,7 @@
       apps = {
         neovim.enable = true;
         sops.enable = true;
+        zed.enable = true;
       };
 
       home-manager = {
