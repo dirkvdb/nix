@@ -6,6 +6,15 @@
 }:
 let
   cfg = config.local.system.fonts;
+  gothamFonts = pkgs.stdenvNoCC.mkDerivation {
+    name = "gotham-fonts";
+    src = ./.;
+    installPhase = ''
+      install -Dm644 "Gotham Black Regular.ttf" "$out/share/fonts/truetype/Gotham Black Regular.ttf"
+      install -Dm644 "Gotham Bold Regular.ttf" "$out/share/fonts/truetype/Gotham Bold Regular.ttf"
+      install -Dm644 "Gotham Medium.otf" "$out/share/fonts/opentype/Gotham Medium.otf"
+    '';
+  };
 in
 {
   options.local.system.fonts = {
@@ -15,6 +24,7 @@ in
   config = lib.mkIf cfg.enable {
     fonts = {
       packages = with pkgs; [
+        gothamFonts
         nerd-fonts.fira-code
         nerd-fonts.fira-mono
         nerd-fonts.caskaydia-mono
