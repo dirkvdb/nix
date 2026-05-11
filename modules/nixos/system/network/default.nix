@@ -7,6 +7,20 @@ let
   cfg = config.local.system.network;
 in
 {
+  options.local.system.network = {
+    wakeOnLan = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable Wake-on-LAN for the ethernet interface";
+    };
+    interface = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Name of the ethernet interface (required for Wake-on-LAN)";
+      example = "enp3s0";
+    };
+  };
+
   config = lib.mkIf cfg.enable {
     networking.interfaces = lib.mkIf (cfg.wakeOnLan && cfg.interface != null) {
       ${cfg.interface}.wakeOnLan.enable = true;
