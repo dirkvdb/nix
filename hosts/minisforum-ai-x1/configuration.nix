@@ -82,8 +82,7 @@
         network = {
           enable = true;
           hostname = "mini";
-
-          ethernet = {
+          networkmanager = {
             enable = true;
             wakeOnLan = true;
             interface = "enp195s0";

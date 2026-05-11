@@ -72,6 +72,7 @@
           enable = true;
           hostname = "mediastation";
           wakeOnLan = true;
+          interface = "enp2s0";
           networkmanager = {
             enable = true;
           };
