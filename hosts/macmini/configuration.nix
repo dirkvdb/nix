@@ -1,5 +1,6 @@
 {
   pkgs,
+  unstablePkgs,
   inputs,
   ...
 }:
@@ -11,6 +12,7 @@
 
     inputs.stylix.nixosModules.stylix
     inputs.nixos-hardware.nixosModules.common-cpu-intel
+    inputs.nixos-hardware.nixosModules.common-gpu-intel
     inputs.nixos-hardware.nixosModules.common-pc-ssd
 
     {
@@ -30,9 +32,13 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        intel-media-driver
         libvdpau-va-gl
       ];
+    };
+
+    hardware.intelgpu = {
+      computeRuntime = "legacy";
+      vaapiDriver = "intel-media-driver";
     };
 
     local = {
@@ -126,6 +132,7 @@
       apps = {
         neovim.enable = true;
         sops.enable = true;
+        steam.enable = true;
         zed.enable = true;
       };
 
@@ -141,5 +148,10 @@
         };
       };
     };
+
+      environment.systemPackages = with pkgs; [
+        just
+        unstablePkgs.fladder
+      ];
   };
 }
