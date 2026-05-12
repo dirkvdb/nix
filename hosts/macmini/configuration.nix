@@ -11,6 +11,7 @@
     ../../modules/home/import.nix
 
     inputs.stylix.nixosModules.stylix
+    inputs.nixos-hardware.nixosModules.apple-t2
     inputs.nixos-hardware.nixosModules.common-cpu-intel
     inputs.nixos-hardware.nixosModules.common-gpu-intel
     inputs.nixos-hardware.nixosModules.common-pc-ssd
@@ -67,6 +68,8 @@
             graphical = true;
           };
         };
+
+        bluetooth.enable = true;
 
         loginmanager.tuigreet.enable = true;
 
