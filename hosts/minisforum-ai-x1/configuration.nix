@@ -82,11 +82,15 @@
         network = {
           enable = true;
           hostname = "mini";
+          wakeOnLan = true;
+          interface = "enp195s0";
+
           networkmanager = {
             enable = true;
-            wakeOnLan = true;
-            interface = "enp195s0";
-            dhcp = "ipv4";
+            vpn = {
+              enable = true;
+              nordvpn = true;
+            };
           };
         };
 
