@@ -236,6 +236,10 @@
           system = "x86_64-linux";
           hostPath = ./hosts/mediastation/configuration.nix;
         };
+        macmini = mkNixos {
+          system = "x86_64-linux";
+          hostPath = ./hosts/macmini/configuration.nix;
+        };
       };
 
       darwinConfigurations."macbook-pro-osx" = mkDarwin {
