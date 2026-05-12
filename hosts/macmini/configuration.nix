@@ -130,6 +130,7 @@
       };
 
       apps = {
+        moonlight.enable = true;
         neovim.enable = true;
         sops.enable = true;
         steam.enable = true;
