@@ -52,6 +52,13 @@ in
           hostname = "odroid.local";
           user = "dirk";
         };
+        macmini = {
+          hostname = "macmini.local";
+          user = "dirk";
+          extraOptions = {
+            ForwardAgent = "yes";
+          };
+        };
         nas = {
           hostname = "nas.local";
           user = "dirk";
