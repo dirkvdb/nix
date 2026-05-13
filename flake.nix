@@ -71,6 +71,11 @@
       url = "github:kavishdevar/librepods/linux/rust";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixflix = {
+      url = "github:kiriwalawren/nixflix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -239,6 +244,7 @@
         macmini = mkNixos {
           system = "x86_64-linux";
           hostPath = ./hosts/macmini/configuration.nix;
+          extraModules = [ inputs.nixflix.nixosModules.default ];
         };
       };
 

@@ -37,6 +37,8 @@
       ];
     };
 
+    hardware.apple-t2.firmware.enable = true;
+
     hardware.intelgpu = {
       computeRuntime = "legacy";
       vaapiDriver = "intel-media-driver";
@@ -125,6 +127,7 @@
         fwupd.enable = true;
         docker.enable = true;
         power-profiles-daemon.enable = true;
+        nixflix.enable = true;
       };
 
       desktop = {
@@ -153,9 +156,9 @@
       };
     };
 
-      environment.systemPackages = with pkgs; [
-        just
-        unstablePkgs.fladder
-      ];
+    environment.systemPackages = with pkgs; [
+      just
+      unstablePkgs.fladder
+    ];
   };
 }
