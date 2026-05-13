@@ -463,7 +463,7 @@
       "inputs": {
         "mkdocs-catppuccin": "mkdocs-catppuccin",
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-unstable"
         ],
         "treefmt-nix": "treefmt-nix_2",
         "vpn-confinement": "vpn-confinement"
