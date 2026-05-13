@@ -5,6 +5,14 @@ in
 {
   options.local.system.nfs-mounts = {
     enable = lib.mkEnableOption "NFS mounts";
+    hosts = lib.mkOption {
+      description = "Additional /etc/hosts entries, useful for pinning NFS server hostnames to IPv4 when IPv6 is also enabled";
+      default = {
+        "192.168.1.13" = [ "nas.local" ];
+      };
+      type = lib.types.attrsOf (lib.types.listOf lib.types.str);
+    };
+
     mounts = lib.mkOption {
       description = "NFS Mount configs";
       default = { };
@@ -43,6 +51,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    networking.hosts = cfg.hosts;
     fileSystems = lib.mapAttrs' (name: mountConfig: {
       inherit name;
       value = {
