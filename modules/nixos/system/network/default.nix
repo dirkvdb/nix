@@ -44,23 +44,12 @@ in
       firewall.enable = cfg.firewall;
     };
 
-    services = {
-      avahi = {
-        enable = true;
-        nssmdns4 = true;
-        openFirewall = true;
-        publish = {
-          enable = true;
-          domain = true;
-          addresses = true;
-          workstation = true;
-        };
-      };
-
-      resolved = {
-        enable = true;
-        llmnr = "false"; # optional, but avoids conflicts
-      };
+    services.resolved = {
+      enable = true;
+      llmnr = "false";
+      extraConfig = ''
+        MulticastDNS=yes
+      '';
     };
   };
 }
