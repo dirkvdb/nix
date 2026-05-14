@@ -94,31 +94,14 @@ in
       wantedBy = [ "sockets.target" ];
     };
 
-    # Dummy interface that pins local domains to a local DNS server.
-    # ~<domain> is more specific than the VPN's catch-all ~. so
-    # systemd-resolved will always prefer the local DNS for these domains.
-    systemd.services.nordvpn-local-dns =
-      let
-        dnsScript = pkgs.writeShellScript "nordvpn-local-dns" ''
-          ${pkgs.iproute2}/bin/ip link add dns-local type dummy 2>/dev/null || true
-          ${pkgs.iproute2}/bin/ip addr replace 169.254.0.1/32 dev dns-local 2>/dev/null || true
-          ${pkgs.iproute2}/bin/ip link set dns-local up
-          ${pkgs.systemd}/bin/resolvectl dns dns-local 192.168.1.13
-          ${pkgs.systemd}/bin/resolvectl domain dns-local ~arr
-        '';
-      in
-      lib.mkIf cfg.localDns {
-        description = "Local DNS routing for NordVPN bypass";
-        after = [ "systemd-resolved.service" ];
-        requires = [ "systemd-resolved.service" ];
-        wantedBy = [ "multi-user.target" ];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          ExecStart = dnsScript;
-          ExecStop = "${pkgs.iproute2}/bin/ip link del dns-local";
-        };
-      };
+    # Route .arr queries to the local DNS server instead of the VPN's DNS.
+    # Global resolved config uses the system routing table (not a specific link)
+    # so packets reach 192.168.1.13 via the physical interface.
+    services.resolved.extraConfig = lib.mkIf cfg.localDns ''
+      [Resolve]
+      DNS=192.168.1.13
+      Domains=~arr
+    '';
 
     # Always enable LAN discovery so local network services remain
     # reachable while the VPN is active.
