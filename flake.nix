@@ -193,6 +193,7 @@
             hostPath
             nix-index-database.nixosModules.nix-index
             sops-nix.nixosModules.sops
+            inputs.nixflix.nixosModules.default
             { nixpkgs.hostPlatform = system; }
             { nixpkgs.overlays = [ overlay ] ++ extraOverlays; }
           ]
@@ -244,7 +245,6 @@
         macmini = mkNixos {
           system = "x86_64-linux";
           hostPath = ./hosts/macmini/configuration.nix;
-          extraModules = [ inputs.nixflix.nixosModules.default ];
         };
       };
 
