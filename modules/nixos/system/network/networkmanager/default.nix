@@ -7,13 +7,6 @@
 let
   inherit (config.local) user;
   cfg = config.local.system.network.networkmanager;
-
-  nordvpnConnections = {
-    nordvpn-uk = "vpn/nordvpn-uk.conf";
-    nordvpn-be = "vpn/nordvpn-be.conf";
-    nordvpn-nl = "vpn/nordvpn-nl.conf";
-    nordvpn-us = "vpn/nordvpn-us.conf";
-  };
 in
 {
   options.local.system.network.networkmanager = {
@@ -74,10 +67,10 @@ in
         description = "VPN plugins to install";
       };
 
-      nordvpn = lib.mkEnableOption ''
-        NordVPN WireGuard connections via NetworkManager.
-        Imports configs for UK, Belgium, Netherlands and US into
-        NetworkManager so they appear in nm-applet.
+      homeVpn = lib.mkEnableOption ''
+        Home WireGuard VPN connection via NetworkManager.
+        Imports the vpn/home.conf sops secret into NetworkManager
+        so it appears in nm-applet. Not auto-connected at boot.
       '';
     };
 
@@ -122,50 +115,46 @@ in
 
     networking.enableIPv6 = cfg.enableIpv6;
 
-    # Import NordVPN WireGuard configs into NetworkManager so they
-    # appear in nm-applet and can be toggled from the system tray.
-    sops.secrets = lib.mkIf cfg.vpn.nordvpn (
-      lib.mapAttrs' (name: secret: lib.nameValuePair secret { }) nordvpnConnections
-    );
+    # Import home WireGuard config into NetworkManager so it
+    # appears in nm-applet and can be toggled from the system tray.
+    sops.secrets = lib.mkIf cfg.vpn.homeVpn {
+      "vpn/home.conf" = { };
+    };
 
-    systemd.services = lib.mkIf cfg.vpn.nordvpn (
-      lib.mapAttrs' (
-        name: secret:
+    systemd.services.home-vpn-nm-import = lib.mkIf cfg.vpn.homeVpn {
+      description = "Import home WireGuard config into NetworkManager";
+      after = [
+        "NetworkManager.service"
+        "sops-nix.service"
+      ];
+      requires = [ "NetworkManager.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      path = [ pkgs.networkmanager ];
+      script =
         let
-          secretPath = config.sops.secrets.${secret}.path;
+          secretPath = config.sops.secrets."vpn/home.conf".path;
         in
-        lib.nameValuePair "${name}-nm-import" {
-          description = "Import ${name} WireGuard config into NetworkManager";
-          after = [
-            "NetworkManager.service"
-            "sops-nix.service"
-          ];
-          requires = [ "NetworkManager.service" ];
-          wantedBy = [ "multi-user.target" ];
-          serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-          };
-          path = [ pkgs.networkmanager ];
-          script = ''
-            # Remove stale profile and re-import from the current secret
-            nmcli connection delete "${name}" 2>/dev/null || true
-            nmcli connection import type wireguard file ${secretPath}
-            # Ensure connection name matches the configured key
-            imported=$(basename "${secretPath}" .conf)
-            if [ "$imported" != "${name}" ]; then
-              nmcli connection modify "$imported" connection.id "${name}"
-            fi
-            # Don't auto-connect at boot — toggle from nm-applet instead
-            nmcli connection modify "${name}" connection.autoconnect no
-            nmcli connection down "${name}" 2>/dev/null || true
-          '';
-        }
-      ) nordvpnConnections
-    );
+        ''
+          # Remove stale profile and re-import from the current secret
+          nmcli connection delete "home" 2>/dev/null || true
+          nmcli connection import type wireguard file ${secretPath}
+          # Rename to a friendly name if needed
+          imported=$(basename "${secretPath}" .conf)
+          if [ "$imported" != "home" ]; then
+            nmcli connection modify "$imported" connection.id "home"
+          fi
+          # Don't auto-connect at boot — toggle from nm-applet instead
+          nmcli connection modify "home" connection.autoconnect no
+          nmcli connection down "home" 2>/dev/null || true
+        '';
+    };
 
     # Required so that WireGuard traffic is not dropped by reverse-path filtering
-    networking.firewall.checkReversePath = lib.mkIf cfg.vpn.nordvpn "loose";
+    networking.firewall.checkReversePath = lib.mkIf cfg.vpn.homeVpn "loose";
 
     # Set routing domains on non-VPN interfaces so local domain queries
     # always go to the local DNS server rather than the VPN's DNS.
