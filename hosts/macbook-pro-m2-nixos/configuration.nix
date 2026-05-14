@@ -82,6 +82,7 @@ in
           hostname = "macbook-pro";
           networkmanager = {
             enable = true;
+            localDomains = [ "arr" ];
             vpn = {
               enable = true;
               nordvpn = true;

@@ -80,6 +80,22 @@ in
         NetworkManager so they appear in nm-applet.
       '';
     };
+
+    enableIpv6 = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable IPv6 system-wide. Disable to prevent IPv6 leaks when using VPN providers that do not support IPv6.";
+    };
+
+    localDomains = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Local domains that should always be resolved via the local network DNS, even when a VPN is active.";
+      example = [
+        "arr"
+        "local"
+      ];
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -103,6 +119,8 @@ in
     # When NetworkManager uses iwd backend, it manages iwd internally
     # Do NOT separately enable iwd service as it will conflict
     # NetworkManager will start iwd automatically when wifi.backend = "iwd"
+
+    networking.enableIPv6 = cfg.enableIpv6;
 
     # Import NordVPN WireGuard configs into NetworkManager so they
     # appear in nm-applet and can be toggled from the system tray.
@@ -140,6 +158,7 @@ in
             fi
             # Don't auto-connect at boot — toggle from nm-applet instead
             nmcli connection modify "${name}" connection.autoconnect no
+            nmcli connection down "${name}" 2>/dev/null || true
           '';
         }
       ) nordvpnConnections
@@ -147,6 +166,32 @@ in
 
     # Required so that WireGuard traffic is not dropped by reverse-path filtering
     networking.firewall.checkReversePath = lib.mkIf cfg.vpn.nordvpn "loose";
+
+    # Set routing domains on non-VPN interfaces so local domain queries
+    # always go to the local DNS server rather than the VPN's DNS.
+    # ~<domain> is more specific than the VPN's catch-all ~. so
+    # systemd-resolved will prefer it.
+    networking.networkmanager.dispatcherScripts = lib.mkIf (cfg.localDomains != [ ]) [
+      {
+        source =
+          let
+            domains = lib.concatMapStringsSep " " (d: "~${d}") cfg.localDomains;
+          in
+          pkgs.writeScript "local-dns-routing" ''
+            #!/bin/sh
+            # On any interface coming up (including VPN), ensure local
+            # routing domains are set on all active wifi/ethernet links.
+            case "$2" in
+              up|dhcp4-change)
+                for dev in $(${pkgs.networkmanager}/bin/nmcli -t -f DEVICE,TYPE device status | grep -E ':(wifi|ethernet)$' | cut -d: -f1); do
+                  ${pkgs.systemd}/bin/resolvectl domain "$dev" ${domains} 2>/dev/null || true
+                done
+                ;;
+            esac
+          '';
+        type = "basic";
+      }
+    ];
 
     # Install NetworkManager and related packages
     environment.systemPackages = cfg.extraPackages;

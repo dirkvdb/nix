@@ -87,6 +87,7 @@
 
           networkmanager = {
             enable = true;
+            localDomains = [ "arr" ];
             vpn = {
               enable = true;
               nordvpn = true;
