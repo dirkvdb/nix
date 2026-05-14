@@ -41,48 +41,51 @@ in
     # rewrites the file when values change, so this is idempotent and
     # leaves user-managed fields (providers, languages, etc.) untouched.
     systemd.services.bazarr.serviceConfig.ExecStartPre = [
-      ("+" + (pkgs.writeShellScript "bazarr-seed-config" ''
-        set -eu
-        CONFIG_DIR="/var/lib/bazarr/config"
-        CONFIG_FILE="$CONFIG_DIR/config.yaml"
-        mkdir -p "$CONFIG_DIR"
-        [ -f "$CONFIG_FILE" ] || : > "$CONFIG_FILE"
+      (
+        "+"
+        + (pkgs.writeShellScript "bazarr-seed-config" ''
+          set -eu
+          CONFIG_DIR="/var/lib/bazarr/config"
+          CONFIG_FILE="$CONFIG_DIR/config.yaml"
+          mkdir -p "$CONFIG_DIR"
+          [ -f "$CONFIG_FILE" ] || : > "$CONFIG_FILE"
 
-        BAZARR_APIKEY="$(cat ${config.sops.secrets."bazarr/api_key".path})"
-        SONARR_APIKEY="$(cat ${config.sops.secrets."sonarr/api_key".path})"
-        RADARR_APIKEY="$(cat ${config.sops.secrets."radarr/api_key".path})"
-        OS_USERNAME="$(cat ${config.sops.secrets."bazarr/opensubtitles_username".path})"
-        OS_PASSWORD="$(cat ${config.sops.secrets."bazarr/opensubtitles_password".path})"
-        SUBDL_APIKEY="$(cat ${config.sops.secrets."bazarr/subdl_api_key".path})"
-        export BAZARR_APIKEY SONARR_APIKEY RADARR_APIKEY OS_USERNAME OS_PASSWORD SUBDL_APIKEY
+          BAZARR_APIKEY="$(cat ${config.sops.secrets."bazarr/api_key".path})"
+          SONARR_APIKEY="$(cat ${config.sops.secrets."sonarr/api_key".path})"
+          RADARR_APIKEY="$(cat ${config.sops.secrets."radarr/api_key".path})"
+          OS_USERNAME="$(cat ${config.sops.secrets."bazarr/opensubtitles_username".path})"
+          OS_PASSWORD="$(cat ${config.sops.secrets."bazarr/opensubtitles_password".path})"
+          SUBDL_APIKEY="$(cat ${config.sops.secrets."bazarr/subdl_api_key".path})"
+          export BAZARR_APIKEY SONARR_APIKEY RADARR_APIKEY OS_USERNAME OS_PASSWORD SUBDL_APIKEY
 
-        ${pkgs.yq-go}/bin/yq -i '
-          .auth.apikey = strenv(BAZARR_APIKEY)
-          | .auth.type = null
-          | .general.use_sonarr = true
-          | .general.use_radarr = true
-          | .general.enabled_providers = ["opensubtitlescom", "subdl"]
-          | .sonarr.ip = "127.0.0.1"
-          | .sonarr.port = 8989
-          | .sonarr.base_url = "/"
-          | .sonarr.ssl = false
-          | .sonarr.apikey = strenv(SONARR_APIKEY)
-          | .radarr.ip = "127.0.0.1"
-          | .radarr.port = 7878
-          | .radarr.base_url = "/"
-          | .radarr.ssl = false
-          | .radarr.apikey = strenv(RADARR_APIKEY)
-          | .opensubtitlescom.username = strenv(OS_USERNAME)
-          | .opensubtitlescom.password = strenv(OS_PASSWORD)
-          | .opensubtitlescom.use_hash = true
-          | .opensubtitlescom.include_ai_translated = false
-          | .opensubtitlescom.include_machine_translated = false
-          | .subdl.api_key = strenv(SUBDL_APIKEY)
-        ' "$CONFIG_FILE"
+          ${pkgs.yq-go}/bin/yq -i '
+            .auth.apikey = strenv(BAZARR_APIKEY)
+            | .auth.type = null
+            | .general.use_sonarr = true
+            | .general.use_radarr = true
+            | .general.enabled_providers = ["opensubtitlescom", "subdl"]
+            | .sonarr.ip = "127.0.0.1"
+            | .sonarr.port = 8989
+            | .sonarr.base_url = "/"
+            | .sonarr.ssl = false
+            | .sonarr.apikey = strenv(SONARR_APIKEY)
+            | .radarr.ip = "127.0.0.1"
+            | .radarr.port = 7878
+            | .radarr.base_url = "/"
+            | .radarr.ssl = false
+            | .radarr.apikey = strenv(RADARR_APIKEY)
+            | .opensubtitlescom.username = strenv(OS_USERNAME)
+            | .opensubtitlescom.password = strenv(OS_PASSWORD)
+            | .opensubtitlescom.use_hash = true
+            | .opensubtitlescom.include_ai_translated = false
+            | .opensubtitlescom.include_machine_translated = false
+            | .subdl.api_key = strenv(SUBDL_APIKEY)
+          ' "$CONFIG_FILE"
 
-        chown -R bazarr:media "$CONFIG_DIR"
-        chmod 0640 "$CONFIG_FILE"
-      ''))
+          chown -R bazarr:media "$CONFIG_DIR"
+          chmod 0640 "$CONFIG_FILE"
+        '')
+      )
     ];
 
     # Idempotently create a "Dutch" language profile via Bazarr's REST API.
@@ -94,7 +97,10 @@ in
       after = [ "bazarr.service" ];
       wants = [ "bazarr.service" ];
       wantedBy = [ "multi-user.target" ];
-      path = [ pkgs.curl pkgs.jq ];
+      path = [
+        pkgs.curl
+        pkgs.jq
+      ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = false;
@@ -186,12 +192,11 @@ in
 
     # Stable's recyclarr module still passes `--app-data`, which was removed
     # in recyclarr 8.x. Rewrite ExecStart to the 8.x-compatible invocation.
-    systemd.services.recyclarr.serviceConfig.ExecStart = lib.mkForce (
-      "${lib.getExe unstablePkgs.recyclarr} sync --config /var/lib/recyclarr/config.json"
-    );
+    systemd.services.recyclarr.serviceConfig.ExecStart =
+      lib.mkForce "${lib.getExe unstablePkgs.recyclarr} sync --config /var/lib/recyclarr/config.json";
 
     sops.secrets = {
-      "vpn/nordvpn.conf" = { };
+      "vpn/nordvpn-be.conf" = { };
       "sonarr/api_key" = { };
       "radarr/api_key" = { };
       "bazarr/api_key" = { };
@@ -222,7 +227,7 @@ in
 
       vpn = {
         enable = true;
-        wgConfFile = config.sops.secrets."vpn/nordvpn.conf".path;
+        wgConfFile = config.sops.secrets."vpn/nordvpn-be.conf".path;
         accessibleFrom = [ "192.168.1.0/24" ];
       };
 
@@ -273,8 +278,14 @@ in
                 until_quality = "HDTV-1080p";
               };
               qualities = [
-                { name = "Raw-HD"; enabled = false; }
-                { name = "BR-DISK"; enabled = false; }
+                {
+                  name = "Raw-HD";
+                  enabled = false;
+                }
+                {
+                  name = "BR-DISK";
+                  enabled = false;
+                }
                 { name = "Remux-2160p"; }
                 { name = "Bluray-2160p"; }
                 {
@@ -303,7 +314,10 @@ in
                     "WEBDL-720p"
                   ];
                 }
-                { name = "HDTV-720p"; enabled = false; }
+                {
+                  name = "HDTV-720p";
+                  enabled = false;
+                }
               ];
             }
           ];
@@ -319,7 +333,10 @@ in
                 until_quality = "HDTV-1080p";
               };
               qualities = [
-                { name = "Raw-HD"; enabled = false; }
+                {
+                  name = "Raw-HD";
+                  enabled = false;
+                }
                 { name = "Bluray-2160p Remux"; }
                 { name = "Bluray-2160p"; }
                 {
@@ -348,7 +365,10 @@ in
                     "WEBDL-720p"
                   ];
                 }
-                { name = "HDTV-720p"; enabled = false; }
+                {
+                  name = "HDTV-720p";
+                  enabled = false;
+                }
               ];
             }
           ];
@@ -420,8 +440,7 @@ in
         enable = true;
         password._secret = config.sops.secrets."arr/password".path;
         serverConfig.Preferences.WebUI.Username = config.local.user.name;
-        serverConfig.Preferences.WebUI.Password_PBKDF2 =
-          ''@ByteArray(GOT/oxX4EohRRMf1FOoGAA==:nNroSP4qegzAps3jIK/qQsWAXuC/F7slljkkN4UdVbbFO6/O7QYPhi36ZBqqE/k8Ra9BWFCaxiLs0Yq5XqjFhg==)'';
+        serverConfig.Preferences.WebUI.Password_PBKDF2 = "@ByteArray(GOT/oxX4EohRRMf1FOoGAA==:nNroSP4qegzAps3jIK/qQsWAXuC/F7slljkkN4UdVbbFO6/O7QYPhi36ZBqqE/k8Ra9BWFCaxiLs0Yq5XqjFhg==)";
         serverConfig.Preferences.WebUI.AuthSubnetWhitelistEnabled = true;
         serverConfig.Preferences.WebUI.AuthSubnetWhitelist = "192.168.1.0/24";
       };

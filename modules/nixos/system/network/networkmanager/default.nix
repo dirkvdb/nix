@@ -7,6 +7,13 @@
 let
   inherit (config.local) user;
   cfg = config.local.system.network.networkmanager;
+
+  nordvpnConnections = {
+    nordvpn-uk = "vpn/nordvpn-uk.conf";
+    nordvpn-be = "vpn/nordvpn-be.conf";
+    nordvpn-nl = "vpn/nordvpn-nl.conf";
+    nordvpn-us = "vpn/nordvpn-us.conf";
+  };
 in
 {
   options.local.system.network.networkmanager = {
@@ -62,21 +69,16 @@ in
       plugins = lib.mkOption {
         type = lib.types.listOf lib.types.package;
         default = with pkgs; [
-          networkmanager-openvpn
           networkmanager-l2tp
         ];
         description = "VPN plugins to install";
       };
 
-      nordvpn = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = ''
-          Enable NordVPN support via OpenVPN plugin.
-          This ensures the OpenVPN plugin is installed for importing NordVPN configs.
-          Download OpenVPN configs from NordVPN and import them via NetworkManager.
-        '';
-      };
+      nordvpn = lib.mkEnableOption ''
+        NordVPN WireGuard connections via NetworkManager.
+        Imports configs for UK, Belgium, Netherlands and US into
+        NetworkManager so they appear in nm-applet.
+      '';
     };
   };
 
@@ -95,12 +97,56 @@ in
         powersave = cfg.wifi.powersave;
       };
       dns = "systemd-resolved";
-      plugins = lib.mkIf cfg.vpn.enable [ pkgs.networkmanager-openvpn ];
+      plugins = lib.mkIf cfg.vpn.enable cfg.vpn.plugins;
     };
 
     # When NetworkManager uses iwd backend, it manages iwd internally
     # Do NOT separately enable iwd service as it will conflict
     # NetworkManager will start iwd automatically when wifi.backend = "iwd"
+
+    # Import NordVPN WireGuard configs into NetworkManager so they
+    # appear in nm-applet and can be toggled from the system tray.
+    sops.secrets = lib.mkIf cfg.vpn.nordvpn (
+      lib.mapAttrs' (name: secret: lib.nameValuePair secret { }) nordvpnConnections
+    );
+
+    systemd.services = lib.mkIf cfg.vpn.nordvpn (
+      lib.mapAttrs' (
+        name: secret:
+        let
+          secretPath = config.sops.secrets.${secret}.path;
+        in
+        lib.nameValuePair "${name}-nm-import" {
+          description = "Import ${name} WireGuard config into NetworkManager";
+          after = [
+            "NetworkManager.service"
+            "sops-nix.service"
+          ];
+          requires = [ "NetworkManager.service" ];
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+          };
+          path = [ pkgs.networkmanager ];
+          script = ''
+            # Remove stale profile and re-import from the current secret
+            nmcli connection delete "${name}" 2>/dev/null || true
+            nmcli connection import type wireguard file ${secretPath}
+            # Ensure connection name matches the configured key
+            imported=$(basename "${secretPath}" .conf)
+            if [ "$imported" != "${name}" ]; then
+              nmcli connection modify "$imported" connection.id "${name}"
+            fi
+            # Don't auto-connect at boot — toggle from nm-applet instead
+            nmcli connection modify "${name}" connection.autoconnect no
+          '';
+        }
+      ) nordvpnConnections
+    );
+
+    # Required so that WireGuard traffic is not dropped by reverse-path filtering
+    networking.firewall.checkReversePath = lib.mkIf cfg.vpn.nordvpn "loose";
 
     # Install NetworkManager and related packages
     environment.systemPackages = cfg.extraPackages;
