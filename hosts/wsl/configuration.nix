@@ -10,10 +10,6 @@
     ../../modules/home/import.nix
 
     inputs.stylix.nixosModules.stylix
-    {
-      _module.args.unstablePkgs =
-        inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-    }
   ];
 
   config = {
