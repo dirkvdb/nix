@@ -189,6 +189,7 @@
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
       (remmina.override { withKf5Wallet = false; })
       unstablePkgs.lmstudio
+      unstablePkgs.fladder
       #winboat
     ];
   };
