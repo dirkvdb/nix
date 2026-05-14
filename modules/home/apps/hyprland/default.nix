@@ -390,6 +390,7 @@ in
         windowrulev2 = [
           "bordercolor rgb(FFCC66) rgb(DEC186), fullscreen:1"
           "float, class:^(org\.nmrs\.ui)$"
+          "float, class:^(nordvpn-gui)$"
         ];
 
         windowrule = [
