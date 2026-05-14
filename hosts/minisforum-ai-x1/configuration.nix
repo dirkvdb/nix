@@ -87,11 +87,6 @@
 
           networkmanager = {
             enable = true;
-            localDomains = [ "arr" ];
-            vpn = {
-              enable = true;
-              nordvpn = true;
-            };
           };
         };
 
@@ -132,6 +127,10 @@
       };
 
       services = {
+        nordvpn = {
+          enable = true;
+          localDns = true;
+        };
         ssh = {
           enable = true;
           disablePasswordAuth = true;

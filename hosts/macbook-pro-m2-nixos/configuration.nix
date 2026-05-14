@@ -82,11 +82,6 @@ in
           hostname = "macbook-pro";
           networkmanager = {
             enable = true;
-            localDomains = [ "arr" ];
-            vpn = {
-              enable = true;
-              nordvpn = true;
-            };
           };
         };
 
@@ -124,6 +119,10 @@ in
       };
 
       services = {
+        nordvpn = {
+          enable = true;
+          localDns = true;
+        };
         ssh.enable = true;
         fwupd.enable = true;
         printing.enable = true;
