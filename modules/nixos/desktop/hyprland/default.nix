@@ -13,17 +13,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # copy the font that contains the menu symbol used in the waybar config
-    fonts.packages = [
-      (pkgs.stdenvNoCC.mkDerivation {
-        name = "omarchy";
-        src = ./fonts;
-        installPhase = ''
-          mkdir -p $out/share/fonts/truetype
-          cp omarchy.ttf $out/share/fonts/truetype/
-        '';
-      })
-    ];
 
     programs.hyprland = {
       enable = true;

@@ -68,11 +68,15 @@ in
             opacity: 0.5;
         }
 
+        #custom-nixmenu {
+            margin-right: 4px;
+        }
+
         #cpu,
         #memory,
         #battery,
         #pulseaudio,
-        #custom-omarchy,
+
         #custom-screenrecording-indicator,
         #custom-update {
             min-width: 12px;
@@ -244,7 +248,7 @@ in
           };
 
           "custom/nixmenu" = {
-            format = "<span font='omarchy'></span>";
+            format = "";
             tooltip = false;
             on-click = "nixcfg-launch-walker";
             on-click-right = "nixcfg-launch-terminal";
