@@ -21,7 +21,7 @@ in
     services.radarr.package = unstablePkgs.radarr;
     services.lidarr.package = unstablePkgs.lidarr;
     services.prowlarr.package = unstablePkgs.prowlarr;
-    services.sabnzbd.package = unstablePkgs.sabnzbd;
+
     services.jellyfin.package = unstablePkgs.jellyfin;
     services.jellyseerr.package = unstablePkgs.jellyseerr;
     services.bazarr.package = unstablePkgs.bazarr;
@@ -447,6 +447,7 @@ in
 
       usenetClients.sabnzbd = {
         enable = true;
+        package = unstablePkgs.sabnzbd;
         settings = {
           misc = {
             api_key._secret = config.sops.secrets."sabnzbd/api_key".path;
