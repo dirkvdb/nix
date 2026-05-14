@@ -140,6 +140,20 @@ in
             background-color: transparent;
         }
 
+        /* Re-assert background for nested submenus, which would otherwise be
+           caught by the `menu *` rule above (higher specificity than `menu`). */
+        menu menu {
+            background-color: @background;
+            border: 1px solid @foreground;
+            border-radius: 6px;
+            padding: 4px 0;
+        }
+
+        menu menu > .background {
+            background-color: @background;
+            border-radius: 6px;
+        }
+
         menu menuitem {
             padding: 4px 10px;
             border-radius: 4px;
