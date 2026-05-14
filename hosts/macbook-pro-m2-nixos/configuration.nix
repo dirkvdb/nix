@@ -77,6 +77,7 @@ in
           hostname = "macbook-pro";
           networkmanager = {
             enable = true;
+            vpn.homeVpn = true;
           };
         };
 
