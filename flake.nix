@@ -188,6 +188,7 @@
         nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs system;
+            unstablePkgs = unstablePkgs system;
             mkHome = userName: attrs: { home-manager.users.${userName} = attrs; };
           };
           modules = [
