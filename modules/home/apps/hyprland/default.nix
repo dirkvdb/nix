@@ -16,6 +16,8 @@ let
   isX86 = pkgs.stdenv.isx86_64;
   mkUserHome = mkHome user.name;
 
+  # Directory holding all theme wallpapers. wpaperd will pick & rotate them.
+  wallpapersDir = ../../../common/theme/wallpapers;
 in
 {
   imports = [
@@ -26,6 +28,7 @@ in
 
   config = lib.mkIf (isLinux && isDesktop) (mkUserHome {
     stylix.targets.hyprland.enable = false;
+    stylix.targets.wpaperd.image.enable = false;
 
     xdg.configFile."walker".source = ../../dotfiles/walker;
     xdg.configFile."sunsetr".source = ../../dotfiles/sunsetr;
@@ -99,19 +102,18 @@ in
       };
     };
 
-    services.hyprpaper = {
+    # Use wpaperd to display and rotate wallpapers natively. It cycles through
+    # all images in the configured directory based on `duration` and `sorting`,
+    # so no custom systemd timer is required.
+    services.wpaperd = {
       enable = true;
       settings = {
-        ipc = "on";
-        splash = false;
-
-        # preload = [
-        #   "~/.local/share/theme/wallpapers/wallpaper-1.jpg"
-        # ];
-
-        # wallpaper = [
-        #   ",~/.local/share/theme/wallpapers/wallpaper-1.jpg" # The comma means "all monitors"
-        # ];
+        any = {
+          path = "${wallpapersDir}";
+          duration = "30m";
+          sorting = "random";
+          mode = "center";
+        };
       };
     };
 
