@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  unstablePkgs,
   ...
 }:
 let
@@ -18,7 +19,7 @@ in
       {
         hardware.bluetooth.enable = true;
 
-        environment.systemPackages = with pkgs; [
+        environment.systemPackages = with unstablePkgs; [
           overskride
         ];
       }
