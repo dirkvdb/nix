@@ -48,7 +48,7 @@
       theme.preset = "everforest";
 
       system = {
-        cpu.cores = 4;
+        cpu.cores = 6;
 
         nix = {
           unfree.enable = true;
