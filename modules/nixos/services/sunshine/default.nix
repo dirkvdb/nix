@@ -58,7 +58,7 @@ in
         {
           name = "ES-DE";
           detached = [ "${pkgs.es-de}/bin/es-de" ];
-          image-path = "${../retro-emulation/esde.png}";
+          image-path = "${../../apps/retro-emulation/esde.png}";
           prep-cmd = [
             {
               do = "hyprctl keyword monitor ,3840x2160@60,auto,1.4";
