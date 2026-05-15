@@ -118,7 +118,6 @@
           disablePasswordAuth = true;
         };
         fwupd.enable = true;
-        docker.enable = true;
         power-profiles-daemon.enable = true;
         nixflix.enable = true;
       };
