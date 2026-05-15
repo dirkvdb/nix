@@ -155,6 +155,7 @@
         neovim.enable = true;
         prusa-slicer.enable = true;
         retro-emulation.enable = true;
+        sunshine.enable = true;
         slack.enable = true;
         sops.enable = true;
         spotify.enable = true;
