@@ -87,60 +87,6 @@ in
       KERNEL=="uhid", MODE="0660", GROUP="input"
     '';
 
-    services.sunshine = {
-      enable = true;
-      autoStart = true;
-
-      openFirewall = true;
-
-      settings = {
-        fps = 60;
-        min_fps_factor = 1;
-        channels = 2;
-        output_name = 1;
-        encoder = "vaapi";
-      };
-
-      applications.apps = [
-        {
-          name = "Desktop";
-          image-path = "desktop.png";
-        }
-        {
-          name = "Desktop 2160p";
-          image-path = "desktop.png";
-          prep-cmd = [
-            {
-              do = "hyprctl keyword monitor ,3840x2160@30,auto,1.66666667";
-              undo = "hyprctl keyword monitor ,preferred,auto,${toString config.local.desktop.displayScale}";
-            }
-          ];
-        }
-        {
-          name = "Desktop 1080p";
-          image-path = "desktop.png";
-          prep-cmd = [
-            {
-              do = "hyprctl keyword monitor ,1920x1080@30,auto,1";
-              undo = "hyprctl keyword monitor ,preferred,auto,${toString config.local.desktop.displayScale}";
-            }
-          ];
-        }
-        {
-          name = "ES-DE";
-          detached = [ "${esDe}/bin/es-de" ];
-          image-path = "${./esde.png}";
-          prep-cmd = [
-            {
-              do = "hyprctl keyword monitor ,3840x2160@60,auto,1.4";
-              undo = "hyprctl keyword monitor ,preferred,auto,${toString config.local.desktop.displayScale}";
-            }
-          ];
-          auto-detach = "true";
-        }
-      ];
-    };
-
     environment.systemPackages = [
       pkgs.ffmpeg
       esDe
