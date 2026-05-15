@@ -130,6 +130,7 @@
         };
         fwupd.enable = true;
         printing.enable = true;
+        sunshine.enable = true;
         docker.enable = true;
         power-profiles-daemon.enable = true;
       };
@@ -151,11 +152,11 @@
         };
         librepods.enable = true;
         localsend.enable = true;
+        moonlight.enable = true;
         mqtt.enable = true;
         neovim.enable = true;
         prusa-slicer.enable = true;
         retro-emulation.enable = true;
-        sunshine.enable = true;
         slack.enable = true;
         sops.enable = true;
         spotify.enable = true;
@@ -191,7 +192,7 @@
       (remmina.override { withKf5Wallet = false; })
       unstablePkgs.lmstudio
       unstablePkgs.fladder
-      #winboat
+      unstablePkgs.winboat
     ];
   };
 }
