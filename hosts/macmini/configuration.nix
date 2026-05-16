@@ -75,9 +75,8 @@
         network = {
           enable = true;
           hostname = "macmini";
-          networkmanager = {
-            enable = true;
-          };
+          interface = "enp4s0";
+          ethernet.enable = true;
         };
 
         nfs-mounts = {
@@ -120,7 +119,6 @@
         fwupd.enable = true;
         power-profiles-daemon.enable = true;
         nixflix.enable = true;
-        sunshine.enable = true;
       };
 
       desktop = {
