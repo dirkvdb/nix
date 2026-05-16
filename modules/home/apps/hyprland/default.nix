@@ -14,6 +14,7 @@ let
   # hyprexpo uses x86-only function hooks and doesn't work on ARM
   # See: https://github.com/hyprwm/hyprland-plugins/issues/438
   isX86 = pkgs.stdenv.isx86_64;
+  isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
   mkUserHome = mkHome user.name;
 
   # Directory holding all theme wallpapers. wpaperd will pick & rotate them.
@@ -26,7 +27,7 @@ in
     ./mako.nix
   ];
 
-  config = lib.mkIf (isLinux && isDesktop) (mkUserHome {
+  config = lib.mkIf (isLinux && isDesktop && isHyprlandEnabled) (mkUserHome {
     stylix.targets.hyprland.enable = false;
     stylix.targets.wpaperd.image.enable = false;
 
