@@ -40,6 +40,7 @@ in
     };
 
     networking = {
+      useNetworkd = true;
       hostName = cfg.hostname;
       firewall.enable = cfg.firewall;
     };
