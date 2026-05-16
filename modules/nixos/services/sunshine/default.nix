@@ -26,6 +26,7 @@ in
         channels = 2;
         output_name = 1;
         encoder = "vaapi";
+        origin_web_ui_allowed = "lan";
       };
 
       applications.apps = [
