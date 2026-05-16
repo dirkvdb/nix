@@ -10,10 +10,11 @@ let
   inherit (config.local) theme;
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable;
+  isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
   mkUserHome = mkHome user.name;
 in
 {
-  config = lib.mkIf (isLinux && isDesktop) (mkUserHome {
+  config = lib.mkIf (isLinux && isDesktop && isHyprlandEnabled) (mkUserHome {
     stylix.targets.mako.enable = false;
 
     services.mako = {

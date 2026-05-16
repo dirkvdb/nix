@@ -12,6 +12,7 @@ let
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable or false;
   isHeadless = config.local.headless or false;
+  isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
   hasAmdGpu = config.local.system.video.amd.enable;
   # Get CPU core count from system config
   cpuCores = config.local.system.cpu.cores;
@@ -23,7 +24,7 @@ let
   mkUserHome = mkHome user.name;
 in
 {
-  config = lib.mkIf (isLinux && isDesktop && !isHeadless) (mkUserHome {
+  config = lib.mkIf (isLinux && isDesktop && !isHeadless && isHyprlandEnabled) (mkUserHome {
     # Configure waybar with systemd service
     programs.waybar = {
       enable = true;

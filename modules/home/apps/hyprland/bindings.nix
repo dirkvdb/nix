@@ -10,11 +10,12 @@ let
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable or false;
   isHeadless = config.local.headless or false;
+  isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
   isX86 = pkgs.stdenv.isx86_64;
   mkUserHome = mkHome user.name;
 in
 {
-  config = lib.mkIf (isLinux && isDesktop && !isHeadless) (mkUserHome {
+  config = lib.mkIf (isLinux && isDesktop && !isHeadless && isHyprlandEnabled) (mkUserHome {
     wayland.windowManager.hyprland.settings = {
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
