@@ -66,11 +66,9 @@
         };
 
         bluetooth.enable = true;
-        loginmanager.tuigreet.enable = true;
 
         audio.pipewire = {
           enable = true;
-          airplay = false;
         };
         network = {
           enable = true;
@@ -124,17 +122,9 @@
       desktop = {
         enable = true;
         displayScale = 1.666667;
-        hyprland.enable = true;
+        hyprland.enable = false;
         kiosk = {
-          enable = false;
-          gamescopeArgs = [
-            "-W 1920"
-            "-H 1080"
-            "-f"
-            "-e"
-            "--prefer-output DP-3"
-            "--xwayland-count 2"
-          ];
+          enable = true;
         };
       };
 
