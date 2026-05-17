@@ -18,7 +18,7 @@ just check
 ```
 
 # Guidelines
-After making changes to the configuration, verify that the config still builds
+After making changes to the configuration, verify that the config still builds using `just build`. Never switch to the config.
 
 # Agent skills
 - `skills/zed-version-bump/SKILL.md`: How to bump pinned Zed versions and refresh both Nix hashes (`src.hash` and `cargoDeps.hash`) safely.

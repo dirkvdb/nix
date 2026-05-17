@@ -141,6 +141,7 @@ in
       apps = {
         celluloid.enable = true;
         direnv.enable = true;
+        fladder.enable = true;
         mqtt.enable = true;
         foliate.enable = true;
         localsend.enable = true;
@@ -274,7 +275,6 @@ in
       teams-for-linux
       vulkan-tools
       brightnessctl
-      unstablePkgs.fladder
       #asahi-audio # belongs to the workaround below
     ];
 
