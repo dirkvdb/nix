@@ -65,7 +65,6 @@
         };
 
         bluetooth.enable = true;
-
         loginmanager.tuigreet.enable = true;
 
         audio.pipewire = {
@@ -123,14 +122,36 @@
 
       desktop = {
         enable = true;
+        displayScale = 1.666667;
         hyprland.enable = true;
+        kiosk = {
+          enable = false;
+          gamescopeArgs = [
+            "-W 1920"
+            "-H 1080"
+            "-f"
+            "-e"
+            "--prefer-output DP-3"
+            "--xwayland-count 2"
+          ];
+        };
       };
 
       apps = {
         moonlight.enable = true;
         neovim.enable = true;
         sops.enable = true;
-        steam.enable = true;
+        retro-emulation.enable = true;
+        steam = {
+          enable = true;
+          nonSteamGames = [
+            {
+              name = "Fladder";
+              exe = "${unstablePkgs.fladder}/bin/Fladder";
+              startDir = "/home/dirk";
+            }
+          ];
+        };
         zed.enable = true;
       };
 

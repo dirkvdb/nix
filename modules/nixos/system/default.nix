@@ -10,4 +10,6 @@
   systemd.user.extraConfig = ''
     DefaultTimeoutStopSec=10s
   '';
+
+  documentation.man.generateCaches = false;
 }

@@ -39,7 +39,6 @@ in
         ''}
 
         ${lib.optionalString sopsEnabled ''
-          set -gx OPENAI_API_KEY (cat ${config.sops.secrets.openai_api_key.path} | string trim)
           set -gx GITHUB_TOKEN (cat ${config.sops.secrets.github_token.path} | string trim)
         ''}
 
