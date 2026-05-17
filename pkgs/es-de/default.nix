@@ -56,6 +56,9 @@ stdenv.mkDerivation (finalAttrs: {
     rlottie
   ];
 
+  env.NIX_CFLAGS_COMPILE = "-march=native";
+  env.NIX_CXXFLAGS_COMPILE = "-march=native";
+
   cmakeFlags = [
     "-DAPPLICATION_UPDATER=off"
   ];
