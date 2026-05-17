@@ -49,6 +49,7 @@
 
       system = {
         cpu.cores = 6;
+        performance.enable = true;
 
         nix = {
           unfree.enable = true;
