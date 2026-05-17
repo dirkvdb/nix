@@ -13,8 +13,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
-      moonlight-qt
-    ];
+    environment.systemPackages = [ pkgs.moonlight-qt ];
   };
 }
