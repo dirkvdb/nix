@@ -158,6 +158,7 @@
         prusa-slicer.enable = true;
         retro-emulation.enable = true;
         slack.enable = true;
+        fladder.enable = true;
         sops.enable = true;
         spotify.enable = true;
         vscode.enable = true;
