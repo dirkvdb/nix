@@ -129,6 +129,7 @@
       };
 
       apps = {
+        fladder.enable = true;
         moonlight.enable = true;
         neovim.enable = true;
         sops.enable = true;
