@@ -156,36 +156,7 @@ in
     # Required so that WireGuard traffic is not dropped by reverse-path filtering
     networking.firewall.checkReversePath = lib.mkIf cfg.vpn.homeVpn "loose";
 
-    # Set routing domains on non-VPN interfaces so local domain queries
-    # always go to the local DNS server rather than the VPN's DNS.
-    # ~<domain> is more specific than the VPN's catch-all ~. so
-    # systemd-resolved will prefer it.
-    networking.networkmanager.dispatcherScripts = lib.mkIf (cfg.localDomains != [ ]) [
-      {
-        source =
-          let
-            domains = lib.concatMapStringsSep " " (d: "~${d}") cfg.localDomains;
-          in
-          pkgs.writeScript "local-dns-routing" ''
-            #!/bin/sh
-            # On any interface coming up (including VPN), ensure local
-            # routing domains are set on all active wifi/ethernet links.
-            case "$2" in
-              up|dhcp4-change)
-                for dev in $(${pkgs.networkmanager}/bin/nmcli -t -f DEVICE,TYPE device status | grep -E ':(wifi|ethernet)$' | cut -d: -f1); do
-                  ${pkgs.systemd}/bin/resolvectl domain "$dev" ${domains} 2>/dev/null || true
-                done
-                ;;
-            esac
-          '';
-        type = "basic";
-      }
-    ];
-
-    # Install NetworkManager and related packages
     environment.systemPackages = cfg.extraPackages;
-
-    # Add user-friendly network management tools
     programs.nm-applet.enable = lib.mkDefault true;
 
     assertions = [
