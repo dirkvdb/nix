@@ -171,7 +171,6 @@
 
     environment.systemPackages = with pkgs; [
       just
-      unstablePkgs.fladder
     ];
   };
 }

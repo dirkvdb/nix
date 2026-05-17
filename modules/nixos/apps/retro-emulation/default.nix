@@ -72,9 +72,20 @@ in
 {
   options.local.apps.retro-emulation = {
     enable = lib.mkEnableOption "retro emulation stack";
+
+    fladder = {
+      enable = lib.mkEnableOption "Fladder Jellyfin client (also added as ES-DE desktop entry)";
+    };
+
+    moonlight = {
+      enable = lib.mkEnableOption "Moonlight game streaming client (also added as ES-DE desktop entry)";
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    local.apps.retro-emulation.fladder.enable = lib.mkDefault true;
+    local.apps.retro-emulation.moonlight.enable = lib.mkDefault true;
+
     boot.kernelModules = [ "uhid" ];
 
     users.groups.uinput = { };
@@ -87,23 +98,27 @@ in
       KERNEL=="uhid", MODE="0660", GROUP="input"
     '';
 
-    environment.systemPackages = [
-      pkgs.ffmpeg
-      esDe
-      edenWrapped
-      (unstablePkgs.retroarch.withCores (
-        cores: with cores; [
-          snes9x
-          ppsspp
-          dolphin
-          beetle-psx-hw
-        ]
-      ))
-      unstablePkgs.retroarch-joypad-autoconfig
-      unstablePkgs.cemu
-      dolphinEmuWrapped
-      unstablePkgs.ppsspp
-    ];
+    environment.systemPackages =
+      lib.optionals cfg.fladder.enable [
+        unstablePkgs.fladder
+      ]
+      ++ [
+        pkgs.ffmpeg
+        esDe
+        edenWrapped
+        (unstablePkgs.retroarch.withCores (
+          cores: with cores; [
+            snes9x
+            ppsspp
+            dolphin
+            beetle-psx-hw
+          ]
+        ))
+        unstablePkgs.retroarch-joypad-autoconfig
+        unstablePkgs.cemu
+        dolphinEmuWrapped
+        unstablePkgs.ppsspp
+      ];
 
     services.udev.packages = [ edenWrapped ];
   };
