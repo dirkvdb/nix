@@ -173,6 +173,7 @@
 
       home-manager = {
         ghostty.enable = true;
+        teams.enable = true;
 
         keepassxc = {
           enable = true;
