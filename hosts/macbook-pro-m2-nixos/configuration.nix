@@ -145,6 +145,7 @@ in
         mqtt.enable = true;
         foliate.enable = true;
         localsend.enable = true;
+        moonlight.enable = true;
         neovim.enable = true;
         vscode.enable = true;
         zathura.enable = true;
