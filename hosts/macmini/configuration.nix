@@ -124,6 +124,7 @@
         hyprland.enable = false;
         kiosk = {
           enable = true;
+          hideCursor = true;
         };
       };
 
