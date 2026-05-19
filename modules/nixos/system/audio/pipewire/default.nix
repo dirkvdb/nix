@@ -13,6 +13,7 @@ in
 
     airplay = lib.mkOption {
       type = lib.types.bool;
+      default = false;
       description = "Airplay output support";
     };
   };

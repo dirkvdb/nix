@@ -2,7 +2,6 @@
   lib,
   config,
   pkgs,
-  unstablePkgs,
   ...
 }:
 let
@@ -22,9 +21,12 @@ in
     };
 
     sysadmin = lib.mkEnableOption "Sysadmin-focused tooling (bind, killall, usbutils on Linux)";
+
+    dev = lib.mkEnableOption "Developer-focused tooling (devenv, just, lazygit, etc.)";
   };
 
   config = lib.mkIf cfg.enable {
+    local.system.dev.enable = cfg.dev;
     environment.systemPackages =
       with pkgs;
       [
