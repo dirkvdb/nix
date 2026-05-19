@@ -111,6 +111,10 @@ in
     };
   };
 
+  options.local.services.sunshine = {
+    enable = lib.mkEnableOption "Sunshine game streaming";
+  };
+
   options.local.system.network = {
     enable = lib.mkEnableOption "Enable networking";
     firewall = lib.mkOption {
