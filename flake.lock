@@ -347,11 +347,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1778944146,
-        "narHash": "sha256-LAg6VUSceSb79ioa47wQjyFFuDF1f5D0y5oJToQiWyI=",
+        "lastModified": 1779182766,
+        "narHash": "sha256-ObXytXej27SZQ3iVOqcbA2MwlXZIUAP/DNNUAsIjuuw=",
         "owner": "feschber",
         "repo": "lan-mouse",
-        "rev": "1fa3800d3c9012b7e55980b0db72052641752113",
+        "rev": "a9461ae830ea91c5d2bce0c78c405217fd8f91c5",
         "type": "github"
       },
       "original": {
@@ -469,11 +469,11 @@
         "vpn-confinement": "vpn-confinement"
       },
       "locked": {
-        "lastModified": 1779119519,
-        "narHash": "sha256-TadImfUJZHq8dD/sfmQ6p7ktUSu+zb3AcIqk0aqmAcU=",
+        "lastModified": 1779203343,
+        "narHash": "sha256-To4pEn2mjZoVVO0gT0ACl1+pOSiGUxjUAr3q/H17OJs=",
         "owner": "kiriwalawren",
         "repo": "nixflix",
-        "rev": "7b241f4b361c103ed85788648c457257544d643a",
+        "rev": "910b94133872ffb1f0bccd65613630d338ddb5ec",
         "type": "github"
       },
       "original": {
