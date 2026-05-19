@@ -102,9 +102,9 @@
         };
 
         utils = {
-          dev = false;
           sysadmin = true;
         };
+        dev.enable = false;
 
         fonts.enable = true;
       };

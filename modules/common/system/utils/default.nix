@@ -8,15 +8,6 @@
 let
   cfg = config.local.system.utils;
   hasDesktop = config.local.desktop.enable or false;
-  dev = with pkgs; [
-    just
-    lazygit
-    serie
-    binsider
-    nixd # to avoid nixd not found errors in zed
-    unstablePkgs.devenv
-    unstablePkgs.pixi
-  ];
   sysadmin = with pkgs; [
     bind
     killall
@@ -30,7 +21,6 @@ in
       description = "Enable installation of common system utilities.";
     };
 
-    dev = lib.mkEnableOption "Developer-focused tooling (e.g., mise, just)";
     sysadmin = lib.mkEnableOption "Sysadmin-focused tooling (bind, killall, usbutils on Linux)";
   };
 
@@ -51,7 +41,6 @@ in
         wget
         p7zip
       ]
-      ++ lib.optionals cfg.dev dev
       ++ lib.optionals cfg.sysadmin sysadmin
       ++ lib.optionals hasDesktop [
         sublime-merge

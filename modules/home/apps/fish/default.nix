@@ -52,7 +52,6 @@ in
 
       shellAbbrs = {
         cat = "bat";
-        cd = "z";
         gd = "git diff";
         gp = "git pull -r --autostash && git submodule update -r";
         gs = "git status";
@@ -81,24 +80,16 @@ in
         nodenv = "direnv exec / fish --no-config";
       };
 
+      interactiveShellInit = lib.optionalString config.local.system.dev.enable ''
+        # devenv native auto-activation (v2.1+)
+        devenv hook fish | source
+      '';
+
       plugins = [
         {
           name = "fzf";
           src = pkgs.fishPlugins.fzf.src;
         }
-        # {
-        #   # https://github.com/direnv/direnv/issues/443
-        #   # INFO: Using this to get shell completion for programs added to the path through nix+direnv.
-        #   # Issue to upstream into direnv:Add commentMore actions
-        #   #
-        #   name = "completion-sync";
-        #   src = pkgs.fetchFromGitHub {
-        #     owner = "iynaix";
-        #     repo = "fish-completion-sync";
-        #     rev = "4f058ad2986727a5f510e757bc82cbbfca4596f0";
-        #     sha256 = "sha256-kHpdCQdYcpvi9EFM/uZXv93mZqlk1zCi2DRhWaDyK5g=";
-        #   };
-        # }
       ];
     };
   };

@@ -106,9 +106,9 @@ in
         };
 
         utils = {
-          dev = true;
           sysadmin = true;
         };
+        dev.enable = true;
 
         bluetooth.enable = true;
         fonts.enable = true;
