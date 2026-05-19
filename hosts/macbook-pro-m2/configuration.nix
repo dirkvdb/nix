@@ -60,8 +60,8 @@
 
         utils = {
           sysadmin = true;
+          dev = true;
         };
-        dev.enable = true;
       };
 
       home-manager = {

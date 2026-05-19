@@ -109,8 +109,8 @@
 
         utils = {
           sysadmin = true;
+          dev = true;
         };
-        dev.enable = true;
 
         bluetooth = {
           enable = true;
