@@ -176,6 +176,13 @@ in
           "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
           "sunsetr"
           "hyprctl dismissnotify" # Dismiss the plugin loaded notification
+        ]
+        ++ lib.optionals config.local.services.sunshine.enable [
+          # Create the headless SUNSHINE output and (re)start sunshine so it
+          # enumerates the new output and `output_name = 2` resolves to it.
+          # Without the restart, sunshine has already cached the output list
+          # from before this exec-once runs and binds to the wrong monitor.
+          "hyprctl output create headless SUNSHINE && systemctl --user restart sunshine.service"
         ];
         env = [
           # Force all apps to use Wayland
