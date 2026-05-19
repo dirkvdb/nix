@@ -59,9 +59,9 @@
         };
 
         utils = {
-          dev = true;
           sysadmin = true;
         };
+        dev.enable = true;
       };
 
       home-manager = {

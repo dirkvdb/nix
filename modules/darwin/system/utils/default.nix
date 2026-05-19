@@ -7,7 +7,6 @@
 let
   withUtils = config.local.system.utils.enable;
   cfg = config.local.system.utils;
-  dev = [ ];
   sysadmin = [ ];
 in
 {
@@ -17,7 +16,6 @@ in
       [
         btop
       ]
-      ++ lib.optionals cfg.dev dev
       ++ lib.optionals cfg.sysadmin sysadmin;
   };
 }
