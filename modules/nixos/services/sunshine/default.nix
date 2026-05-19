@@ -68,11 +68,8 @@ in
       openFirewall = true;
 
       settings = {
-        fps = 60;
-        min_fps_factor = 1;
-        channels = 2;
         encoder = "vaapi";
-        output_name = 2;
+        output_name = "SUNSHINE";
         origin_web_ui_allowed = "lan";
       };
 
