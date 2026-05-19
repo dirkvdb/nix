@@ -119,21 +119,21 @@ stdenv.mkDerivation (finalAttrs: {
     sed -i '/pkg_check_modules(HTTPLIB QUIET cpp-httplib/a find_package(httplib QUIET)' CMakeLists.txt
 
     # Replace the conditional httplib linking with the CMake imported target in all CMakeLists.txt
-    # files. This covers: lemond (via lemonade-server-core PUBLIC), lemonade-server (legacy-cli
-    # PRIVATE), lemonade CLI (cli PRIVATE), and lemonade-tray (apply_tray_deps function PRIVATE).
+    # files. This covers: lemond (via lemonade-server-core PUBLIC), lemonade CLI (cli PRIVATE),
+    # and lemonade-tray (apply_tray_deps function PRIVATE).
+    # Note: legacy-cli was removed in v10.5.1.
     find . -name CMakeLists.txt -exec sed -i \
       -e 's/PRIVATE cpp-httplib)/PRIVATE httplib::httplib)/g' \
       -e 's/PUBLIC cpp-httplib)/PUBLIC httplib::httplib)/g' \
       {} +
 
-    # Remove the install(CODE) blocks in cli and legacy-cli CMakeLists.txt that create reflexive
-    # /usr/bin symlinks. When postPatch rewrites /usr/bin to ''${CMAKE_INSTALL_PREFIX}/bin the
-    # symlink destination becomes identical to the source, producing a self-referencing symlink
-    # that breaks the Nix noBrokenSymlinks check.
+    # Remove the install(CODE) block in cli/CMakeLists.txt that creates a reflexive /usr/bin
+    # symlink. When postPatch rewrites /usr/bin to ''${CMAKE_INSTALL_PREFIX}/bin the symlink
+    # destination becomes identical to the source, producing a self-referencing symlink that
+    # breaks the Nix noBrokenSymlinks check.
+    # Note: legacy-cli was removed in v10.5.1 so only cli needs patching here.
     sed -i '/# Create symlink in standard bin path only if not installing to \/usr/,/^endif()$/d' \
       src/cpp/cli/CMakeLists.txt
-    sed -i '/# Create symlink in standard bin path only if not installing to \/usr/,/^endif()$/d' \
-      src/cpp/legacy-cli/CMakeLists.txt
 
     # Rewrite remaining hardcoded /usr paths in all CMakeLists.txt files
     find . -name CMakeLists.txt -exec sed -i \
