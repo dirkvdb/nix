@@ -103,7 +103,7 @@ let
         <command label="Suspend ES-DE">%ENABLESHORTCUTS% %EMULATOR_OS-SHELL% %ROM%</command>
         <command label="Keep ES-DE running">%RUNINBACKGROUND% %ENABLESHORTCUTS% %EMULATOR_OS-SHELL% %ROM%</command>
         <platform>${cfg.moonlight.platform}</platform>
-        <theme>moonlight</theme>
+        <theme>switch</theme>
     </system>
   ''
   + ''
