@@ -469,11 +469,11 @@
         "vpn-confinement": "vpn-confinement"
       },
       "locked": {
-        "lastModified": 1779217072,
-        "narHash": "sha256-yq8JLRFOB0NOK76ywW+6/SFeZK1PEKsSzQ8VrLAWS7c=",
+        "lastModified": 1779232708,
+        "narHash": "sha256-lXQ/tXrvaTjeHcHBmjeFeS3Lj2h7IcT4YO5Tib0NS9A=",
         "owner": "kiriwalawren",
         "repo": "nixflix",
-        "rev": "4ccbfd40b9a8d33caee22c3ca37d4b1359071ae7",
+        "rev": "fbf54d749d66e7c45b6e42bf300bccf0a976a0ec",
         "type": "github"
       },
       "original": {
@@ -666,11 +666,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1779018518,
-        "narHash": "sha256-RUmjcuxbaa8UKsd5rUO5bqDe9YxGBDLXd4tFFBi351E=",
+        "lastModified": 1779223791,
+        "narHash": "sha256-xNAn0ugwia62KeaU4cc8BbssFF/revAW4hsU1H6isnc=",
         "owner": "NotAShelf",
         "repo": "nvf",
-        "rev": "cd45295f9c65ca81f323155660ba83d427bd0154",
+        "rev": "7a6c1147446fceba360a1c5c9d1eca5f9f028e64",
         "type": "github"
       },
       "original": {
