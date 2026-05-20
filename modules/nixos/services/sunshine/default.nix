@@ -70,11 +70,29 @@ in
       sunshine-kill-eden
     ];
 
+    # Grant the sunshine user service CAP_SYS_NICE (and nothing else) so it
+    # can request the EGL high-priority GL context without warning:
+    #   "EGL: context priority set to HIGH but CAP_SYS_NICE capability is
+    #    missing"
+    # systemd user services can't be granted capabilities directly, so we
+    # attach them to the binary via `security.wrappers` (file caps) and let
+    # the upstream sunshine module's `capSysAdmin` plumbing point ExecStart
+    # at the wrapped binary in $wrapperDir.
+    security.wrappers.sunshine.capabilities = lib.mkForce "cap_sys_nice+p";
+
     services.sunshine = {
       enable = true;
       autoStart = true;
 
       openFirewall = true;
+
+      # Route the systemd user service through `security.wrappers.sunshine`
+      # so the binary can carry file capabilities. The upstream module only
+      # wires the wrapper into ExecStart when `capSysAdmin = true`, so we
+      # enable it here and then strip back the capability set below to only
+      # what we actually need (CAP_SYS_NICE for the EGL high-priority
+      # context; CAP_SYS_ADMIN isn't required with the wlr capture backend).
+      capSysAdmin = true;
 
       settings = {
         output_name = "SUNSHINE";
