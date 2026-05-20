@@ -116,7 +116,7 @@ in
   config = lib.mkIf cfg.enable (
     mkUserHome (
       lib.optionalAttrs hasAnySystems {
-        xdg.configFile."ES-DE/custom_systems/es_systems.xml".text = customSystemsXml;
+        home.file."ES-DE/custom_systems/es_systems.xml".text = customSystemsXml;
       }
       // {
         xdg.configFile."eden/input/Moonlight.ini".source = ../../../nixos/services/sunshine/Moonlight.ini;

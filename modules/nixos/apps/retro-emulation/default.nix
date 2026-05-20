@@ -136,16 +136,22 @@ in
         esDe
         edenWrapped
         (unstablePkgs.retroarch.withCores (
-          cores: with cores; [
+          cores:
+          with cores;
+          [
             snes9x
-            ppsspp
             dolphin
             beetle-psx-hw
           ]
+          ++ lib.optionals (!pkgs.stdenv.hostPlatform.isAarch64) [
+            ppsspp
+          ]
         ))
         unstablePkgs.retroarch-joypad-autoconfig
-        unstablePkgs.cemu
         dolphinEmuWrapped
+      ]
+      ++ lib.optionals (!pkgs.stdenv.hostPlatform.isAarch64) [
+        unstablePkgs.cemu
         unstablePkgs.ppsspp
       ];
 
