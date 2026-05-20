@@ -39,7 +39,7 @@ let
       pkgs.hyprland
     ];
     text = ''
-      hyprctl dispatch exec "[workspace name:sunshine silent; monitor SUNSHINE] ${unstablePkgs.eden}/bin/eden -f -i Moonlight '/nas/arr/ROMs/switch/The Legend of Zelda Breath of the Wild.nsp'"
+      hyprctl dispatch exec "[workspace name:sunshine silent; monitor SUNSHINE] ${unstablePkgs.eden}/bin/eden -f -input-profile Moonlight '/nas/arr/ROMs/switch/The Legend of Zelda Breath of the Wild.nsp'"
     '';
   };
 
@@ -58,7 +58,7 @@ let
       pkgs.hyprland
     ];
     text = ''
-      hyprctl dispatch exec "[workspace name:sunshine silent; monitor SUNSHINE] ${unstablePkgs.eden}/bin/eden -f -i Moonlight '/nas/arr/ROMs/switch/Bluey the Videogame [01008C2019598000][v0].nsp'"
+      hyprctl dispatch exec "[workspace name:sunshine silent; monitor SUNSHINE] ${unstablePkgs.eden}/bin/eden -f -input-profile Moonlight '/nas/arr/ROMs/switch/Bluey the Videogame [01008C2019598000][v0].nsp'"
     '';
   };
 in

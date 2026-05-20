@@ -133,7 +133,23 @@
         moonlight.enable = true;
         neovim.enable = true;
         sops.enable = true;
-        retro-emulation.enable = true;
+        retro-emulation = {
+          enable = true;
+          moonlight = {
+            sunshineHost = "mini.local";
+            platform = "switch";
+            apps = [
+              {
+                name = "The Legend of Zelda Breath of the Wild";
+                sunshineApp = "Zelda Breath of the Wild";
+              }
+              {
+                name = "Bluey the Videogame";
+                sunshineApp = "Bluey";
+              }
+            ];
+          };
+        };
         steam = {
           enable = true;
           nonSteamGames = [
