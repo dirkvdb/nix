@@ -140,11 +140,11 @@
             platform = "switch";
             apps = [
               {
-                name = "The Legend of Zelda Breath of the Wild";
+                name = "Zelda Breath of the Wild";
                 sunshineApp = "Zelda Breath of the Wild";
               }
               {
-                name = "Bluey the Videogame";
+                name = "Bluey";
                 sunshineApp = "Bluey";
               }
             ];
