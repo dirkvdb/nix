@@ -43,6 +43,14 @@ let
     '';
   };
 
+  sunshine-kill-eden = pkgs.writeShellApplication {
+    name = "sunshine-kill-eden";
+    runtimeInputs = [ pkgs.procps ];
+    text = ''
+      pkill -9 -f '${unstablePkgs.eden}/bin/eden' || true
+    '';
+  };
+
   sunshine-launch-bluey = pkgs.writeShellApplication {
     name = "sunshine-launch-bluey";
     runtimeInputs = [
@@ -59,6 +67,7 @@ in
     environment.systemPackages = [
       sunshine-create-display
       sunshine-remove-display
+      sunshine-kill-eden
     ];
 
     services.sunshine = {
@@ -68,9 +77,12 @@ in
       openFirewall = true;
 
       settings = {
-        encoder = "vaapi";
         output_name = "SUNSHINE";
         origin_web_ui_allowed = "lan";
+        gamepad = "xone";
+        capture = "wlr";
+        encoder = "vaapi";
+        fec_percentage = 5;
       };
 
       applications.apps = [
@@ -107,6 +119,10 @@ in
               do = "${sunshine-create-display}/bin/sunshine-create-display";
               undo = "${sunshine-remove-display}/bin/sunshine-remove-display";
             }
+            {
+              do = "";
+              undo = "${sunshine-kill-eden}/bin/sunshine-kill-eden";
+            }
           ];
           auto-detach = "true";
         }
@@ -118,6 +134,10 @@ in
             {
               do = "${sunshine-create-display}/bin/sunshine-create-display";
               undo = "${sunshine-remove-display}/bin/sunshine-remove-display";
+            }
+            {
+              do = "";
+              undo = "${sunshine-kill-eden}/bin/sunshine-kill-eden";
             }
           ];
           auto-detach = "true";
