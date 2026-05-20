@@ -79,6 +79,35 @@ in
 
     moonlight = {
       enable = lib.mkEnableOption "Moonlight game streaming client (also added as ES-DE desktop entry)";
+      sunshineHost = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "Hostname or IP of the Sunshine server to stream from.";
+      };
+      platform = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = "Platform name used by ES-DE for scraping metadata (e.g. 'switch', 'pc'). Must match a ScreenScraper/TheGamesDB platform identifier.";
+      };
+      apps = lib.mkOption {
+        type = lib.types.listOf (
+          lib.types.submodule {
+            options = {
+              name = lib.mkOption {
+                type = lib.types.str;
+                description = "Display name for the app in ES-DE.";
+              };
+              sunshineApp = lib.mkOption {
+                type = lib.types.str;
+                default = "";
+                description = "Name of the app as registered in Sunshine. Defaults to the display name.";
+              };
+            };
+          }
+        );
+        default = [ ];
+        description = "List of Sunshine apps to make available as a custom ES-DE system.";
+      };
     };
   };
 
