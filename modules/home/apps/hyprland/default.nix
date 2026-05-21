@@ -143,6 +143,14 @@ in
 
       portalPackage = pkgs.xdg-desktop-portal-hyprland;
 
+      # If ~/.config/hypr/monitors.conf exists (written by an external tool such
+      # as nwg-displays), use it instead of the NixOS-configured monitors above.
+      # Because extraConfig is appended after settings, the sourced file's
+      # monitor directives override the inline ones for matching outputs.
+      extraConfig = ''
+        source = ~/.config/hypr/monitors.conf
+      '';
+
       systemd = {
         enable = true;
         variables = [ "--all" ];
