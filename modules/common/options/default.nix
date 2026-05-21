@@ -77,6 +77,41 @@ in
       example = 1.5;
       description = "Global display scale factor (e.g., 1.0 for normal, 1.5 for 150% scaling).";
     };
+
+    monitors = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = [ "HDMI-A-1,preferred,auto-left,1.0" ];
+      description = ''
+        List of Hyprland monitor configuration strings for specific monitors.
+        Each entry follows the format: name,resolution,position,scale
+        A catch-all rule using the global displayScale is always appended automatically.
+      '';
+    };
+
+    workspaces = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      example = [ "9, monitor:HDMI-A-1, default:true, persistent:true" ];
+      description = ''
+        List of additional Hyprland workspace rules for host-specific monitor bindings.
+        Each entry follows Hyprland workspace rule syntax: id, rule1, rule2, ...
+        These are appended to the shared workspace list.
+      '';
+    };
+
+    primaryMonitor = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      example = "DP-3";
+      description = ''
+        Name of the primary monitor connector (e.g. "DP-3").
+        When set, shared workspaces 1-8 are automatically bound to this monitor
+        so they return to it after sleep/wake cycles.
+        When null (default), no monitor binding is added and workspaces roam freely,
+        which is correct for single-monitor setups.
+      '';
+    };
   };
 
   options.local.headless = lib.mkEnableOption "Headless environment (no desktop GUI)";
