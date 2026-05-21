@@ -40,9 +40,6 @@ in
             background-color: @background;
             color: @foreground;
 
-            border: none;
-            border-radius: 0;
-            min-height: 0;
             font-family: "RobotoMono Nerd Font Propo";
             font-weight: 600;
             font-size: 12px;
@@ -60,6 +57,9 @@ in
             all: initial;
             background-color: transparent;
             color: @foreground;
+            border: none;
+            border-radius: 0;
+            min-height: 0;
             padding: 0 6px;
             margin: 0 1.5px;
             min-width: 9px;
@@ -167,6 +167,12 @@ in
         menu menuitem:hover,
         menu menuitem:selected {
             background-color: alpha(@foreground, 0.12);
+        }
+
+        /* Use normal weight in tray menus so Pango <b> markup
+           (e.g. the active network name) is visually distinct. */
+        menu menuitem label {
+            font-weight: 400;
         }
 
         #custom-update {
