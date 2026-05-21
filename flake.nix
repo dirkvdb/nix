@@ -76,6 +76,11 @@
       url = "github:kiriwalawren/nixflix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
+    nmrs-gui = {
+      url = "github:networkmanager-rs/nmrs-gui";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -114,7 +119,8 @@
           in
           legacyPkgs.freeimage;
         es-de = prev.callPackage ./pkgs/es-de { freeimage = final.freeimage-pinned; };
-        nmrs-gui = prev.callPackage ./pkgs/nmrs-gui {
+        nmrs-gui = prev.callPackage "${inputs.nmrs-gui}/package.nix" {
+          # set rustplatform to the nixpkgs version instead of upstreams naersk platform
           rustPlatform =
             (import inputs.nixpkgs-unstable { system = prev.stdenv.hostPlatform.system; }).rustPlatform;
         };
