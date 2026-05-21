@@ -137,7 +137,7 @@ in
   config = {
     stylix = {
       polarity = "dark";
-      image = ./wallpapers/wallpaper-1.jpg;
+      image = ./wallpapers/wallpaper3.jpg;
       base16Scheme = selectedPreset.base16Scheme;
 
       fonts = {
