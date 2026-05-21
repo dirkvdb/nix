@@ -148,37 +148,61 @@ in
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-gpu-usage" ''
+      # Try NVIDIA first
+      if command -v nvidia-smi &>/dev/null; then
+          percent=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1 | tr -d ' ')
+          if [[ -n "$percent" && "$percent" =~ ^[0-9]+$ ]]; then
+              printf '{"text":"%d","tooltip":"GPU %d%%","percentage":%d}' "$percent" "$percent" "$percent"
+              exit 0
+          fi
+      fi
+
+      # Fall back to AMD sysfs
       GPU_BUSY_FILE="/sys/class/drm/card1/device/gpu_busy_percent"
       if [[ -r "$GPU_BUSY_FILE" ]]; then
           percent=$(<"$GPU_BUSY_FILE")
-      else
-          exit 1
+          printf '{"text":"%d","tooltip":"GPU %d%%","percentage":%d}' "$percent" "$percent" "$percent"
+          exit 0
       fi
 
-      printf '{"text":"%d","tooltip":"GPU %d%%","percentage":%d}' $percent $percent $percent
+      exit 1
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-gpu-memory" ''
+      # Try NVIDIA first
+      if command -v nvidia-smi &>/dev/null; then
+          read -r used_mib total_mib < <(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits 2>/dev/null | head -1 | tr -d ' ' | tr ',' ' ')
+          if [[ -n "$used_mib" && "$used_mib" =~ ^[0-9]+$ ]]; then
+              used=$(( used_mib * 10 / 1024 ))
+              total=$(( total_mib * 10 / 1024 ))
+              percentage=$(( used_mib * 100 / total_mib ))
+              awk -v pct="$percentage" -v used="$used" -v total="$total" \
+                'BEGIN {printf "{\"text\":\"%d\",\"tooltip\":\"%.1fGiB / %.1fGiB used\",\"percentage\":%d}", pct, used/10, total/10, pct}'
+              exit 0
+          fi
+      fi
+
+      # Fall back to AMD sysfs
       GPU_PATH="/sys/class/drm/card1/device"
       GPU_TOTAL_MEM="$GPU_PATH/mem_info_vram_total"
       GPU_USED_MEM="$GPU_PATH/mem_info_vram_used"
-      if [[ -r "$GPU_PATH" ]]; then
+      if [[ -r "$GPU_TOTAL_MEM" ]]; then
           total_bytes=$(<"$GPU_TOTAL_MEM")
           used_bytes=$(<"$GPU_USED_MEM")
 
-          # Convert to MiB first to avoid overflow, then calculate GiB * 10 for one decimal
           total_mib=$(( total_bytes / 1024 / 1024 ))
           used_mib=$(( used_bytes / 1024 / 1024 ))
           total=$(( total_mib * 10 / 1024 ))
           used=$(( used_mib * 10 / 1024 ))
 
           percentage=$(( used_bytes * 100 / total_bytes ))
-      else
-          exit 1
+
+          awk -v pct="$percentage" -v used="$used" -v total="$total" \
+            'BEGIN {printf "{\"text\":\"%d\",\"tooltip\":\"%.1fGiB / %.1fGiB used\",\"percentage\":%d}", pct, used/10, total/10, pct}'
+          exit 0
       fi
 
-      awk -v pct="$percentage" -v used="$used" -v total="$total" \
-        'BEGIN {printf "{\"text\":\"%d\",\"tooltip\":\"%.1fGib / %.1fGib used\",\"percentage\":%d}", pct, used/10, total/10, pct}'
+      exit 1
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-cmd-share" ''

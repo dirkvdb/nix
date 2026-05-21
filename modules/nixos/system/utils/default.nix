@@ -7,6 +7,7 @@
 let
   cfg = config.local.system.utils;
   hasAmdVideo = config.local.system.video.amd.enable;
+  hasNvidiaVideo = config.local.system.video.nvidia.enable;
   hasDesktop = config.local.desktop.enable or false;
   supportCpuFreqUtils = pkgs.stdenv.hostPlatform.system == "x86_64-linux";
   sysadmin =
@@ -35,6 +36,9 @@ in
       ]
       ++ lib.optionals hasAmdVideo [
         btop-rocm
+      ]
+      ++ lib.optionals hasNvidiaVideo [
+        nvtopPackages.nvidia
       ];
   };
 }

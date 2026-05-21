@@ -215,7 +215,9 @@ in
 
         # Good compromise for 27" or 32" 4K monitors (but fractional!)
         # env = GDK_SCALE,1.75
-        monitor = ",preferred,auto,${toString (config.local.desktop.displayScale or 1.75)}";
+        monitor = config.local.desktop.monitors ++ [
+          ",preferred,auto,${toString (config.local.desktop.displayScale or 1.75)}"
+        ];
 
         # Variables
         "$activeBorderColor" = "rgb(${lib.strings.removePrefix "#" theme.uiAccentColor})";
@@ -394,16 +396,24 @@ in
           "noanim, selection"
         ];
 
-        workspace = [
-          "1, name:cmd, persistent:true"
-          "2, name:web, persistent:true"
-          "3, name:dev, persistent:true, rounding:false, decorate:false, gapsin:0, gapsout:0"
-          "4, name:scratch, persistent:true"
-          "5, name:scratch, persistent:true"
-          "6, name:vcs, persistent:true"
-          "7, name:chat, persistent:true"
-          "8, name:com, persistent:true"
-        ];
+        workspace =
+          (
+            let
+              pm = config.local.desktop.primaryMonitor;
+              addMonitor = ws: if pm != null then "${ws}, monitor:${pm}" else ws;
+            in
+            [
+              (addMonitor "1, name:cmd, persistent:true")
+              (addMonitor "2, name:web, persistent:true")
+              (addMonitor "3, name:dev, persistent:true, rounding:false, decorate:false, gapsin:1, gapsout:1")
+              (addMonitor "4, name:scratch, persistent:true")
+              (addMonitor "5, name:scratch, persistent:true")
+              (addMonitor "6, name:vcs, persistent:true")
+              (addMonitor "7, name:chat, persistent:true")
+              (addMonitor "8, name:com, persistent:true")
+            ]
+          )
+          ++ config.local.desktop.workspaces;
 
         windowrulev2 = [
           "bordercolor rgb(FFCC66) rgb(DEC186), fullscreen:1"

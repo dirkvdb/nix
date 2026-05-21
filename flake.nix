@@ -255,6 +255,11 @@
           system = "x86_64-linux";
           hostPath = ./hosts/macmini/configuration.nix;
         };
+
+        dell-workstation = mkNixos {
+          system = "x86_64-linux";
+          hostPath = ./hosts/dell-workstation/configuration.nix;
+        };
       };
 
       darwinConfigurations."macbook-pro-osx" = mkDarwin {
