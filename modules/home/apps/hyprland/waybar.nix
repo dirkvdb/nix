@@ -14,6 +14,8 @@ let
   isHeadless = config.local.headless or false;
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
   hasAmdGpu = config.local.system.video.amd.enable;
+  hasNvidiaGpu = config.local.system.video.nvidia.enable;
+  hasGpu = hasAmdGpu || hasNvidiaGpu;
   # Get CPU core count from system config
   cpuCores = config.local.system.cpu.cores;
   # Generate CPU icon placeholders based on core count
@@ -214,7 +216,7 @@ in
             "cpu"
             "memory"
           ]
-          ++ lib.optionals hasAmdGpu [
+          ++ lib.optionals hasGpu [
             "custom/gpuusage"
             "custom/gpumemory"
           ]

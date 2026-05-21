@@ -137,6 +137,10 @@ in
     enable = lib.mkEnableOption "Enable AMD graphics support";
   };
 
+  options.local.system.video.nvidia = {
+    enable = lib.mkEnableOption "Enable NVIDIA graphics support";
+  };
+
   options.local.system.cpu = {
     cores = lib.mkOption {
       type = lib.types.int;

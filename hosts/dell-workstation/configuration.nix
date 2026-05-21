@@ -2,6 +2,7 @@
   pkgs,
   unstablePkgs,
   inputs,
+  config,
   ...
 }:
 {
@@ -11,23 +12,48 @@
     ../../modules/home/import.nix
 
     inputs.stylix.nixosModules.stylix
-    inputs.nixos-hardware.nixosModules.common-cpu-amd
-    inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
-    inputs.nixos-hardware.nixosModules.common-cpu-amd-zenpower
-    inputs.nixos-hardware.nixosModules.common-gpu-amd
-    inputs.nixos-hardware.nixosModules.common-hidpi
+
+    # Intel Tiger Lake CPU + Intel Xe/Iris Xe GPU
+    inputs.nixos-hardware.nixosModules.common-cpu-intel
+    inputs.nixos-hardware.nixosModules.common-gpu-intel
+    # Minimal NVIDIA module: just sets videoDrivers=["nvidia"].
+    # Switch to common-gpu-nvidia (PRIME offload) once Bus IDs are confirmed.
+    inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+    # Generic laptop power/battery modules
+    inputs.nixos-hardware.nixosModules.common-pc-laptop
     inputs.nixos-hardware.nixosModules.common-pc-ssd
   ];
 
   config = {
-    system.stateVersion = "25.05"; # Version at install time, never change
+    system.stateVersion = "25.11"; # Version at install time, never change
 
     stylix = {
       enable = true;
     };
 
-    # Use the latest kernel from unstable (for better AMD CPU support)
     boot.kernelPackages = pkgs.linuxPackages_latest;
+
+    # NVIDIA + Intel PRIME configuration.
+    # common-gpu-nvidia already handles: videoDrivers=["nvidia"], prime.offload.enable,
+    # and the nvidia-offload wrapper command.
+    # Verify Bus IDs on your hardware with: lspci | grep -E 'VGA|3D'
+    # then convert to PCI:bus:device:function notation.
+    hardware.nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = true;
+      # powerManagement.finegrained requires PRIME offload — re-enable with prime block
+      # powerManagement.finegrained = true;
+      open = false; # use proprietary driver (best support for Turing-era hardware)
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+
+      # TODO: fill in after first boot (`lspci | grep -E 'VGA|3D'`), then
+      # switch the import above to common-gpu-nvidia (PRIME offload).
+      # prime = {
+      #   intelBusId = "PCI:0:2:0";
+      #   nvidiaBusId = "PCI:1:0:0";
+      # };
+    };
 
     local = {
       user = {
@@ -40,7 +66,8 @@
       theme.preset = "everforest";
 
       system = {
-        cpu.cores = 20;
+        # Adjust to the actual core count of your CPU
+        cpu.cores = 16;
         binfmt.enable = true;
 
         nix = {
@@ -63,20 +90,11 @@
 
         audio.pipewire = {
           enable = true;
-          airplay = false;
-        };
-
-        video.amd.enable = true;
-        display.brightnesscontrol = {
-          enable = true;
-          i2cDevice = "i2c-13";
         };
 
         network = {
           enable = true;
-          hostname = "mini";
-          wakeOnLan = true;
-          interface = "enp195s0";
+          hostname = "p220248";
 
           networkmanager = {
             enable = true;
@@ -84,7 +102,7 @@
         };
 
         nfs-mounts = {
-          enable = true;
+          enable = false;
           mounts = {
             "/nas/secrets" = {
               device = "nas.local:/volume2/secrets";
@@ -101,9 +119,6 @@
             "/nas/media" = {
               device = "nas.local:/volume1/media";
             };
-            "/nas/arr" = {
-              device = "nas.local:/volume1/arr";
-            };
           };
         };
 
@@ -114,15 +129,16 @@
 
         bluetooth = {
           enable = true;
-          sixaxis = true;
         };
+        video.nvidia.enable = true;
+
         fonts.enable = true;
       };
 
       services = {
         nordvpn = {
           enable = true;
-          localDns = true;
+          localDns = false;
         };
         ssh = {
           enable = true;
@@ -130,46 +146,20 @@
         };
         fwupd.enable = true;
         printing.enable = true;
-        sunshine.enable = true;
         docker.enable = true;
         power-profiles-daemon.enable = true;
       };
 
       desktop = {
         enable = true;
-        displayScale = 1.666667;
+        displayScale = 1.5;
         hyprland.enable = true;
-        monitors = [
-          # Place the Dell secondary monitor to the left of the main LG 4K monitor
-          # "HDMI-A-1,preferred,auto-left,1.0,transform,1"
-          "HDMI-A-1,preferred,auto-left,1.0"
-        ];
-        primaryMonitor = "DP-3";
-        workspaces = [
-          # Bind secondary workspaces to HDMI-A-1 so it is never the main monitor
-          "9, monitor:HDMI-A-1, default:true, persistent:true"
-          "10, monitor:HDMI-A-1, persistent:true"
-        ];
       };
 
       apps = {
         direnv.enable = true;
-        lan-mouse.enable = true;
-        lemonade = {
-          enable = true;
-          llamacppBackend = "rocm";
-          contextSize = 16000;
-          extraModelsDir = /models;
-        };
-        librepods.enable = true;
-        localsend.enable = true;
-        moonlight.enable = true;
-        mqtt.enable = true;
         neovim.enable = true;
-        prusa-slicer.enable = true;
-        retro-emulation.enable = true;
         slack.enable = true;
-        fladder.enable = true;
         sops.enable = true;
         spotify.enable = true;
         vscode.enable = true;
@@ -178,7 +168,7 @@
         zathura.enable = true;
         zed = {
           enable = true;
-          useLatestUpstream = true;
+          useLatestUpstream = false;
         };
       };
 
@@ -189,20 +179,21 @@
         keepassxc = {
           enable = true;
           databasePaths = [
-            "/nas/ssd/secrets/Desktop.kdbx"
+            "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Desktop.kdbx"
           ];
-          keyfilePath = "/nas/secrets/desktop.key";
+          keyfilePath = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/desktop.key";
+
         };
       };
     };
 
     environment.systemPackages = with pkgs; [
+      intel-gpu-tools # intel_gpu_top and related tools
       appimage-run
+      (remmina.override { withKf5Wallet = false; })
       qgis
       gnumeric
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
-      (remmina.override { withKf5Wallet = false; })
-      unstablePkgs.lmstudio
       unstablePkgs.winboat
     ];
   };
