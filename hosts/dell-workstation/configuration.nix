@@ -13,12 +13,11 @@
 
     inputs.stylix.nixosModules.stylix
 
-    # Intel Tiger Lake CPU + Intel Xe/Iris Xe GPU
-    inputs.nixos-hardware.nixosModules.common-cpu-intel
-    inputs.nixos-hardware.nixosModules.common-gpu-intel
-    # Minimal NVIDIA module: just sets videoDrivers=["nvidia"].
-    # Switch to common-gpu-nvidia (PRIME offload) once Bus IDs are confirmed.
-    inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+    # Dell Precision 7670: 12th gen Intel Core HX (Alder Lake) + Intel iGPU.
+    (inputs.nixos-hardware + "/common/cpu/intel/alder-lake")
+    # Precision 7670 dGPU options are NVIDIA RTX A-series mobile GPUs (Ampere).
+    inputs.nixos-hardware.nixosModules.common-gpu-nvidia
+    (inputs.nixos-hardware + "/common/gpu/nvidia/ampere")
     # Generic laptop power/battery modules
     inputs.nixos-hardware.nixosModules.common-pc-laptop
     inputs.nixos-hardware.nixosModules.common-pc-ssd
@@ -33,27 +32,42 @@
 
     boot.kernelPackages = pkgs.linuxPackages_latest;
 
-    # NVIDIA + Intel PRIME configuration.
-    # common-gpu-nvidia already handles: videoDrivers=["nvidia"], prime.offload.enable,
-    # and the nvidia-offload wrapper command.
-    # Verify Bus IDs on your hardware with: lspci | grep -E 'VGA|3D'
-    # then convert to PCI:bus:device:function notation.
+    # NVIDIA + Intel PRIME configuration for the Precision 7670 hybrid graphics
+    # layout. common-gpu-nvidia enables PRIME offload and provides the
+    # `nvidia-offload` wrapper; fine-grained power management lets the dGPU
+    # fully power down when not in use.
     hardware.nvidia = {
       modesetting.enable = true;
-      powerManagement.enable = true;
-      # powerManagement.finegrained requires PRIME offload — re-enable with prime block
-      # powerManagement.finegrained = true;
-      open = false; # use proprietary driver (best support for Turing-era hardware)
+      powerManagement = {
+        enable = true;
+        finegrained = true;
+      };
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
+      dynamicBoost.enable = true;
 
-      # TODO: fill in after first boot (`lspci | grep -E 'VGA|3D'`), then
-      # switch the import above to common-gpu-nvidia (PRIME offload).
-      # prime = {
-      #   intelBusId = "PCI:0:2:0";
-      #   nvidiaBusId = "PCI:1:0:0";
-      # };
+      # Typical Precision 7670 Intel+iGPU / NVIDIA dGPU bus IDs. Verify with:
+      #   lspci | grep -E 'VGA|3D|Display'
+      prime = {
+        intelBusId = "PCI:0:2:0";
+        nvidiaBusId = "PCI:1:0:0";
+      };
     };
+
+    # Improve Gen12 Intel media scheduling and HuC/Guc firmware use.
+    boot.kernelParams = [ "i915.enable_guc=3" ];
+
+    # Dell Precision 7670 units are often configured with Intel VMD/RST for NVMe.
+    # Including vmd keeps the initrd bootable even when the BIOS is left in RAID mode.
+    boot.initrd.availableKernelModules = [ "vmd" ];
+
+    # Dell Precision laptops benefit from firmware thermal controls, especially
+    # under sustained workstation CPU/GPU loads.
+    services.thermald.enable = true;
+
+    # Precision 7670 has Thunderbolt 4 ports; bolt handles secure enrollment and
+    # authorization of docks and external devices.
+    services.hardware.bolt.enable = true;
 
     local = {
       user = {
