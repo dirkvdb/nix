@@ -78,6 +78,7 @@ in
           networkmanager = {
             enable = true;
             vpn.homeVpn = true;
+            wifi.backend = "wpa_supplicant";
           };
         };
 
