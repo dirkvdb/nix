@@ -80,6 +80,29 @@ in
       description = "Enable IPv6 system-wide. Disable to prevent IPv6 leaks when using VPN providers that do not support IPv6.";
     };
 
+    proxy = {
+      pacUrl = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+        description = ''
+          URL of a Proxy Auto-Configuration (PAC) file to apply by default to
+          all NetworkManager connections. Mutually exclusive with `pacFile`.
+          Use a `file://` URL to reference a local file directly.
+        '';
+        example = "http://wpad.example.com/wpad.dat";
+      };
+
+      pacFile = lib.mkOption {
+        type = lib.types.nullOr lib.types.path;
+        default = null;
+        description = ''
+          Path to a local Proxy Auto-Configuration (PAC) file. The file will
+          be installed to `/etc/NetworkManager/proxy.pac` and referenced via
+          a `file://` URL. Mutually exclusive with `pacUrl`.
+        '';
+      };
+    };
+
     localDomains = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
@@ -91,83 +114,102 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    # Disable systemd-networkd when using NetworkManager
-    systemd.network.enable = lib.mkForce false;
-    networking.useNetworkd = lib.mkForce false;
+  config = lib.mkIf cfg.enable (
+    let
+      pacUrl =
+        if cfg.proxy.pacFile != null then "file:///etc/NetworkManager/proxy.pac" else cfg.proxy.pacUrl;
+    in
+    {
+      # Disable systemd-networkd when using NetworkManager
+      systemd.network.enable = lib.mkForce false;
+      networking.useNetworkd = lib.mkForce false;
 
-    users.users.${user.name}.extraGroups = [ "networkmanager" ];
+      users.users.${user.name}.extraGroups = [ "networkmanager" ];
 
-    # Enable NetworkManager
-    networking.networkmanager = {
-      enable = true;
-      wifi = lib.mkIf cfg.wifi.enable {
-        backend = cfg.wifi.backend;
-        powersave = cfg.wifi.powersave;
+      # Enable NetworkManager
+      networking.networkmanager = {
+        enable = true;
+        wifi = lib.mkIf cfg.wifi.enable {
+          backend = cfg.wifi.backend;
+          powersave = cfg.wifi.powersave;
+        };
+        dns = "systemd-resolved";
+        plugins = lib.mkIf cfg.vpn.enable cfg.vpn.plugins;
+        connectionConfig = lib.mkIf (pacUrl != null) {
+          "proxy.method" = "auto";
+          "proxy.pac-url" = pacUrl;
+        };
       };
-      dns = "systemd-resolved";
-      plugins = lib.mkIf cfg.vpn.enable cfg.vpn.plugins;
-    };
 
-    # When NetworkManager uses iwd backend, it manages iwd internally
-    # Do NOT separately enable iwd service as it will conflict
-    # NetworkManager will start iwd automatically when wifi.backend = "iwd"
+      # Install the local PAC file if one was provided.
+      environment.etc = lib.mkIf (cfg.proxy.pacFile != null) {
+        "NetworkManager/proxy.pac".source = cfg.proxy.pacFile;
+      };
 
-    networking.enableIPv6 = cfg.enableIpv6;
+      # When NetworkManager uses iwd backend, it manages iwd internally
+      # Do NOT separately enable iwd service as it will conflict
+      # NetworkManager will start iwd automatically when wifi.backend = "iwd"
 
-    # Import home WireGuard config into NetworkManager so it
-    # appears in nm-applet and can be toggled from the system tray.
-    sops.secrets = lib.mkIf cfg.vpn.homeVpn {
-      "vpn/home.conf" = { };
-    };
+      networking.enableIPv6 = cfg.enableIpv6;
 
-    systemd.services.home-vpn-nm-import = lib.mkIf cfg.vpn.homeVpn {
-      description = "Import home WireGuard config into NetworkManager";
-      after = [
-        "NetworkManager.service"
-        "sops-nix.service"
+      # Import home WireGuard config into NetworkManager so it
+      # appears in nm-applet and can be toggled from the system tray.
+      sops.secrets = lib.mkIf cfg.vpn.homeVpn {
+        "vpn/home.conf" = { };
+      };
+
+      systemd.services.home-vpn-nm-import = lib.mkIf cfg.vpn.homeVpn {
+        description = "Import home WireGuard config into NetworkManager";
+        after = [
+          "NetworkManager.service"
+          "sops-nix.service"
+        ];
+        requires = [ "NetworkManager.service" ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+        };
+        path = [ pkgs.networkmanager ];
+        script =
+          let
+            secretPath = config.sops.secrets."vpn/home.conf".path;
+          in
+          ''
+            # Remove stale profile and re-import from the current secret
+            nmcli connection delete "home" 2>/dev/null || true
+            nmcli connection import type wireguard file ${secretPath}
+            # Rename to a friendly name if needed
+            imported=$(basename "${secretPath}" .conf)
+            if [ "$imported" != "home" ]; then
+              nmcli connection modify "$imported" connection.id "home"
+            fi
+            # Don't auto-connect at boot — toggle from nm-applet instead
+            nmcli connection modify "home" connection.autoconnect no
+            nmcli connection down "home" 2>/dev/null || true
+          '';
+      };
+
+      # Required so that WireGuard traffic is not dropped by reverse-path filtering
+      networking.firewall.checkReversePath = lib.mkIf cfg.vpn.homeVpn "loose";
+
+      environment.systemPackages = cfg.extraPackages;
+      programs.nm-applet.enable = lib.mkDefault true;
+
+      assertions = [
+        {
+          assertion = !(config.local.system.network.ethernet.enable or false) || !cfg.enable;
+          message = "Cannot enable both systemd-networkd ethernet and NetworkManager. Disable local.system.network.ethernet when using NetworkManager.";
+        }
+        {
+          assertion = !(config.local.system.network.wifi.enable or false) || !cfg.enable;
+          message = "Cannot enable both systemd-networkd wifi and NetworkManager. Disable local.system.network.wifi when using NetworkManager.";
+        }
+        {
+          assertion = !(cfg.proxy.pacUrl != null && cfg.proxy.pacFile != null);
+          message = "local.system.network.networkmanager.proxy.pacUrl and proxy.pacFile are mutually exclusive.";
+        }
       ];
-      requires = [ "NetworkManager.service" ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-      };
-      path = [ pkgs.networkmanager ];
-      script =
-        let
-          secretPath = config.sops.secrets."vpn/home.conf".path;
-        in
-        ''
-          # Remove stale profile and re-import from the current secret
-          nmcli connection delete "home" 2>/dev/null || true
-          nmcli connection import type wireguard file ${secretPath}
-          # Rename to a friendly name if needed
-          imported=$(basename "${secretPath}" .conf)
-          if [ "$imported" != "home" ]; then
-            nmcli connection modify "$imported" connection.id "home"
-          fi
-          # Don't auto-connect at boot — toggle from nm-applet instead
-          nmcli connection modify "home" connection.autoconnect no
-          nmcli connection down "home" 2>/dev/null || true
-        '';
-    };
-
-    # Required so that WireGuard traffic is not dropped by reverse-path filtering
-    networking.firewall.checkReversePath = lib.mkIf cfg.vpn.homeVpn "loose";
-
-    environment.systemPackages = cfg.extraPackages;
-    programs.nm-applet.enable = lib.mkDefault true;
-
-    assertions = [
-      {
-        assertion = !(config.local.system.network.ethernet.enable or false) || !cfg.enable;
-        message = "Cannot enable both systemd-networkd ethernet and NetworkManager. Disable local.system.network.ethernet when using NetworkManager.";
-      }
-      {
-        assertion = !(config.local.system.network.wifi.enable or false) || !cfg.enable;
-        message = "Cannot enable both systemd-networkd wifi and NetworkManager. Disable local.system.network.wifi when using NetworkManager.";
-      }
-    ];
-  };
+    }
+  );
 }
