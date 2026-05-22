@@ -191,6 +191,11 @@
         ghostty.enable = true;
         teams.enable = true;
 
+        dropbox = {
+          enable = true;
+          path = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/dropbox";
+        };
+
         keepassxc = {
           enable = true;
           databasePaths = [
