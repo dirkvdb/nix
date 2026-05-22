@@ -9,6 +9,13 @@ in
 {
   options.local.system.nix.nh = {
     enable = lib.mkEnableOption "Enable Nix CLI helper";
+
+    configurationName = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Flake configuration name to pass to nh with --hostname when it differs from the system hostname.";
+      example = "dell-workstation";
+    };
   };
 
   config = lib.mkIf cfg.enable {

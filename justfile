@@ -1,6 +1,8 @@
 # System detection
 
 os_cmd := if os() == "macos" { "darwin" } else { "os" }
+hostname := `hostname`
+system_config := if hostname == "p220248" { "dell-workstation" } else { hostname }
 
 # Default recipe - show available commands
 default:
@@ -10,20 +12,20 @@ default:
 
 # Build the system configuration
 build:
-    nh {{ os_cmd }} build .
+    nh {{ os_cmd }} build . -H {{ system_config }}
 
 # Test the system configuration
 test:
-    nh {{ os_cmd }} test .
+    nh {{ os_cmd }} test . -H {{ system_config }}
     nixcfg-reload
 
 # Switch to the new system configuration
 switch:
-    nh {{ os_cmd }} switch .
+    nh {{ os_cmd }} switch . -H {{ system_config }}
 
 # Set configuration to activate on next boot
 switch_on_boot:
-    nh {{ os_cmd }} boot  .
+    nh {{ os_cmd }} boot . -H {{ system_config }}
 
 # Update flake inputs
 update:
