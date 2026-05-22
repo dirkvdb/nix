@@ -32,6 +32,10 @@ in
           owner = user.name;
         };
 
+        secrets.copilot_github_token = {
+          owner = user.name;
+        };
+
         secrets.mqtt_pass = {
           owner = user.name;
         };

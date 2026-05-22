@@ -15,6 +15,7 @@ let
   # See: https://github.com/hyprwm/hyprland-plugins/issues/438
   isX86 = pkgs.stdenv.isx86_64;
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
+  sopsEnabled = config.local.apps.sops.enable or false;
   mkUserHome = mkHome user.name;
 
   # Directory holding all theme wallpapers. wpaperd will pick & rotate them.
@@ -136,6 +137,9 @@ in
       XDG_SESSION_TYPE = "wayland";
       XDG_CURRENT_DESKTOP = "Hyprland";
       XDG_SESSION_DESKTOP = "Hyprland";
+    }
+    // lib.optionalAttrs sopsEnabled {
+      COPILOT_GITHUB_TOKEN = config.sops.placeholder.copilot_github_token;
     };
 
     wayland.windowManager.hyprland = {

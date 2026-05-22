@@ -42,6 +42,7 @@ in
 
         ${lib.optionalString sopsEnabled ''
           set -gx GITHUB_TOKEN (cat ${config.sops.secrets.github_token.path} | string trim)
+          set -gx COPILOT_GITHUB_TOKEN (cat ${config.sops.secrets.copilot_github_token.path} | string trim)
         ''}
 
         # Enable vi mode
