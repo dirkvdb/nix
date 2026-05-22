@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   unstablePkgs,
   inputs,
@@ -38,6 +39,8 @@
     # fully power down when not in use.
     hardware.nvidia = {
       modesetting.enable = true;
+      # Ampere is supported by NVIDIA's open kernel module.
+      open = true;
       powerManagement = {
         enable = true;
         finegrained = true;
@@ -69,6 +72,11 @@
     # authorization of docks and external devices.
     services.hardware.bolt.enable = true;
 
+    services.udev.extraRules = ''
+      SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:01:00.0", SYMLINK+="dri/nvidia-dgpu"
+      SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:00:02.0", SYMLINK+="dri/intel-igpu"
+    '';
+
     local = {
       user = {
         enable = true;
@@ -86,7 +94,10 @@
 
         nix = {
           unfree.enable = true;
-          nh.enable = true;
+          nh = {
+            enable = true;
+            configurationName = "dell-workstation";
+          };
           ld.enable = true;
           flakes.enable = true;
         };
@@ -193,19 +204,26 @@
 
         dropbox = {
           enable = true;
-          path = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/dropbox";
+          path = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Dropbox";
         };
 
         keepassxc = {
           enable = true;
           databasePaths = [
-            "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Desktop.kdbx"
+            "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Dropbox/Desktop.kdbx"
           ];
-          keyfilePath = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/desktop.key";
+          keyfilePath = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Dropbox/desktop.key";
 
         };
       };
     };
+
+    # Prefer the NVIDIA dGPU for Hyprland rendering on this hybrid Intel+NVIDIA host.
+    # AQ_DRM_DEVICES is colon-separated, so use colon-free udev symlinks instead
+    # of /dev/dri/by-path names such as pci-0000:01:00.0-card.
+    home-manager.users.dirk.wayland.windowManager.hyprland.settings.env = lib.mkAfter [
+      "AQ_DRM_DEVICES,/dev/dri/nvidia-dgpu:/dev/dri/intel-igpu"
+    ];
 
     environment.systemPackages = with pkgs; [
       intel-gpu-tools # intel_gpu_top and related tools

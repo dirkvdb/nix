@@ -10,6 +10,8 @@ let
   sopsEnabled = config.local.apps.sops.enable or false;
   isStandalone = config.local.home-manager.standalone or false;
   configName = config.local.home-manager.configName or user.name;
+  nhConfigurationName = config.local.system.nix.nh.configurationName or null;
+  nhHostArg = lib.optionalString (nhConfigurationName != null) " -H ${nhConfigurationName}";
   mkUserHome = mkHome user.name;
 in
 {
@@ -65,16 +67,16 @@ in
           if isStandalone then
             "nix run home-manager/release-25.11 -- switch -b backup --flake ~/nix#${configName}"
           else if pkgs.stdenv.isDarwin then
-            "nh darwin switch ~/nix"
+            "nh darwin switch ~/nix${nhHostArg}"
           else
-            "nh os switch -j2 ~/nix && nixcfg-reload";
+            "nh os switch -j2 ~/nix${nhHostArg} && nixcfg-reload";
         update =
           if isStandalone then
             "git -C ~/nix pull -r --autostash && nrs"
           else if pkgs.stdenv.isDarwin then
-            "nh darwin switch -j2 --update --commit-lock-file ~/nix"
+            "nh darwin switch -j2 --update --commit-lock-file ~/nix${nhHostArg}"
           else
-            "git -C ~/nix pull -r --autostash && nh os switch -j2 --update --commit-lock-file ~/nix";
+            "git -C ~/nix pull -r --autostash && nh os switch -j2 --update --commit-lock-file ~/nix${nhHostArg}";
         tree = "lsd --tree";
         zed = lib.mkIf (config.local.desktop.enable or false) "zeditor";
         nodenv = "direnv exec / fish --no-config";
