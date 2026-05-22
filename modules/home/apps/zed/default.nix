@@ -98,7 +98,7 @@ in
           nixfmt
           just-formatter
           just-lsp
-          unstablePkgs.codex-acp
+          codex-acp
         ]
       );
 

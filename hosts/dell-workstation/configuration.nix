@@ -89,7 +89,7 @@
 
       system = {
         # Adjust to the actual core count of your CPU
-        cpu.cores = 16;
+        cpu.cores = 24;
         binfmt.enable = true;
 
         nix = {
