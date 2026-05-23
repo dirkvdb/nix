@@ -15,6 +15,7 @@ let
   # See: https://github.com/hyprwm/hyprland-plugins/issues/438
   isX86 = pkgs.stdenv.isx86_64;
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
+  isNvidiaEnabled = config.local.system.video.nvidia.enable or false;
   sopsEnabled = config.local.apps.sops.enable or false;
   mkUserHome = mkHome user.name;
 
@@ -206,6 +207,10 @@ in
           "OZONE_PLATFORM,wayland"
           "XDG_SESSION_TYPE,wayland"
           "XDG_SESSION_DESKTOP,Hyprland"
+        ]
+        ++ lib.optionals isNvidiaEnabled [
+          "LIBVA_DRIVER_NAME,nvidia"
+          "__GLX_VENDOR_LIBRARY_NAME,nvidia"
         ];
 
         xwayland = {

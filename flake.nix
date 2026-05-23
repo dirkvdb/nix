@@ -134,6 +134,16 @@
         nordvpn = prev.callPackage ./pkgs/nordvpn { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
 
+        # Pin Sublime Merge to Build 2125
+        sublime-merge = prev.callPackage (import
+          "${inputs.nixpkgs}/pkgs/applications/version-management/sublime-merge/common.nix"
+          {
+            buildVersion = "2125";
+            aarch64sha256 = "18nwydssnmbzkxg7bp49bf33hnmmjl0zv5sq8l50x4san4libkk6";
+            x64sha256 = "1xs7ap0njcly5y6kppfs6i3xv62wsd0jwjkfa11n2vscfvi6z6fi";
+          }
+        ) { };
+
         # Patch keepassxc to include NativeMessageInstaller.patch
         # This avoids error messages at startup that the browser connection files cannot be written
         # They are readonly because they are managed by the Nix config
