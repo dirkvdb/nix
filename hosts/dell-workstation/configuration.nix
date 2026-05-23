@@ -121,6 +121,10 @@
           enable = true;
           hostname = "p220248";
 
+          proxy = {
+            pacUrl = "http://127.0.0.1:8091/proxy.pac";
+          };
+
           networkmanager = {
             enable = true;
             wifi.backend = "wpa_supplicant";

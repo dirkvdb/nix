@@ -13,6 +13,7 @@ let
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
   isStandalone = config.local.home-manager.standalone or false;
+  proxyPacUrl = config.local.system.network.proxy.pacUrl;
 in
 {
   config = lib.mkIf (!isHeadless) (
@@ -24,6 +25,10 @@ in
 
           extensions = lib.mkIf keepassEnabled [
             "oboonakemofpalcgghocfoadofidjkkk" # keepassxc
+          ];
+
+          commandLineArgs = lib.optionals (proxyPacUrl != null) [
+            "--proxy-pac-url=${proxyPacUrl}"
           ];
 
           # widevine support for DRM content (Netflix, Disney+, Spotify, etc)

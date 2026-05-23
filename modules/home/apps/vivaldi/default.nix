@@ -12,6 +12,7 @@ let
   keepassEnabled = config.local.home-manager.keepassxc.enable;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
+  proxyPacUrl = config.local.system.network.proxy.pacUrl;
 in
 {
   options.local.apps.vivaldi = {
@@ -21,18 +22,25 @@ in
   config = lib.mkIf (cfg.enable && !isHeadless) (
     lib.mkMerge [
       (mkUserHome {
-        xdg.configFile = lib.mkIf (keepassEnabled && isLinux) {
-          "vivaldi/NativeMessagingHosts/org.keepassxc.keepassxc_browser.json".text = builtins.toJSON {
-            allowed_origins = [
-              "chrome-extension://pdffhmdngciaglkoonimfcmckehcpafo/"
-              "chrome-extension://oboonakemofpalcgghocfoadofidjkkk/"
-            ];
-            description = "KeePassXC integration with native messaging support";
-            name = "org.keepassxc.keepassxc_browser";
-            path = "${pkgs.keepassxc}/bin/keepassxc-proxy";
-            type = "stdio";
-          };
-        };
+        xdg.configFile =
+          (lib.optionalAttrs (keepassEnabled && isLinux) {
+            "vivaldi/NativeMessagingHosts/org.keepassxc.keepassxc_browser.json".text = builtins.toJSON {
+              allowed_origins = [
+                "chrome-extension://pdffhmdngciaglkoonimfcmckehcpafo/"
+                "chrome-extension://oboonakemofpalcgghocfoadofidjkkk/"
+              ];
+              description = "KeePassXC integration with native messaging support";
+              name = "org.keepassxc.keepassxc_browser";
+              path = "${pkgs.keepassxc}/bin/keepassxc-proxy";
+              type = "stdio";
+            };
+          })
+          // (lib.optionalAttrs (proxyPacUrl != null) {
+            "vivaldi/Policies/Managed/proxy.json".text = builtins.toJSON {
+              ProxyMode = "pac_script";
+              ProxyPacUrl = proxyPacUrl;
+            };
+          });
 
         home.packages = lib.optionals isLinux (
           with pkgs;
