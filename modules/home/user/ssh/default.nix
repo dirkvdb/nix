@@ -8,13 +8,17 @@
 let
   inherit (config.local) user;
   sopsEnabled = config.local.apps.sops.enable or false;
+  proxyPacUrl = config.local.system.network.proxy.pacUrl;
+  proxyEnabled = proxyPacUrl != null;
   mkUserHome = mkHome user.name;
 in
 {
   config = mkUserHome {
-    home.packages = with pkgs; [
-      websocat
-    ];
+    home.packages =
+      (with pkgs; [
+        websocat
+      ])
+      ++ lib.optionals proxyEnabled [ pkgs.connect ];
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
@@ -44,10 +48,6 @@ in
             ForwardAgent = "yes";
           };
         };
-        vito = {
-          hostname = "192.168.1.43";
-          user = "Vito\\vdboerd";
-        };
         odroid = {
           hostname = "odroid.local";
           user = "dirk";
@@ -71,7 +71,7 @@ in
         cluster = {
           hostname = "develop.marvin.vito.local";
           user = "vdboerd";
-          proxyCommand = "nc -x localhost:1080 -X 5 %h %p";
+          proxyCommand = lib.mkIf proxyEnabled "${pkgs.connect}/bin/connect -S 127.0.0.1:1080 %h %p";
           extraOptions = {
             ForwardAgent = "yes";
             #   remoteCommand = "fish";
@@ -80,7 +80,7 @@ in
         };
         clusterfs = {
           hostname = "develop.marvin.vito.local";
-          proxyCommand = "nc -x localhost:1080 -X 5 %h %p";
+          proxyCommand = lib.mkIf proxyEnabled "${pkgs.connect}/bin/connect -S 127.0.0.1:1080 %h %p";
           user = "vdboerd";
           extraOptions = {
             ForwardAgent = "yes";
