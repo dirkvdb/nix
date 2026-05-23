@@ -12,6 +12,7 @@ let
   isDesktop = config.local.desktop.enable;
   keepassEnabled = config.local.home-manager.keepassxc.enable;
   mkUserHome = mkHome user.name;
+  proxyPacUrl = config.local.system.network.proxy.pacUrl;
 in
 {
   config = lib.mkIf (isLinux && isDesktop) (mkUserHome {
@@ -162,6 +163,10 @@ in
             "font.name.monospace.x-western" = theme.terminalFont;
             "font.size.variable.x-unicode" = theme.uiFontSize + 6;
             "font.size.variable.x-western" = theme.uiFontSize + 6;
+          }
+          // lib.optionalAttrs (proxyPacUrl != null) {
+            "network.proxy.type" = 2;
+            "network.proxy.autoconfig_url" = proxyPacUrl;
           };
           search = {
             force = true;
