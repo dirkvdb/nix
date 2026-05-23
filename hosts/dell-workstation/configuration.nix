@@ -85,6 +85,13 @@
       SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:00:02.0", SYMLINK+="dri/intel-igpu"
     '';
 
+    # Prefer the NVIDIA dGPU for Hyprland rendering on this hybrid Intel+NVIDIA host.
+    # AQ_DRM_DEVICES is colon-separated, so use colon-free udev symlinks instead
+    # of /dev/dri/by-path names such as pci-0000:01:00.0-card.
+    home-manager.users.dirk.wayland.windowManager.hyprland.settings.env = lib.mkAfter [
+      "AQ_DRM_DEVICES,/dev/dri/nvidia-dgpu:/dev/dri/intel-igpu"
+    ];
+
     local = {
       user = {
         enable = true;
@@ -203,13 +210,6 @@
         };
       };
     };
-
-    # Prefer the NVIDIA dGPU for Hyprland rendering on this hybrid Intel+NVIDIA host.
-    # AQ_DRM_DEVICES is colon-separated, so use colon-free udev symlinks instead
-    # of /dev/dri/by-path names such as pci-0000:01:00.0-card.
-    home-manager.users.dirk.wayland.windowManager.hyprland.settings.env = lib.mkAfter [
-      "AQ_DRM_DEVICES,/dev/dri/nvidia-dgpu:/dev/dri/intel-igpu"
-    ];
 
     environment.systemPackages = with pkgs; [
       intel-gpu-tools # intel_gpu_top and related tools
