@@ -121,6 +121,11 @@ in
         [
           sqlitebrowser
           wezterm
+          (writeShellScriptBin "sublime_merge" ''
+            exec env \
+              GDK_BACKEND=wayland \
+              ${sublime-merge}/bin/sublime_merge "$@"
+          '')
         ]
       );
 
