@@ -57,12 +57,6 @@
           hostname = "macbook-pro-osx";
         };
 
-        nix = {
-          unfree.enable = true;
-          nh.enable = true;
-          flakes.enable = true;
-        };
-
         utils = {
           sysadmin = true;
           dev = true;

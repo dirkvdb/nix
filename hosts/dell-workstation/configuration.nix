@@ -93,13 +93,8 @@
         binfmt.enable = true;
 
         nix = {
-          unfree.enable = true;
-          nh = {
-            enable = true;
-            configurationName = "dell-workstation";
-          };
           ld.enable = true;
-          flakes.enable = true;
+          nh.configurationName = "dell-workstation";
         };
 
         boot = {
