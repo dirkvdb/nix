@@ -133,23 +133,7 @@
 
         nfs-mounts = {
           enable = false;
-          mounts = {
-            "/nas/secrets" = {
-              device = "nas.local:/volume2/secrets";
-            };
-            "/nas/ssd" = {
-              device = "nas.local:/volume2/ssd";
-            };
-            "/nas/downloads" = {
-              device = "nas.local:/volume1/downloads";
-            };
-            "/nas/data" = {
-              device = "nas.local:/volume1/data";
-            };
-            "/nas/media" = {
-              device = "nas.local:/volume1/media";
-            };
-          };
+          presets.nas = true;
         };
 
         utils = {
