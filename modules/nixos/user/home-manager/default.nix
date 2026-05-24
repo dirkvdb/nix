@@ -27,10 +27,8 @@ in
           ;
         elephant = inputs.elephant;
         walker = inputs.walker;
-        zen-browser = inputs.zen-browser;
         theme = config.local.theme;
         isDesktop = config.local.desktop.enable or false;
-        sops = config.sops;
       };
       sharedModules = [
         inputs.zen-browser.homeModules.default
