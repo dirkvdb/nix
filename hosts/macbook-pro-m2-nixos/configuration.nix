@@ -49,10 +49,7 @@ in
         binfmt.enable = true;
 
         nix = {
-          unfree.enable = true;
-          nh.enable = true;
           ld.enable = true;
-          flakes.enable = true;
         };
 
         boot = {

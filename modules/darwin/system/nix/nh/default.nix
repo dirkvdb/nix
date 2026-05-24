@@ -9,7 +9,9 @@ let
 in
 {
   options.local.system.nix.nh = {
-    enable = lib.mkEnableOption "Enable Nix CLI helper";
+    enable = lib.mkEnableOption "Enable Nix CLI helper" // {
+      default = true;
+    };
 
     configurationName = lib.mkOption {
       type = lib.types.nullOr lib.types.str;

@@ -4,7 +4,9 @@ let
 in
 {
   options.local.system.nix.unfree = {
-    enable = lib.mkEnableOption "Enable Unfree packages";
+    enable = lib.mkEnableOption "Enable Unfree packages" // {
+      default = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {

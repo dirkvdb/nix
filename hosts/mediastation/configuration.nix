@@ -42,10 +42,7 @@
         cpu.cores = 4;
 
         nix = {
-          unfree.enable = true;
-          nh.enable = true;
           ld.enable = true;
-          flakes.enable = true;
         };
 
         boot = {

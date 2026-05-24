@@ -8,7 +8,9 @@ let
 in
 {
   options.local.system.nix.flakes = {
-    enable = lib.mkEnableOption "Enable Flakes";
+    enable = lib.mkEnableOption "Enable Flakes" // {
+      default = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {
