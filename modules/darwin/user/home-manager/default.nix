@@ -24,7 +24,6 @@ in
           system
           user
           ;
-        zen-browser = inputs.zen-browser;
       };
       sharedModules = [
         inputs.zen-browser.homeModules.default
