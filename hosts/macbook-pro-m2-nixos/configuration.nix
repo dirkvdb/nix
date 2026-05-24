@@ -278,14 +278,6 @@ in
       teams-for-linux
       vulkan-tools
       brightnessctl
-      #asahi-audio # belongs to the workaround below
     ];
-
-    # workaround for audio volume not restoring on reboot (https://github.com/nix-community/nixos-apple-silicon/issues/352)
-    # Only clear pipewire configPackages to prevent the bad 99-asahi.conf from being installed.
-    # Do NOT clear wireplumber.configPackages — asahi-audio DSP profiles must remain there
-    # or wireplumber won't load them and sound will be of poor quality.
-    # See: https://github.com/nix-community/nixos-apple-silicon/issues/442
-    #services.pipewire.configPackages = lib.mkForce [ ];
   };
 }
