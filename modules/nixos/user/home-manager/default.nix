@@ -25,14 +25,11 @@ in
           system
           user
           ;
-        elephant = inputs.elephant;
-        walker = inputs.walker;
-        theme = config.local.theme;
-        isDesktop = config.local.desktop.enable or false;
       };
       sharedModules = [
         inputs.zen-browser.homeModules.default
         inputs.nvf.homeManagerModules.default
+        inputs.walker.homeManagerModules.default
       ];
       users.${user.name}.imports = [
         ./home.nix

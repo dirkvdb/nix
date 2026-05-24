@@ -7,12 +7,12 @@
 }:
 let
   inherit (config.local) user;
-  cfg = config.local.home-manager.skhd;
+  cfg = config.local.apps.skhd;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
 in
 {
-  options.local.home-manager.skhd = {
+  options.local.apps.skhd = {
     enable = lib.mkEnableOption "Hotkey manager";
   };
 

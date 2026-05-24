@@ -101,6 +101,7 @@ in
           enable = true;
           localDns = true;
         };
+        hyprmoncfg.enable = true;
         ssh.enable = true;
         fwupd.enable = true;
         printing.enable = true;
@@ -139,12 +140,8 @@ in
             path = "${user.homeDir}/.config/sops/age/keys.txt";
           };
         };
-      };
-
-      home-manager = {
         ghostty.enable = true;
         teams.enable = true;
-
         keepassxc = {
           enable = true;
           databasePaths = [

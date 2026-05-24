@@ -7,11 +7,11 @@
 }:
 let
   inherit (config.local) user;
-  cfg = config.local.home-manager.teams;
+  cfg = config.local.apps.teams;
   mkUserHome = mkHome user.name;
 in
 {
-  options.local.home-manager.teams = {
+  options.local.apps.teams = {
     enable = lib.mkEnableOption "Teams for Linux";
   };
 

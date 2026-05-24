@@ -35,6 +35,15 @@
         karabiner.enable = true;
         bitwarden.enable = false;
         localsend.enable = true;
+        skhd.enable = true;
+        ghostty.enable = true;
+        keepassxc = {
+          enable = true;
+          databasePaths = [
+            "/Users/dirk/Secrets/Desktop.kdbx"
+          ];
+          keyfilePath = "/Users/dirk/.local/share/desktop.key";
+        };
       };
 
       tools = {
@@ -60,19 +69,6 @@
         };
       };
 
-      home-manager = {
-        skhd.enable = true;
-        ghostty.enable = true;
-
-        keepassxc = {
-          enable = true;
-
-          databasePaths = [
-            "/Users/dirk/Secrets/Desktop.kdbx"
-          ];
-          keyfilePath = "/Users/dirk/.local/share/desktop.key";
-        };
-      };
     };
 
     # Create /etc/zshrc that loads the nix-darwin environment.

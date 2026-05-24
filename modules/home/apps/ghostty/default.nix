@@ -8,12 +8,12 @@
 let
   inherit (config.local) user;
   inherit (config.local) theme;
-  cfg = config.local.home-manager.ghostty;
+  cfg = config.local.apps.ghostty;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
 in
 {
-  options.local.home-manager.ghostty = {
+  options.local.apps.ghostty = {
     enable = lib.mkEnableOption "Ghostty terminal emulator";
   };
 

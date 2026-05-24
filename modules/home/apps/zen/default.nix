@@ -10,7 +10,7 @@ let
   inherit (config.local) theme;
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable;
-  keepassEnabled = config.local.home-manager.keepassxc.enable;
+  keepassEnabled = config.local.apps.keepassxc.enable;
   mkUserHome = mkHome user.name;
   proxyPacUrl = config.local.system.network.proxy.pacUrl;
 in

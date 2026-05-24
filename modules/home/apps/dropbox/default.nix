@@ -6,12 +6,12 @@
 }:
 let
   inherit (config.local) user;
-  cfg = config.local.home-manager.dropbox;
+  cfg = config.local.apps.dropbox;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
 in
 {
-  options.local.home-manager.dropbox = {
+  options.local.apps.dropbox = {
     enable = lib.mkEnableOption "Dropbox file sync";
 
     path = lib.mkOption {
