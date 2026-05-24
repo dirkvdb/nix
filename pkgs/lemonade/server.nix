@@ -169,7 +169,7 @@ stdenv.mkDerivation (finalAttrs: {
     description = "Lemonade LLM server";
     homepage = "https://github.com/${versionInfo.src.owner}/${versionInfo.src.repo}";
     license = lib.licenses.mit;
-    platforms = lib.platforms.all;
+    platforms = lib.platforms.linux;
     mainProgram = "lemonade-server";
   };
 })
