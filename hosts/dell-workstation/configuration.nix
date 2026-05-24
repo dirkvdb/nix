@@ -184,24 +184,18 @@
           enable = true;
           useLatestUpstream = false;
         };
-      };
-
-      home-manager = {
         ghostty.enable = true;
         teams.enable = true;
-
         dropbox = {
           enable = true;
           path = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Dropbox";
         };
-
         keepassxc = {
           enable = true;
           databasePaths = [
             "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Dropbox/Desktop.kdbx"
           ];
           keyfilePath = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Dropbox/desktop.key";
-
         };
       };
     };

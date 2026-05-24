@@ -142,11 +142,7 @@
           ];
         };
         zed.enable = true;
-      };
-
-      home-manager = {
         ghostty.enable = true;
-
         keepassxc = {
           enable = true;
           databasePaths = [

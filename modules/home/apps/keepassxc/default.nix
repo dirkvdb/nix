@@ -7,7 +7,7 @@
 }:
 let
   inherit (config.local) user;
-  cfg = config.local.home-manager.keepassxc;
+  cfg = config.local.apps.keepassxc;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
 
@@ -48,7 +48,7 @@ let
   '';
 in
 {
-  options.local.home-manager.keepassxc = {
+  options.local.apps.keepassxc = {
     enable = lib.mkEnableOption "Keepassxc password/secret manager.";
 
     databasePaths = lib.mkOption {

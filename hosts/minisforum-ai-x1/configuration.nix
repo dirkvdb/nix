@@ -161,12 +161,8 @@
           enable = true;
           useLatestUpstream = true;
         };
-      };
-
-      home-manager = {
         ghostty.enable = true;
         teams.enable = true;
-
         keepassxc = {
           enable = true;
           databasePaths = [

@@ -9,7 +9,7 @@ let
   inherit (config.local) user;
   isLinux = pkgs.stdenv.isLinux;
   cfg = config.local.apps.vivaldi;
-  keepassEnabled = config.local.home-manager.keepassxc.enable;
+  keepassEnabled = config.local.apps.keepassxc.enable;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
   proxyPacUrl = config.local.system.network.proxy.pacUrl;

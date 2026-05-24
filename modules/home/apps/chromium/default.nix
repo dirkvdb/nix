@@ -9,7 +9,7 @@ let
   inherit (config.local) user;
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable;
-  keepassEnabled = config.local.home-manager.keepassxc.enable;
+  keepassEnabled = config.local.apps.keepassxc.enable;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
   isStandalone = config.local.home-manager.standalone or false;
