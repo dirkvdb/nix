@@ -19,7 +19,11 @@ in
         sops
       ];
       sops = {
-        age.keyFile = "/home/${user.name}/.config/sops/age/keys.txt";
+        age.keyFile =
+          if cfg.ageKeyFile.path != null then
+            cfg.ageKeyFile.path
+          else
+            "/home/${user.name}/.config/sops/age/keys.txt";
 
         defaultSopsFile = ./secrets.yaml;
         defaultSopsFormat = "yaml";
