@@ -530,11 +530,11 @@
         "vpn-confinement": "vpn-confinement"
       },
       "locked": {
-        "lastModified": 1779483163,
-        "narHash": "sha256-rlTpDEuu9RjUus7Vl1jfREXj8jDfDjzatczPhKY2mZk=",
+        "lastModified": 1779662462,
+        "narHash": "sha256-bCNJvsjkWfik0C47XFXrrAe8y0muKZphdUBTjTs22bY=",
         "owner": "kiriwalawren",
         "repo": "nixflix",
-        "rev": "119e778540c94d3f035979af1ffdaa163b47c8ec",
+        "rev": "67d988de2279793fb75b27ecfeb2046cea0a4492",
         "type": "github"
       },
       "original": {
@@ -716,11 +716,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1779450037,
-        "narHash": "sha256-SPdOXT2EQiLxkq2Wfh/nOOU07AAF8FXIm4ES3+G++BE=",
+        "lastModified": 1779656408,
+        "narHash": "sha256-L27JK+wKMqIkTWV4Rfh0yGUuRf97rrXYzsDDfO0JvTo=",
         "owner": "networkmanager-rs",
         "repo": "nmrs-gui",
-        "rev": "c2df347ce3524351ef6069077f85fcebc0549ace",
+        "rev": "1fff9a1861c4adca1da75a0fc8cd8c19aa1add08",
         "type": "github"
       },
       "original": {
@@ -1173,11 +1173,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779455631,
-        "narHash": "sha256-svU6Ro4xiMxMA1KJGwQ/nfKwz3yXE/SONCw2Z1qTXHA=",
+        "lastModified": 1779649538,
+        "narHash": "sha256-k256zgHyqJ/0siFdq5y4GSwJyYKhQnW83N9K8S7OMKo=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "5bcdfcef664bf62831dcb4b947004d9c5fbf7201",
+        "rev": "e8fbde26a92a8c078fb1355c9f7c8dba5f7eb9d6",
         "type": "github"
       },
       "original": {
