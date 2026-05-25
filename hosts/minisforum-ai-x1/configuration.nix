@@ -29,6 +29,22 @@
     # Use the latest kernel from unstable (for better AMD CPU support)
     boot.kernelPackages = pkgs.linuxPackages_latest;
 
+    # Raise memlock limit for AMD NPU (required by XRT/FastFlowLM)
+    security.pam.loginLimits = [
+      {
+        domain = "*";
+        type = "soft";
+        item = "memlock";
+        value = "unlimited";
+      }
+      {
+        domain = "*";
+        type = "hard";
+        item = "memlock";
+        value = "unlimited";
+      }
+    ];
+
     local = {
       user = {
         enable = true;
