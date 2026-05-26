@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
     name = "${pname}-${version}-cargo-deps";
     inherit src;
     sourceRoot = "${src.name}/third_party/tokenizers-cpp/rust";
-    hash = "sha256-bhX+fy2atm07ZkP4Y+dMlAFP8i5EwUherSYj+HEmSkA=";
+    hash = "sha256-NQkrX/fyb1fJUcHmgiO/oTn/DVNkpnBFqp1ugDftJT4=";
     postUnpack = ''
       cp ${./Cargo.lock} $sourceRoot/Cargo.lock
     '';
@@ -107,13 +107,9 @@ stdenv.mkDerivation rec {
     mkdir -p "$CARGO_HOME"
 
     mkdir -p ../third_party/tokenizers-cpp/rust/.cargo
-    cat > ../third_party/tokenizers-cpp/rust/.cargo/config.toml <<EOF
-    [source.crates-io]
-    replace-with = "vendored-sources"
-
-    [source.vendored-sources]
-    directory = "$cargoDeps"
-    EOF
+    substitute ${cargoDeps}/.cargo/config.toml \
+      ../third_party/tokenizers-cpp/rust/.cargo/config.toml \
+      --replace-fail "@vendor@" "${cargoDeps}"
   '';
 
   # Wrap the binary to find XRT libraries at runtime

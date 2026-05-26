@@ -123,6 +123,8 @@
         sunshine = prev.callPackage ./pkgs/sunshine { };
         nordvpn = prev.callPackage ./pkgs/nordvpn { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
+        fastflowlm = prev.callPackage ./pkgs/fastflowlm { };
+        xrt = prev.callPackage ./pkgs/xrt { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
 
         # Pin Sublime Merge to Build 2125
