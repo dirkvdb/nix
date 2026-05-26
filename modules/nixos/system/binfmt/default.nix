@@ -10,7 +10,7 @@ let
 
   # Wine with Vulkan and Wayland support enabled
   # Use stagingFull which includes all necessary support libraries
-  wineWithVulkan = pkgs.wineWowPackages.stagingFull.override {
+  wineWithVulkan = pkgs.wineWow64Packages.stagingFull.override {
     vulkanSupport = true;
     waylandSupport = true;
   };
