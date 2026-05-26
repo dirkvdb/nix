@@ -11,9 +11,6 @@ let
   inherit (config.lib.stylix) colors;
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable;
-  # hyprexpo uses x86-only function hooks and doesn't work on ARM
-  # See: https://github.com/hyprwm/hyprland-plugins/issues/438
-  isX86 = pkgs.stdenv.isx86_64;
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
   isNvidiaEnabled = config.local.system.video.nvidia.enable or false;
   sopsEnabled = config.local.apps.sops.enable or false;
