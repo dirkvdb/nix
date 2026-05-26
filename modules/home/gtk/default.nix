@@ -20,6 +20,8 @@ in
     gtk = {
       enable = true;
 
+      gtk4.theme = null; # opt into new default (no legacy gtk.theme inheritance)
+
       # theme = {
       #   name = theme.gtkTheme;
       #   package = theme.gtkThemePackage;

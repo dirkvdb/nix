@@ -191,7 +191,8 @@
       qgis
       gnumeric
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
-      (remmina.override { withKf5Wallet = false; })
+      # fastflowlm
+      remmina
       unstablePkgs.lmstudio
       unstablePkgs.winboat
     ];

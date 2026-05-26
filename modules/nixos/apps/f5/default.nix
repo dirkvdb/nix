@@ -40,7 +40,7 @@ let
       openssl
       zlib
       stdenv.cc.cc.lib
-      xorg.libX11
+      libx11
       xorg.libXext
       xorg.libXrender
       xorg.libXtst
@@ -135,7 +135,7 @@ let
         openssl
         zlib
         stdenv.cc.cc.lib
-        xorg.libX11
+        libx11
         xorg.libXext
         xorg.libXrender
         xorg.libXtst
