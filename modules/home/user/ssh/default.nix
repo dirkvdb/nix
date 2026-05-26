@@ -23,68 +23,56 @@ in
       enable = true;
       enableDefaultConfig = false;
 
-      matchBlocks = {
+      settings = {
         mini = {
-          hostname = "mini.local";
-          user = "dirk";
-          extraOptions = {
-            requestTTY = "true";
-            ForwardAgent = "yes";
-          };
+          HostName = "mini.local";
+          User = "dirk";
+          RequestTTY = "yes";
+          ForwardAgent = true;
         };
         mini-remote = lib.mkIf sopsEnabled {
-          user = "dirk";
-          extraOptions = {
-            ProxyCommand = "websocat -b $(cat ${config.sops.secrets.ssh_websocat_host.path})";
-            ControlMaster = "no";
-            ControlPath = "none";
-            ControlPersist = "no";
-          };
+          User = "dirk";
+          ProxyCommand = "websocat -b $(cat ${config.sops.secrets.ssh_websocat_host.path})";
+          ControlMaster = "no";
+          ControlPath = "none";
+          ControlPersist = "no";
         };
         inky = {
-          hostname = "inky.local";
-          user = "dirk";
-          extraOptions = {
-            ForwardAgent = "yes";
-          };
+          HostName = "inky.local";
+          User = "dirk";
+          ForwardAgent = true;
         };
         odroid = {
-          hostname = "odroid.local";
-          user = "dirk";
+          HostName = "odroid.local";
+          User = "dirk";
         };
         macmini = {
-          hostname = "macmini.local";
-          user = "dirk";
-          extraOptions = {
-            ForwardAgent = "yes";
-          };
+          HostName = "macmini.local";
+          User = "dirk";
+          ForwardAgent = true;
         };
         nas = {
-          hostname = "nas.local";
-          user = "dirk";
-          port = 6987;
-          extraOptions = {
-            requestTTY = "true";
-            SetEnv = "TERM=vt100";
+          HostName = "nas.local";
+          User = "dirk";
+          Port = 6987;
+          RequestTTY = "yes";
+          SetEnv = {
+            TERM = "vt100";
           };
         };
         cluster = {
-          hostname = "develop.marvin.vito.local";
-          user = "vdboerd";
-          proxyCommand = lib.mkIf proxyEnabled "${pkgs.connect}/bin/connect -S 127.0.0.1:1080 %h %p";
-          extraOptions = {
-            ForwardAgent = "yes";
-            #   remoteCommand = "fish";
-            #   requestTTY = "true";
-          };
+          HostName = "develop.marvin.vito.local";
+          User = "vdboerd";
+          ProxyCommand = lib.mkIf proxyEnabled "${pkgs.connect}/bin/connect -S 127.0.0.1:1080 %h %p";
+          ForwardAgent = true;
+          #   RemoteCommand = "fish";
+          #   RequestTTY = "yes";
         };
         clusterfs = {
-          hostname = "develop.marvin.vito.local";
-          proxyCommand = lib.mkIf proxyEnabled "${pkgs.connect}/bin/connect -S 127.0.0.1:1080 %h %p";
-          user = "vdboerd";
-          extraOptions = {
-            ForwardAgent = "yes";
-          };
+          HostName = "develop.marvin.vito.local";
+          ProxyCommand = lib.mkIf proxyEnabled "${pkgs.connect}/bin/connect -S 127.0.0.1:1080 %h %p";
+          User = "vdboerd";
+          ForwardAgent = true;
         };
       };
     };
