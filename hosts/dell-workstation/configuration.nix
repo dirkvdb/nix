@@ -163,6 +163,7 @@
           disablePasswordAuth = true;
         };
         fwupd.enable = true;
+        hyprmoncfg.enable = true;
         printing.enable = true;
         docker.enable = true;
         power-profiles-daemon.enable = true;
