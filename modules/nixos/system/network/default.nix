@@ -47,7 +47,7 @@ in
 
     services.resolved = {
       enable = true;
-      llmnr = "false";
+      settings.Resolve.LLMNR = "false";
       settings.Resolve.MulticastDNS = "yes";
     };
   };

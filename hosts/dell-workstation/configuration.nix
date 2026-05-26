@@ -205,7 +205,7 @@
     environment.systemPackages = with pkgs; [
       intel-gpu-tools # intel_gpu_top and related tools
       appimage-run
-      (remmina.override { withKf5Wallet = false; })
+      remmina
       qgis
       gnumeric
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
