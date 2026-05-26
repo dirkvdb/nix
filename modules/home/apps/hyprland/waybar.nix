@@ -221,6 +221,7 @@ in
             "custom/gpumemory"
           ]
           ++ [
+            "disk"
             "tray"
             "battery"
             "bluetooth"
@@ -311,6 +312,13 @@ in
               "<span color='#e69875'>▇</span>"
               "<span color='#e67e80'>█</span>"
             ];
+            on-click = "xdg-terminal-exec -- btop";
+          };
+
+          disk = {
+            interval = 10;
+            path = "/";
+            format = " {percentage_used}%";
             on-click = "xdg-terminal-exec -- btop";
           };
 
