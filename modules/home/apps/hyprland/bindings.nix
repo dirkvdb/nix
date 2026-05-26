@@ -56,10 +56,6 @@ in
       bindd = [
         "$mod, SPACE, Launch apps, exec, $applauncher"
       ]
-      # Export workspace overview with SUPER + ~ (only on x86_64)
-      ++ lib.optionals isX86 [
-        "$mod, GRAVE, Workspace overview, hyprexpo:expo, toggle"
-      ]
       ++ [
         "$mod ALT, SPACE, Menu, exec, nixcfg-menu"
         "$mod, X, Special workspace, togglespecialworkspace"
