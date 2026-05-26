@@ -32,16 +32,6 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    elephant = {
-      url = "github:abenz1267/elephant";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    walker = {
-      url = "github:abenz1267/walker";
-      inputs.elephant.follows = "elephant";
-    };
-
     apple-silicon = {
       url = "github:tpwrules/nixos-apple-silicon";
       inputs.nixpkgs.follows = "nixpkgs";

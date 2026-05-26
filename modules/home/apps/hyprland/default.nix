@@ -33,7 +33,6 @@ in
     stylix.targets.hyprland.enable = false;
     stylix.targets.wpaperd.image.enable = false;
 
-    xdg.configFile."walker".source = ../../dotfiles/walker;
     xdg.configFile."sunsetr".source = ../../dotfiles/sunsetr;
 
     programs.hyprlock = {
