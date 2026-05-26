@@ -298,7 +298,6 @@ in
 
         # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
         dwindle = {
-          pseudotile = true; # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
           preserve_split = true; # You probably want this
           force_split = 2; # Always split on the right
         };
@@ -400,9 +399,9 @@ in
         };
 
         layerrule = [
-          "noanim, walker"
+          "match:namespace walker, no_anim true"
           # Remove 1px border around hyprshot screenshots
-          "noanim, selection"
+          "match:namespace selection, no_anim true"
         ];
 
         workspace =
@@ -424,68 +423,69 @@ in
           )
           ++ config.local.desktop.workspaces;
 
-        windowrulev2 = [
-          "bordercolor rgb(FFCC66) rgb(DEC186), fullscreen:1"
-          "float, class:^(org\.nmrs\.ui)$"
-          "float, class:^(nordvpn-gui)$"
-          "fullscreen, class:^(Fladder)$"
-          "fullscreenstate 2 2, class:^(Fladder)$"
-          "noborder, class:^(Fladder)$"
-        ];
-
         windowrule = [
           # disable the window opacity
-          "opacity 1 1, class:.*"
+          "match:class .*, opacity 1 1"
           # Floating windows
-          "float, tag:floating-window"
-          "center, tag:floating-window"
-          "size 1024 768, tag:floating-window"
+          "match:tag floating-window, float true"
+          "match:tag floating-window, center true"
+          "match:tag floating-window, size 1024 768"
           # Float LocalSend and fzf file picker
-          "float, class:(Share|localsend)"
-          "center, class:(Share|localsend)"
+          "match:class (Share|localsend), float true"
+          "match:class (Share|localsend), center true"
           # Define terminal tag to style them uniformly
-          "tag +terminal, class:(Alacritty|kitty|com.mitchellh.ghostty)"
-          "float, class:org.gnome.Calculato"
-          "float, class:com.github.finefindus.eyedropper"
-          "tag +floating-window, class:(blueberry.py|io.github.kaii_lb.Overskride|Impala|Wiremix|org.gnome.NautilusPreviewer|com.gabm.satty|About|TUI.float|org.keepassxc.KeePassXC)"
-          "tag +floating-window, class:(xdg-desktop-portal-gtk|sublime_text|DesktopEditors|org.gnome.Nautilus), title:^(Open.*Files?|Open [F|f]older.*|Save.*Files?|Save.*As|Save|All Files)"
+          "match:class (Alacritty|kitty|com.mitchellh.ghostty), tag +terminal"
+          "match:class org.gnome.Calculato, float true"
+          "match:class com.github.finefindus.eyedropper, float true"
+          "match:class (blueberry.py|io.github.kaii_lb.Overskride|Impala|Wiremix|org.gnome.NautilusPreviewer|com.gabm.satty|About|TUI.float|org.keepassxc.KeePassXC), tag +floating-window"
+          "match:class (xdg-desktop-portal-gtk|sublime_text|DesktopEditors|org.gnome.Nautilus), match:title ^(Open.*Files?|Open [F|f]older.*|Save.*Files?|Save.*As|Save|All Files), tag +floating-window"
           # Browser types
-          "tag +chromium-based-browser, class:((google-)?[cC]hrom(e|ium)|[bB]rave-browser|Microsoft-edge|Vivaldi-stable|helium)"
-          "tag +firefox-based-browser, class:([fF]irefox|zen|librewolf)"
+          "match:class ((google-)?[cC]hrom(e|ium)|[bB]rave-browser|Microsoft-edge|Vivaldi-stable|helium), tag +chromium-based-browser"
+          "match:class ([fF]irefox|zen|librewolf), tag +firefox-based-browser"
 
           # Force chromium-based browsers into a tile to deal with --app bug
-          "tile, tag:chromium-based-browser"
+          "match:tag chromium-based-browser, tile true"
 
           # Picture-in-picture overlays
-          "tag +pip, title:(Picture.?in.?[Pp]icture)"
-          "float, tag:pip"
-          "pin, tag:pip"
-          "size 600 338, tag:pip"
-          "keepaspectratio, tag:pip"
-          "noborder, tag:pip"
-          "opacity 1 1, tag:pip"
-          "move 100%-w-40 4%, tag:pip"
+          "match:title (Picture.?in.?[Pp]icture), tag +pip"
+          "match:tag pip, float true"
+          "match:tag pip, pin true"
+          "match:tag pip, size 600 338"
+          "match:tag pip, keep_aspect_ratio true"
+          "match:tag pip, border_size 0"
+          "match:tag pip, opacity 1 1"
+          "match:tag pip, move 100%-w-40 4%"
 
           # No password manager screenshare
-          "noscreenshare, class:^(Bitwarden|org.keepassxc.KeePassXC)$"
+          "match:class ^(Bitwarden|org.keepassxc.KeePassXC)$, no_screen_share true"
 
           # Open browsers on workspace 2 when launched
-          "workspace 2, class:(vivaldi-stable)"
-          "workspace 2, class:(firefox|Firefox|librewolf)"
-          "workspace 2, class:(zen|zen-beta)"
+          "match:class (vivaldi-stable), workspace 2"
+          "match:class (firefox|Firefox|librewolf), workspace 2"
+          "match:class (zen|zen-beta), workspace 2"
 
           # Open Zed editor on workspace 3
-          "workspace 3, class:(dev.zed.Zed)"
+          "match:class (dev.zed.Zed), workspace 3"
           # Open File explorers on workspace 5
-          "workspace 5, class:(org.gnome.Nautilus|thunar)"
+          "match:class (org.gnome.Nautilus|thunar), workspace 5"
 
           # Open Spotify on workspace 9 (web app class is derived from URL by Chromium on Wayland)
-          "workspace 9, class:(Spotify|chrome-open\.spotify\.com__.*)"
+          "match:class (Spotify|chrome-open\.spotify\.com__.*), workspace 9"
 
-          "workspace 6, class:(sublime_merge)"
-          "workspace 7, class:(Slack)"
-          "workspace 8, class:(outlook-for-linux)"
-          "workspace 8, class:(teams-for-linux)"
+          "match:class (sublime_merge), workspace 6"
+          "match:class (Slack), workspace 7"
+          "match:class (outlook-for-linux), workspace 8"
+          "match:class (teams-for-linux), workspace 8"
+
+          # Fullscreen border color indicator
+          "match:fullscreen true, border_color rgb(FFCC66) rgb(DEC186)"
+          # Float specific apps
+          "match:class ^(org\.nmrs\.ui)$, float true"
+          "match:class ^(nordvpn-gui)$, float true"
+          # Fladder media player fullscreen
+          "match:class ^(Fladder)$, fullscreen true"
+          "match:class ^(Fladder)$, fullscreen_state 2 2"
+          "match:class ^(Fladder)$, border_size 0"
         ];
       };
     };

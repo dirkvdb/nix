@@ -97,11 +97,12 @@ in
     # Route .arr queries to the local DNS server instead of the VPN's DNS.
     # Global resolved config uses the system routing table (not a specific link)
     # so packets reach 192.168.1.13 via the physical interface.
-    services.resolved.extraConfig = lib.mkIf cfg.localDns ''
-      [Resolve]
-      DNS=192.168.1.13
-      Domains=~arr
-    '';
+    services.resolved.settings = lib.mkIf cfg.localDns {
+      Resolve = {
+        DNS = "192.168.1.13";
+        Domains = "~arr";
+      };
+    };
 
     # Always enable LAN discovery so local network services remain
     # reachable while the VPN is active.
