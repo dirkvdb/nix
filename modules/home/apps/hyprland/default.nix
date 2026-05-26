@@ -162,10 +162,6 @@ in
 
       plugins = [
         #pkgs.hyprlandPlugins.hyprscrolling
-      ]
-      ++ lib.optionals isX86 [
-        # hyprexpo only works on x86_64 due to function hooking limitations
-        pkgs.hyprlandPlugins.hyprexpo
       ];
 
       settings = {
@@ -257,14 +253,6 @@ in
 
           # Please see https://wiki.hyprland.org/Configuring/Tearing/ before you turn this on
           allow_tearing = false;
-        };
-
-        plugin.hyprexpo = lib.mkIf isX86 {
-          columns = 3;
-          gap_size = 5;
-          bg_col = "rgb(111111)";
-          workspace_method = "center current"; # [center/first] [workspace] e.g. first 1 or center m+1
-          gesture_distance = 300; # how far is the "max" for the gesture
         };
 
         plugin.hyprscrolling = {
