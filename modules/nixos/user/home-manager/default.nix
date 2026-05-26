@@ -29,7 +29,6 @@ in
       sharedModules = [
         inputs.zen-browser.homeModules.default
         inputs.nvf.homeManagerModules.default
-        inputs.walker.homeManagerModules.default
       ];
       users.${user.name}.imports = [
         ./home.nix
