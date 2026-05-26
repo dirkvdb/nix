@@ -17,7 +17,7 @@
   atk,
   openssl,
   wayland,
-  xorg,
+  libx11,
   libayatana-appindicator,
   gst_all_1,
 }:
@@ -89,7 +89,7 @@ rustPlatform.buildRustPackage {
     atk # atk
     openssl # TLS for reqwest
     wayland # wayland-client (for gdkwayland)
-    xorg.libX11 # x11 (for gdkx11)
+    libx11 # x11 (for gdkx11)
     libayatana-appindicator # system tray support (runtime)
     gst_all_1.gstreamer # GStreamer core (needed by WebKitGTK for media)
     gst_all_1.gst-plugins-base # appsink, playback, audio/video converters
