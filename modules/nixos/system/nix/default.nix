@@ -15,7 +15,7 @@ in
   };
 
   environment.systemPackages = with pkgs; [
-    nixfmt
+    nixfmt-rs
     nix-output-monitor
   ];
 
