@@ -187,7 +187,7 @@
         zathura.enable = true;
         zed = {
           enable = true;
-          useLatestUpstream = false;
+          useLatestUpstream = true;
         };
         ghostty.enable = true;
         teams.enable = true;
