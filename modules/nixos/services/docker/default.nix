@@ -29,6 +29,7 @@ in
     environment.systemPackages = with pkgs; [
       lazydocker
       docker-credential-helpers
+      docker-compose
     ];
 
     users.users.${user.name}.extraGroups = [
