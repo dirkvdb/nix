@@ -181,6 +181,10 @@ in
           "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
           "sunsetr"
           "hyprctl dismissnotify" # Dismiss the plugin loaded notification
+          # Sync PRIMARY selection → CLIPBOARD so mouse-selected text is pasteable with Ctrl+V
+          "wl-paste --watch --primary wl-copy"
+          # Keep clipboard contents alive after the source application closes
+          "wl-clip-persist --clipboard both"
         ]
         ++ lib.optionals config.local.services.sunshine.enable [
           # Create the headless SUNSHINE output and (re)start sunshine so it
@@ -457,7 +461,7 @@ in
           "match:class (Spotify|chrome-open\.spotify\.com__.*), workspace 9"
 
           "match:class (sublime_merge), workspace 6"
-          "match:class (Slack), workspace 7"
+          "match:class (slack), workspace 7"
           "match:class (outlook-for-linux), workspace 8"
           "match:class (teams-for-linux), workspace 8"
 
