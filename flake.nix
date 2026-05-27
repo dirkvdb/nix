@@ -83,11 +83,22 @@
       ...
     }@inputs:
     let
+      # Patch devenv fish hook to fix zoxide infinite loop
+      # https://github.com/cachix/devenv/commit/8eff3cd84a4c2a86a02fe706582ae348650e3e76
+      devenvOverlay = final: prev: {
+        devenv = prev.devenv.overrideAttrs (old: {
+          postPatch = (old.postPatch or "") + ''
+            cp ${./pkgs/devenv/hook.fish} devenv/hooks/hook.fish
+          '';
+        });
+      };
+
       # Import unstable for ROCm packages
       unstablePkgs =
         system:
         import inputs.nixpkgs-unstable {
           inherit system;
+          overlays = [ devenvOverlay ];
           config.allowUnfree = true;
         };
 
