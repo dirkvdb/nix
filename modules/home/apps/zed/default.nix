@@ -95,7 +95,7 @@ in
           biome
           tombi
           color-lsp
-          nixfmt
+          nixfmt-rs
           just-formatter
           just-lsp
           codex-acp
