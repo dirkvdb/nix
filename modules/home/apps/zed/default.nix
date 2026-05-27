@@ -12,7 +12,7 @@ let
   inherit (config.local) theme;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
-  zedPinnedVersion = "1.2.6";
+  zedPinnedVersion = "1.3.7";
 
   zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
     version = zedPinnedVersion;
@@ -21,12 +21,12 @@ let
       owner = "zed-industries";
       repo = "zed";
       tag = "v${version}";
-      hash = "sha256-sxjzbmYEZtup8kpKy3+Wdep5GIqa5YNRZFqzoeqrWAM=";
+      hash = "sha256-4wcjSDnSk+G8TYxj5iFNj6JRo9BI8VYufz06wnS0hcM=";
     };
     cargoDeps = unstablePkgs.rustPlatform.fetchCargoVendor {
       inherit src;
       name = "${old.pname}-${version}";
-      hash = "sha256-tJg3uIV/UtAP/S958/1wN/kwLm5P6KZePhF3gWmh1xw=";
+      hash = "sha256-EMszbOV7aKRd3a/wRHAlfZO3TwFsmh+847WP+Sc5sY0=";
       # Match nixpkgs workaround for a broken Cargo.toml in candle-book.
       postBuild = ''
         rm -r $out/git/*/candle-book/
@@ -298,6 +298,13 @@ in
             }
             (lib.mkIf (!pkgs.stdenv.isDarwin) {
               command = "${unstablePkgs.github-copilot-cli}/bin/copilot";
+              default_model = "claude-sonnet-4.6";
+              args = [
+                "--acp"
+                "--stdio"
+                "--allow-all-tools"
+                "--allow-all-urls"
+              ];
             })
           ];
         };
