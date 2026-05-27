@@ -11,12 +11,11 @@
   libdrm,
   libva,
   libxkbcommon,
+  libxcb,
   mesa,
   openssl,
   vulkan-loader,
   wayland,
-  libx11,
-  libxcb,
   zlib,
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
@@ -46,11 +45,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     libdrm
     libva
     libxkbcommon
-    mesa
     openssl
-    vulkan-loader
-    wayland
-    libx11
     libxcb
     zlib
   ];
@@ -80,6 +75,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     install -Dm644 assets/gitcomet-512.png \
       $out/share/icons/hicolor/512x512/apps/gitcomet.png
     wrapProgram $out/bin/gitcomet \
+      --unset DISPLAY \
       --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [
         alsa-lib
         libdrm
@@ -88,7 +84,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
         mesa
         vulkan-loader
         wayland
-        libx11
         libxcb
       ]}"
   '';

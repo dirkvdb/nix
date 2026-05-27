@@ -48,8 +48,7 @@
     # fully power down when not in use.
     hardware.nvidia = {
       modesetting.enable = true;
-      # Ampere is supported by NVIDIA's open kernel module.
-      open = true;
+      open = false;
       powerManagement = {
         enable = true;
         finegrained = true;
@@ -218,6 +217,7 @@
       remmina
       qgis
       gnumeric
+      gitcomet
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
       unstablePkgs.winboat
     ];
