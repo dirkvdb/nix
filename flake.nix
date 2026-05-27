@@ -124,6 +124,7 @@
         nordvpn = prev.callPackage ./pkgs/nordvpn { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         fastflowlm = prev.callPackage ./pkgs/fastflowlm { };
+        gitcomet = prev.callPackage ./pkgs/gitcomet { };
         xrt = prev.callPackage ./pkgs/xrt { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
 
