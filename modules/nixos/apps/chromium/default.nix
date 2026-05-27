@@ -7,7 +7,7 @@
 let
   # `modules/home/*` is also used for standalone home-manager (e.g. HPC Docker).
   # Keep NixOS-only options like `environment.*` out of that evaluation.
-  keepassEnabled = lib.attrByPath [ "local" "home-manager" "keepassxc" "enable" ] false config;
+  keepassEnabled = config.local.apps.keepassxc.enable or false;
   isDesktop = lib.attrByPath [ "local" "desktop" "enable" ] false config;
   isHeadless = lib.attrByPath [ "local" "headless" ] false config;
   isStandalone = lib.attrByPath [ "local" "home-manager" "standalone" ] false config;
