@@ -291,6 +291,15 @@ in
               command = "${unstablePkgs.codex-acp}/bin/codex-acp";
             })
           ];
+
+          copilot = lib.mkMerge [
+            {
+              type = "custom";
+            }
+            (lib.mkIf (!pkgs.stdenv.isDarwin) {
+              command = "${unstablePkgs.github-copilot-cli}/bin/copilot";
+            })
+          ];
         };
       };
 
