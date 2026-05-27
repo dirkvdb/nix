@@ -4,6 +4,7 @@
   fetchFromGitHub,
   pkg-config,
   cmake,
+  makeWrapper,
   alsa-lib,
   fontconfig,
   freetype,
@@ -34,6 +35,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   nativeBuildInputs = [
     cmake
     pkg-config
+    makeWrapper
     rustPlatform.bindgenHook
   ];
 
@@ -77,6 +79,18 @@ rustPlatform.buildRustPackage (finalAttrs: {
       $out/share/applications/gitcomet.desktop
     install -Dm644 assets/gitcomet-512.png \
       $out/share/icons/hicolor/512x512/apps/gitcomet.png
+    wrapProgram $out/bin/gitcomet \
+      --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [
+        alsa-lib
+        libdrm
+        libva
+        libxkbcommon
+        mesa
+        vulkan-loader
+        wayland
+        libx11
+        libxcb
+      ]}"
   '';
 
   meta = {
