@@ -189,6 +189,7 @@
         spotify.enable = true;
         vscode.enable = true;
         whatsapp.enable = true;
+        qgis.enable = true;
         celluloid.enable = true;
         zathura.enable = true;
         zed = {
@@ -215,7 +216,6 @@
       intel-gpu-tools # intel_gpu_top and related tools
       appimage-run
       remmina
-      qgis
       gnumeric
       gitcomet
       rproc

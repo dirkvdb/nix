@@ -168,6 +168,7 @@
         spotify.enable = true;
         vscode.enable = true;
         whatsapp.enable = true;
+        qgis.enable = true;
         celluloid.enable = true;
         zathura.enable = true;
         zed = {
@@ -188,7 +189,6 @@
 
     environment.systemPackages = with pkgs; [
       appimage-run
-      qgis
       gnumeric
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
       fastflowlm
