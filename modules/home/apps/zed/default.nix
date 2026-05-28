@@ -202,6 +202,11 @@ in
           dark = "Ayu Mirage";
         };
         lsp = {
+          nixd = lib.mkIf (!pkgs.stdenv.isDarwin) {
+            binary = {
+              path = "${unstablePkgs.nixd}/bin/nixd";
+            };
+          };
           tombi = lib.mkMerge [
             {
               binary = {
