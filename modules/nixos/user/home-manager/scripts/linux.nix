@@ -524,8 +524,8 @@ in
         *Lock*) nixcfg-lock-screen ;;
         *Screensaver*) nixcfg-launch-screensaver force ;;
         *Suspend*) systemctl suspend ;;
-        *Restart*) systemctl reboot --no-wall ;;
-        *Shutdown*) systemctl poweroff --no-wall ;;
+        *Restart*) hyprshutdown -t "Restarting..." -p "systemctl reboot --no-wall" ;;
+        *Shutdown*) hyprshutdown -t "Shutting down..." -p "systemctl poweroff --no-wall" ;;
         *) back_to show_main_menu ;;
         esac
       }
