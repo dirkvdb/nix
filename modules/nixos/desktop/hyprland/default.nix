@@ -39,6 +39,7 @@ in
       waypaper
       wayfreeze # for screenshots
       hyprland-qt-support
+      hyprshutdown
       wl-clipboard
       wl-clip-persist # Keep clipboard alive after source app closes
     ];
