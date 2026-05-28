@@ -209,13 +209,36 @@
           ];
           keyfilePath = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Dropbox/desktop.key";
         };
+        remmina = {
+          enable = true;
+          connections = {
+            EISSDESK = {
+              name = "EISSDESK";
+              server = "eissdesk.vito.local";
+              drive = "/work/transfer";
+              protocol = "RDP";
+              ignore-tls-errors = 1;
+              proxy_type = "socks5";
+              proxy_hostname = "127.0.0.1";
+              proxy_port = 1080;
+            };
+            VITO = {
+              name = "VITO";
+              server = "vitord2016.vito.local";
+              drive = "/work/transfer";
+              protocol = "RDP";
+              proxy_type = "socks5";
+              proxy_hostname = "127.0.0.1";
+              proxy_port = 1080;
+            };
+          };
+        };
       };
     };
 
     environment.systemPackages = with pkgs; [
       intel-gpu-tools # intel_gpu_top and related tools
       appimage-run
-      remmina
       gnumeric
       gitcomet
       rproc
