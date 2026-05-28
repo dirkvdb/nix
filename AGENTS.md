@@ -18,6 +18,7 @@ just check
 ```
 
 # Guidelines
+When adding new files, also add them to git otherwise the flake will not consider the files
 After making changes to the configuration, verify that the config still builds using `just build`. Never switch to the config.
 
 # Agent skills
