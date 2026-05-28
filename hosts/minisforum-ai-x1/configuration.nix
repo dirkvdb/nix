@@ -192,7 +192,6 @@
       gnumeric
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
       fastflowlm
-      remmina
       unstablePkgs.lmstudio
       unstablePkgs.winboat
     ];
