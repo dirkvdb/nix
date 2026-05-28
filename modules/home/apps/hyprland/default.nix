@@ -462,7 +462,7 @@ in
 
           "match:class (sublime_merge), workspace 6"
           "match:class (slack), workspace 7"
-          "match:class (outlook-for-linux), workspace 8"
+          "match:class (outlook-for-linux|chrome-outlook\\.office365\\.com__.*), workspace 8"
           "match:class (teams-for-linux), workspace 8"
 
           # Fullscreen border color indicator
