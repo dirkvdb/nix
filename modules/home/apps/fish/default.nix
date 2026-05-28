@@ -35,6 +35,13 @@ in
       shellInit = ''
         set -g fish_greeting
 
+        # In TTY (TERM=linux) use a starship config with only glyphs the
+        # console font supports (straight powerline arrows, basic box-drawing).
+        if test "$TERM" = "linux"
+            set -gx STARSHIP_CONFIG "$HOME/.config/starship-tty.toml"
+        end
+
+
         ${lib.optionalString isStandalone ''
           # In standalone home-manager, ensure ~/.nix-profile/bin is in PATH
           fish_add_path --path --prepend ~/.nix-profile/bin
