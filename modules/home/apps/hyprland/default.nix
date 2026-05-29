@@ -150,6 +150,8 @@ in
       # monitor directives override the inline ones for matching outputs.
       extraConfig = ''
         source = ~/.config/hypr/monitors.conf
+        # Apply after monitors.conf so hyprmoncfg cannot override these.
+        workspace = 3, rounding:false, decorate:false, gapsin:0, gapsout:0
       '';
 
       systemd = {
