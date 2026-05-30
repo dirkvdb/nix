@@ -71,6 +71,8 @@
       url = "github:networkmanager-rs/nmrs-gui";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-amd-ai.url = "github:noamsto/nix-amd-ai";
   };
 
   outputs =
@@ -105,12 +107,6 @@
       # Custom packages overlay
       overlay = final: prev: {
         plymouth-theme-nixos = prev.callPackage ./pkgs/plymouth-theme-nixos { };
-        cpp-httplib = prev.callPackage ./pkgs/cpp-httplib {
-          zlib = prev."zlib-ng".override {
-            withZlibCompat = true;
-          };
-        };
-
         freeimage-pinned =
           let
             legacyPkgs = import inputs.nixpkgs-freeimage {
@@ -125,19 +121,12 @@
           rustPlatform =
             (import inputs.nixpkgs-unstable { system = prev.stdenv.hostPlatform.system; }).rustPlatform;
         };
-        lemonade-server = prev.callPackage ./pkgs/lemonade/server.nix {
-          lemonade-web-app-bundle = final.lemonade-web-app-bundle;
-        };
-        lemonade-app = prev.callPackage ./pkgs/lemonade/app.nix { };
-        lemonade-web-app-bundle = prev.callPackage ./pkgs/lemonade/web-app-bundle.nix { };
         decentpaste = prev.callPackage ./pkgs/decentpaste { };
         sunshine = prev.callPackage ./pkgs/sunshine { };
         nordvpn = prev.callPackage ./pkgs/nordvpn { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
-        fastflowlm = prev.callPackage ./pkgs/fastflowlm { };
         gitcomet = prev.callPackage ./pkgs/gitcomet { };
         rproc = prev.callPackage ./pkgs/rproc { };
-        xrt = prev.callPackage ./pkgs/xrt { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
 
         # Pin Sublime Merge to Build 2125
@@ -219,6 +208,7 @@
             nix-index-database.nixosModules.nix-index
             sops-nix.nixosModules.sops
             inputs.nixflix.nixosModules.default
+            inputs.nix-amd-ai.nixosModules.default
             { nixpkgs.hostPlatform = system; }
             { nixpkgs.overlays = [ overlay ] ++ extraOverlays; }
           ]

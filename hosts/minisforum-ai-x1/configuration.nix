@@ -2,6 +2,7 @@
   pkgs,
   unstablePkgs,
   inputs,
+  config,
   ...
 }:
 {
@@ -28,22 +29,6 @@
 
     # Use the latest kernel from unstable (for better AMD CPU support)
     boot.kernelPackages = pkgs.linuxPackages_latest;
-
-    # Raise memlock limit for AMD NPU (required by XRT/FastFlowLM)
-    security.pam.loginLimits = [
-      {
-        domain = "*";
-        type = "soft";
-        item = "memlock";
-        value = "unlimited";
-      }
-      {
-        domain = "*";
-        type = "hard";
-        item = "memlock";
-        value = "unlimited";
-      }
-    ];
 
     local = {
       user = {
@@ -149,12 +134,6 @@
       apps = {
         direnv.enable = true;
         lan-mouse.enable = true;
-        lemonade = {
-          enable = true;
-          llamacppBackend = "rocm";
-          contextSize = 16000;
-          extraModelsDir = /models;
-        };
         librepods.enable = true;
         localsend.enable = true;
         moonlight.enable = true;
@@ -188,12 +167,23 @@
       };
     };
 
+    hardware.amd-npu = {
+      enable = true;
+      enableFastFlowLM = true; # LLM inference on NPU
+      enableLemonade = true; # OpenAI-compatible API server
+      enableROCm = true; # ROCm GPU backends (llamacpp + sd-cpp)
+      enableVulkan = true; # Vulkan GPU backends (llamacpp + whispercpp)
+      enableImageGen = true; # default true; set false to drop sd-cpp from closure
+      lemonade = {
+        user = config.local.user.name;
+        host = "0.0.0.0";
+      };
+    };
+
     environment.systemPackages = with pkgs; [
       appimage-run
       gnumeric
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
-      fastflowlm
-      unstablePkgs.lmstudio
       unstablePkgs.winboat
     ];
   };

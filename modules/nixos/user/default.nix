@@ -41,6 +41,7 @@ in
         "i2c"
         "users"
         "video"
+        "render"
       ];
       shell = user.shell.package;
     };
