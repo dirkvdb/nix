@@ -177,6 +177,7 @@
         };
         ghostty.enable = true;
         teams.enable = true;
+        aichat.enable = true;
         keepassxc = {
           enable = true;
           databasePaths = [
