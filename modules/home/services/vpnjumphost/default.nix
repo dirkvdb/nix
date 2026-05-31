@@ -1,6 +1,6 @@
 # Home-manager module for the VITO VPN jumphost.
 #
-# Provides two systemd user services when local.services.vpnjumphost.enable = true:
+# Provides a systemd user service when local.services.vpnjumphost.enable = true:
 #
 #   vito-vpn.service
 #     ExecStartPre — vito-vpn-cookie-refresh:
@@ -15,10 +15,9 @@
 #     Restart=on-failure — on a network flap the cookie is usually still valid,
 #     so the probe passes quickly and the tunnel reconnects without a browser.
 #
-#   vito-pac-server.service  (opt-in: local.services.vpnjumphost.pac.enable = true)
-#     Serves proxy.pac via miniserve on 127.0.0.1:<pac.port>. Runs independently
-#     of the VPN tunnel so browsers can always reach the PAC file.
-#     Also sets local.system.network.proxy.pacUrl automatically.
+# When local.services.vpnjumphost.pac.enable = true, the PAC file is referenced
+# directly from the Nix store via a file:// URL. No HTTP server is needed.
+# local.system.network.proxy.pacUrl is set automatically.
 #
 # Credentials (username + password) are read from sops secrets at runtime:
 #   /run/secrets/vpnjumphost/username
@@ -117,29 +116,12 @@ let
       ${lib.escapeShellArg cfg.vpnUrl} < "$COOKIE_FILE"
   '';
 
-  # --------------------------------------------------------------------------
-  # PAC server: copy the configured PAC file into a read-only Nix store
-  # directory and serve it with miniserve.
-  # The derivation is only evaluated when pac.enable = true (Nix laziness).
-  # --------------------------------------------------------------------------
-  pacDir = pkgs.runCommandNoCC "vito-pac-dir" { } ''
-    mkdir -p "$out"
-    cp ${cfg.pac.file} "$out/${cfg.pac.fileName}"
-  '';
-
-  pacServerScript = pkgs.writeShellScript "vito-pac-server" ''
-    exec ${pkgs.miniserve}/bin/miniserve \
-      --interfaces ${lib.escapeShellArg cfg.pac.bind} \
-      -p ${toString cfg.pac.port} \
-      ${lib.escapeShellArg (toString pacDir)}
-  '';
-
 in
 {
   options.local.system.network.proxy.pacUrl = lib.mkOption {
     type = lib.types.nullOr lib.types.str;
     default = null;
-    description = "PAC URL derived from the vpnjumphost PAC server. Set automatically when local.services.vpnjumphost.pac.enable is true.";
+    description = "file:// URL pointing to the PAC file in the Nix store. Set automatically when local.services.vpnjumphost.pac.enable is true.";
   };
 
   options.local.services.vpnjumphost = {
@@ -170,40 +152,16 @@ in
     };
 
     pac = {
-      enable = lib.mkEnableOption "loopback PAC HTTP server (miniserve on 127.0.0.1:8091 by default)";
+      enable = lib.mkEnableOption "PAC proxy auto-configuration (sets pacUrl to a file:// store path)";
 
       file = lib.mkOption {
         type = lib.types.path;
         default = ./proxy.pac;
         description = ''
-          Path to the PAC file to serve. Defaults to the bundled proxy.pac.
-          The file is copied into the Nix store at evaluation time and served
-          immutably; changes take effect only after rebuilding and restarting
-          the service.
+          Path to the PAC file. Defaults to the bundled proxy.pac.
+          The file is added to the Nix store at evaluation time; changes
+          take effect after rebuilding.
         '';
-      };
-
-      fileName = lib.mkOption {
-        type = lib.types.str;
-        default = "proxy.pac";
-        description = ''
-          Filename under which the PAC file is served. This is the last path
-          component of the autoproxy URL:
-            http://<bind>:<port>/<fileName>
-          Must match the filename your browser's autoproxy URL points to.
-        '';
-      };
-
-      port = lib.mkOption {
-        type = lib.types.port;
-        default = 8091;
-        description = "Port for the PAC HTTP server.";
-      };
-
-      bind = lib.mkOption {
-        type = lib.types.str;
-        default = "127.0.0.1";
-        description = "Bind address for the PAC HTTP server. Do not expose on a LAN — miniserve has no authentication.";
       };
     };
   };
@@ -211,8 +169,7 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
-        local.system.network.proxy.pacUrl =
-          lib.mkIf cfg.pac.enable "http://${cfg.pac.bind}:${toString cfg.pac.port}/${cfg.pac.fileName}";
+        local.system.network.proxy.pacUrl = lib.mkIf cfg.pac.enable "file://${cfg.pac.file}";
       }
       (mkUserHome {
         systemd.user.services.vito-vpn = {
@@ -262,26 +219,6 @@ in
           };
         };
 
-        systemd.user.services.pac-server = lib.mkIf cfg.pac.enable {
-          Unit = {
-            Description = "VPN jumphost PAC file HTTP server";
-            # Runs independently of the VPN tunnel: browsers can always fetch the
-            # PAC (and thus keep byod.vito.be → DIRECT) even when the VPN is down.
-            After = [ "network-online.target" ];
-            Wants = [ "network-online.target" ];
-          };
-
-          Service = {
-            Type = "simple";
-            ExecStart = "${pacServerScript}";
-            Restart = "on-failure";
-            RestartSec = 3;
-          };
-
-          Install = {
-            WantedBy = [ "graphical-session.target" ];
-          };
-        };
       })
     ]
   );
