@@ -47,6 +47,14 @@ in
         secrets.ssh_websocat_host = {
           owner = user.name;
         };
+
+        secrets."vpnjumphost/username" = {
+          owner = user.name;
+        };
+
+        secrets."vpnjumphost/password" = {
+          owner = user.name;
+        };
       };
     }
   );
