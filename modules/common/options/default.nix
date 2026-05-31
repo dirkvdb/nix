@@ -167,14 +167,6 @@ in
       description = "Device hostname";
     };
 
-    proxy = {
-      pacUrl = lib.mkOption {
-        type = lib.types.nullOr lib.types.str;
-        default = null;
-        example = "https://proxy.example.com/proxy.pac";
-        description = "Proxy auto-config (PAC) URL used by browsers when set.";
-      };
-    };
   };
 
 }
