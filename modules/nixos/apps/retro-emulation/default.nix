@@ -11,16 +11,6 @@ let
   esDe = pkgs.es-de;
 
   eden = unstablePkgs.eden.overrideAttrs (old: {
-    version = "0.2.0-rc2";
-    src = old.src.override {
-      tag = "v0.2.0-rc2";
-      hash = "sha256-keLkB5qeQch+tM2J6zVh9oQGhP5TuxItqrZRN24apJw=";
-    };
-    # Drop the aarch64-disable-fastmem patch - it no longer applies to 0.2.0-rc2
-    # and is irrelevant on x86_64 anyway
-    patches = [ ];
-    # 0.2.0-rc2 added a dependency on Qt6Charts
-    buildInputs = old.buildInputs ++ [ unstablePkgs.qt6.qtcharts ];
     # Build with -march=native for maximum performance on this machine
     NIX_CFLAGS_COMPILE = (old.NIX_CFLAGS_COMPILE or "") + " -march=native";
   });
