@@ -156,10 +156,6 @@
       };
 
       services = {
-        nordvpn = {
-          enable = true;
-          localDns = false;
-        };
         ssh = {
           enable = true;
           disablePasswordAuth = true;
