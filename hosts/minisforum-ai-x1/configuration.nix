@@ -133,7 +133,7 @@
 
       apps = {
         direnv.enable = true;
-        lan-mouse.enable = true;
+
         librepods.enable = true;
         localsend.enable = true;
         moonlight.enable = true;
