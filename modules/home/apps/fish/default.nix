@@ -37,8 +37,12 @@ in
 
         # In TTY (TERM=linux) use a starship config with only glyphs the
         # console font supports (straight powerline arrows, basic box-drawing).
+        # Otherwise, ensure any inherited/stale STARSHIP_CONFIG is cleared so
+        # the default starship config is used.
         if test "$TERM" = "linux"
             set -gx STARSHIP_CONFIG "$HOME/.config/starship-tty.toml"
+        else
+            set -e STARSHIP_CONFIG
         end
 
 
