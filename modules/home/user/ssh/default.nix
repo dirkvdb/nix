@@ -8,6 +8,7 @@
 let
   inherit (config.local) user;
   sopsEnabled = config.local.apps.sops.enable or false;
+  winboatEnabled = config.local.apps.winboat.enable or false;
   proxyPacUrl = config.local.system.network.proxy.pacUrl;
   proxyEnabled = proxyPacUrl != null;
   mkUserHome = mkHome user.name;
@@ -36,6 +37,13 @@ in
           ControlMaster = "no";
           ControlPath = "none";
           ControlPersist = "no";
+        };
+        winboat = lib.mkIf winboatEnabled {
+          HostName = "127.0.0.1";
+          User = "dirk";
+          Port = 2222;
+          RequestTTY = "yes";
+          ForwardAgent = true;
         };
         inky = {
           HostName = "inky.local";

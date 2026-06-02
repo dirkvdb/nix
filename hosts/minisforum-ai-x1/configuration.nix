@@ -156,6 +156,7 @@
         };
         ghostty.enable = true;
         teams.enable = true;
+        winboat.enable = true;
         aichat.enable = true;
         keepassxc = {
           enable = true;
@@ -184,7 +185,6 @@
       appimage-run
       gnumeric
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
-      unstablePkgs.winboat
     ];
   };
 }
