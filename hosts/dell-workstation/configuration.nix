@@ -198,6 +198,7 @@
         };
         ghostty.enable = true;
         teams.enable = true;
+        winboat.enable = true;
         dropbox = {
           enable = true;
           path = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Dropbox";
@@ -243,7 +244,6 @@
       gitcomet
       rproc
       teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
-      unstablePkgs.winboat
     ];
   };
 }
