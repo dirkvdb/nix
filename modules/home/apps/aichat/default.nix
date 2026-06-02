@@ -7,7 +7,9 @@
 let
   inherit (config.local) user;
   cfg = config.local.apps.aichat;
-  lemonade = config.local.apps.lemonade;
+  npuCfg = config.hardware.amd-npu or { };
+  lemonadeEnabled = (npuCfg.enable or false) && (npuCfg.enableLemonade or false);
+  lemonadePort = (npuCfg.lemonade or { }).port or 13305;
   sopsEnabled = config.local.apps.sops.enable or false;
   mkUserHome = mkHome user.name;
 in
@@ -39,10 +41,10 @@ in
       settings = {
         model = "github:gpt-5";
         clients =
-          lib.optional lemonade.enable {
+          lib.optional lemonadeEnabled {
             type = "openai-compatible";
             name = "lemonade";
-            api_base = "http://localhost:${toString lemonade.port}/api/v0";
+            api_base = "http://localhost:${toString lemonadePort}/api/v0";
             models = cfg.lemonade.models;
           }
           ++ lib.optional sopsEnabled {

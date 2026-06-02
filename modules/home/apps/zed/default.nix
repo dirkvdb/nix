@@ -8,6 +8,9 @@
 }:
 let
   cfg = config.local.apps.zed;
+  npuCfg = config.hardware.amd-npu or { };
+  lemonadeEnabled = (npuCfg.enable or false) && (npuCfg.enableLemonade or false);
+  lemonadePort = (npuCfg.lemonade or { }).port or 13305;
   inherit (config.local) user;
   inherit (config.local) theme;
   mkUserHome = mkHome user.name;
@@ -52,6 +55,25 @@ in
       type = lib.types.bool;
       default = false;
       description = "Use the pinned upstream Zed version when newer than unstable.";
+    };
+
+    localModels = lib.mkEnableOption "local model providers in Zed (e.g. lemonade)";
+
+    lemonade.models = lib.mkOption {
+      type = lib.types.listOf lib.types.attrs;
+      default = [
+        {
+          name = "gemma4-it-e4b-FLM";
+          display_name = "Gemma 4 IT e4b (FLM)";
+          max_tokens = 100000;
+        }
+        {
+          name = "qwen3.5-9b-FLM";
+          display_name = "Qwen 3.5 9B (FLM)";
+          max_tokens = 100000;
+        }
+      ];
+      description = "Models to expose from the local lemonade server in Zed.";
     };
   };
 
@@ -102,218 +124,230 @@ in
         ]
       );
 
-      userSettings = {
-        vim_mode = true;
-        vim = {
-          highlight_on_yank_duration = 500;
-        };
-        relative_line_numbers = "enabled";
-        autosave = "on_focus_change";
-        colorize_brackets = true;
-        scroll_sensitivity = 3.0;
-
-        ui_font_size = 13.0;
-        ui_font_family = "RobotoMono Nerd Font Propo";
-        ui_font_features = {
-          calt = 0;
-        };
-
-        icon_theme = {
-          mode = "light";
-          light = "Catppuccin Mocha";
-          dark = "Catppuccin Mocha";
-        };
-
-        title_bar = {
-          show_branch_status_icon = true;
-        };
-
-        collaboration_panel = {
-          dock = "left";
-        };
-
-        git_panel = {
-          dock = "left";
-        };
-
-        agent = {
-          dock = "right";
-          sidebar_side = "right";
-          use_modifier_to_send = false;
-          default_profile = "write";
-          play_sound_when_agent_done = "always";
-          inline_assistant_model = {
-            provider = "copilot_chat";
-            model = "claude-sonnet-4.6";
-          };
-          tool_permissions = {
-            default = "allow";
-          };
-          default_model = {
-            provider = "copilot_chat";
-            model = "claude-opus-4.6";
-          };
-        };
-        edit_predictions = {
-          provider = "copilot";
-        };
-        git = {
-          inline_blame = {
-            enabled = false;
-          };
-        };
-        gutter = {
-          folds = false;
-          min_line_number_digits = 3;
-        };
-        project_panel = {
-          dock = "left";
-          hide_gitignore = true;
-          entry_spacing = "standard";
-          indent_size = 13;
-          indent_guides = {
-            show = "always";
-          };
-        };
-        telemetry = {
-          metrics = false;
-        };
-        buffer_font_family = theme.codeFont;
-        buffer_font_weight = 400.0;
-        buffer_font_size = theme.codeFontSize;
-        buffer_font_features = {
-          liga = true;
-        };
-        tab_bar = {
-          show_nav_history_buttons = false;
-        };
-        outline_panel = {
-          dock = "right";
-        };
-        terminal = {
-          dock = "bottom";
-          font_size = theme.terminalFontSize + 1;
-          line_height = "standard";
-          font_family = theme.terminalFont;
-        };
-        theme = {
-          mode = "system";
-          light = "Ayu Light";
-          dark = "Ayu Mirage";
-        };
-        lsp = {
-          nixd = lib.mkIf (!pkgs.stdenv.isDarwin) {
-            binary = {
-              path = "${unstablePkgs.nixd}/bin/nixd";
+      userSettings = lib.mkMerge [
+        (lib.mkIf (cfg.localModels && lemonadeEnabled) {
+          language_models = {
+            openai_compatible = {
+              lemonade = {
+                api_url = "http://localhost:${toString lemonadePort}/api/v0";
+                available_models = cfg.lemonade.models;
+              };
             };
           };
-          tombi = lib.mkMerge [
-            {
+        })
+        {
+          vim_mode = true;
+          vim = {
+            highlight_on_yank_duration = 500;
+          };
+          relative_line_numbers = "enabled";
+          autosave = "on_focus_change";
+          colorize_brackets = true;
+          scroll_sensitivity = 3.0;
+
+          ui_font_size = 13.0;
+          ui_font_family = "RobotoMono Nerd Font Propo";
+          ui_font_features = {
+            calt = 0;
+          };
+
+          icon_theme = {
+            mode = "light";
+            light = "Catppuccin Mocha";
+            dark = "Catppuccin Mocha";
+          };
+
+          title_bar = {
+            show_branch_status_icon = true;
+          };
+
+          collaboration_panel = {
+            dock = "left";
+          };
+
+          git_panel = {
+            dock = "left";
+          };
+
+          agent = {
+            dock = "right";
+            sidebar_side = "right";
+            use_modifier_to_send = false;
+            default_profile = "write";
+            play_sound_when_agent_done = "always";
+            inline_assistant_model = {
+              provider = "copilot_chat";
+              model = "claude-sonnet-4.6";
+            };
+            tool_permissions = {
+              default = "allow";
+            };
+            default_model = {
+              provider = "copilot_chat";
+              model = "claude-opus-4.6";
+            };
+          };
+          edit_predictions = {
+            provider = "copilot";
+          };
+          git = {
+            inline_blame = {
+              enabled = false;
+            };
+          };
+          gutter = {
+            folds = false;
+            min_line_number_digits = 3;
+          };
+          project_panel = {
+            dock = "left";
+            hide_gitignore = true;
+            entry_spacing = "standard";
+            indent_size = 13;
+            indent_guides = {
+              show = "always";
+            };
+          };
+          telemetry = {
+            metrics = false;
+          };
+          buffer_font_family = theme.codeFont;
+          buffer_font_weight = 400.0;
+          buffer_font_size = theme.codeFontSize;
+          buffer_font_features = {
+            liga = true;
+          };
+          tab_bar = {
+            show_nav_history_buttons = false;
+          };
+          outline_panel = {
+            dock = "right";
+          };
+          terminal = {
+            dock = "bottom";
+            font_size = theme.terminalFontSize + 1;
+            line_height = "standard";
+            font_family = theme.terminalFont;
+          };
+          theme = {
+            mode = "system";
+            light = "Ayu Light";
+            dark = "Ayu Mirage";
+          };
+          lsp = {
+            nixd = lib.mkIf (!pkgs.stdenv.isDarwin) {
               binary = {
-                arguments = [
-                  "lsp"
-                  "-v"
-                ];
-                env = {
-                  NO_COLOR = "true";
+                path = "${unstablePkgs.nixd}/bin/nixd";
+              };
+            };
+            tombi = lib.mkMerge [
+              {
+                binary = {
+                  arguments = [
+                    "lsp"
+                    "-v"
+                  ];
+                  env = {
+                    NO_COLOR = "true";
+                  };
+                };
+              }
+              (lib.mkIf (!pkgs.stdenv.isDarwin) {
+                binary = {
+                  path = "${unstablePkgs.tombi}/bin/tombi";
+                };
+              })
+            ];
+          };
+          languages = {
+            Python = {
+              language_servers = [
+                "!basedpyright"
+                "!pyright"
+                "ty"
+                "ruff"
+              ];
+            };
+            Nix = {
+              language_servers = [
+                "!nil"
+                "nixd"
+              ];
+              formatter = {
+                external = {
+                  command = "nixfmt";
                 };
               };
-            }
-            (lib.mkIf (!pkgs.stdenv.isDarwin) {
-              binary = {
-                path = "${unstablePkgs.tombi}/bin/tombi";
+            };
+            TOML = {
+              formatter = {
+                language_server = {
+                  name = "tombi";
+                };
               };
-            })
-          ];
-        };
-        languages = {
-          Python = {
-            language_servers = [
-              "!basedpyright"
-              "!pyright"
-              "ty"
-              "ruff"
+            };
+          };
+          diagnostics = {
+            inline = {
+              enabled = true;
+            };
+          };
+          profiles = {
+            laptop = {
+              settings = {
+                buffer_font_size = 14;
+                ui_font_size = 14;
+              };
+              terminal = pkgs.lib.mkIf pkgs.stdenv.isDarwin {
+                shell = {
+                  program = "nu";
+                };
+                env = {
+                  XDG_CONFIG_HOME = "/Users/dirk/.config";
+                };
+              };
+            };
+            presentation = {
+              settings = {
+                buffer_font_size = 20;
+                ui_font_size = 18;
+              };
+            };
+          };
+
+          agent_servers = {
+            codex-nix = lib.mkMerge [
+              {
+                type = "custom";
+                default_model = "gpt-5.3-codex";
+                default_config_options = {
+                  mode = "full-access";
+                  reasoning_effort = "high";
+                };
+              }
+              (lib.mkIf (!pkgs.stdenv.isDarwin) {
+                command = "${unstablePkgs.codex-acp}/bin/codex-acp";
+              })
+            ];
+
+            copilot = lib.mkMerge [
+              {
+                type = "custom";
+              }
+              (lib.mkIf (!pkgs.stdenv.isDarwin) {
+                command = "${unstablePkgs.github-copilot-cli}/bin/copilot";
+                default_model = "claude-sonnet-4.6";
+                args = [
+                  "--acp"
+                  "--stdio"
+                  "--allow-all-tools"
+                  "--allow-all-urls"
+                ];
+              })
             ];
           };
-          Nix = {
-            language_servers = [
-              "!nil"
-              "nixd"
-            ];
-            formatter = {
-              external = {
-                command = "nixfmt";
-              };
-            };
-          };
-          TOML = {
-            formatter = {
-              language_server = {
-                name = "tombi";
-              };
-            };
-          };
-        };
-        diagnostics = {
-          inline = {
-            enabled = true;
-          };
-        };
-        profiles = {
-          laptop = {
-            settings = {
-              buffer_font_size = 14;
-              ui_font_size = 14;
-            };
-            terminal = pkgs.lib.mkIf pkgs.stdenv.isDarwin {
-              shell = {
-                program = "nu";
-              };
-              env = {
-                XDG_CONFIG_HOME = "/Users/dirk/.config";
-              };
-            };
-          };
-          presentation = {
-            settings = {
-              buffer_font_size = 20;
-              ui_font_size = 18;
-            };
-          };
-        };
-
-        agent_servers = {
-          codex-nix = lib.mkMerge [
-            {
-              type = "custom";
-              default_model = "gpt-5.3-codex";
-              default_config_options = {
-                mode = "full-access";
-                reasoning_effort = "high";
-              };
-            }
-            (lib.mkIf (!pkgs.stdenv.isDarwin) {
-              command = "${unstablePkgs.codex-acp}/bin/codex-acp";
-            })
-          ];
-
-          copilot = lib.mkMerge [
-            {
-              type = "custom";
-            }
-            (lib.mkIf (!pkgs.stdenv.isDarwin) {
-              command = "${unstablePkgs.github-copilot-cli}/bin/copilot";
-              default_model = "claude-sonnet-4.6";
-              args = [
-                "--acp"
-                "--stdio"
-                "--allow-all-tools"
-                "--allow-all-urls"
-              ];
-            })
-          ];
-        };
-      };
+        }
+      ];
 
       userKeymaps = [
         {
