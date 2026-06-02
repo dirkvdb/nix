@@ -85,6 +85,10 @@
       SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:00:02.0", SYMLINK+="dri/intel-igpu"
     '';
 
+    home-manager.users.dirk.programs.fish.shellInit = lib.mkAfter ''
+      set -gx ARTIFACTORY_TOKEN (cat ${config.sops.secrets.artifactory_token.path} | string trim)
+    '';
+
     # Prefer the NVIDIA dGPU for Hyprland rendering on this hybrid Intel+NVIDIA host.
     # AQ_DRM_DEVICES is colon-separated, so use colon-free udev symlinks instead
     # of /dev/dri/by-path names such as pci-0000:01:00.0-card.
