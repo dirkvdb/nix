@@ -40,8 +40,6 @@
       ];
     };
 
-    boot.kernelPackages = pkgs.linuxPackages_latest;
-
     # NVIDIA + Intel PRIME configuration for the Precision 7670 hybrid graphics
     # layout. common-gpu-nvidia enables PRIME offload and provides the
     # `nvidia-offload` wrapper; fine-grained power management lets the dGPU
