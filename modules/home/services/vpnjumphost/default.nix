@@ -22,6 +22,10 @@
 # Credentials (username + password) are read from sops secrets at runtime:
 #   /run/secrets/vpnjumphost/username
 #   /run/secrets/vpnjumphost/password
+#
+# When local.apps.winboat.enable is true, ocproxy is passed -g so the SOCKS5
+# listener binds to 0.0.0.0 instead of 127.0.0.1, making it reachable from
+# inside the WinBoat Docker container via the Docker bridge gateway IP.
 
 {
   config,
@@ -34,6 +38,7 @@
 let
   inherit (config.local) user;
   cfg = config.local.services.vpnjumphost;
+  winboatEnabled = config.local.apps.winboat.enable or false;
   mkUserHome = mkHome user.name;
 
   cookieFilePath = "${user.homeDir}/.local/state/vpn-jumphost/cookie";
@@ -106,13 +111,14 @@ let
     # exec replaces the shell; SIGTERM from systemd reaches openconnect directly.
     # openconnect tears down the tunnel and kills ocproxy (its --script-tun child)
     # via the socketpair when it exits — nothing to clean up manually.
-    # ocproxy is intentionally NOT passed -g so its SOCKS5 listener binds to
-    # 127.0.0.1 only and is never exposed on the LAN.
+    # When winboat is enabled, -g makes ocproxy bind to 0.0.0.0 so the
+    # WinBoat Docker container can reach the SOCKS5 proxy via the Docker
+    # bridge gateway IP.  Otherwise ocproxy binds to 127.0.0.1 only.
     exec ${pkgs.openconnect}/bin/openconnect \
       --protocol=${lib.escapeShellArg cfg.vpnProtocol} \
       --cookie-on-stdin \
       --script-tun \
-      --script ${lib.escapeShellArg "${pkgs.ocproxy}/bin/ocproxy -D ${toString cfg.socksPort} -k ${toString cfg.ocproxyKeepalive}"} \
+      --script ${lib.escapeShellArg "${pkgs.ocproxy}/bin/ocproxy${if winboatEnabled then " -g" else ""} -D ${toString cfg.socksPort} -k ${toString cfg.ocproxyKeepalive}"} \
       ${lib.escapeShellArg cfg.vpnUrl} < "$COOKIE_FILE"
   '';
 
