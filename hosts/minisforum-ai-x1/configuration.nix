@@ -153,6 +153,7 @@
         zed = {
           enable = true;
           useLatestUpstream = true;
+          localModels = true;
         };
         ghostty.enable = true;
         teams.enable = true;
