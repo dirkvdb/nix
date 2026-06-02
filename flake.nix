@@ -101,6 +101,18 @@
 
       # Custom packages overlay
       overlay = final: prev: {
+        # Override aquamarine to 0.12.0 to fix split-node GPU render node fallback on Apple Silicon
+        # https://github.com/hyprwm/aquamarine/pull/291
+        aquamarine = prev.aquamarine.overrideAttrs (old: {
+          version = "0.12.0";
+          src = prev.fetchFromGitHub {
+            owner = "hyprwm";
+            repo = "aquamarine";
+            tag = "v0.12.0";
+            hash = "sha256-TtAhxedbRAl1u6OyT+4eRxZ417G2NMJNoqEbIhjvWo0=";
+          };
+        });
+
         plymouth-theme-nixos = prev.callPackage ./pkgs/plymouth-theme-nixos { };
         freeimage-pinned =
           let
