@@ -10,10 +10,14 @@ let
 
   esDe = pkgs.es-de;
 
-  eden = unstablePkgs.eden.overrideAttrs (old: {
-    # Build with -march=native for maximum performance on this machine
-    NIX_CFLAGS_COMPILE = (old.NIX_CFLAGS_COMPILE or "") + " -march=native";
-  });
+  eden =
+    if cfg.eden.archnative then
+      unstablePkgs.eden.overrideAttrs (old: {
+        # Build with -march=native for maximum performance on this machine
+        NIX_CFLAGS_COMPILE = (old.NIX_CFLAGS_COMPILE or "") + " -march=native";
+      })
+    else
+      unstablePkgs.eden;
 
   edenWrapped = unstablePkgs.symlinkJoin {
     name = "eden-wrapped";
@@ -62,6 +66,10 @@ in
 {
   options.local.apps.retro-emulation = {
     enable = lib.mkEnableOption "retro emulation stack";
+
+    eden = {
+      archnative = lib.mkEnableOption "building eden with -march=native for maximum performance";
+    };
 
     fladder = {
       enable = lib.mkEnableOption "Fladder Jellyfin client (also added as ES-DE desktop entry)";

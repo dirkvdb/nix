@@ -140,6 +140,7 @@
         neovim.enable = true;
         prusa-slicer.enable = true;
         retro-emulation.enable = true;
+        retro-emulation.eden.archnative = true;
         slack.enable = true;
         fladder.enable = true;
         sops.enable = true;
