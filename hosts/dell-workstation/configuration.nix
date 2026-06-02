@@ -180,6 +180,7 @@
       };
 
       apps = {
+        aichat.enable = true;
         direnv.enable = true;
         neovim.enable = true;
         slack.enable = true;
