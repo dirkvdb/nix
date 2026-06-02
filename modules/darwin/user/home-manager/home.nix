@@ -12,7 +12,7 @@ with lib;
     home = {
       username = "${user.name}";
       homeDirectory = "${user.homeDir}";
-      stateVersion = "25.05";
+      stateVersion = "26.05";
 
       extraActivationPath = with pkgs; [
         rsync

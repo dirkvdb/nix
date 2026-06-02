@@ -23,7 +23,7 @@ in
     services.prowlarr.package = unstablePkgs.prowlarr;
 
     services.jellyfin.package = unstablePkgs.jellyfin;
-    services.jellyseerr.package = unstablePkgs.jellyseerr;
+    services.seerr.package = unstablePkgs.jellyseerr;
     services.bazarr.package = unstablePkgs.bazarr;
 
     # Bazarr: subtitle manager that integrates with Sonarr/Radarr.

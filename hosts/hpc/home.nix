@@ -23,7 +23,7 @@ in
     home = {
       username = userName;
       homeDirectory = userHome;
-      stateVersion = "25.05";
+      stateVersion = "26.05";
     };
 
     # Enable XDG but disable mime (which can pull in cursor/desktop deps)

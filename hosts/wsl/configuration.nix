@@ -14,7 +14,7 @@
 
   config = {
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-    system.stateVersion = "25.05"; # Version at install time, never change
+    system.stateVersion = "26.05"; # Version at install time, never change
 
     stylix = {
       enable = true;

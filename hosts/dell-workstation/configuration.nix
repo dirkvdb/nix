@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  unstablePkgs,
   inputs,
   config,
   ...
@@ -25,7 +24,7 @@
   ];
 
   config = {
-    system.stateVersion = "25.11"; # Version at install time, never change
+    system.stateVersion = "26.05"; # Version at install time, never change
 
     stylix = {
       enable = true;

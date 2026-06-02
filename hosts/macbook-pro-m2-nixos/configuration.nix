@@ -21,7 +21,7 @@ in
   ];
 
   config = {
-    system.stateVersion = "25.05"; # Version at install time, never change
+    system.stateVersion = "26.05"; # Version at install time, never change
 
     # Enable ZRAM for memory compression
     zramSwap = {
