@@ -16,6 +16,7 @@ let
 in
 {
   config = lib.mkIf (isLinux && isDesktop && !isHeadless && isHyprlandEnabled) (mkUserHome {
+    wayland.windowManager.hyprland.configType = "hyprlang";
     wayland.windowManager.hyprland.settings = {
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
