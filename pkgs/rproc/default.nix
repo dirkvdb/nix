@@ -4,42 +4,49 @@
   fetchFromGitHub,
   pkg-config,
   makeWrapper,
-  libGL,
+  makeFontsConf,
+  freefont_ttf,
+  fontconfig,
   libxkbcommon,
   wayland,
-  libx11,
-  libxcursor,
-  libxi,
-  libxrandr,
-  libxcb,
+  xorg,
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "rproc";
-  version = "0.1.3";
+  version = "0.3.0";
 
   src = fetchFromGitHub {
     owner = "Trystan-SA";
     repo = "rproc";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-nSoUwhQZSuY5aaKAr9+WOH7xbpa2Qf49hFoufYKbZSI=";
+    hash = "sha256-EHeiY/zlJLOlLmoAU0x7e2K4SNq65PQZhLQFSoHpG8U=";
   };
 
-  cargoHash = "sha256-RNuHzvThIKQNXvyDUSfu3cC6QS2tvje+TqR4w6KoD+Y=";
+  cargoHash = "sha256-mMSiYimfkcX5p2SV8jmNwGg/HAeaI3SOYeTRsA8eR+s=";
+
+  env.FONTCONFIG_FILE = makeFontsConf { fontDirectories = [ freefont_ttf ]; };
+
+  preBuild = ''
+    export XDG_CACHE_HOME="$TMPDIR/cache"
+    mkdir -p "$XDG_CACHE_HOME/fontconfig"
+    export LD_LIBRARY_PATH="${fontconfig.lib}/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  '';
 
   nativeBuildInputs = [
     pkg-config
     makeWrapper
+    fontconfig
   ];
 
   buildInputs = [
-    libGL
+    fontconfig
     libxkbcommon
     wayland
-    libx11
-    libxcursor
-    libxi
-    libxrandr
-    libxcb
+    xorg.libX11
+    xorg.libXcursor
+    xorg.libXi
+    xorg.libXrandr
+    xorg.libxcb
   ];
 
   doCheck = false;
@@ -52,16 +59,18 @@ rustPlatform.buildRustPackage (finalAttrs: {
     install -Dm644 packaging/rprocd.service \
       $out/lib/systemd/user/rprocd.service
     wrapProgram $out/bin/rproc \
-      --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [
-        libGL
-        libxkbcommon
-        wayland
-        libx11
-        libxcursor
-        libxi
-        libxrandr
-        libxcb
-      ]}"
+      --prefix LD_LIBRARY_PATH : "${
+        lib.makeLibraryPath [
+          fontconfig
+          libxkbcommon
+          wayland
+          xorg.libX11
+          xorg.libXcursor
+          xorg.libXi
+          xorg.libXrandr
+          xorg.libxcb
+        ]
+      }"
   '';
 
   meta = {
@@ -73,4 +82,3 @@ rustPlatform.buildRustPackage (finalAttrs: {
     platforms = lib.platforms.linux;
   };
 })
-
