@@ -523,11 +523,11 @@
         "vpn-confinement": "vpn-confinement"
       },
       "locked": {
-        "lastModified": 1780340628,
-        "narHash": "sha256-EIs4F3nnTVaOP9WKClVZNDD8jMfm28+w9oVFOJxucYU=",
+        "lastModified": 1780431791,
+        "narHash": "sha256-fQfrGRJWPSpbcW9jHfe1gc3+ZxwbD+6qwXoSuwZGapc=",
         "owner": "kiriwalawren",
         "repo": "nixflix",
-        "rev": "bcd287304de9a7dbe9280298a87c95100b87474f",
+        "rev": "cf00e69d1ec0f990bac83511342e4606420e73b4",
         "type": "github"
       },
       "original": {
@@ -561,11 +561,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1780169171,
-        "narHash": "sha256-3HBYDfBgZ+ph52HS6Ks/bMMwuh2uONIT72sZ1CtLE/s=",
+        "lastModified": 1780448629,
+        "narHash": "sha256-gSA/O9ey7QomcxoRtVA5kJI7XToyyDHQK8Mp4gRCH+I=",
         "owner": "nix-community",
         "repo": "NixOS-WSL",
-        "rev": "998b2821c30b2938637230916904ceb8757c79e8",
+        "rev": "ac3c9e99c686c6fcec24b563880577818c79ba4a",
         "type": "github"
       },
       "original": {
@@ -740,11 +740,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1780280838,
-        "narHash": "sha256-cyxwZodGNmtfCB7AfXY/QNJAEM+ZDTzhzWtBrx6ARI4=",
+        "lastModified": 1780439619,
+        "narHash": "sha256-wSVSuKliXZR4jkhQ1pFgMXRChFENx3jkAZ6RTpqy+6c=",
         "owner": "networkmanager-rs",
         "repo": "nmrs-gui",
-        "rev": "e9e59fbffd8a2843fd67e4a681c6aa75b416d809",
+        "rev": "e3bf840e44f15b7953e8ba2d8d1e254324b848ca",
         "type": "github"
       },
       "original": {
