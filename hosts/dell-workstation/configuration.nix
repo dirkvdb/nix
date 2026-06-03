@@ -170,6 +170,7 @@
           enable = true;
           pac.enable = true;
         };
+        officework.enable = true;
       };
 
       desktop = {
@@ -241,7 +242,6 @@
       gnumeric
       gitcomet
       rproc
-      teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
     ];
   };
 }

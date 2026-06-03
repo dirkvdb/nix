@@ -178,6 +178,11 @@ in
         local.system.network.proxy.pacUrl = lib.mkIf cfg.pac.enable "file://${cfg.pac.file}";
       }
       (mkUserHome {
+        home.sessionVariables = {
+          http_proxy = "socks5://127.0.0.1:${toString cfg.socksPort}";
+          https_proxy = "socks5://127.0.0.1:${toString cfg.socksPort}";
+        };
+
         systemd.user.services.vito-vpn = {
           Unit = {
             Description = "VPN jumphost (openconnect + ocproxy SOCKS5 userspace tunnel)";
