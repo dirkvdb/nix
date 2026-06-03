@@ -138,6 +138,7 @@
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         gitcomet = prev.callPackage ./pkgs/gitcomet { };
         rproc = prev.callPackage ./pkgs/rproc { };
+        outlook-for-linux = prev.callPackage ./pkgs/outlook-for-linux { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
 
         # Pin Sublime Merge to Build 2125
