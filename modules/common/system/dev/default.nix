@@ -7,6 +7,7 @@
 }:
 let
   cfg = config.local.system.dev;
+  inherit (config.local) user;
 in
 {
   options.local.system.dev = {
@@ -29,5 +30,13 @@ in
         unstablePkgs.codex
         unstablePkgs.github-copilot-cli
       ];
+
+    # Pixi configuration
+    home-manager.users.${user.name} = {
+      xdg.configFile."pixi/config.toml".text = ''
+        [shell]
+        change-ps1 = false
+      '';
+    };
   };
 }

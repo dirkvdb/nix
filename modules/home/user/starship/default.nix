@@ -63,7 +63,7 @@ in
         add_newline = false;
         palette = "default";
 
-        format = "[╭](fg:separator)$status$hostname$custom$directory$git_branch$nix_shell$cmd_duration$line_break[╰](fg:separator)$character";
+        format = "[╭](fg:separator)$status$hostname\${custom.wsl}$directory$git_branch$nix_shell\${custom.pixi}$cmd_duration$line_break[╰](fg:separator)$character";
 
         palettes.default = {
           prompt_ok = "#${colors.base0B}";
@@ -74,6 +74,7 @@ in
           host = "#${colors.base0B}";
           directory = "${theme.uiAccentColor}";
           nixshell = "#${colors.base0E}";
+          pixishell = "#${colors.base0A}";
           gitbranch = "#${colors.base05}";
           duration = "#${colors.base0A}";
           status = "#${colors.base08}";
@@ -95,6 +96,12 @@ in
           impure_msg = "";
           pure_msg = " [impure](bold green bg:background)";
           disabled = false;
+        };
+
+        custom.pixi = {
+          when = ''[ -n "$PIXI_PROJECT_NAME" ]'';
+          command = ''echo "$PIXI_PROJECT_NAME"'';
+          format = "[─](fg:separator)[](fg:pixishell)[](fg:icon bg:pixishell)[](fg:pixishell bg:background)[ $output](bg:background)[](fg:background)";
         };
 
         git_branch = {
