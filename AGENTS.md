@@ -23,3 +23,6 @@ After making changes to the configuration, verify that the config still builds u
 
 # Agent skills
 - `skills/zed-version-bump/SKILL.md`: How to bump pinned Zed versions and refresh both Nix hashes (`src.hash` and `cargoDeps.hash`) safely.
+
+# Missing commands
+When commands like `python` are missing prefix them with the , to execute them e.g. `, python`
