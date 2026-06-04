@@ -6,7 +6,7 @@ in
   options.local.system.nfs-mounts = {
     enable = lib.mkEnableOption "NFS mounts";
 
-    presets.nas = lib.mkEnableOption "standard NAS mounts (secrets, ssd, downloads, data, media, arr)";
+    presets.nas = lib.mkEnableOption "standard NAS mounts (ssd, downloads, data, media, arr)";
     hosts = lib.mkOption {
       description = "Additional /etc/hosts entries, useful for pinning NFS server hostnames to IPv4 when IPv6 is also enabled";
       default = {
@@ -55,9 +55,6 @@ in
   config = lib.mkMerge [
     (lib.mkIf cfg.presets.nas {
       local.system.nfs-mounts.mounts = {
-        "/nas/secrets" = {
-          device = lib.mkDefault "nas.local:/volume2/secrets";
-        };
         "/nas/ssd" = {
           device = lib.mkDefault "nas.local:/volume2/ssd";
         };

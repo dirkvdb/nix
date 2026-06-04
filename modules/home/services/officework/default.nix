@@ -27,7 +27,7 @@ let
 
       Service = {
         Type = "simple";
-        ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
+        ExecStartPre = "${pkgs.nixcfg-wait-for-tray}/bin/nixcfg-wait-for-tray";
         ExecStart = execStart;
         Restart = "no";
       };

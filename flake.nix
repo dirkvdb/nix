@@ -138,6 +138,7 @@
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         gitcomet = prev.callPackage ./pkgs/gitcomet { };
         rproc = prev.callPackage ./pkgs/rproc { };
+        nixcfg-wait-for-tray = prev.callPackage ./pkgs/wait-for-tray { };
         outlook-for-linux = prev.callPackage ./pkgs/outlook-for-linux { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
 
