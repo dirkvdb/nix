@@ -148,7 +148,7 @@ in
           databasePaths = [
             "${config.local.services.syncthing.shares.secretsPath}/Desktop.kdbx"
           ];
-          keyfilePath = "${config.local.services.syncthing.shares.secretsPath}/desktop.key";
+          keyfilePath = "${user.homeDir}/.local/share/desktop.key";
         };
       };
     };
