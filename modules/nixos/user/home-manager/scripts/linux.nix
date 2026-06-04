@@ -520,9 +520,9 @@ in
       }
 
       show_system_menu() {
-        case $(menu "System" "  Lock\n󱄄  Screensaver\n󰤄  Suspend\n󰜉  Restart\n󰐥  Shutdown") in
+        case $(menu "System" "  Lock\n󰍃  Logout\n󰤄  Suspend\n󰜉  Restart\n󰐥  Shutdown") in
         *Lock*) nixcfg-lock-screen ;;
-        *Screensaver*) nixcfg-launch-screensaver force ;;
+        *Logout*) hyprshutdown -t "Logging out..." ;;
         *Suspend*) systemctl suspend ;;
         *Restart*) hyprshutdown -t "Restarting..." -p "systemctl reboot --no-wall" ;;
         *Shutdown*) hyprshutdown -t "Shutting down..." -p "systemctl poweroff --no-wall" ;;
