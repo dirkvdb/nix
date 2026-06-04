@@ -166,6 +166,10 @@
         printing.enable = true;
         docker.enable = true;
         power-profiles-daemon.enable = true;
+        syncthing = {
+          enable = true;
+          shares.secrets = true;
+        };
         vpnjumphost = {
           enable = true;
           pac.enable = true;
@@ -198,16 +202,12 @@
         ghostty.enable = true;
         teams.enable = true;
         winboat.enable = true;
-        dropbox = {
-          enable = true;
-          path = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Dropbox";
-        };
         keepassxc = {
           enable = true;
           databasePaths = [
-            "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Dropbox/Desktop.kdbx"
+            "${config.local.services.syncthing.shares.secretsPath}/Desktop.kdbx"
           ];
-          keyfilePath = "${config.home-manager.users.dirk.xdg.dataHome}/secrets/Dropbox/desktop.key";
+          keyfilePath = "${config.local.user.homeDir}/.local/share/desktop.key";
         };
         remmina = {
           enable = true;
