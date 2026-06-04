@@ -109,6 +109,10 @@
         fwupd.enable = true;
         printing.enable = true;
         sunshine.enable = true;
+        syncthing = {
+          enable = true;
+          shares.secrets = true;
+        };
         docker.enable = true;
         power-profiles-daemon.enable = true;
       };
@@ -162,9 +166,9 @@
         keepassxc = {
           enable = true;
           databasePaths = [
-            "/nas/ssd/secrets/Desktop.kdbx"
+            "${config.local.services.syncthing.shares.secretsPath}/Desktop.kdbx"
           ];
-          keyfilePath = "/nas/secrets/desktop.key";
+          keyfilePath = "${config.local.services.syncthing.shares.secretsPath}/desktop.key";
         };
       };
     };

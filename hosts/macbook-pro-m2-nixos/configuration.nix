@@ -102,6 +102,10 @@ in
         ssh.enable = true;
         fwupd.enable = true;
         printing.enable = true;
+        syncthing = {
+          enable = true;
+          shares.secrets = true;
+        };
         power-profiles-daemon.enable = true;
         wluma = {
           enable = true;
@@ -142,9 +146,9 @@ in
         keepassxc = {
           enable = true;
           databasePaths = [
-            "/nas/ssd/secrets/Desktop.kdbx"
+            "${config.local.services.syncthing.shares.secretsPath}/Desktop.kdbx"
           ];
-          keyfilePath = "/nas/secrets/desktop.key";
+          keyfilePath = "${config.local.services.syncthing.shares.secretsPath}/desktop.key";
         };
       };
     };
