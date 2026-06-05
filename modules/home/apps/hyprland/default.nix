@@ -85,12 +85,20 @@ in
               "brightnessctl -r"
               + (lib.optionalString config.local.services.wluma.enable " && systemctl --user start wluma.service"); # monitor backlight restore.
           }
-          # Power of the monitor after some time
+        ]
+        ++ lib.optionals (!isNvidiaEnabled) [
+          # Power off the monitor via DPMS after some time.
+          # Skipped on NVIDIA: the proprietary driver does not reliably
+          # reinitialise the display pipeline after dpms off → on, leaving
+          # the screen permanently black. Brightness is already at 0 from
+          # the listener above, so the display is effectively off anyway.
           {
             timeout = 600; # 10min
             on-timeout = "hyprctl dispatch dpms off";
             on-resume = "hyprctl dispatch dpms on && sleep 2.0 && hyprctl dispatch dpms on && sleep 1.0 && hyprctl dispatch dpms on && brightnessctl -r && hyprctl dispatch focuswindow"; # Trigger a repaint to avoid empty workspace after waking up
           }
+        ]
+        ++ [
           # Long time away - lock the screen
           {
             timeout = 7200; # 120min
@@ -150,8 +158,6 @@ in
       # monitor directives override the inline ones for matching outputs.
       extraConfig = ''
         source = ~/.config/hypr/monitors.conf
-        # Apply after monitors.conf so hyprmoncfg cannot override these.
-        workspace = 3, rounding:false, decorate:false, gapsin:0, gapsout:0
       '';
 
       # Session target management is handled by UWSM; the home-manager
@@ -159,7 +165,6 @@ in
       systemd.enable = false;
 
       plugins = [
-        #pkgs.hyprlandPlugins.hyprscrolling
       ];
 
       settings = {
@@ -234,7 +239,6 @@ in
         };
 
         general = {
-          # No gaps between windows
           gaps_in = 3;
           gaps_out = 6;
 
@@ -393,24 +397,28 @@ in
           "match:namespace selection, no_anim true"
         ];
 
-        workspace =
-          (
-            let
-              pm = config.local.desktop.primaryMonitor;
-              addMonitor = ws: if pm != null then "${ws}, monitor:${pm}" else ws;
-            in
-            [
-              (addMonitor "1, name:cmd, persistent:true")
-              (addMonitor "2, name:web, persistent:true")
-              (addMonitor "3, name:dev, persistent:true, rounding:false, decorate:false, gapsin:1, gapsout:1")
-              (addMonitor "4, name:scratch, persistent:true")
-              (addMonitor "5, name:scratch, persistent:true")
-              (addMonitor "6, name:vcs, persistent:true")
-              (addMonitor "7, name:chat, persistent:true")
-              (addMonitor "8, name:com, persistent:true")
-            ]
-          )
-          ++ config.local.desktop.workspaces;
+        workspace = [
+          "3, rounding:false, decorate:false, gapsin:1, gapsout:1"
+        ];
+
+        # workspace =
+        #   (
+        #     let
+        #       pm = config.local.desktop.primaryMonitor;
+        #       addMonitor = ws: if pm != null then "${ws}, monitor:${pm}" else ws;
+        #     in
+        #     [
+        #       (addMonitor "1, name:cmd, persistent:true")
+        #       (addMonitor "2, name:web, persistent:true")
+        #       (addMonitor "3, name:dev, persistent:true, rounding:false, decorate:false, gapsin:1, gapsout:1")
+        #       (addMonitor "4, name:scratch, persistent:true")
+        #       (addMonitor "5, name:scratch, persistent:true")
+        #       (addMonitor "6, name:vcs, persistent:true")
+        #       (addMonitor "7, name:chat, persistent:true")
+        #       (addMonitor "8, name:com, persistent:true")
+        #     ]
+        #   )
+        #   ++ config.local.desktop.workspaces;
 
         windowrule = [
           # disable the window opacity

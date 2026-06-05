@@ -85,13 +85,15 @@ in
         Description = "KeePassXC password manager with Secret Service";
         After = [
           "graphical-session.target"
-          "tray.target"
           "network-online.target"
           "ssh-agent.service"
         ];
         Wants = [ "network-online.target" ];
         Requires = [ "ssh-agent.service" ];
         PartOf = [ "graphical-session.target" ];
+        # Only start when a Wayland compositor is running (guards against
+        # activation before UWSM has exported the display variables).
+        ConditionEnvironment = "WAYLAND_DISPLAY";
       };
 
       Service = {
