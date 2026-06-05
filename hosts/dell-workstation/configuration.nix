@@ -135,6 +135,7 @@
           networkmanager = {
             enable = true;
             wifi.backend = "wpa_supplicant";
+            vpn.homeVpn = true;
           };
         };
 
