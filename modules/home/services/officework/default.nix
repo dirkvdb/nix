@@ -8,6 +8,7 @@
 let
   inherit (config.local) user;
   cfg = config.local.services.officework;
+  isNvidia = config.local.system.video.nvidia.enable or false;
   mkUserHome = mkHome user.name;
 
   graphicalService =
@@ -61,10 +62,20 @@ in
           execStart = "${pkgs.slack}/bin/slack --startup";
         };
 
-        systemd.user.services.officework-outlook = graphicalService {
-          description = "Outlook for Linux";
-          execStart = "${pkgs.outlook-for-linux}/bin/outlook-for-linux";
-        };
+        systemd.user.services.officework-outlook =
+          lib.recursiveUpdate
+            (graphicalService {
+              description = "Outlook for Linux";
+              execStart = "${pkgs.outlook-for-linux}/bin/outlook-for-linux";
+            })
+            (
+              lib.optionalAttrs isNvidia {
+                # WebKitGTK's DMA-BUF renderer breaks on NVIDIA proprietary drivers,
+                # causing washed-out / garbled rendering. Disable it so WebKit falls
+                # back to SHM-based compositing.
+                Service.Environment = [ "WEBKIT_DISABLE_DMABUF_RENDERER=1" ];
+              }
+            );
       })
     ]
   );
