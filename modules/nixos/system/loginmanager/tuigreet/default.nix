@@ -10,21 +10,13 @@ in
 {
   options.local.system.loginmanager.tuigreet = {
     enable = lib.mkEnableOption "Enable the tuigreet login manager";
-
-    launchCmd = lib.mkOption {
-      type = lib.types.str;
-      description = "The command to launch the desired session";
-      default = "hyprland";
-      example = "hyprland";
-    };
   };
 
   config = lib.mkIf cfg.enable {
     services = {
       greetd = {
         enable = true;
-        # logs can be checked with: journalctl -t session
-        settings.default_session.command = "${pkgs.tuigreet}/bin/tuigreet --asterisks --remember --time --cmd 'systemd-cat -t session ${cfg.launchCmd}'";
+        settings.default_session.command = "${pkgs.tuigreet}/bin/tuigreet --asterisks --remember --remember-session --time --sessions /run/current-system/sw/share/wayland-sessions --session-wrapper 'systemd-cat -t session'";
       };
     };
   };
