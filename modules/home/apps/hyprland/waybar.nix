@@ -32,7 +32,7 @@ in
       enable = true;
       systemd = {
         enable = true;
-        targets = [ "hyprland-session.target" ];
+        targets = [ "graphical-session.target" ];
       };
       style = ''
         @define-color foreground ${theme.uiAccentColor};

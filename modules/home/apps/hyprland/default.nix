@@ -154,10 +154,9 @@ in
         workspace = 3, rounding:false, decorate:false, gapsin:0, gapsout:0
       '';
 
-      systemd = {
-        enable = true;
-        variables = [ "--all" ];
-      };
+      # Session target management is handled by UWSM; the home-manager
+      # built-in exec-once (env import + target activation) is not needed.
+      systemd.enable = false;
 
       plugins = [
         #pkgs.hyprlandPlugins.hyprscrolling
