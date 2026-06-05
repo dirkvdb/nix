@@ -13,7 +13,7 @@
     owner = "crmne";
     repo = "hyprmoncfg";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-KA8w53Qjf08/nMTBEWLdmBABlwnlidIf237cmYfFQiQ=";
+    hash = "sha256-bGqwENvFQ0PfxmxAulVFmgMQrywAJ59UROgomgzg5eM=";
   };
 
   vendorHash = "sha256-gQbjvdKtO0hCXrs9RnWo1s0YeHf5W9t+8AgS2ELXlPo=";
