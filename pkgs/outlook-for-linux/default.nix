@@ -40,6 +40,10 @@ stdenv.mkDerivation (finalAttrs: {
 
   sourceRoot = "${finalAttrs.src.name}/client";
 
+  patches = [
+    ./open-http-links-in-browser.patch
+  ];
+
   nativeBuildInputs = [
     rustPlatform.cargoSetupHook
     cargo-tauri.hook
