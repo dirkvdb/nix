@@ -902,11 +902,11 @@
         "tinted-zed": "tinted-zed"
       },
       "locked": {
-        "lastModified": 1780682680,
-        "narHash": "sha256-xsrqI5dfhaB5P/QPT0WuVB3kFIey6DWAbx3OgsJBQC0=",
+        "lastModified": 1780684873,
+        "narHash": "sha256-GM4O0ZSiK/bknRnPY4nNsFVhQHbVtkRrqUj9TE0Ud6s=",
         "owner": "nix-community",
         "repo": "stylix",
-        "rev": "78a63684fff83e6e333827e5af928abf37657cd3",
+        "rev": "497618de21c0d0ffd82505f9d6f231cfcf419f32",
         "type": "github"
       },
       "original": {
