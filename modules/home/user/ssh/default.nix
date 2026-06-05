@@ -44,6 +44,7 @@ in
           Port = 2222;
           RequestTTY = "yes";
           ForwardAgent = true;
+          SendEnv = [ "ARTIFACTORY_TOKEN" ];
         };
         inky = {
           HostName = "inky.local";
