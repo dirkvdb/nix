@@ -401,25 +401,6 @@ in
           "3, rounding:false, decorate:false, gapsin:1, gapsout:1"
         ];
 
-        # workspace =
-        #   (
-        #     let
-        #       pm = config.local.desktop.primaryMonitor;
-        #       addMonitor = ws: if pm != null then "${ws}, monitor:${pm}" else ws;
-        #     in
-        #     [
-        #       (addMonitor "1, name:cmd, persistent:true")
-        #       (addMonitor "2, name:web, persistent:true")
-        #       (addMonitor "3, name:dev, persistent:true, rounding:false, decorate:false, gapsin:1, gapsout:1")
-        #       (addMonitor "4, name:scratch, persistent:true")
-        #       (addMonitor "5, name:scratch, persistent:true")
-        #       (addMonitor "6, name:vcs, persistent:true")
-        #       (addMonitor "7, name:chat, persistent:true")
-        #       (addMonitor "8, name:com, persistent:true")
-        #     ]
-        #   )
-        #   ++ config.local.desktop.workspaces;
-
         windowrule = [
           # disable the window opacity
           "match:class .*, opacity 1 1"

@@ -98,6 +98,7 @@
       };
 
       services = {
+        hyprmoncfg.enable = true;
         nordvpn = {
           enable = true;
           localDns = true;
@@ -121,17 +122,6 @@
         enable = true;
         displayScale = 1.666667;
         hyprland.enable = true;
-        monitors = [
-          # Place the Dell secondary monitor to the left of the main LG 4K monitor
-          # "HDMI-A-1,preferred,auto-left,1.0,transform,1"
-          "HDMI-A-1,preferred,auto-left,1.0"
-        ];
-        primaryMonitor = "DP-3";
-        workspaces = [
-          # Bind secondary workspaces to HDMI-A-1 so it is never the main monitor
-          "9, monitor:HDMI-A-1, default:true, persistent:true"
-          "10, monitor:HDMI-A-1, persistent:true"
-        ];
       };
 
       apps = {
