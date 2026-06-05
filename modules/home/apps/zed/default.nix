@@ -120,6 +120,8 @@ in
           nixfmt-rs
           just-formatter
           just-lsp
+          bash-language-server
+          shellcheck
           codex-acp
         ]
       );
@@ -235,6 +237,12 @@ in
             dark = "Ayu Mirage";
           };
           lsp = {
+            bash-language-server = lib.mkIf (!pkgs.stdenv.isDarwin) {
+              binary = {
+                path = "${unstablePkgs.bash-language-server}/bin/bash-language-server";
+                arguments = [ "start" ];
+              };
+            };
             nixd = lib.mkIf (!pkgs.stdenv.isDarwin) {
               binary = {
                 path = "${unstablePkgs.nixd}/bin/nixd";
