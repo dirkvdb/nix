@@ -39,6 +39,13 @@ in
           Cryptomining = true;
           Fingerprinting = true;
         };
+      }
+      // lib.optionalAttrs (proxyPacUrl != null) {
+        Proxy = {
+          Mode = "autoConfig";
+          AutoConfigURL = proxyPacUrl;
+          Locked = true;
+        };
       };
 
       profiles.default =
