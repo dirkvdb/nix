@@ -85,8 +85,8 @@ in
         Description = "KeePassXC password manager with Secret Service";
         After = [
           "graphical-session.target"
+          "tray.target"
           "network-online.target"
-          "waybar.service" # ensure the tray icon can be shown
           "ssh-agent.service"
         ];
         Wants = [ "network-online.target" ];
@@ -96,7 +96,6 @@ in
 
       Service = {
         Type = "simple";
-        ExecStartPre = "${pkgs.nixcfg-wait-for-tray}/bin/nixcfg-wait-for-tray";
         Environment = [ "SSH_AUTH_SOCK=%t/ssh-agent" ];
         ExecStart = "${pkgs.keepassxc}/bin/keepassxc --minimized --keyfile ${cfg.keyfilePath} ${lib.concatStringsSep " " cfg.databasePaths}";
         Restart = "on-failure";

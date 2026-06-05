@@ -438,5 +438,34 @@ in
         }
       ];
     };
+
+    # Oneshot gate that blocks until the StatusNotifierWatcher D-Bus name
+    # appears.  tray.target already orders After=waybar.service, but waybar
+    # is Type=simple so systemd considers it "started" before the tray is
+    # actually registered on D-Bus.  By making tray.target also pull in
+    # this service, dependent units see a tray that is genuinely ready.
+    systemd.user.services.tray-ready = {
+      Unit = {
+        Description = "Wait for system tray (StatusNotifierWatcher) on D-Bus";
+        After = [ "waybar.service" ];
+        Requisite = [ "waybar.service" ];
+      };
+
+      Service = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = toString (
+          pkgs.writeShellScript "wait-for-tray" ''
+            ${pkgs.glib}/bin/gdbus wait --session org.kde.StatusNotifierWatcher
+          ''
+        );
+        TimeoutStartSec = 15;
+      };
+    };
+
+    systemd.user.targets.tray.Unit = {
+      Requires = [ "tray-ready.service" ];
+      After = [ "tray-ready.service" ];
+    };
   });
 }

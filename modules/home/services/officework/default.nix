@@ -20,14 +20,13 @@ let
         Description = description;
         After = [
           "graphical-session.target"
-          "waybar.service"
+          "tray.target"
         ];
         Wants = [ "graphical-session.target" ];
       };
 
       Service = {
         Type = "simple";
-        ExecStartPre = "${pkgs.nixcfg-wait-for-tray}/bin/nixcfg-wait-for-tray";
         ExecStart = execStart;
         Restart = "no";
       };
