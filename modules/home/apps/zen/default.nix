@@ -20,7 +20,7 @@ in
     programs.zen-browser = {
       enable = true;
 
-      #nativeMessagingHosts = [ pkgs.firefoxpwa ];
+      nativeMessagingHosts = lib.optionals keepassEnabled [ pkgs.keepassxc ];
 
       policies = {
         AutofillAddressEnabled = true;
@@ -177,17 +177,5 @@ in
 
     stylix.targets.zen-browser.profileNames = [ "default" ];
 
-    home.file = lib.mkIf (keepassEnabled && isLinux) {
-      ".mozilla/native-messaging-hosts/org.keepassxc.keepassxc_browser.json".text = builtins.toJSON {
-        allowed_extensions = [
-          "keepassxc-browser@keepassxc.org"
-        ];
-
-        description = "KeePassXC integration with native messaging support";
-        name = "org.keepassxc.keepassxc_browser";
-        path = "${pkgs.keepassxc}/bin/keepassxc-proxy";
-        type = "stdio";
-      };
-    };
   });
 }

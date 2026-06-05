@@ -40,19 +40,21 @@
     };
 
     # NVIDIA + Intel PRIME configuration for the Precision 7670 hybrid graphics
-    # layout. common-gpu-nvidia enables PRIME offload and provides the
-    # `nvidia-offload` wrapper; fine-grained power management lets the dGPU
-    # fully power down when not in use.
+    # layout. The NVIDIA dGPU is used as the Hyprland/compositor GPU because the
+    # Intel iGPU is not powerful enough for the attached 4K display setup.
     hardware.nvidia = {
       modesetting.enable = true;
       open = false;
       powerManagement = {
         enable = true;
-        finegrained = true;
+        # Fine-grained PM (D3cold) is designed for offload setups where the
+        # dGPU powers off when idle. Since Hyprland renders on the dGPU, the GPU
+        # is always active and D3cold is never reached — but the PM state
+        # machine still complicates suspend/resume and modesetting.
+        finegrained = false;
       };
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
-      dynamicBoost.enable = true;
 
       # Typical Precision 7670 Intel+iGPU / NVIDIA dGPU bus IDs. Verify with:
       #   lspci | grep -E 'VGA|3D|Display'
@@ -62,8 +64,23 @@
       };
     };
 
-    # Improve Gen12 Intel media scheduling and HuC/Guc firmware use.
-    boot.kernelParams = [ "i915.enable_guc=3" ];
+    boot.kernelParams = [
+      # Improve Gen12 Intel media scheduling and HuC/GuC firmware use.
+      "i915.enable_guc=3"
+      # Expose a DRM framebuffer device on the NVIDIA GPU. Without this the
+      # proprietary driver does not properly re-initialise the display pipeline
+      # after s2idle resume, leaving the laptop panel black.
+      "nvidia-drm.fbdev=1"
+    ];
+
+    # Alder Lake Dell Precision 7670 only supports s2idle (Modern Standby), not
+    # S3 deep sleep. The NVIDIA driver defaults to S3-style suspend handling;
+    # NVreg_EnableS0ixPowerManagement tells it to use s0ix/s2idle paths instead.
+    # Disable GSP firmware on the proprietary driver: on Ampere mobile GPUs it
+    # can cause Wayland black windows, hangs, and poor resume behavior.
+    boot.extraModprobeConfig = ''
+      options nvidia NVreg_EnableS0ixPowerManagement=1 NVreg_EnableGpuFirmware=0
+    '';
 
     # Dell Precision 7670 units are often configured with Intel VMD/RST for NVMe.
     # Including vmd keeps the initrd bootable even when the BIOS is left in RAID mode.
@@ -86,11 +103,22 @@
       set -gx ARTIFACTORY_TOKEN (cat ${config.sops.secrets.artifactory_token.path} | string trim)
     '';
 
-    # Prefer the NVIDIA dGPU for Hyprland rendering on this hybrid Intel+NVIDIA host.
+    # Prefer the NVIDIA dGPU for Hyprland rendering on this hybrid host. The
+    # Intel iGPU is kept as a secondary DRM device but is not powerful enough to
+    # drive the attached 4K display setup smoothly.
     # AQ_DRM_DEVICES is colon-separated, so use colon-free udev symlinks instead
     # of /dev/dri/by-path names such as pci-0000:01:00.0-card.
     home-manager.users.dirk.wayland.windowManager.hyprland.settings.env = lib.mkAfter [
       "AQ_DRM_DEVICES,/dev/dri/nvidia-dgpu:/dev/dri/intel-igpu"
+      "SDL_VIDEODRIVER,wayland"
+      "LIBVA_DRIVER_NAME,nvidia"
+      "GBM_BACKEND,nvidia-drm"
+      "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+      "__NV_PRIME_RENDER_OFFLOAD,1"
+      "__VK_LAYER_NV_optimus,NVIDIA_only"
+      "NVD_BACKEND,direct"
+      "__GL_GSYNC_ALLOWED,1"
+      "__GL_VRR_ALLOWED,1"
     ];
 
     local = {
