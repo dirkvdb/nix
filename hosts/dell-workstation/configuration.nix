@@ -14,7 +14,9 @@
     inputs.stylix.nixosModules.stylix
 
     # Dell Precision 7670: 12th gen Intel Core HX (Alder Lake) + Intel iGPU.
+    inputs.nixos-hardware.nixosModules.common-gpu-intel
     (inputs.nixos-hardware + "/common/cpu/intel/alder-lake")
+    (inputs.nixos-hardware + "/common/gpu/intel/alder-lake")
     # Precision 7670 dGPU options are NVIDIA RTX A-series mobile GPUs (Ampere).
     inputs.nixos-hardware.nixosModules.common-gpu-nvidia
     (inputs.nixos-hardware + "/common/gpu/nvidia/ampere")
@@ -44,13 +46,15 @@
     # Intel iGPU is not powerful enough for the attached 4K display setup.
     hardware.nvidia = {
       modesetting.enable = true;
-      open = false;
       powerManagement = {
+        # Registers nvidia-suspend / nvidia-resume systemd services so the GPU
+        # saves state and enters D3 during s2idle. Without this the platform
+        # never reaches S0ix (slp_s0_residency stays 0) and the EC immediately
+        # wakes the system.
         enable = true;
         # Fine-grained PM (D3cold) is designed for offload setups where the
-        # dGPU powers off when idle. Since Hyprland renders on the dGPU, the GPU
-        # is always active and D3cold is never reached — but the PM state
-        # machine still complicates suspend/resume and modesetting.
+        # dGPU powers off when idle. Since Hyprland renders on the dGPU, the
+        # GPU is always active and D3cold is never reached.
         finegrained = false;
       };
       nvidiaSettings = true;
@@ -59,25 +63,32 @@
       # Typical Precision 7670 Intel+iGPU / NVIDIA dGPU bus IDs. Verify with:
       #   lspci | grep -E 'VGA|3D|Display'
       prime = {
+        offload = {
+          enable = true;
+          enableOffloadCmd = true;
+        };
+
         intelBusId = "PCI:0:2:0";
         nvidiaBusId = "PCI:1:0:0";
       };
     };
 
+    hardware.intelgpu = {
+      driver = "i915";
+    };
+
     boot.kernelParams = [
-      # Improve Gen12 Intel media scheduling and HuC/GuC firmware use.
-      "i915.enable_guc=3"
       # Expose a DRM framebuffer device on the NVIDIA GPU. Without this the
       # proprietary driver does not properly re-initialise the display pipeline
       # after s2idle resume, leaving the laptop panel black.
-      "nvidia-drm.fbdev=1"
+      # "nvidia-drm.fbdev=1"
     ];
 
     # Alder Lake Dell Precision 7670 only supports s2idle (Modern Standby), not
     # S3 deep sleep. The NVIDIA driver defaults to S3-style suspend handling;
     # NVreg_EnableS0ixPowerManagement tells it to use s0ix/s2idle paths instead.
-    # Disable GSP firmware on the proprietary driver: on Ampere mobile GPUs it
-    # can cause Wayland black windows, hangs, and poor resume behavior.
+    # Disable GSP firmware on the open driver: on Ampere mobile GPUs it causes
+    # screen corruption, Wayland black windows, hangs, and poor resume behavior.
     boot.extraModprobeConfig = ''
       options nvidia NVreg_EnableS0ixPowerManagement=1 NVreg_EnableGpuFirmware=0
     '';
@@ -97,6 +108,11 @@
     services.udev.extraRules = ''
       SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:01:00.0", SYMLINK+="dri/nvidia-dgpu"
       SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:00:02.0", SYMLINK+="dri/intel-igpu"
+
+      # The I2C HID touchpad (VEN_0488 / Synaptics at _SB_.PC00.I2C1.TPD0)
+      # generates GPIO interrupts (IRQ 14 / INTC1056) that immediately wake
+      # the system from s2idle. Disable wakeup on this device.
+      ACTION=="add", SUBSYSTEM=="i2c", KERNEL=="i2c-VEN_0488:00", ATTR{power/wakeup}="disabled"
     '';
 
     home-manager.users.dirk.programs.fish.shellInit = lib.mkAfter ''
@@ -111,14 +127,9 @@
     home-manager.users.dirk.wayland.windowManager.hyprland.settings.env = lib.mkAfter [
       "AQ_DRM_DEVICES,/dev/dri/nvidia-dgpu:/dev/dri/intel-igpu"
       "SDL_VIDEODRIVER,wayland"
-      "LIBVA_DRIVER_NAME,nvidia"
-      "GBM_BACKEND,nvidia-drm"
-      "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-      "__NV_PRIME_RENDER_OFFLOAD,1"
-      "__VK_LAYER_NV_optimus,NVIDIA_only"
-      "NVD_BACKEND,direct"
-      "__GL_GSYNC_ALLOWED,1"
-      "__GL_VRR_ALLOWED,1"
+      # "LIBVA_DRIVER_NAME,nvidia"
+      # "GBM_BACKEND,nvidia-drm"
+      # "NVD_BACKEND,direct"
     ];
 
     local = {
