@@ -209,10 +209,6 @@ in
           "OZONE_PLATFORM,wayland"
           "XDG_SESSION_TYPE,wayland"
           "XDG_SESSION_DESKTOP,Hyprland"
-        ]
-        ++ lib.optionals isNvidiaEnabled [
-          "LIBVA_DRIVER_NAME,nvidia"
-          "__GLX_VENDOR_LIBRARY_NAME,nvidia"
         ];
 
         xwayland = {
@@ -302,6 +298,11 @@ in
           focus_on_activate = true;
           anr_missed_pings = 3;
         };
+
+        # https://wiki.hyprland.org/Configuring/Variables/#debug
+        # debug = {
+        #   overlay = true;
+        # };
 
         # https://wiki.hypr.land/Configuring/Variables/#cursor
         cursor = {
