@@ -11,15 +11,17 @@ let
   winboatEnabled = config.local.apps.winboat.enable or false;
   proxyPacUrl = config.local.system.network.proxy.pacUrl;
   proxyEnabled = proxyPacUrl != null;
+  socksProxyUrl = config.local.services.vpnjumphost.socksProxyUrl;
   mkUserHome = mkHome user.name;
 in
 {
   config = mkUserHome {
-    home.packages =
-      (with pkgs; [
+    home.packages = (
+      with pkgs;
+      [
         websocat
-      ])
-      ++ lib.optionals proxyEnabled [ pkgs.connect ];
+      ]
+    );
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
@@ -72,14 +74,14 @@ in
         cluster = {
           HostName = "develop.marvin.vito.local";
           User = "vdboerd";
-          ProxyCommand = lib.mkIf proxyEnabled "${pkgs.connect}/bin/connect -S 127.0.0.1:1080 %h %p";
+          ProxyCommand = lib.mkIf proxyEnabled "nc -x ${socksProxyUrl} -X 5 %h %p";
           ForwardAgent = true;
           #   RemoteCommand = "fish";
           #   RequestTTY = "yes";
         };
         clusterfs = {
           HostName = "develop.marvin.vito.local";
-          ProxyCommand = lib.mkIf proxyEnabled "${pkgs.connect}/bin/connect -S 127.0.0.1:1080 %h %p";
+          ProxyCommand = lib.mkIf proxyEnabled "nc -x ${socksProxyUrl} -X 5 %h %p";
           User = "vdboerd";
           ForwardAgent = true;
         };

@@ -94,6 +94,13 @@ in
       };
     };
 
+    socksProxyUrl = lib.mkOption {
+      type = lib.types.str;
+      readOnly = true;
+      default = "127.0.0.1:${toString cfg.socksPort}";
+      description = "SOCKS5 proxy address (host:port) derived from socksPort. Read-only; consumed by other modules (e.g. SSH ProxyCommand).";
+    };
+
     pac = {
       enable = lib.mkEnableOption "PAC proxy auto-configuration (served by the jumphost binary over HTTP)";
 
