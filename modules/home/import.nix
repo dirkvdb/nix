@@ -116,7 +116,7 @@ in
         ]
       )
 
-      ++ lib.optionals (!isHeadless) (
+      ++ lib.optionals (!isHeadless && !pkgs.stdenv.isDarwin) (
         with pkgs;
         [
           sqlitebrowser
