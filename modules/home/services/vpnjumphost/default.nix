@@ -26,28 +26,25 @@ let
   cfg = config.local.services.vpnjumphost;
   mkUserHome = mkHome user.name;
 
-  usernameSecretPath = "/run/secrets/vpnjumphost/username";
-  passwordSecretPath = "/run/secrets/vpnjumphost/password";
+  tomlFormat = pkgs.formats.toml { };
 
-  # Build the TOML config file content.
-  configContent = ''
-    # VPN jumphost configuration — managed by NixOS
-    # Do not edit manually; changes will be overwritten on rebuild.
+  configFile = tomlFormat.generate "vpn-jumphost-config.toml" {
+    vpn_url = cfg.vpnUrl;
+    vpn_protocol = cfg.vpnProtocol;
+    socks_port = cfg.socksPort;
+    ocproxy_keepalive = 60;
+    check_interval = 300;
 
-    vpn_url = "${cfg.vpnUrl}"
-    vpn_protocol = "${cfg.vpnProtocol}"
-    socks_port = ${toString cfg.socksPort}
-    ocproxy_keepalive = ${toString cfg.ocproxyKeepalive}
-    check_interval = ${toString cfg.checkInterval}
+    domains = {
+      proxy = cfg.domains.proxy;
+      direct = cfg.domains.direct;
+    };
 
-    [domains]
-    proxy = [${lib.concatMapStringsSep ", " (d: ''"${d}"'') cfg.domains.proxy}]
-    direct = [${lib.concatMapStringsSep ", " (d: ''"${d}"'') cfg.domains.direct}]
-
-    [credentials]
-    username_file = "${usernameSecretPath}"
-    password_file = "${passwordSecretPath}"
-  '';
+    credentials = {
+      username_file = "/run/secrets/vpnjumphost/username";
+      password_file = "/run/secrets/vpnjumphost/password";
+    };
+  };
 
 in
 {
@@ -76,18 +73,6 @@ in
       type = lib.types.port;
       default = 1080;
       description = "SOCKS5 listen port for ocproxy (upstream of routing proxy).";
-    };
-
-    ocproxyKeepalive = lib.mkOption {
-      type = lib.types.ints.positive;
-      default = 60;
-      description = "TCP keepalive interval (seconds) passed to ocproxy via -k.";
-    };
-
-    checkInterval = lib.mkOption {
-      type = lib.types.ints.positive;
-      default = 300;
-      description = "Seconds between periodic cookie validity checks.";
     };
 
     domains = {
@@ -131,7 +116,7 @@ in
         home.packages = [ pkgs.vpn-jumphost ];
 
         xdg.configFile."vpn-jumphost/config.toml" = {
-          text = configContent;
+          source = configFile;
         };
 
         systemd.user.services.vpn-jumphost = {
