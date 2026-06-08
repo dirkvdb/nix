@@ -11,7 +11,12 @@ let
 in
 {
   config = lib.mkIf isDesktop (mkUserHome {
-    services.elephant.enable = true;
+    services.elephant = {
+      enable = true;
+      settings = {
+        launch_prefix = "uwsm app --";
+      };
+    };
     services.walker = {
       enable = true;
       systemd.enable = true;
