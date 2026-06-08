@@ -86,6 +86,7 @@
         # Not available for macOS in nixpkgs:
         "balenaetcher"
         "cyberduck"
+        "google-chrome"
         "dropbox"
         "es-de"
         "cemu"
