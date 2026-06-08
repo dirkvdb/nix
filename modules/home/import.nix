@@ -29,8 +29,8 @@ let
 
   getDefaultNix =
     dir:
-    builtins.map (file: ./. + "/${file}") (
-      builtins.filter (file: builtins.baseNameOf file == "default.nix") (files dir)
+    map (file: ./. + "/${file}") (
+      builtins.filter (file: baseNameOf file == "default.nix") (files dir)
     );
 
 in
