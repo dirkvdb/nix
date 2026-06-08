@@ -5,7 +5,7 @@
   symlinkJoin,
 }:
 let
-  version = "4.6.0";
+  version = "5.0.0";
 
   common = {
     inherit version;
@@ -14,7 +14,7 @@ let
       owner = "NordSecurity";
       repo = "nordvpn-linux";
       tag = version;
-      hash = "sha256-Pz0tMy7SZtiF/PXNNa84x8yuNr//IHzFULrwyQcBhwo=";
+      hash = "sha256-PHxaYsOGOiEhghNApr/ScfIx0OGtNzS1geruK4QzXMg=";
     };
 
     # rec so that changelog can reference homepage
