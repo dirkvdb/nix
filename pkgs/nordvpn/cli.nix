@@ -28,7 +28,7 @@ let
         tunnelblickSrc = fetchFromGitHub {
           owner = "Tunnelblick";
           repo = "Tunnelblick";
-          # https://github.com/NordSecurity/nordvpn-linux/blob/4.6.0/ci/openvpn/env.sh#L11
+          # https://github.com/NordSecurity/nordvpn-linux/blob/5.0.0/ci/openvpn/env.sh#L11
           tag = "v6.0beta09";
           hash = "sha256-uLYrBgwX3HkEV06snlIYLsgfhD5lNDVR21D56ygoStY=";
         };
@@ -56,7 +56,7 @@ buildGoModule (finalAttrs: {
     makeWrapper
   ];
 
-  vendorHash = "sha256-rUrzHb5ILnHGeLtbv4dI298dFbuFueWovT1aUXv+wZs=";
+  vendorHash = "sha256-nGKIY95R9nfE0IBC8htz+2src3tqLnNLoRXcT/CgEqM=";
 
   preBuild = ''
     # redirect AppDataPathStatic (/usr/lib/nordvpn) to $out/bin so that
