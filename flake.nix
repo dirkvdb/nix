@@ -67,6 +67,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    vpn-jumphost = {
+      url = "github:VITO-RMA/vpn-jumphost";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-amd-ai.url = "github:noamsto/nix-amd-ai";
   };
 
@@ -222,7 +227,13 @@
             inputs.nixflix.nixosModules.default
             inputs.nix-amd-ai.nixosModules.default
             { nixpkgs.hostPlatform = system; }
-            { nixpkgs.overlays = [ overlay ] ++ extraOverlays; }
+            {
+              nixpkgs.overlays = [
+                overlay
+                inputs.vpn-jumphost.overlays.default
+              ]
+              ++ extraOverlays;
+            }
           ]
           ++ extraModules;
         };

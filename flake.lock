@@ -821,6 +821,7 @@
         "nvf": "nvf",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
+        "vpn-jumphost": "vpn-jumphost",
         "zen-browser": "zen-browser"
       }
     },
@@ -1091,6 +1092,26 @@
       "original": {
         "owner": "Maroka-chan",
         "repo": "VPN-Confinement",
+        "type": "github"
+      }
+    },
+    "vpn-jumphost": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1780952878,
+        "narHash": "sha256-LtjFp2M823CtHWgIYmY5xpnJRlyO8WBy1hznlI8TPqo=",
+        "owner": "VITO-RMA",
+        "repo": "vpn-jumphost",
+        "rev": "e6ca0b376fe0a0deee5bbf8f946c7442fc999c3d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "VITO-RMA",
+        "repo": "vpn-jumphost",
         "type": "github"
       }
     },
