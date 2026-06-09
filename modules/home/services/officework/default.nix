@@ -66,7 +66,7 @@ in
           lib.recursiveUpdate
             (graphicalService {
               description = "Outlook for Linux";
-              execStart = "${pkgs.outlook-for-linux}/bin/outlook-for-linux";
+              execStart = "${pkgs.outlook-for-linux}/bin/outlook-for-linux --minimized";
             })
             (
               lib.optionalAttrs isNvidia {

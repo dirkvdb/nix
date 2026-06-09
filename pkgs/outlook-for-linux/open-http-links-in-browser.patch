@@ -1,25 +1,18 @@
 diff --git a/src-tauri/src/window.rs b/src-tauri/src/window.rs
-index 6b3b259..71d293f 100644
 --- a/src-tauri/src/window.rs
 +++ b/src-tauri/src/window.rs
-@@ -4,10 +4,12 @@ use std::net::TcpStream;
- use std::path::PathBuf;
- use std::thread;
+@@ -5,7 +5,9 @@
  use std::time::Duration;
  use tauri::path::BaseDirectory;
  use tauri::webview::DownloadEvent;
 +use tauri::webview::NewWindowResponse;
  use tauri::{AppHandle, Manager, Url, WebviewWindow, Window, WindowEvent};
- use tauri_plugin_dialog::DialogExt;
 +use tauri_plugin_opener::OpenerExt;
+ use tauri_plugin_dialog::DialogExt;
  use tauri_plugin_store::StoreExt;
  
- pub fn handle_window_event(window: &Window, event: &WindowEvent) {
-@@ -51,10 +53,22 @@ pub fn setup_window(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
-     let builder = tauri::WebviewWindowBuilder::from_config(
-         app.handle(),
-         &app.config().app.windows[0],
-     )?;
+@@ -59,6 +61,17 @@
+     }
  
      builder
 +        .on_new_window({
@@ -30,12 +23,23 @@ index 6b3b259..71d293f 100644
 +                        eprintln!("failed to open URL in browser: {}", err);
 +                    }
 +                }
-+
 +                NewWindowResponse::Deny
 +            }
 +        })
          .on_download(|webview, event| {
              handle_download_event(webview.app_handle().clone(), event);
              true
-         })
-         .build()?;
+diff --git a/src/url-change.js b/src/url-change.js
+--- a/src/url-change.js
++++ b/src/url-change.js
+@@ -5,6 +5,10 @@
+       const anchor = event.target.closest("a[href]");
+       if (!anchor) return;
+       const linkUrl = anchor.href;
++      // Only intercept external links - let Outlook's own SPA navigation work
++      if (new URL(linkUrl, window.location.href).origin === window.location.origin) return;
++      event.preventDefault();
++      event.stopPropagation();
+       window.__TAURI__?.core
+         ?.invoke("open_in_browser", { url: linkUrl })
+         .then(() => console.log("URL successfully opened:", linkUrl))

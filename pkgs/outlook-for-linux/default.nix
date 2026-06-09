@@ -19,29 +19,30 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "outlook-for-linux";
-  version = "0.1.12-unstable-2026-06-03";
+  version = "0.1.13";
 
   src = fetchFromGitHub {
     owner = "maxiking445";
     repo = "outlook-for-linux";
-    rev = "2d94dbc45a44dffd9ceca00081172a9e8837a034";
-    hash = "sha256-Jdw84Lb9MwjC1jPwlii//G8l0k9zJSNAHELkcGHOoAk=";
+    rev = "v${finalAttrs.version}";
+    hash = "sha256-M0pKeyzZSoGysM4yzc/sqKz+g0QEROycPjuND85aoAc=";
   };
 
   npmDeps = fetchNpmDeps {
     src = "${finalAttrs.src}/client";
-    hash = "sha256-FY3GSKzLD165deV2FcsRikP8mwXK9I7jb47T2HE/YJk=";
+    hash = "sha256-uq6V5KBbrtj098o2Yt0yzLxqkb7EhQrismxu2oQfyXI=";
   };
 
   cargoDeps = rustPlatform.fetchCargoVendor {
     src = "${finalAttrs.src}/client/src-tauri";
-    hash = "sha256-oJNx6mprc7niOydP3ohvlbiyusGMl847GibIzv/UL0Q=";
+    hash = "sha256-UL3WtJdFi/djGlrJ+mCMxaGe9WxmgUaaxM+p2a1tOCw=";
   };
 
   sourceRoot = "${finalAttrs.src.name}/client";
 
   patches = [
     ./open-http-links-in-browser.patch
+    ./persist-session-cookies.patch
   ];
 
   nativeBuildInputs = [
