@@ -94,7 +94,6 @@ in
           unstablePkgs.zed-editor;
 
       extensions = [
-        "biome"
         "cargo-tom"
         "catppuccin-icons"
         "color-highlight"
@@ -114,7 +113,6 @@ in
         with unstablePkgs;
         [
           nixd
-          biome
           tombi
           color-lsp
           nixfmt-rs
@@ -138,6 +136,7 @@ in
           };
         })
         {
+          cli_default_open_behavior = "new_window";
           vim_mode = true;
           vim = {
             highlight_on_yank_duration = 500;
