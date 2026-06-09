@@ -1,0 +1,232 @@
+diff --git a/src-tauri/src/window.rs b/src-tauri/src/window.rs
+--- a/src-tauri/src/window.rs
++++ b/src-tauri/src/window.rs
+@@ -1,17 +1,42 @@
+-use std::fs;
++use serde::{Deserialize, Serialize};
++use std::fs::{self, OpenOptions};
++use std::io::Write;
++#[cfg(unix)]
++use std::os::unix::fs::OpenOptionsExt;
+ use std::net::TcpStream;
+ use std::path::PathBuf;
+ use std::thread;
+ use std::time::Duration;
+ use tauri::path::BaseDirectory;
+-use tauri::webview::DownloadEvent;
++use tauri::webview::{Cookie, DownloadEvent, PageLoadEvent};
+ use tauri::webview::NewWindowResponse;
+-use tauri::{AppHandle, Manager, Url, WebviewWindow, Window, WindowEvent};
++use tauri::{AppHandle, Manager, Url, WebviewUrl, WebviewWindow, Window, WindowEvent};
+ use tauri_plugin_opener::OpenerExt;
+ use tauri_plugin_dialog::DialogExt;
+ use tauri_plugin_store::StoreExt;
+ 
+ const MINIMIZED_ARG: &str = "--minimized";
++const SESSION_COOKIE_FILE: &str = "session-cookies.json";
++
++#[derive(Debug, Deserialize, Serialize)]
++struct StoredSessionCookie {
++    name: String,
++    value: String,
++    domain: Option<String>,
++    path: Option<String>,
++    secure: Option<bool>,
++    http_only: Option<bool>,
++    same_site: Option<String>,
++}
++
++const MICROSOFT_COOKIE_HOST_SUFFIXES: &[&str] = &[
++    "live.com",
++    "microsoft.com",
++    "microsoftonline.com",
++    "office.com",
++    "office365.com",
++    "outlook.com",
++];
+ 
+ pub fn is_minimized_arg_set(args: impl IntoIterator<Item = impl AsRef<str>>) -> bool {
+     args.into_iter().any(|arg| arg.as_ref() == MINIMIZED_ARG)
+@@ -20,6 +45,11 @@ pub fn is_minimized_arg_set(args: impl IntoIterator<Item = impl AsRef<str>>) ->
+ pub fn handle_window_event(window: &Window, event: &WindowEvent) {
+     match event {
+         WindowEvent::CloseRequested { api, .. } => {
++            if let Some(webview_window) = window.app_handle().get_webview_window("main") {
++                if let Err(err) = save_session_cookies(&webview_window) {
++                    eprintln!("failed to save session cookies: {}", err);
++                }
++            }
+             let store = window.app_handle().store("settings.json").unwrap();
+             let quit_on_close = store
+                 .get("quit_on_close")
+@@ -51,14 +81,30 @@ pub fn handle_window_event(window: &Window, event: &WindowEvent) {
+ }
+ 
+ pub fn setup_window(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
++    let mut window_config = app.config().app.windows[0].clone();
++    let outlook_url = window_config.url.to_string();
++    window_config.url = WebviewUrl::External("about:blank".parse()?);
++
+     let mut builder =
+-        tauri::WebviewWindowBuilder::from_config(app.handle(), &app.config().app.windows[0])?;
++        tauri::WebviewWindowBuilder::from_config(app.handle(), &window_config)?;
+ 
+     if is_minimized_arg_set(std::env::args()) {
+         builder = builder.visible(false);
+     }
+ 
+     builder
++        .on_page_load(|webview, payload| {
++            if matches!(payload.event(), PageLoadEvent::Finished)
++                && should_save_cookies_for_url(payload.url())
++            {
++                let webview = webview.clone();
++                thread::spawn(move || {
++                    if let Err(err) = save_session_cookies(&webview) {
++                        eprintln!("failed to save session cookies: {}", err);
++                    }
++                });
++            }
++        })
+         .on_new_window({
+             let app_handle = app.handle().clone();
+             move |url, _features| {
+@@ -77,6 +120,7 @@ pub fn setup_window(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Erro
+         .build()?;
+ 
+     let window = app.get_webview_window("main").unwrap();
++    restore_session_cookies(&window)?;
+ 
+     if !check_internet() {
+         let offline_path = app
+@@ -86,6 +130,9 @@ pub fn setup_window(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Erro
+         let offline_url = Url::from_file_path(&offline_path)
+             .map_err(|_| format!("Invalid path: {:?}", offline_path))?;
+         window.navigate(offline_url)?;
++    } else {
++        let outlook_url = Url::parse(&outlook_url)?;
++        window.navigate(outlook_url)?;
+     }
+ 
+     inject_js_files(window);
+@@ -93,6 +140,120 @@ pub fn setup_window(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Erro
+     Ok(())
+ }
+ 
++fn should_save_cookies_for_url(url: &Url) -> bool {
++    url.host_str()
++        .map(is_microsoft_cookie_host)
++        .unwrap_or(false)
++}
++
++fn is_microsoft_cookie_host(host: &str) -> bool {
++    let host = host.trim_start_matches('.').to_ascii_lowercase();
++    MICROSOFT_COOKIE_HOST_SUFFIXES
++        .iter()
++        .any(|suffix| host == *suffix || host.ends_with(&format!(".{}", suffix)))
++}
++
++fn session_cookie_path(app: &AppHandle) -> Result<PathBuf, Box<dyn std::error::Error>> {
++    let dir = app.path().app_data_dir()?;
++    fs::create_dir_all(&dir)?;
++    Ok(dir.join(SESSION_COOKIE_FILE))
++}
++
++fn is_session_cookie(cookie: &Cookie<'_>) -> bool {
++    cookie.expires_datetime().is_none() && cookie.max_age().is_none()
++}
++
++fn stored_session_cookie(cookie: &Cookie<'_>) -> Option<StoredSessionCookie> {
++    if !is_session_cookie(cookie) {
++        return None;
++    }
++
++    if let Some(domain) = cookie.domain() {
++        if !is_microsoft_cookie_host(domain) {
++            return None;
++        }
++    }
++
++    Some(StoredSessionCookie {
++        name: cookie.name().to_string(),
++        value: cookie.value().to_string(),
++        domain: cookie.domain().map(ToString::to_string),
++        path: cookie.path().map(ToString::to_string),
++        secure: cookie.secure(),
++        http_only: cookie.http_only(),
++        same_site: cookie.same_site().map(|same_site| format!("{:?}", same_site)),
++    })
++}
++
++fn save_session_cookies(window: &WebviewWindow) -> Result<(), Box<dyn std::error::Error>> {
++    let cookies: Vec<_> = window
++        .cookies()?
++        .into_iter()
++        .filter_map(|cookie| stored_session_cookie(&cookie))
++        .collect();
++    let data = serde_json::to_vec_pretty(&cookies)?;
++    let path = session_cookie_path(window.app_handle())?;
++
++    let mut options = OpenOptions::new();
++    options.create(true).truncate(true).write(true);
++    #[cfg(unix)]
++    options.mode(0o600);
++
++    let mut file = options.open(path)?;
++    file.write_all(&data)?;
++    Ok(())
++}
++
++fn restore_session_cookies(window: &WebviewWindow) -> Result<(), Box<dyn std::error::Error>> {
++    let path = session_cookie_path(window.app_handle())?;
++    if !path.exists() {
++        return Ok(());
++    }
++
++    let data = fs::read(path)?;
++    let cookies: Vec<StoredSessionCookie> = serde_json::from_slice(&data)?;
++    for cookie in cookies {
++        if let Some(domain) = &cookie.domain {
++            if !is_microsoft_cookie_host(domain) {
++                continue;
++            }
++        }
++
++        match cookie.to_cookie() {
++            Ok(cookie) => {
++                if let Err(err) = window.set_cookie(cookie) {
++                    eprintln!("failed to restore session cookie: {}", err);
++                }
++            }
++            Err(err) => eprintln!("failed to parse stored session cookie: {}", err),
++        }
++    }
++
++    Ok(())
++}
++
++impl StoredSessionCookie {
++    fn to_cookie(&self) -> Result<Cookie<'static>, Box<dyn std::error::Error>> {
++        let mut cookie = format!("{}={}", self.name, self.value);
++        if let Some(domain) = &self.domain {
++            cookie.push_str(&format!("; Domain={}", domain));
++        }
++        if let Some(path) = &self.path {
++            cookie.push_str(&format!("; Path={}", path));
++        }
++        if self.secure.unwrap_or(false) {
++            cookie.push_str("; Secure");
++        }
++        if self.http_only.unwrap_or(false) {
++            cookie.push_str("; HttpOnly");
++        }
++        if let Some(same_site) = &self.same_site {
++            cookie.push_str(&format!("; SameSite={}", same_site));
++        }
++        Ok(Cookie::parse(cookie)?)
++    }
++}
++
+ fn handle_download_event(app_handle: AppHandle, event: DownloadEvent) {
+     match event {
+         DownloadEvent::Requested { url, destination } => {
