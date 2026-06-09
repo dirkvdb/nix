@@ -400,6 +400,7 @@ in
 
         workspace = [
           "3, rounding:false, decorate:false, gapsin:1, gapsout:1"
+          "5, layoutopt:orientation:left, layout:scrolling"
         ];
 
         windowrule = [
