@@ -30,6 +30,9 @@ in
         font-style = "Regular";
         font-size = theme.terminalFontSize;
 
+        # Scrollback
+        scrollback-limit = 1000000000; # ~1GB
+
         # Window
         window-padding-x = 14;
         window-padding-y = 14;
