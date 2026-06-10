@@ -17,28 +17,30 @@ in
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
       {
-        hardware.bluetooth.enable = true;
+        hardware.bluetooth = {
+          enable = true;
+          powerOnBoot = true;
 
-        environment.systemPackages = with unstablePkgs; [
+          settings = {
+            General = {
+              Experimental = true;
+              FastConnectable = true;
+              JustWorksRepairing = "always";
+              # Reconnect on startup for paired devices
+              ReconnectAttempts = 7;
+              ReconnectIntervals = "1,2,4,8,16,32,64";
+            };
+          };
+        };
+
+        environment.systemPackages = with pkgs; [
           overskride
+          bluetui
         ];
       }
 
       (lib.mkIf cfg.sixaxis {
         hardware.bluetooth = {
-          # Use the bluez package with experimental features for sixaxis plugin
-          package = pkgs.bluez;
-
-          settings = {
-            General = {
-              # Ensure the sixaxis plugin is not excluded
-              # ClassicBondedOnly = false;
-              FastConnectable = true;
-              # Battery level updates require experimental features
-              Experimental = true;
-            };
-          };
-
           input = {
             General = {
               # Needed for sixaxis according to arch wiki
