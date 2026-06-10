@@ -3,6 +3,7 @@
   config,
   lib,
   mkHome,
+  unstablePkgs,
   ...
 }:
 let
@@ -114,6 +115,7 @@ in
     # so no custom systemd timer is required.
     services.wpaperd = {
       enable = true;
+      package = unstablePkgs.wpaperd;
       settings = {
         any = {
           path = "${wallpapersDir}";
