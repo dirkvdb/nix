@@ -1102,11 +1102,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781042569,
-        "narHash": "sha256-kw+8x3wT7SX/wgrTka8J9wx6LGvyfuBlgDGPMLOVOqY=",
+        "lastModified": 1781070914,
+        "narHash": "sha256-LoZ6vr8+1YzCyb5vYU4zIUlKpxuIyH/c7HSMKT8IruM=",
         "owner": "VITO-RMA",
         "repo": "vpn-jumphost",
-        "rev": "898152c832efd2442301897620a07ea15f099a97",
+        "rev": "9e25e86f2e446997fb6d823347bc04d88603352e",
         "type": "github"
       },
       "original": {
