@@ -59,6 +59,27 @@ in
 
     localModels = lib.mkEnableOption "local model providers in Zed (e.g. lemonade)";
 
+    mimeTypes = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "text/plain"
+        "application/x-shellscript"
+        "text/x-c"
+        "text/x-c++src"
+        "text/x-python"
+        "text/x-rust"
+        "text/x-go"
+        "text/x-java"
+        "text/javascript"
+        "application/json"
+        "application/x-yaml"
+        "application/toml"
+        "text/markdown"
+        "text/x-nix"
+      ];
+      description = "MIME types for which Zed is the default handler.";
+    };
+
     lemonade.models = lib.mkOption {
       type = lib.types.listOf lib.types.attrs;
       default = [
@@ -78,6 +99,8 @@ in
   };
 
   config = lib.mkIf (cfg.enable) (mkUserHome {
+    xdg.mimeApps.defaultApplications = lib.genAttrs cfg.mimeTypes (_: "dev.zed.Zed.desktop");
+
     stylix.targets.zed.enable = false;
 
     programs.zed-editor = {

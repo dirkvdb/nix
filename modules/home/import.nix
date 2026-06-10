@@ -29,9 +29,7 @@ let
 
   getDefaultNix =
     dir:
-    map (file: ./. + "/${file}") (
-      builtins.filter (file: baseNameOf file == "default.nix") (files dir)
-    );
+    map (file: ./. + "/${file}") (builtins.filter (file: baseNameOf file == "default.nix") (files dir));
 
 in
 {
@@ -50,23 +48,7 @@ in
 
   config = mkUserHome {
     xdg.enable = true;
-
-    # Set Zen as the default browser
-    xdg.mimeApps = {
-      enable = !pkgs.stdenv.isDarwin;
-      defaultApplications = {
-        "text/html" = "zen-beta.desktop";
-        "x-scheme-handler/http" = "zen-beta.desktop";
-        "x-scheme-handler/https" = "zen-beta.desktop";
-        "x-scheme-handler/about" = "zen-beta.desktop";
-        "x-scheme-handler/unknown" = "zen-beta.desktop";
-        "inode/directory" = "org.gnome.Nautilus.desktop";
-        "application/pdf" = "zen-beta.desktop";
-        "application/zip" = "org.gnome.FileRoller.desktop";
-        "application/x-tar" = "org.gnome.FileRoller.desktop";
-        "application/x-7z-compressed" = "org.gnome.FileRoller.desktop";
-      };
-    };
+    xdg.mimeApps.enable = !pkgs.stdenv.isDarwin;
 
     # Per-directory XDG config entries for dotfiles
     xdg.configFile."btop".source = ./dotfiles/btop;

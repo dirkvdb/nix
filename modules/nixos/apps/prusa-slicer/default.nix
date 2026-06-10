@@ -52,6 +52,14 @@ in
 {
   options.local.apps.prusa-slicer = {
     enable = lib.mkEnableOption "prusa-slicer";
+
+    mimeTypes = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "x-scheme-handler/prusaslicer"
+      ];
+      description = "MIME types for which PrusaSlicer is the default handler.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -59,12 +67,8 @@ in
 
     # Register prusaslicer:// URL scheme handler in home-manager
     home-manager.users.${user.name} = {
-      xdg.mimeApps.associations.added = {
-        "x-scheme-handler/prusaslicer" = "PrusaSlicer.desktop";
-      };
-      xdg.mimeApps.defaultApplications = {
-        "x-scheme-handler/prusaslicer" = "PrusaSlicer.desktop";
-      };
+      xdg.mimeApps.associations.added = lib.genAttrs cfg.mimeTypes (_: "PrusaSlicer.desktop");
+      xdg.mimeApps.defaultApplications = lib.genAttrs cfg.mimeTypes (_: "PrusaSlicer.desktop");
     };
   };
 }
