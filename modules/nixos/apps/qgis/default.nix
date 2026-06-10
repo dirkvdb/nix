@@ -11,18 +11,24 @@ in
 {
   options.local.apps.qgis = {
     enable = lib.mkEnableOption "qgis";
+
+    mimeTypes = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "application/x-esri-shape"
+        "image/tiff"
+        "image/x-tiff"
+        "application/geopackage+sqlite3"
+      ];
+      description = "MIME types for which QGIS is the default handler.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ pkgs.qgis ];
 
     home-manager.users.${user.name} = {
-      xdg.mimeApps.defaultApplications = {
-        "application/x-esri-shape" = "org.qgis.qgis.desktop";
-        "image/tiff" = "org.qgis.qgis.desktop";
-        "image/x-tiff" = "org.qgis.qgis.desktop";
-        "application/geopackage+sqlite3" = "org.qgis.qgis.desktop";
-      };
+      xdg.mimeApps.defaultApplications = lib.genAttrs cfg.mimeTypes (_: "org.qgis.qgis.desktop");
     };
   };
 }

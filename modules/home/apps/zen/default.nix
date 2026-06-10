@@ -15,6 +15,21 @@ let
   proxyPacUrl = config.local.system.network.proxy.pacUrl;
 in
 {
+  options.local.apps.zen = {
+    mimeTypes = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "text/html"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+        "x-scheme-handler/about"
+        "x-scheme-handler/unknown"
+        "application/xhtml+xml"
+      ];
+      description = "MIME types for which Zen Browser is the default handler.";
+    };
+  };
+
   config = lib.mkIf (isLinux && isDesktop) (mkUserHome {
 
     programs.zen-browser = {
@@ -184,5 +199,8 @@ in
 
     stylix.targets.zen-browser.profileNames = [ "default" ];
 
+    xdg.mimeApps.defaultApplications = lib.genAttrs config.local.apps.zen.mimeTypes (
+      _: "zen-beta.desktop"
+    );
   });
 }
