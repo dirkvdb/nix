@@ -12,6 +12,7 @@ let
   proxyPacUrl = config.local.system.network.proxy.pacUrl;
   proxyEnabled = proxyPacUrl != null;
   socksProxyUrl = config.local.services.vpnjumphost.socksProxyUrl;
+  vpnjumphostEnabled = config.local.services.vpnjumphost.enable;
   mkUserHome = mkHome user.name;
 in
 {
@@ -46,6 +47,8 @@ in
           Port = 2222;
           RequestTTY = "yes";
           ForwardAgent = true;
+          RemoteForward = lib.mkIf vpnjumphostEnabled "1080 ${socksProxyUrl}";
+          ExitOnForwardFailure = lib.mkIf vpnjumphostEnabled "yes";
           SendEnv = [ "ARTIFACTORY_TOKEN" ];
         };
         inky = {
