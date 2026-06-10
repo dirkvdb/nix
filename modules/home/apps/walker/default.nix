@@ -17,6 +17,13 @@ in
         launch_prefix = "uwsm app --";
       };
     };
+    # Ensure both services start after WAYLAND_DISPLAY and other
+    # session variables have been exported by UWSM (via
+    # wayland-session-waitenv.service), otherwise app launching
+    # silently fails at boot.
+    systemd.user.services.elephant.Unit.After = [ "graphical-session.target" ];
+    systemd.user.services.walker.Unit.After = [ "graphical-session.target" ];
+
     services.walker = {
       enable = true;
       systemd.enable = true;
@@ -83,6 +90,10 @@ in
             {
               prefix = "$";
               provider = "clipboard";
+            }
+            {
+              prefix = "~";
+              provider = "bluetooth";
             }
           ];
         };
