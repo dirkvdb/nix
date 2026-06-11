@@ -480,11 +480,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1781180204,
-        "narHash": "sha256-vkwtIMUoUvCxXr/C4oqVzX5uYeF4CON+fNUAXcwRI9E=",
+        "lastModified": 1781202520,
+        "narHash": "sha256-3+OpqxQb/mwGbU5P01GshmkjGDuocivA3yJ6d6Iwgcg=",
         "owner": "noamsto",
         "repo": "nix-amd-ai",
-        "rev": "03f86ef66660e9194da3c8ba8f294555a3b8ca68",
+        "rev": "7f9529fe3e24362860f354d40f1fbd78f27d98f2",
         "type": "github"
       },
       "original": {
@@ -790,11 +790,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1781182504,
-        "narHash": "sha256-U0JwGV8NkaNTWbfNOmUZdajA97mW+LTtYogTz/GYy5o=",
+        "lastModified": 1781204315,
+        "narHash": "sha256-0mEWVih7Aq2tdyZwHL91tZMsIitFIocGMvtfaenOSPc=",
         "owner": "NotAShelf",
         "repo": "nvf",
-        "rev": "7fca440370dedda2406efb58a8b4547eb1345de5",
+        "rev": "5727a5b9a76f6540d93a26cfc96c6ec2b47fa4f3",
         "type": "github"
       },
       "original": {
@@ -1102,11 +1102,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781180545,
-        "narHash": "sha256-9YwQYBQTfHD1TxOU44jGkrDfx15ISPx67MeSPZGpFbg=",
+        "lastModified": 1781203985,
+        "narHash": "sha256-rcUP+H2uIS613kYXIvsOYYy3i+l3dwG+H1cTPa4sq8w=",
         "owner": "VITO-RMA",
         "repo": "vpn-jumphost",
-        "rev": "c1d7dc55832aeffb06ad8d7bc099aa432b7f9398",
+        "rev": "f793d0613c95c9352b7daf10d32d30b45f06bf73",
         "type": "github"
       },
       "original": {
