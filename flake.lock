@@ -639,11 +639,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1780749050,
-        "narHash": "sha256-3av0pIjlOWQ6rDbNOmpUSvbNnJkGORQKKjb4LtCZsIY=",
+        "lastModified": 1781074563,
+        "narHash": "sha256-md8WlXOlfnIeHeOScMTTHFyf2d6iaTwPl2apR5EQ3P4=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "a799d3e3886da994fa307f817a6bc705ae538eeb",
+        "rev": "9ae611a455b90cf061d8f332b977e387bda8e1ca",
         "type": "github"
       },
       "original": {
@@ -790,11 +790,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1781204315,
-        "narHash": "sha256-0mEWVih7Aq2tdyZwHL91tZMsIitFIocGMvtfaenOSPc=",
+        "lastModified": 1781295736,
+        "narHash": "sha256-enXFe6QlMPTFnxjdNM+I0dcKj2CqV7yZRpz6AULQrYY=",
         "owner": "NotAShelf",
         "repo": "nvf",
-        "rev": "5727a5b9a76f6540d93a26cfc96c6ec2b47fa4f3",
+        "rev": "9ba45374ef7ca8b10a616b94364f079b483e5369",
         "type": "github"
       },
       "original": {
@@ -1102,11 +1102,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781203985,
-        "narHash": "sha256-rcUP+H2uIS613kYXIvsOYYy3i+l3dwG+H1cTPa4sq8w=",
+        "lastModified": 1781293543,
+        "narHash": "sha256-0tpR7QfdYVAwojHLTzFHK7zdT8d3bQMbqT/1BvZiSBo=",
         "owner": "VITO-RMA",
         "repo": "vpn-jumphost",
-        "rev": "f793d0613c95c9352b7daf10d32d30b45f06bf73",
+        "rev": "1d26f058f75e7bfdd52b3eacf30374f08f8558c0",
         "type": "github"
       },
       "original": {
