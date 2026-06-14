@@ -184,7 +184,6 @@
     environment.systemPackages = with pkgs; [
       appimage-run
       gnumeric
-      teams-for-linux # add "secure": true to ~/.config/teams-for-linux/Preferences for camera to work
       outlook-for-linux
     ];
   };

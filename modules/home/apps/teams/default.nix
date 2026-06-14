@@ -16,10 +16,13 @@ in
   };
 
   config = lib.mkIf (cfg.enable && pkgs.stdenv.isLinux) (mkUserHome {
+    home.packages = [ pkgs.teams-for-linux ];
+
     xdg.configFile."teams-for-linux/config.json".text = builtins.toJSON {
       appIconType = "light";
       disableGpu = false;
       enableIncomingCallToast = true;
+      secure = true; # for camera to work
     };
   });
 }
