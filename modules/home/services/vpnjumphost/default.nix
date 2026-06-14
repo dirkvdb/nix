@@ -101,6 +101,12 @@ in
       description = "SOCKS5 proxy address (host:port) derived from socksPort. Read-only; consumed by other modules (e.g. SSH ProxyCommand).";
     };
 
+    autostart = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether the vpn-jumphost systemd user service starts automatically with the graphical session.";
+    };
+
     pac = {
       enable = lib.mkEnableOption "PAC proxy auto-configuration (served by the jumphost binary over HTTP)";
 
@@ -137,22 +143,22 @@ in
               "network-online.target"
               "graphical-session.target"
             ];
+            StartLimitIntervalSec = 600;
+            StartLimitBurst = 3;
           };
 
           Service = {
             Type = "simple";
-            ExecStart = "${pkgs.vpn-jumphost}/bin/jumphost run --serve-pac";
+            ExecStart = "${pkgs.vpn-jumphost}/bin/jumphost run";
             KillSignal = "SIGTERM";
             TimeoutStopSec = 15;
             Restart = "on-failure";
             RestartSec = 15;
-            StartLimitIntervalSec = 600;
-            StartLimitBurst = 3;
             # Allow time for browser-based MFA if cookie refresh is needed.
             TimeoutStartSec = 360;
           };
 
-          Install = {
+          Install = lib.mkIf cfg.autostart {
             WantedBy = [ "graphical-session.target" ];
           };
         };

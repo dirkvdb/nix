@@ -116,6 +116,11 @@
         };
         docker.enable = true;
         power-profiles-daemon.enable = true;
+        vpnjumphost = {
+          enable = true;
+          autostart = false;
+          pac.enable = true;
+        };
       };
 
       desktop = {
