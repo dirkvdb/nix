@@ -65,6 +65,8 @@ stdenv.mkDerivation (finalAttrs: {
 
   cargoRoot = "src-tauri";
 
+  tauriBuildFlags = [ "--no-bundle" ];
+
   postPatch = ''
     substituteInPlace src-tauri/tauri.conf.json \
       --replace-fail '"beforeBuildCommand": "npm run build"' '"beforeBuildCommand": ""' \
@@ -100,7 +102,7 @@ stdenv.mkDerivation (finalAttrs: {
     in
     ''
       runHook preInstall
-      install -Dm755 src-tauri/target/x86_64-unknown-linux-gnu/release/OutlookClient $out/bin/outlook-for-linux
+      install -Dm755 src-tauri/target/${stdenv.hostPlatform.rust.cargoShortTarget}/release/OutlookClient $out/bin/outlook-for-linux
       install -Dm644 src-tauri/icons/128x128.png $out/share/icons/hicolor/128x128/apps/outlook-for-linux.png
       install -Dm644 src-tauri/icons/32x32.png $out/share/icons/hicolor/32x32/apps/outlook-for-linux.png
       install -Dm644 <(echo ${lib.escapeShellArg desktopEntry}) $out/share/applications/outlook-for-linux.desktop
