@@ -500,11 +500,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780816331,
-        "narHash": "sha256-0BYqs8yKWkOz2Q7+SP18N5E5gmDKSo6LSxIVIa0wWes=",
+        "lastModified": 1781422160,
+        "narHash": "sha256-W7S8O86bVrw2gaomEwkHStOzmPpnFIHQ6lS4Q2HffJ0=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "1a2ea89c917781e88508d9fd2b507f2d2a0e173c",
+        "rev": "854d04e2368fb2e9c328a36b3c0a04cd713bfae1",
         "type": "github"
       },
       "original": {
@@ -1102,11 +1102,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781418958,
-        "narHash": "sha256-sDqxQze8K6a+O6crmF+FgV+L7KsOfa2DM3ZATo721+4=",
+        "lastModified": 1781425545,
+        "narHash": "sha256-sKyZbjo2+7GZP2vNm7TP0TGygYHJK5sJQAAcjjQBIok=",
         "owner": "VITO-RMA",
         "repo": "vpn-jumphost",
-        "rev": "5cfafd82407dab19611fd529874f347297920627",
+        "rev": "2f685a54f928472d101fb895b45889eb096b7186",
         "type": "github"
       },
       "original": {
