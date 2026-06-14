@@ -123,17 +123,6 @@ in
       fi
     '')
 
-    # Toggle VPN jumphost
-    (pkgs.writeShellScriptBin "nixcfg-toggle-vpn-jumphost" ''
-      if systemctl --user is-active --quiet vpn-jumphost.service; then
-        systemctl --user stop vpn-jumphost.service
-        notify-desktop "VPN jumphost stopped"
-      else
-        systemctl --user start vpn-jumphost.service
-        notify-desktop "VPN jumphost started"
-      fi
-    '')
-
     # Get current working directory of active terminal
     (pkgs.writeShellScriptBin "nixcfg-cmd-terminal-cwd" ''
       # Go from current active terminal to its child shell process and run cwd there
