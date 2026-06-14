@@ -88,7 +88,9 @@ in
 
         "$mod CTRL, I, Toggle locking on idle, exec, nixcfg-toggle-idle"
         "$mod CTRL, N, Toggle nightlight, exec, nixcfg-toggle-nightlight"
-        "$mod ALT, J, Toggle VPN jumphost, exec, nixcfg-toggle-vpn-jumphost"
+      ]
+      ++ lib.optional vpnjumphostEnabled "$mod ALT, J, Toggle VPN jumphost, exec, nixcfg-toggle-vpn-jumphost"
+      ++ [
         "$mod CTRL, S, Share, exec, nixcfg-menu share"
 
         # Control tiling
