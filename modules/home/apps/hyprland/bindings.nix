@@ -12,6 +12,7 @@ let
   isHeadless = config.local.headless or false;
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
   isX86 = pkgs.stdenv.isx86_64;
+  vpnjumphostEnabled = config.local.services.vpnjumphost.enable;
   mkUserHome = mkHome user.name;
 in
 {
