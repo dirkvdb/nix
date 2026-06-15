@@ -185,6 +185,7 @@
       appimage-run
       gnumeric
       outlook-for-linux
+      orca-slicer
     ];
   };
 }
