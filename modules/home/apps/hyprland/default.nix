@@ -141,12 +141,23 @@ in
 
     home.sessionVariables = {
       NIXOS_OZONE_WL = "1";
-      XDG_SESSION_TYPE = "wayland";
-      XDG_CURRENT_DESKTOP = "Hyprland";
-      XDG_SESSION_DESKTOP = "Hyprland";
     }
     // lib.optionalAttrs sopsEnabled {
       COPILOT_GITHUB_TOKEN = config.sops.placeholder.copilot_github_token;
+    };
+
+    # Set via environment.d so systemd user services (uwsm app, Walker/elephant)
+    # inherit the same Wayland and scaling variables as terminal-launched apps.
+    systemd.user.sessionVariables = {
+      XDG_SESSION_TYPE = "wayland";
+      XDG_CURRENT_DESKTOP = "Hyprland";
+      XDG_SESSION_DESKTOP = "Hyprland";
+      GDK_BACKEND = "wayland,x11,*";
+      QT_QPA_PLATFORM = "wayland;xcb";
+      SDL_VIDEODRIVER = "wayland";
+      MOZ_ENABLE_WAYLAND = "1";
+      ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+      OZONE_PLATFORM = "wayland";
     };
 
     wayland.windowManager.hyprland = {
@@ -202,15 +213,6 @@ in
           "hyprctl output create headless SUNSHINE && systemctl --user restart sunshine.service"
         ];
         env = [
-          # Force all apps to use Wayland
-          "GDK_BACKEND,wayland,x11,*"
-          "QT_QPA_PLATFORM,wayland;xcb"
-          "SDL_VIDEODRIVER,wayland"
-          "MOZ_ENABLE_WAYLAND,1"
-          "ELECTRON_OZONE_PLATFORM_HINT,wayland"
-          "OZONE_PLATFORM,wayland"
-          "XDG_SESSION_TYPE,wayland"
-          "XDG_SESSION_DESKTOP,Hyprland"
         ];
 
         xwayland = {
