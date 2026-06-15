@@ -477,19 +477,41 @@
     "nix-amd-ai": {
       "inputs": {
         "flake-parts": "flake-parts_2",
+        "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1781202520,
-        "narHash": "sha256-3+OpqxQb/mwGbU5P01GshmkjGDuocivA3yJ6d6Iwgcg=",
+        "lastModified": 1781442633,
+        "narHash": "sha256-MyjOCrerHRlRb0RATUYUXuecZ9xZnzqm577OzheCmIM=",
         "owner": "noamsto",
         "repo": "nix-amd-ai",
-        "rev": "7f9529fe3e24362860f354d40f1fbd78f27d98f2",
+        "rev": "38e6f7446f3d77196ea6d863c82a1dc577160226",
         "type": "github"
       },
       "original": {
         "owner": "noamsto",
         "repo": "nix-amd-ai",
+        "type": "github"
+      }
+    },
+    "nix-darwin": {
+      "inputs": {
+        "nixpkgs": [
+          "nix-amd-ai",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1781242433,
+        "narHash": "sha256-bchLZZ3sRn740zyvD2icZSnNoTaanN0nw7l6fjVXO+E=",
+        "owner": "nix-darwin",
+        "repo": "nix-darwin",
+        "rev": "aabb2037edfc0f210723b72cd5f528aab5dd3f0b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-darwin",
+        "repo": "nix-darwin",
         "type": "github"
       }
     },
@@ -790,11 +812,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1781374247,
-        "narHash": "sha256-34t1PpO8957G0KkE9YdZx5tsVW1HwMYxUsDep+q093o=",
+        "lastModified": 1781468924,
+        "narHash": "sha256-lohnpykCw/3ABFIyMw3SjKQe+Je3iiH/ZHAl/HOS00s=",
         "owner": "NotAShelf",
         "repo": "nvf",
-        "rev": "b67d23fad44b27764ef4af290745188cf3bcbade",
+        "rev": "d55e51c3f75b94f49445a9efb73aab722df1cf4d",
         "type": "github"
       },
       "original": {
@@ -1102,11 +1124,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781425545,
-        "narHash": "sha256-sKyZbjo2+7GZP2vNm7TP0TGygYHJK5sJQAAcjjQBIok=",
+        "lastModified": 1781434314,
+        "narHash": "sha256-E8R+3mNtlK8Flwqf3teLrZmy0DhAbyCzUhxZ1GELcko=",
         "owner": "VITO-RMA",
         "repo": "vpn-jumphost",
-        "rev": "2f685a54f928472d101fb895b45889eb096b7186",
+        "rev": "dcd7ffc960d569ae47f00d005accbb8e2ff5b8e1",
         "type": "github"
       },
       "original": {
