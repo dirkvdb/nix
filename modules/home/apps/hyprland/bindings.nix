@@ -13,6 +13,7 @@ let
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
   isX86 = pkgs.stdenv.isx86_64;
   vpnjumphostEnabled = config.local.services.vpnjumphost.enable;
+  officeworkEnabled = config.local.services.officework.enable;
   mkUserHome = mkHome user.name;
 in
 {
@@ -90,6 +91,7 @@ in
         "$mod CTRL, N, Toggle nightlight, exec, nixcfg-toggle-nightlight"
       ]
       ++ lib.optional vpnjumphostEnabled "$mod ALT, J, Toggle VPN jumphost, exec, nixcfg-toggle-vpn-jumphost"
+      ++ lib.optional officeworkEnabled "$mod ALT, O, Toggle officework services, exec, nixcfg-toggle-officework"
       ++ [
         "$mod CTRL, S, Share, exec, nixcfg-menu share"
 

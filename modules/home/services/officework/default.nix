@@ -32,7 +32,7 @@ let
         Restart = "no";
       };
 
-      Install = {
+      Install = lib.mkIf cfg.autostart {
         WantedBy = [ "graphical-session.target" ];
       };
     };
@@ -40,6 +40,12 @@ in
 {
   options.local.services.officework = {
     enable = lib.mkEnableOption "officework — auto-start work applications (Teams, Slack, Outlook)";
+
+    autostart = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether the officework systemd user services start automatically with the graphical session.";
+    };
   };
 
   config = lib.mkIf cfg.enable (
@@ -51,6 +57,21 @@ in
           outlook-for-linux
         ];
       }
+      (mkUserHome {
+        home.packages = [
+          # Toggle all officework services
+          (pkgs.writeShellScriptBin "nixcfg-toggle-officework" ''
+            services="officework-teams.service officework-slack.service officework-outlook.service"
+            if systemctl --user is-active --quiet officework-teams.service; then
+              systemctl --user stop $services
+              notify-desktop "Officework services stopped"
+            else
+              systemctl --user start $services
+              notify-desktop "Officework services started"
+            fi
+          '')
+        ];
+      })
       (mkUserHome {
         systemd.user.services.officework-teams = graphicalService {
           description = "Microsoft Teams (teams-for-linux)";

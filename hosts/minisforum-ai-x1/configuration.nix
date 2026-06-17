@@ -121,6 +121,10 @@
           autostart = false;
           pac.enable = true;
         };
+        officework = {
+          enable = true;
+          autostart = false;
+        };
       };
 
       desktop = {
