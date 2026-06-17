@@ -126,6 +126,7 @@ in
         "rainbow-csv"
         "tombi"
         "toml"
+        "groovy"
       ];
 
       extraPackages = pkgs.lib.mkIf (!pkgs.stdenv.isDarwin) (
@@ -140,6 +141,7 @@ in
           bash-language-server
           shellcheck
           codex-acp
+          groovy-language-server
         ]
       );
 
@@ -264,6 +266,11 @@ in
             nixd = lib.mkIf (!pkgs.stdenv.isDarwin) {
               binary = {
                 path = "${unstablePkgs.nixd}/bin/nixd";
+              };
+            };
+            groovy = lib.mkIf (!pkgs.stdenv.isDarwin) {
+              binary = {
+                path = "${unstablePkgs.groovy-language-server}/bin/groovy-language-server";
               };
             };
             tombi = lib.mkMerge [
