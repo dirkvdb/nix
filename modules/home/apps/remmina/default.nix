@@ -20,7 +20,7 @@ let
       value.text = ''
         [remmina]
         colordepth = 99;
-        resolution_mode = 2;
+        resolution_mode = 1;
         quality = 2;
         network = "autodetect";
         sound = "off";
