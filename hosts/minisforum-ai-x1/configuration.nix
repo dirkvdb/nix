@@ -134,34 +134,11 @@
       };
 
       apps = {
-        direnv.enable = true;
-
-        librepods.enable = true;
-        localsend.enable = true;
-        moonlight.enable = true;
-        mqtt.enable = true;
-        neovim.enable = true;
-        prusa-slicer.enable = true;
-        retro-emulation.enable = true;
-        retro-emulation.eden.archnative = true;
-        slack.enable = true;
-        fladder.enable = true;
-        sops.enable = true;
-        spotify.enable = true;
-        vscode.enable = true;
-        whatsapp.enable = true;
-        qgis.enable = true;
-        celluloid.enable = true;
-        zathura.enable = true;
-        zed = {
-          enable = true;
-          useLatestUpstream = true;
-          localModels = true;
-        };
-        ghostty.enable = true;
-        teams.enable = true;
-        winboat.enable = true;
         aichat.enable = true;
+        celluloid.enable = true;
+        direnv.enable = true;
+        fladder.enable = true;
+        ghostty.enable = true;
         keepassxc = {
           enable = true;
           databasePaths = [
@@ -169,6 +146,47 @@
           ];
           keyfilePath = "${config.local.user.homeDir}/.local/share/desktop.key";
         };
+        librepods.enable = true;
+        localsend.enable = true;
+        moonlight.enable = true;
+        mqtt.enable = true;
+        neovim.enable = true;
+        prusa-slicer.enable = true;
+        qgis.enable = true;
+        remmina = {
+          enable = true;
+          connections = {
+            EISSDESK = {
+              name = "EISSDESK";
+              server = "eissdesk.vito.local";
+              drive = "/work/transfer";
+              protocol = "RDP";
+              username = "vdboerd";
+              password = ".";
+              domain = "VITO";
+              ignore-tls-errors = 1;
+              proxy_type = "socks5";
+              proxy_hostname = "127.0.0.1";
+              proxy_port = 1080;
+            };
+          };
+        };
+        retro-emulation.enable = true;
+        retro-emulation.eden.archnative = true;
+        slack.enable = true;
+        sops.enable = true;
+        spotify.enable = true;
+        teams.enable = true;
+        vscode.enable = true;
+        whatsapp.enable = true;
+        winboat.enable = true;
+        zathura.enable = true;
+        zed = {
+          enable = true;
+          useLatestUpstream = true;
+          localModels = true;
+        };
+
       };
     };
 
