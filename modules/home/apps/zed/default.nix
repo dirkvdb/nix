@@ -142,6 +142,7 @@ in
           shellcheck
           codex-acp
           groovy-language-server
+          mcp-nixos
         ]
       );
 
