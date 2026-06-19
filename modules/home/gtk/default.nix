@@ -7,9 +7,17 @@
 }:
 let
   inherit (config.local) user;
-  inherit (config.local) theme;
+  inherit (config.lib.stylix) colors;
   hasDesktop = config.local.desktop.enable or false;
   mkUserHome = mkHome user.name;
+
+  # Fix Stylix-generated GTK button text being too dark on dark backgrounds.
+  # Forces button labels to use the theme foreground color (base05).
+  buttonCssFix = ''
+    button {
+      color: #${colors.base05};
+    }
+  '';
 in
 {
   config = lib.mkIf hasDesktop (mkUserHome {
@@ -17,37 +25,10 @@ in
       nwg-look # tool to inspect the gtk settings
     ];
 
+    stylix.targets.gtk.extraCss = buttonCssFix;
+
     gtk = {
       enable = true;
-
-      # theme = {
-      #   name = theme.gtkTheme;
-      #   package = theme.gtkThemePackage;
-      # };
-
-      # iconTheme = {
-      #   name = theme.iconTheme;
-      #   package = theme.iconThemePackage;
-      # };
-
-      # font = {
-      #   name = theme.uiFont;
-      #   size = theme.uiFontSize;
-      # };
-
-      # gtk3.extraConfig = {
-      #   gtk-application-prefer-dark-theme = true;
-      # };
-
-      # gtk4.extraConfig = {
-      #   gtk-application-prefer-dark-theme = true;
-      # };
     };
-
-    # dconf.settings = {
-    #   "org/gnome/desktop/interface" = {
-    #     color-scheme = "prefer-dark";
-    #   };
-    # };
   });
 }
