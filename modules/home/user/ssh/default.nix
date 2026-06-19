@@ -88,6 +88,9 @@ in
           User = "vdboerd";
           ForwardAgent = true;
         };
+        "*.vito.be *.vito.local" = lib.mkIf vpnjumphostEnabled {
+          ProxyCommand = "nc -x 127.0.0.1:1080 -X 5 %h %p";
+        };
       };
     };
   };
