@@ -111,17 +111,17 @@
 
       # Custom packages overlay
       overlay = final: prev: {
-        # Override aquamarine to 0.12.0 to fix split-node GPU render node fallback on Apple Silicon
+        # Override aquamarine to 0.12.1 to fix split-node GPU render node fallback on Apple Silicon
         # https://github.com/hyprwm/aquamarine/pull/291
         aquamarine =
           if prev.stdenv.hostPlatform.isAarch64 && prev.stdenv.hostPlatform.isLinux then
             prev.aquamarine.overrideAttrs (old: {
-              version = "0.12.0";
+              version = "0.12.1";
               src = prev.fetchFromGitHub {
                 owner = "hyprwm";
                 repo = "aquamarine";
-                tag = "v0.12.0";
-                hash = "sha256-TtAhxedbRAl1u6OyT+4eRxZ417G2NMJNoqEbIhjvWo0=";
+                tag = "v0.12.1";
+                hash = "sha256-cUQENbJn0PHQUttXame5+PbGGew+BckHZFTfpb8XGI8=";
               };
             })
           else
