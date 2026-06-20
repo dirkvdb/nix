@@ -123,6 +123,7 @@ in
       };
 
       apps = {
+        aichat.enable = true;
         celluloid.enable = true;
         direnv.enable = true;
         fladder.enable = true;
