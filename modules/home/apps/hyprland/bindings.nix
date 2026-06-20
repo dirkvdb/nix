@@ -64,6 +64,7 @@ in
         "$mod, X, Special workspace, togglespecialworkspace"
 
         "$mod, ESCAPE, Power menu, exec, nixcfg-menu system"
+
         "$mod, RETURN, Terminal, exec, $terminal --working-directory=\"$(nixcfg-cmd-terminal-cwd)\""
         "$mod, S, Browser, exec, nixcfg-launch-or-focus $browser"
         "$mod SHIFT, S, Browser (new instance), exec, $browser"
