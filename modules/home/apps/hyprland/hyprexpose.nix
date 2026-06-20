@@ -50,7 +50,7 @@ in
       ];
 
       bindd = [
-        "$mod, grave, Workspace overview, exec, pkill -SIGUSR1 -x hyprexpose"
+        "$mod, TAB, Workspace overview, exec, pkill -SIGUSR1 -x hyprexpose"
       ];
     };
   });
