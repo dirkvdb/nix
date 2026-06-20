@@ -445,6 +445,12 @@ in
           };
         }
         {
+          context = "Pane && !Editor && !Terminal";
+          bindings = {
+            "space w" = "pane::CloseActiveItem";
+          };
+        }
+        {
           context = "Dock";
           bindings = {
             "alt-e" = "editor::ToggleFocus";
