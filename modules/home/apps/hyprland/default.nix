@@ -23,6 +23,7 @@ in
 {
   imports = [
     ./bindings.nix
+    ./hyprexpose.nix
     ./waybar.nix
     ./mako.nix
   ];

@@ -73,6 +73,11 @@
     };
 
     nix-amd-ai.url = "github:noamsto/nix-amd-ai";
+
+    hyprexpose = {
+      url = "github:ThiagoAVicente/hyprexpose";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -145,6 +150,7 @@
         rproc = prev.callPackage ./pkgs/rproc { };
         outlook-for-linux = prev.callPackage ./pkgs/outlook-for-linux { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
+        hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;
 
         # Pin Sublime Merge to Build 2125
         sublime-merge = prev.callPackage (import
