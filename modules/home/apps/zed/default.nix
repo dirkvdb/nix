@@ -423,8 +423,6 @@ in
           bindings = {
             "space p" = "editor::Format";
             "space g" = "git_panel::ToggleFocus";
-            "shift-l" = "pane::ActivateNextItem";
-            "shift-h" = "pane::ActivatePreviousItem";
             "space v" = "pane::SplitRight";
             "space w" = "pane::CloseActiveItem";
             "space h" = "workspace::ActivateNextPane";
@@ -440,23 +438,28 @@ in
           };
         }
         {
+          context = "Pane";
+          bindings = {
+            "alt-shift-l" = "pane::ActivateNextItem";
+            "alt-shift-h" = "pane::ActivatePreviousItem";
+          };
+        }
+        {
           context = "Dock";
           bindings = {
             "alt-e" = "editor::ToggleFocus";
           };
         }
         {
-          context = "Terminal";
+          context = "Editor";
           bindings = {
-            "ctrl-shift-h" = "pane::ActivatePreviousItem";
-            "ctrl-shift-l" = "pane::ActivateNextItem";
-            "alt-`" = "editor::ToggleFocus";
+            "alt-`" = "terminal_panel::ToggleFocus";
           };
         }
         {
-          context = "Workspace && !Terminal";
+          context = "Workspace && !Editor";
           bindings = {
-            "alt-`" = "terminal_panel::ToggleFocus";
+            "alt-`" = "editor::ToggleFocus";
           };
         }
         {
