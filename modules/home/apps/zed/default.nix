@@ -422,11 +422,6 @@ in
           context = "vim_mode == normal";
           bindings = {
             "space p" = "editor::Format";
-            "space g" = "git_panel::ToggleFocus";
-            "space v" = "pane::SplitRight";
-            "space w" = "pane::CloseActiveItem";
-            "space h" = "workspace::ActivateNextPane";
-            "space l" = "workspace::ActivatePreviousPane";
           };
         }
         {
@@ -445,9 +440,13 @@ in
           };
         }
         {
-          context = "Pane && !Editor && !Terminal";
+          context = "vim_mode == normal || (Pane && !Editor && !Terminal)";
           bindings = {
             "space w" = "pane::CloseActiveItem";
+            "space v" = "pane::SplitRight";
+            "space g" = "git_panel::ToggleFocus";
+            "space h" = "workspace::ActivateNextPane";
+            "space l" = "workspace::ActivatePreviousPane";
           };
         }
         {
