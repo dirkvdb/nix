@@ -337,8 +337,6 @@ in
         # Control your input devices
         # See https://wiki.hypr.land/Configuring/Variables/#input
         input = {
-          # Use multiple keyboard layouts and switch between them with Left Alt + Right Alt
-          # kb_layout = us,dk,eu
           kb_layout = "us";
           kb_options = "caps:escape"; # Map Caps Lock to Escape
 
