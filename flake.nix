@@ -26,6 +26,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.0.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -72,7 +77,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-amd-ai.url = "github:noamsto/nix-amd-ai";
+    nix-amd-ai = {
+      url = "github:noamsto/nix-amd-ai";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     hyprexpose = {
       url = "github:ThiagoAVicente/hyprexpose";
@@ -87,6 +95,7 @@
       nixos-wsl,
       sops-nix,
       darwin,
+      lanzaboote,
       ...
     }@inputs:
     let
@@ -228,6 +237,7 @@
           };
           modules = [
             hostPath
+            lanzaboote.nixosModules.lanzaboote
             nix-index-database.nixosModules.nix-index
             sops-nix.nixosModules.sops
             inputs.nixflix.nixosModules.default
