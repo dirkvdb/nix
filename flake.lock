@@ -498,11 +498,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1781771904,
-        "narHash": "sha256-/LYKTdilTPp8VP24Dvpkf7SxliGM2Ra1UmFVzlI+BFk=",
+        "lastModified": 1782029266,
+        "narHash": "sha256-ZmN7x4Zo6Pjfxmk0SuBqeIgpLA6yH0vW7FjEHpU/jGc=",
         "owner": "noamsto",
         "repo": "nix-amd-ai",
-        "rev": "d6b26648de54f890bb0041ed1f3f8fd33ffbbd2a",
+        "rev": "9fc5b05781809e0a59e991386441c8df08e1f45b",
         "type": "github"
       },
       "original": {
@@ -539,11 +539,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782026386,
-        "narHash": "sha256-IbJwHZfizNzLl2TLCLGtN0TQUZC/Yop5zbhDbWEtBgE=",
+        "lastModified": 1782030356,
+        "narHash": "sha256-h4WpMr455AfRub0FXBaon6Vcpe0waUyJ4GivIW6oyd4=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "346fee9a0107520cf92efa3947c47236f5b54cd4",
+        "rev": "3017088b49efd404f78e3b104f553b97e4af786b",
         "type": "github"
       },
       "original": {
@@ -562,11 +562,11 @@
         "vpn-confinement": "vpn-confinement"
       },
       "locked": {
-        "lastModified": 1781883208,
-        "narHash": "sha256-6+SAePd+9QkT5bb8PfBSyJzNQNP5l2pB3qjqbC6dE0U=",
+        "lastModified": 1782052990,
+        "narHash": "sha256-+Nx1CUDwLd/dK8wTpFnYgPvK+ZZd49BzZCho7HrhNP8=",
         "owner": "kiriwalawren",
         "repo": "nixflix",
-        "rev": "bbc2987ded4d07c9a3c2982d3c6da85b6893f889",
+        "rev": "f3b947f61283ac5a9368ee73cf755743741d3175",
         "type": "github"
       },
       "original": {
