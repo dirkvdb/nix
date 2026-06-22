@@ -81,7 +81,7 @@
       # Expose a DRM framebuffer device on the NVIDIA GPU. Without this the
       # proprietary driver does not properly re-initialise the display pipeline
       # after s2idle resume, leaving the laptop panel black.
-      # "nvidia-drm.fbdev=1"
+      "nvidia-drm.fbdev=1"
     ];
 
     # Alder Lake Dell Precision 7670 only supports s2idle (Modern Standby), not
