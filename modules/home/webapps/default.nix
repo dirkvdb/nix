@@ -68,11 +68,11 @@ in
         icon = "gmail";
       })
 
-      # (mkWebApp {
-      #   name = "Outlook";
-      #   url = "https://outlook.office365.com/";
-      #   icon = "outlook";
-      # })
+      (mkWebApp {
+        name = "Outlook";
+        url = "https://outlook.office365.com/";
+        icon = "outlook";
+      })
 
       (lib.optionalAttrs (pkgs.stdenv.hostPlatform.system == "aarch64-linux") (mkWebApp {
         name = "Slack";

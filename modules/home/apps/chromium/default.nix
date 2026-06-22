@@ -20,18 +20,20 @@ let
   # Adding this to programs.chromium.nativeMessagingHosts merges it into the
   # symlink-join that home-manager installs at ~/.config/chromium/NativeMessagingHosts/,
   # so KeePassXC's isBrowserEnabled() check sees the file and shows the checkbox as active.
-  keepassxcChromiumHost = pkgs.writeTextDir
-    "etc/chromium/native-messaging-hosts/org.keepassxc.keepassxc_browser.json"
-    (builtins.toJSON {
-      allowed_origins = [
-        "chrome-extension://pdffhmdngciaglkoonimfcmckehcpafo/"
-        "chrome-extension://oboonakemofpalcgghocfoadofidjkkk/"
-      ];
-      description = "KeePassXC integration with native messaging support";
-      name = "org.keepassxc.keepassxc_browser";
-      path = "${pkgs.keepassxc}/bin/keepassxc-proxy";
-      type = "stdio";
-    });
+  keepassxcChromiumHost =
+    pkgs.writeTextDir "etc/chromium/native-messaging-hosts/org.keepassxc.keepassxc_browser.json"
+      (
+        builtins.toJSON {
+          allowed_origins = [
+            "chrome-extension://pdffhmdngciaglkoonimfcmckehcpafo/"
+            "chrome-extension://oboonakemofpalcgghocfoadofidjkkk/"
+          ];
+          description = "KeePassXC integration with native messaging support";
+          name = "org.keepassxc.keepassxc_browser";
+          path = "${pkgs.keepassxc}/bin/keepassxc-proxy";
+          type = "stdio";
+        }
+      );
 in
 {
   config = lib.mkIf (!isHeadless) (
@@ -53,6 +55,15 @@ in
           package = pkgs.chromium.override { enableWideVine = true; };
         };
       }))
+
+      # Restore previous session on startup so that session cookies
+      # (used by Microsoft Outlook/Teams web apps) survive browser restarts.
+      (lib.mkIf (isLinux && isDesktop) {
+        programs.chromium = {
+          enable = true;
+          extraOpts.RestoreOnStartup = 1;
+        };
+      })
 
       # KeePassXC native messaging host for Chromium.
       # home-manager's programs.keepassxc module auto-adds pkgs.keepassxc to

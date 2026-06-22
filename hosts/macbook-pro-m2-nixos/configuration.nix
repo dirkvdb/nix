@@ -255,7 +255,6 @@ in
 
     environment.systemPackages = with pkgs; [
       decentpaste
-      outlook-for-linux
       vulkan-tools
       brightnessctl
     ];

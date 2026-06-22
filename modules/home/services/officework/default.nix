@@ -8,8 +8,10 @@
 let
   inherit (config.local) user;
   cfg = config.local.services.officework;
-  isNvidia = config.local.system.video.nvidia.enable or false;
   mkUserHome = mkHome user.name;
+
+  # Use the final wrapped chromium from home-manager (includes commandLineArgs like proxy-pac-url)
+  chromiumPkg = config.home-manager.users.${user.name}.programs.chromium.finalPackage;
 
   graphicalService =
     {
@@ -54,7 +56,6 @@ in
         environment.systemPackages = with pkgs; [
           teams-for-linux
           slack
-          outlook-for-linux
         ];
       }
       (mkUserHome {
@@ -73,30 +74,28 @@ in
         ];
       })
       (mkUserHome {
-        systemd.user.services.officework-teams = graphicalService {
-          description = "Microsoft Teams (teams-for-linux)";
-          execStart = "${pkgs.teams-for-linux}/bin/teams-for-linux --minimized";
-        };
+        systemd.user.services.officework-teams =
+          lib.recursiveUpdate
+            (graphicalService {
+              description = "Microsoft Teams (teams-for-linux)";
+              execStart = "${pkgs.teams-for-linux}/bin/teams-for-linux --minimized";
+            })
+            {
+              Service = {
+                KillSignal = "SIGINT";
+                TimeoutStopSec = 5;
+              };
+            };
 
         systemd.user.services.officework-slack = graphicalService {
           description = "Slack";
           execStart = "${pkgs.slack}/bin/slack --startup";
         };
 
-        systemd.user.services.officework-outlook =
-          lib.recursiveUpdate
-            (graphicalService {
-              description = "Outlook for Linux";
-              execStart = "${pkgs.outlook-for-linux}/bin/outlook-for-linux --minimized";
-            })
-            (
-              lib.optionalAttrs isNvidia {
-                # WebKitGTK's DMA-BUF renderer breaks on NVIDIA proprietary drivers,
-                # causing washed-out / garbled rendering. Disable it so WebKit falls
-                # back to SHM-based compositing.
-                Service.Environment = [ "WEBKIT_DISABLE_DMABUF_RENDERER=1" ];
-              }
-            );
+        systemd.user.services.officework-outlook = graphicalService {
+          description = "Outlook Web App";
+          execStart = "${chromiumPkg}/bin/chromium --app=https://outlook.office365.com/ --restore-last-session";
+        };
       })
     ]
   );

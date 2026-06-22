@@ -215,7 +215,6 @@
       freecad
       gnumeric
       onlyoffice-desktopeditors
-      outlook-for-linux
       orca-slicer
     ];
   };
