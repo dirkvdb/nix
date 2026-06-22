@@ -34,6 +34,8 @@ let
     socks_port = cfg.socksPort;
     ocproxy_keepalive = 60;
     check_interval = 300;
+    verbose = true;
+    serve_pac = true;
 
     domains = {
       proxy = cfg.domains.proxy;
