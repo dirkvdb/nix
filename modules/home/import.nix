@@ -53,6 +53,7 @@ in
     # Per-directory XDG config entries for dotfiles
     xdg.configFile."btop".source = ./dotfiles/btop;
     xdg.configFile."wezterm".source = ./dotfiles/wezterm;
+
     xdg.configFile."sublime-merge/Packages/User".source = ./dotfiles/sublime-merge/Packages/User;
 
     # Add ~/.local/bin to PATH
@@ -77,7 +78,7 @@ in
         rsync
         sd
         tabiew
-        yazi
+
       ])
       ++ lib.optionals (!pkgs.stdenv.isDarwin) (
         with unstablePkgs;
@@ -148,6 +149,47 @@ in
         extraPackages = with pkgs.bat-extras; [
           batman
         ];
+      };
+
+      yazi = {
+        enable = true;
+        plugins = {
+          git = pkgs.yaziPlugins.git;
+          githead = pkgs.yaziPlugins.githead;
+        };
+        initLua = ''
+          require("git"):setup {
+            order = 1500,
+          }
+          require("githead"):setup({
+            branch_prefix = "on",
+            branch_symbol = " ",
+            branch_borders = "()",
+          })
+        '';
+        settings = {
+          mgr = {
+            linemode = "none";
+          };
+          plugin = {
+            prepend_fetchers = [
+              {
+                id = "git";
+                url = "*";
+                run = "git";
+                prio = "normal";
+                group = "git";
+              }
+              {
+                id = "git";
+                url = "*/";
+                run = "git";
+                prio = "normal";
+                group = "git";
+              }
+            ];
+          };
+        };
       };
     };
   };
