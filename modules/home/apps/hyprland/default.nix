@@ -457,8 +457,8 @@ in
 
           "match:class (sublime_merge), workspace 6"
           "match:class (slack), workspace 7"
-          "match:class (outlook-for-linux|chrome-outlook\\.office365\\.com__.*), workspace 8"
-          "match:class (teams-for-linux), workspace 8"
+          "match:class (outlook-for-linux|chrome-outlook\\.office365\\.com__.*), workspace 8 silent"
+          "match:class (teams-for-linux), workspace 8 silent"
 
           # Fullscreen border color indicator
           "match:fullscreen true, border_color rgb(FFCC66) rgb(DEC186)"
