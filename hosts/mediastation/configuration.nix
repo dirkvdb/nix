@@ -46,9 +46,9 @@
         };
 
         boot = {
+          graphical = true;
           systemd = {
             enable = true;
-            graphical = true;
           };
         };
 
