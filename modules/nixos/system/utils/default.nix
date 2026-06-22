@@ -14,6 +14,7 @@ let
     with pkgs;
     [
       usbutils
+      caligula
     ]
     ++ lib.optionals hasDesktop [
       gparted
