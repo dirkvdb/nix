@@ -29,8 +29,12 @@ in
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStart = "${pkgs.docker}/bin/docker update --restart=no WinBoat";
       };
+      script = ''
+        if ${pkgs.docker}/bin/docker inspect WinBoat &>/dev/null; then
+          ${pkgs.docker}/bin/docker update --restart=no WinBoat
+        fi
+      '';
     };
   };
 }
