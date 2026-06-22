@@ -155,9 +155,19 @@
         boot = {
           secureboot.enable = true;
           graphical = true;
+          disk-encryption = {
+            enable = false;
+            device = "/dev/disk/by-label/NIXROOT_CRYPT";
+          };
         };
 
-        loginmanager.tuigreet.enable = true;
+        loginmanager.tuigreet = {
+          enable = true;
+          autologin = {
+            enable = false;
+            user = "dirk";
+          };
+        };
 
         input.keyboard.via = true;
 
