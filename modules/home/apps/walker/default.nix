@@ -14,7 +14,19 @@ in
     services.elephant = {
       enable = true;
       settings = {
-        launch_prefix = "uwsm app --";
+        providers.default = [
+          "runner"
+          "unicode"
+          "wireplumber"
+          "bluetooth"
+          "symbols"
+          "files"
+          "desktopapplications"
+          "calc"
+          "providerlist"
+          "websearch"
+          "clipboard"
+        ];
       };
     };
     # Ensure both services start after WAYLAND_DISPLAY and other
