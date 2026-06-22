@@ -153,10 +153,8 @@
         };
 
         boot = {
+          secureboot.enable = true;
           graphical = true;
-          systemd = {
-            enable = true;
-          };
         };
 
         loginmanager.tuigreet.enable = true;
