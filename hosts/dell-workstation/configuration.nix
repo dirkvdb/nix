@@ -156,15 +156,15 @@
           secureboot.enable = true;
           graphical = true;
           disk-encryption = {
-            enable = false;
-            device = "/dev/disk/by-label/NIXROOT_CRYPT";
+            enable = true;
+            device = "/dev/disk/by-label/root";
           };
         };
 
         loginmanager.tuigreet = {
           enable = true;
           autologin = {
-            enable = false;
+            enable = true;
             user = "dirk";
           };
         };
