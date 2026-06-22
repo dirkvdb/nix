@@ -29,7 +29,7 @@ in
 
       settings = {
         mini = {
-          HostName = "mini.local";
+          HostName = "mini.fritz.box";
           User = "dirk";
           RequestTTY = "yes";
           ForwardAgent = true;
@@ -66,7 +66,7 @@ in
           ForwardAgent = true;
         };
         nas = {
-          HostName = "nas.local";
+          HostName = "nas.fritz.box";
           User = "dirk";
           Port = 6987;
           RequestTTY = "yes";
