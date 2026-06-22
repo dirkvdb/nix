@@ -19,14 +19,4 @@
       LC_TIME = "nl_BE.UTF-8";
     };
   };
-
-  # Use terminus-nerdfont for the virtual console so that powerline
-  # separator glyphs render correctly in TTY sessions (Ctrl+Alt+Fx).
-  # Note: Nerd Font icons in the Supplementary PUA (U+F0000+) cannot
-  # be displayed in the TTY regardless of font choice.
-  console = {
-    packages = [ pkgs.powerline-fonts ];
-    font = "${pkgs.powerline-fonts}/share/consolefonts/ter-powerline-v32n.psf.gz";
-    earlySetup = true;
-  };
 }

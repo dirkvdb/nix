@@ -53,10 +53,10 @@ in
         };
 
         boot = {
+          canTouchEfi = false;
+          graphical = true;
           systemd = {
             enable = true;
-            graphical = true;
-            canTouchEfi = false;
           };
         };
 

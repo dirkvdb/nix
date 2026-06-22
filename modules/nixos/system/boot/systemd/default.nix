@@ -1,71 +1,23 @@
 {
   lib,
-  pkgs,
   config,
   ...
 }:
 let
   cfg = config.local.system.boot.systemd;
-  amd = config.local.system.video.amd.enable;
 in
 {
   options.local.system.boot.systemd = {
     enable = lib.mkEnableOption "Enable systemd bootloader";
-    graphical = lib.mkEnableOption "Enable graphical boot without kernel messages";
-    canTouchEfi = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Allow modifying EFI variables";
-    };
   };
 
-  config = lib.mkIf cfg.enable (
-
-    lib.mkMerge [
-      {
-        boot.loader = {
-          efi.canTouchEfiVariables = cfg.canTouchEfi;
-          timeout = 1;
-
-          #grub.enable = false;
-
-          systemd-boot = {
-            enable = true;
-            consoleMode = lib.mkDefault "2"; # use 2 unless overridden elsewhere
-            configurationLimit = lib.mkDefault 6;
-          };
-
-          # refind = {
-          #   enable = false;
-          #   maxGenerations = 5;
-          # };
-        };
-      }
-
-      (lib.mkIf cfg.graphical {
-
-        boot.consoleLogLevel = 3;
-        boot.initrd.verbose = false;
-        boot.initrd.systemd.enable = true;
-        boot.kernelParams = [
-          "quiet"
-          "intremap=on"
-          "boot.shell_on_fail"
-          "udev.log_priority=3"
-          "rd.systemd.show_status=auto"
-          "vt.global_cursor_default=0"
-          "fbcon=nodefer"
-          "video=efifb:nobgrt" # disable firmware vendor logo
-        ]
-        ++ lib.optionals amd [ "amdgpu.modeset=1" ];
-
-        stylix.targets.plymouth.enable = false;
-
-        # plymouth, showing after LUKS unlock
-        boot.plymouth.enable = true;
-        boot.plymouth.themePackages = [ pkgs.plymouth-theme-nixos ];
-        boot.plymouth.theme = "nixos";
-      })
-    ]
-  );
+  config = lib.mkIf cfg.enable {
+    boot.loader = {
+      systemd-boot = {
+        enable = true;
+        consoleMode = lib.mkDefault "2"; # use 2 unless overridden elsewhere
+        configurationLimit = lib.mkDefault 6;
+      };
+    };
+  };
 }

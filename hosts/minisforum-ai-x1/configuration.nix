@@ -29,6 +29,14 @@
     # Use the latest kernel from unstable (for better AMD CPU support)
     boot.kernelPackages = pkgs.linuxPackages_latest;
 
+    # Boot display: match HDMI resolution to avoid scaling issues on fbcon
+    boot.kernelParams = [
+      "video=DP-3:1920x1080@60D"
+      "video=HDMI-A-1:1920x1080@60D"
+      "fbcon=nodefer"
+      "initcall_blacklist=simpledrm_platform_driver_init"
+    ];
+
     local = {
       user = {
         enable = true;
@@ -48,10 +56,8 @@
         };
 
         boot = {
-          systemd = {
-            enable = true;
-            graphical = true;
-          };
+          secureboot.enable = true;
+          graphical = true;
         };
 
         loginmanager.tuigreet.enable = true;
@@ -205,7 +211,10 @@
 
     environment.systemPackages = with pkgs; [
       appimage-run
+      gitcomet
+      freecad
       gnumeric
+      onlyoffice-desktopeditors
       outlook-for-linux
       orca-slicer
     ];
