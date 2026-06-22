@@ -575,11 +575,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782119507,
-        "narHash": "sha256-fTEojHYrqgWLbqU/+Tpm3w//j6ZsHmh8p/V4/5tDLNc=",
+        "lastModified": 1782131589,
+        "narHash": "sha256-ipToNNGW5HJlnLrZUAtydnXmht6PX4/piL9UTPXxzOg=",
         "owner": "noamsto",
         "repo": "nix-amd-ai",
-        "rev": "b2de250b743eb513b174efae921776a67864d7f6",
+        "rev": "b304a0136f959204d9d32d1783387c47267a3a43",
         "type": "github"
       },
       "original": {
@@ -1301,11 +1301,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782012261,
-        "narHash": "sha256-3uA/FtAVbmBIL3kUs6ZDUtf/ZKjLmHljDQZWSKuJwx0=",
+        "lastModified": 1782124717,
+        "narHash": "sha256-QlxH7jB2NsgaJRhQa5g/Cy9/kUgIXTRe0KCMHgwO8oY=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "6593c895a25b4bf166f596987f2cfabc63a86c0d",
+        "rev": "17db03c0746ba8afb575b45bc4ded841ae5c36bd",
         "type": "github"
       },
       "original": {
