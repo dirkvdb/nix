@@ -161,7 +161,7 @@
           };
         };
 
-        loginmanager.tuigreet = {
+        loginmanager.sddm = {
           enable = true;
           autologin = {
             enable = true;

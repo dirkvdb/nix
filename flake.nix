@@ -86,6 +86,11 @@
       url = "github:ThiagoAVicente/hyprexpose";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    silent-sddm = {
+      url = "github:uiriansan/SilentSDDM";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -241,6 +246,7 @@
             sops-nix.nixosModules.sops
             inputs.nixflix.nixosModules.default
             inputs.nix-amd-ai.nixosModules.default
+            inputs.silent-sddm.nixosModules.default
             { nixpkgs.hostPlatform = system; }
             {
               nixpkgs.overlays = [
