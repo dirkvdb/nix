@@ -1,6 +1,8 @@
 {
   lib,
   config,
+  pkgs,
+  inputs,
   ...
 }:
 let
@@ -9,6 +11,23 @@ let
   scale = toString displayScale;
   dpi = toString (builtins.floor (96 * displayScale));
   silentPkg = config.programs.silentSDDM.package';
+  font = config.stylix.fonts.sansSerif.name;
+  colors = config.lib.stylix.colors;
+
+  # Custom preset with stylix colors and font substituted
+  customConf = pkgs.replaceVars ./theme.conf {
+    inherit font;
+    base00 = colors.base00-hex;
+    base01 = colors.base01-hex;
+    base02 = colors.base02-hex;
+    base05 = colors.base05-hex;
+    base08 = colors.base08-hex;
+    base0A = colors.base0A-hex;
+    base0E = colors.base0E-hex;
+  };
+
+  # The base SilentSDDM package from the flake input (avoids infinite recursion)
+  silentBase = inputs.silent-sddm.packages.${pkgs.system}.default;
 in
 {
   options.local.system.loginmanager.sddm = {
@@ -28,6 +47,13 @@ in
       example = "rei";
     };
 
+    defaultUser = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      description = "Pre-select this user on the login screen so the password field is immediately focused";
+      default = null;
+      example = "dirk";
+    };
+
     autologin = {
       enable = lib.mkEnableOption "Auto-login (useful when LUKS already provides authentication)";
       user = lib.mkOption {
@@ -41,12 +67,13 @@ in
     programs.silentSDDM = {
       enable = true;
       theme = cfg.theme;
-      settings = {
-        "LoginScreen.LoginArea.Avatar" = {
-          active-size = 0;
-          inactive-size = 0;
-        };
-      };
+      backgrounds.wallpaper11 = ../../../../common/theme/wallpapers/wallpaper11.jpg;
+      # Replace the default package with one that uses our custom stylix-themed config
+      package = silentBase.overrideAttrs (old: {
+        installPhase = old.installPhase + ''
+          cp -f ${customConf} $out/share/sddm/themes/silent/configs/${cfg.theme}.conf
+        '';
+      });
     };
 
     services.displayManager = {
@@ -70,6 +97,8 @@ in
         # factor.  Qt-based Wayland greeters need QT_SCREEN_SCALE_FACTORS
         # for HiDPI to actually take effect, so override the value here.
         settings.General.GreeterEnvironment = lib.mkForce "QML2_IMPORT_PATH=${silentPkg}/share/sddm/themes/silent/components/,QT_IM_MODULE=qtvirtualkeyboard,QT_SCREEN_SCALE_FACTORS=${scale},QT_FONT_DPI=${dpi}";
+
+        settings.Users.DefaultUser = lib.mkIf (cfg.defaultUser != null) cfg.defaultUser;
       };
     };
   };
