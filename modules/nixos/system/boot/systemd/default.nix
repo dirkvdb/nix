@@ -5,6 +5,7 @@
 }:
 let
   cfg = config.local.system.boot.systemd;
+  bootCfg = config.local.system.boot;
 in
 {
   options.local.system.boot.systemd = {
@@ -17,6 +18,7 @@ in
         enable = true;
         consoleMode = lib.mkDefault "2"; # use 2 unless overridden elsewhere
         configurationLimit = lib.mkDefault 6;
+        graceful = !bootCfg.canTouchEfi; # avoid failure when EFI vars are read-only
       };
     };
   };
