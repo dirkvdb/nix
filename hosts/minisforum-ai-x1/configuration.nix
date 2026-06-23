@@ -60,7 +60,7 @@
           graphical = true;
         };
 
-        loginmanager.tuigreet.enable = true;
+        loginmanager.sddm.enable = true;
 
         input.keyboard.via = true;
 
