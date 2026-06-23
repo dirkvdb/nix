@@ -41,11 +41,17 @@ in
     programs.silentSDDM = {
       enable = true;
       theme = cfg.theme;
+      settings = {
+        "LoginScreen.LoginArea.Avatar" = {
+          active-size = 0;
+          inactive-size = 0;
+        };
+      };
     };
 
     services.displayManager = {
       defaultSession = cfg.launchCmd;
-      
+
       autoLogin = lib.mkIf cfg.autologin.enable {
         enable = true;
         user = cfg.autologin.user;
