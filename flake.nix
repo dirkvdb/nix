@@ -157,11 +157,9 @@
             (import inputs.nixpkgs-unstable { system = prev.stdenv.hostPlatform.system; }).rustPlatform;
         };
         decentpaste = prev.callPackage ./pkgs/decentpaste { };
-        sunshine = prev.callPackage ./pkgs/sunshine { };
         nordvpn = prev.callPackage ./pkgs/nordvpn { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         gitcomet = prev.callPackage ./pkgs/gitcomet { };
-        rproc = prev.callPackage ./pkgs/rproc { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
         hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;
 
