@@ -60,7 +60,10 @@ in
           };
         };
 
-        loginmanager.sddm.enable = true;
+        loginmanager.sddm = {
+          enable = true;
+          defaultUser = user.name;
+        };
 
         input.keyboard.via = true;
 
