@@ -308,7 +308,6 @@
       gnumeric
       onlyoffice-desktopeditors
       gitcomet
-      rproc
     ];
   };
 }
