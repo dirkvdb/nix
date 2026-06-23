@@ -99,6 +99,9 @@ in
       Service = {
         Type = "simple";
         Environment = [ "SSH_AUTH_SOCK=%t/ssh-agent" ];
+        # Autologin sessions start very quickly after FDE unlock;
+        # give the graphical session a moment to fully initialise.
+        ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
         ExecStart = "${pkgs.keepassxc}/bin/keepassxc --minimized --keyfile ${cfg.keyfilePath} ${lib.concatStringsSep " " cfg.databasePaths}";
         Restart = "on-failure";
         RestartSec = 3;
