@@ -63,6 +63,7 @@ in
         loginmanager.sddm = {
           enable = true;
           defaultUser = user.name;
+          display = "eDP-1";
         };
 
         input.keyboard.via = true;
