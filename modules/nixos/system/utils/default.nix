@@ -40,6 +40,9 @@ in
       ]
       ++ lib.optionals hasNvidiaVideo [
         nvtopPackages.nvidia
+      ]
+      ++ lib.optionals hasDesktop [
+        mangohud
       ];
   };
 }
