@@ -26,6 +26,24 @@ let
     base0E = colors.base0E-hex;
   };
 
+  # Custom weston.ini with [output] section so SDDM greeter appears on the chosen display
+  westonIni = (pkgs.formats.ini { }).generate "weston.ini" {
+    libinput = {
+      enable-tap = config.services.libinput.mouse.tapping;
+      left-handed = config.services.libinput.mouse.leftHanded;
+    };
+    keyboard = {
+      keymap_model = config.services.xserver.xkb.model;
+      keymap_layout = config.services.xserver.xkb.layout;
+      keymap_variant = config.services.xserver.xkb.variant;
+      keymap_options = config.services.xserver.xkb.options;
+    };
+    output = {
+      name = cfg.display;
+      "app-ids" = "sddm-greeter-qt6";
+    };
+  };
+
   # The base SilentSDDM package from the flake input (avoids infinite recursion)
   silentBase = inputs.silent-sddm.packages.${pkgs.system}.default;
 in
@@ -52,6 +70,13 @@ in
       description = "Pre-select this user on the login screen so the password field is immediately focused";
       default = null;
       example = "dirk";
+    };
+
+    display = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      description = "Connector name of the display to show SDDM on (e.g. 'DP-1', 'HDMI-A-1'). When set, a kwinoutputconfig.json is created for the sddm user so the greeter appears on this display.";
+      default = null;
+      example = "DP-1";
     };
 
     autologin = {
@@ -99,6 +124,13 @@ in
         settings.General.GreeterEnvironment = lib.mkForce "QML2_IMPORT_PATH=${silentPkg}/share/sddm/themes/silent/components/,QT_IM_MODULE=qtvirtualkeyboard,QT_SCREEN_SCALE_FACTORS=${scale},QT_FONT_DPI=${dpi}";
 
         settings.Users.DefaultUser = lib.mkIf (cfg.defaultUser != null) cfg.defaultUser;
+
+        # Override the compositor command with a custom weston.ini that
+        # includes an [output] section for the chosen display.
+        # TODO: Remove this when there is a nixos option to set the SDDM display output directly.
+        settings.Wayland.CompositorCommand = lib.mkIf (
+          cfg.display != null
+        ) "${lib.getExe pkgs.weston} --shell=kiosk -c ${westonIni}";
       };
     };
   };
