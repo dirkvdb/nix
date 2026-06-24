@@ -448,7 +448,7 @@ in
           "match:class (zen|zen-beta), workspace 2"
 
           # Open Zed editor on workspace 3
-          "match:class (dev.zed.Zed), workspace 3"
+          "match:class (dev.zed.Zed|dev.zed.Zed-Dev), workspace 3"
           # Open File explorers on workspace 5
           "match:class (org.gnome.Nautilus|thunar), workspace 5"
 
