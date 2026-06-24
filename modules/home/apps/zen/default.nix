@@ -9,10 +9,27 @@ let
   inherit (config.local) user;
   inherit (config.local) theme;
   isLinux = pkgs.stdenv.isLinux;
+  isAarch64Linux = pkgs.stdenv.isLinux && pkgs.stdenv.isAarch64;
   isDesktop = config.local.desktop.enable;
   keepassEnabled = config.local.apps.keepassxc.enable;
   mkUserHome = mkHome user.name;
   proxyPacUrl = config.local.system.network.proxy.pacUrl;
+
+  # Widevine CDM plugin for Firefox-based browsers on aarch64-linux.
+  # Symlinks the widevine-cdm package into the GMP plugin directory structure
+  # that Firefox expects, so DRM-protected content (Netflix, Spotify, etc.) works.
+  widevineGmp = pkgs.stdenv.mkDerivation {
+    name = "widevine-firefox";
+    version = pkgs.widevine-cdm.version;
+    buildCommand = ''
+      mkdir -p $out/gmp-widevinecdm/system-installed
+      ln -s "${pkgs.widevine-cdm}/share/google/chrome/WidevineCdm/manifest.json" $out/gmp-widevinecdm/system-installed/manifest.json
+      ln -s "${pkgs.widevine-cdm}/share/google/chrome/WidevineCdm/_platform_specific/linux_arm64/libwidevinecdm.so" $out/gmp-widevinecdm/system-installed/libwidevinecdm.so
+    '';
+    meta = pkgs.widevine-cdm.meta // {
+      platforms = [ "aarch64-linux" ];
+    };
+  };
 in
 {
   options.local.apps.zen = {
@@ -189,6 +206,18 @@ in
           // lib.optionalAttrs (proxyPacUrl != null) {
             "network.proxy.type" = 2;
             "network.proxy.autoconfig_url" = proxyPacUrl;
+          }
+          // {
+            # Enable Widevine DRM support (Netflix, Disney+, Spotify, etc.)
+            "browser.eme.ui.enabled" = true;
+            "media.gmp-widevinecdm.visible" = true;
+            "media.gmp-widevinecdm.enabled" = true;
+            "media.eme.enabled" = true;
+            "media.eme.encrypted-media-encryption-scheme.enabled" = true;
+          }
+          // lib.optionalAttrs isAarch64Linux {
+            "media.gmp-widevinecdm.version" = "system-installed";
+            "media.gmp-widevinecdm.autoupdate" = false;
           };
           search = {
             force = true;
@@ -196,6 +225,16 @@ in
           };
         };
     };
+
+    # Point Firefox GMP plugin path to our widevine derivation on aarch64-linux.
+    # Set in both home.sessionVariables (shell logins) and systemd.user.sessionVariables
+    # (graphical sessions launched via systemd/uwsm) so Zen can always find the CDM.
+    home.sessionVariables = lib.mkIf isAarch64Linux {
+      MOZ_GMP_PATH = "${widevineGmp}/gmp-widevinecdm/system-installed";
+    };
+    # systemd.user.sessionVariables = lib.mkIf isAarch64Linux {
+    #   MOZ_GMP_PATH = "${widevineGmp}/gmp-widevinecdm/system-installed";
+    # };
 
     stylix.targets.zen-browser.profileNames = [ "default" ];
 
