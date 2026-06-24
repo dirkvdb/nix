@@ -35,6 +35,26 @@ update:
 check:
     nix flake check -L
 
+# Build a bootable installer ISO with all configs baked in
+# Cleanup task available in just 1.54
+# [continue]
+# iso: && _iso-cleanup
+iso:
+    @echo "Encrypting desktop.key for inclusion in ISO..."
+    nix shell nixpkgs#openssl -c openssl enc -aes-256-cbc -salt -pbkdf2 -in ~/.local/share/desktop.key -out hosts/installer/desktop.key.enc
+    git add -f hosts/installer/desktop.key.enc
+    nix build .#nixosConfigurations.installer.config.system.build.isoImage -L
+    @echo "ISO built:"
+    @ls -lh result/iso/*.iso
+
+# _iso-cleanup:
+# -git rm -f --cached hosts/installer/desktop.key.enc 2>/dev/null
+# rm -f hosts/installer/desktop.key.enc
+
+# Build the installer ISO and burn it to a USB drive
+burniso: iso
+    nix run nixpkgs#caligula -- burn -z none -s skip result/iso/nixos-*.iso
+
 secrets_edit:
     sops modules/nixos/apps/sops/secrets.yaml
 
