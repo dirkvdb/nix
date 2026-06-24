@@ -41,21 +41,20 @@
       ];
     };
 
-    # NVIDIA + Intel PRIME configuration for the Precision 7670 hybrid graphics
-    # layout. The NVIDIA dGPU is used as the Hyprland/compositor GPU because the
-    # Intel iGPU is not powerful enough for the attached 4K display setup.
+    # NVIDIA + Intel PRIME offload configuration for the Precision 7670 hybrid
+    # graphics layout. The Intel iGPU drives all displays; the NVIDIA dGPU is
+    # available via offload (nvidia-offload <cmd>) and powers down when idle.
     hardware.nvidia = {
-      modesetting.enable = true;
+      branch = "latest";
       powerManagement = {
         # Registers nvidia-suspend / nvidia-resume systemd services so the GPU
         # saves state and enters D3 during s2idle. Without this the platform
         # never reaches S0ix (slp_s0_residency stays 0) and the EC immediately
         # wakes the system.
         enable = true;
-        # Fine-grained PM (D3cold) is designed for offload setups where the
-        # dGPU powers off when idle. Since Hyprland renders on the dGPU, the
-        # GPU is always active and D3cold is never reached.
-        finegrained = false;
+        # Fine-grained PM (D3cold): the dGPU powers off completely when no
+        # offload workload is running, saving significant battery.
+        finegrained = true;
       };
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
@@ -78,9 +77,8 @@
     };
 
     boot.kernelParams = [
-      # Expose a DRM framebuffer device on the NVIDIA GPU. Without this the
-      # proprietary driver does not properly re-initialise the display pipeline
-      # after s2idle resume, leaving the laptop panel black.
+      # Expose a DRM framebuffer device on the NVIDIA GPU so that offload and
+      # resume paths work correctly with the proprietary driver.
       "nvidia-drm.fbdev=1"
     ];
 
@@ -134,18 +132,31 @@
       set -gx ARTIFACTORY_TOKEN (cat ${config.sops.secrets.artifactory_token.path} | string trim)
     '';
 
-    # Prefer the NVIDIA dGPU for Hyprland rendering on this hybrid host. The
-    # Intel iGPU is kept as a secondary DRM device but is not powerful enough to
-    # drive the attached 4K display setup smoothly.
+    # Intel iGPU drives the compositor. The NVIDIA dGPU is available for
+    # offload only; list it second so Hyprland prefers the iGPU.
     # AQ_DRM_DEVICES is colon-separated, so use colon-free udev symlinks instead
     # of /dev/dri/by-path names such as pci-0000:01:00.0-card.
     home-manager.users.dirk.wayland.windowManager.hyprland.settings.env = lib.mkAfter [
-      "AQ_DRM_DEVICES,/dev/dri/nvidia-dgpu:/dev/dri/intel-igpu"
+      "AQ_DRM_DEVICES,/dev/dri/intel-igpu:/dev/dri/nvidia-dgpu"
       "SDL_VIDEODRIVER,wayland"
-      # "LIBVA_DRIVER_NAME,nvidia"
-      # "GBM_BACKEND,nvidia-drm"
-      # "NVD_BACKEND,direct"
     ];
+
+    # Specialisation: NVIDIA dGPU drives all compositing (current/legacy setup).
+    # Switch at runtime with:
+    #   sudo /run/current-system/specialisation/nvidia-primary/bin/switch-to-configuration test
+    # Or select "nvidia-primary" from the bootloader menu.
+    specialisation.nvidia-primary.configuration = {
+      system.nixos.tags = [ "nvidia-primary" ];
+
+      hardware.nvidia.powerManagement.finegrained = lib.mkForce false;
+
+      home-manager.users.dirk.wayland.windowManager.hyprland.settings.env = lib.mkForce [
+        "AQ_DRM_DEVICES,/dev/dri/nvidia-dgpu:/dev/dri/intel-igpu"
+        "SDL_VIDEODRIVER,wayland"
+        "GBM_BACKEND,nvidia-drm"
+        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+      ];
+    };
 
     local = {
       user = {
