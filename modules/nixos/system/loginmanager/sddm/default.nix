@@ -30,7 +30,7 @@ let
   cursorPackage = config.stylix.cursor.package;
 
   # Custom weston.ini for SDDM's compositor with correct scale and optional output pinning
-  westonIni = (pkgs.formats.ini { }).generate "weston.ini" ({
+  westonIni = (pkgs.formats.ini { }).generate "weston.ini" {
     libinput = {
       enable-tap = config.services.libinput.mouse.tapping;
       left-handed = config.services.libinput.mouse.leftHanded;
@@ -49,7 +49,7 @@ let
       name = cfg.display;
       "app-ids" = "sddm-greeter-qt6";
     };
-  });
+  };
 
   # The base SilentSDDM package from the flake input (avoids infinite recursion)
   silentBase = inputs.silent-sddm.packages.${pkgs.system}.default;

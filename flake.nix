@@ -95,6 +95,7 @@
 
   outputs =
     {
+      self,
       nixpkgs,
       nix-index-database,
       nixos-wsl,
@@ -233,7 +234,7 @@
         }:
         nixpkgs.lib.nixosSystem {
           specialArgs = {
-            inherit inputs system;
+            inherit inputs system self;
             unstablePkgs = unstablePkgs system;
             mkHome = userName: attrs: { home-manager.users.${userName} = attrs; };
           };
@@ -308,6 +309,17 @@
         dell-workstation = mkNixos {
           system = "x86_64-linux";
           hostPath = ./hosts/dell-workstation/configuration.nix;
+        };
+
+        # Installer ISO
+        installer = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = { inherit self; };
+          modules = [
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+            ./hosts/installer/configuration.nix
+            { nixpkgs.hostPlatform = "x86_64-linux"; }
+          ];
         };
       };
 

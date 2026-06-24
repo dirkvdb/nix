@@ -5,3 +5,6 @@ result-*
 # Ignore automatically generated direnv output
 .direnv
 .DS_Store
+
+# Encrypted keyfile for installer ISO (generated at build time)
+hosts/installer/desktop.key.enc
