@@ -24,8 +24,10 @@ let
         After = [
           "graphical-session.target"
           "tray.target"
+          "keepassxc.service"
         ];
         Wants = [ "graphical-session.target" ];
+        Requires = [ "keepassxc.service" ];
       };
 
       Service = {
