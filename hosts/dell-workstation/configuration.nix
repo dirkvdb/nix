@@ -205,7 +205,7 @@
         };
 
         nfs-mounts = {
-          enable = false;
+          enable = true;
           presets.nas = true;
         };
 

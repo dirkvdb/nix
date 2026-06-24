@@ -43,6 +43,9 @@ in
                 "noauto"
                 "_netdev" # filesystem requires a network connection before it can be mounted
                 "x-systemd.idle-timeout=10min"
+                "soft" # return errors instead of hanging indefinitely when the server is unreachable
+                "timeo=50" # 5 second timeout (units are deciseconds)
+                "retrans=2" # retry twice then give up
               ];
               description = "Default mount options";
             };
