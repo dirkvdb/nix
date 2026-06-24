@@ -8,8 +8,7 @@
 let
   cfg = config.local.system.loginmanager.sddm;
   displayScale = config.local.desktop.displayScale;
-  scale = toString displayScale;
-  dpi = toString (builtins.floor (96 * displayScale));
+  scaleInt = toString (builtins.ceil displayScale);
   silentPkg = config.programs.silentSDDM.package';
   font = config.stylix.fonts.sansSerif.name;
   colors = config.lib.stylix.colors;
@@ -26,8 +25,12 @@ let
     base0E = colors.base0E-hex;
   };
 
-  # Custom weston.ini with [output] section so SDDM greeter appears on the chosen display
-  westonIni = (pkgs.formats.ini { }).generate "weston.ini" {
+  cursorTheme = config.stylix.cursor.name;
+  cursorSize = toString config.stylix.cursor.size;
+  cursorPackage = config.stylix.cursor.package;
+
+  # Custom weston.ini for SDDM's compositor with correct scale and optional output pinning
+  westonIni = (pkgs.formats.ini { }).generate "weston.ini" ({
     libinput = {
       enable-tap = config.services.libinput.mouse.tapping;
       left-handed = config.services.libinput.mouse.leftHanded;
@@ -38,11 +41,15 @@ let
       keymap_variant = config.services.xserver.xkb.variant;
       keymap_options = config.services.xserver.xkb.options;
     };
+
     output = {
+      scale = scaleInt;
+    }
+    // lib.optionalAttrs (cfg.display != null) {
       name = cfg.display;
       "app-ids" = "sddm-greeter-qt6";
     };
-  };
+  });
 
   # The base SilentSDDM package from the flake input (avoids infinite recursion)
   silentBase = inputs.silent-sddm.packages.${pkgs.system}.default;
@@ -89,6 +96,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # Install cursor theme system-wide and make it the default fallback so
+    # the sddm user can resolve cursor names before a user session exists.
+    environment.systemPackages = [ cursorPackage ];
+    xdg.icons.fallbackCursorThemes = [ cursorTheme ];
+
     programs.silentSDDM = {
       enable = true;
       theme = cfg.theme;
@@ -118,19 +130,21 @@ in
         # the greeter will show normally on session exit.
         autoLogin.relogin = lib.mkIf cfg.autologin.enable false;
 
-        # The SilentSDDM module sets GreeterEnvironment without a scale
-        # factor.  Qt-based Wayland greeters need QT_SCREEN_SCALE_FACTORS
-        # for HiDPI to actually take effect, so override the value here.
-        settings.General.GreeterEnvironment = lib.mkForce "QML2_IMPORT_PATH=${silentPkg}/share/sddm/themes/silent/components/,QT_IM_MODULE=qtvirtualkeyboard,QT_SCREEN_SCALE_FACTORS=${scale},QT_FONT_DPI=${dpi}";
+        # The SilentSDDM module sets GreeterEnvironment without cursor settings.
+        # Weston advertises the output scale to Qt, so don't also force
+        # QT_SCREEN_SCALE_FACTORS/QT_FONT_DPI here or the greeter/cursor gets double-scaled.
+        # XCURSOR_PATH points directly to the store path so the cursor theme
+        # is available on first boot before the system profile is activated.
+        settings.General.GreeterEnvironment = lib.mkForce "QML2_IMPORT_PATH=${silentPkg}/share/sddm/themes/silent/components/,QT_IM_MODULE=qtvirtualkeyboard,XCURSOR_THEME=${cursorTheme},XCURSOR_SIZE=${cursorSize},XCURSOR_PATH=${cursorPackage}/share/icons";
 
         settings.Users.DefaultUser = lib.mkIf (cfg.defaultUser != null) cfg.defaultUser;
 
+        settings.Theme.CursorTheme = cursorTheme;
+        settings.Theme.CursorSize = cursorSize;
+
         # Override the compositor command with a custom weston.ini that
-        # includes an [output] section for the chosen display.
-        # TODO: Remove this when there is a nixos option to set the SDDM display output directly.
-        settings.Wayland.CompositorCommand = lib.mkIf (
-          cfg.display != null
-        ) "${lib.getExe pkgs.weston} --shell=kiosk -c ${westonIni}";
+        # sets the correct scale factor and optionally pins the greeter to a specific display.
+        settings.Wayland.CompositorCommand = "${lib.getExe pkgs.weston} --shell=kiosk -c ${westonIni}";
       };
     };
   };
