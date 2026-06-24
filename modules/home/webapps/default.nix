@@ -17,10 +17,13 @@ let
       url,
       comment ? "",
       icon ? null,
+      extraArgs ? [ ],
     }:
     let
       desktopName = lib.toLower name;
       iconPath = if icon != null then icon else desktopName;
+      argsStr = lib.concatStringsSep " " extraArgs;
+      execLine = "nixcfg-launch-webapp \"${url}\"" + lib.optionalString (extraArgs != [ ]) " ${argsStr}";
     in
     {
       "applications/${desktopName}.desktop" = {
@@ -29,7 +32,7 @@ let
           Version=1.0
           Name=${name}
           Comment=${comment}
-          Exec=nixcfg-launch-webapp "${url}"
+          Exec=${execLine}
           Terminal=false
           Type=Application
           Icon=${iconPath}
@@ -72,6 +75,7 @@ in
         name = "Outlook";
         url = "https://outlook.office365.com/";
         icon = "outlook";
+        extraArgs = [ "--restore-last-session" ];
       })
 
       (lib.optionalAttrs (pkgs.stdenv.hostPlatform.system == "aarch64-linux") (mkWebApp {
