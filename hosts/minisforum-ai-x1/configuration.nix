@@ -60,7 +60,10 @@
           graphical = true;
         };
 
-        loginmanager.sddm.enable = true;
+        loginmanager.sddm = {
+          enable = true;
+          display = "DP-3";
+        };
 
         input.keyboard.via = true;
 
