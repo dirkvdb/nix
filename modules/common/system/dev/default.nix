@@ -31,8 +31,14 @@ in
         unstablePkgs.github-copilot-cli
       ];
 
-    # Pixi configuration
     home-manager.users.${user.name} = {
+      # TODO: Enable this when it hits stable home manager
+      # programs.devenv = {
+      #   enable = true;
+      #   package = unstablePkgs.devenv;
+      # };
+
+      # Pixi configuration
       xdg.configFile."pixi/config.toml".text = ''
         [shell]
         change-ps1 = false
