@@ -82,6 +82,7 @@ in
         "$mod SHIFT, W, Whatsapp, exec, nixcfg-launch-or-focus-webapp Whatsapp \"https://web.whatsapp.com/\""
         "$mod SHIFT, E, Email, exec, nixcfg-launch-or-focus-webapp GMail \"https://mail.google.com\""
         "$mod, W, Close active window, killactive,"
+        "$mod, DELETE, Kill window (click to kill), exec, hyprctl kill"
         "$mod, K, Show key bindings, exec, nixcfg-menu-keybindings"
         "$mod, T, Activity, exec, $terminal -e btop"
         "$mod, V, Clipboard, exec, walker --provider clipboard --theme clipboard"
