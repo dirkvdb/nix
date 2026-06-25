@@ -40,10 +40,12 @@ check:
 # [continue]
 # iso: && _iso-cleanup
 iso:
-    @echo "Encrypting desktop.key for inclusion in ISO..."
-    nix shell nixpkgs#openssl -c openssl enc -aes-256-cbc -salt -pbkdf2 -in ~/.local/share/desktop.key -out hosts/installer/desktop.key.enc
-    git add -f hosts/installer/desktop.key.enc
+    @nix shell nixpkgs#openssl -c bash -c 'read -rsp "Encryption password: " PASS; echo; read -rsp "Confirm password: " PASS2; echo; [ "$PASS" = "$PASS2" ] || { echo "Passwords do not match."; exit 1; }; echo "Encrypting files for inclusion in ISO..."; openssl enc -aes-256-cbc -salt -pbkdf2 -pass "pass:$PASS" -in ~/.local/share/desktop.key -out hosts/installer/desktop.key.enc; openssl enc -aes-256-cbc -salt -pbkdf2 -pass "pass:$PASS" -in ~/.config/sops/age/keys.txt -out hosts/installer/age-keys.txt.enc; echo "  Encrypted desktop.key and age-keys.txt"'
+    git add -f hosts/installer/desktop.key.enc hosts/installer/age-keys.txt.enc
     nix build .#nixosConfigurations.installer.config.system.build.isoImage -L
+    git rm -f --cached hosts/installer/desktop.key.enc 2>/dev/null
+    git rm -f --cached hosts/installer/age-keys.txt.enc 2>/dev/null
+    rm -f hosts/installer/desktop.key.enc hosts/installer/age-keys.txt.enc
     @echo "ISO built:"
     @ls -lh result/iso/*.iso
 
