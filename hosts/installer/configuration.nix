@@ -67,6 +67,36 @@ let
     read -r confirm
     [ "$confirm" = "yes" ] || { echo "Aborted."; exit 1; }
 
+    # -- Disk encryption ---------------------------------------------------
+    echo ""
+    printf "Enable disk encryption (LUKS)? [y/N]: "
+    read -r use_encryption
+    ENCRYPT=false
+    if [[ "$use_encryption" =~ ^[Yy] ]]; then
+      ENCRYPT=true
+      echo ""
+      echo "Set disk encryption passphrase"
+      echo ""
+      while true; do
+        printf "Encryption passphrase: "
+        read -rs LUKS_PASS
+        echo ""
+        printf "Confirm passphrase:    "
+        read -rs LUKS_PASS_CONFIRM
+        echo ""
+        if [ "$LUKS_PASS" = "$LUKS_PASS_CONFIRM" ]; then
+          if [ -z "$LUKS_PASS" ]; then
+            echo "Passphrase cannot be empty, try again."
+          else
+            break
+          fi
+        else
+          echo "Passphrases do not match, try again."
+        fi
+        echo ""
+      done
+    fi
+
     # -- Select configuration ----------------------------------------------
     echo ""
     echo "Select a configuration"
@@ -133,8 +163,14 @@ let
     echo ""
     echo "  Partition layout:"
     echo "    1) 1G   EFI  (FAT32)  label: NIXBOOT"
-    echo "    2) rest Root (ext4)   label: NIXROOT"
-    echo "    3) 32G  Swap          label: SWAP"
+    if [ "$ENCRYPT" = true ]; then
+      echo "    2) rest Root (LUKS+ext4) label: NIXROOT"
+      echo "    3) 32G  Swap (LUKS+swap) label: SWAP"
+    else
+      echo "    2) rest Root (ext4)   label: NIXROOT"
+      echo "    3) 32G  Swap          label: SWAP"
+    fi
+    echo "  Encryption:     $(if [ "$ENCRYPT" = true ]; then echo enabled; else echo disabled; fi)"
     echo ""
     printf "Proceed with installation? [y/N]: "
     read -r confirm
@@ -177,16 +213,39 @@ let
     echo ">>> Formatting partitions ..."
 
     ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n NIXBOOT "$PART1"
-    ${pkgs.e2fsprogs}/bin/mkfs.ext4 -L NIXROOT -F "$PART2"
-    ${pkgs.util-linux}/bin/mkswap -L SWAP "$PART3"
+
+    if [ "$ENCRYPT" = true ]; then
+      echo ">>> Setting up LUKS encryption ..."
+
+      echo -n "$LUKS_PASS" | ${pkgs.cryptsetup}/bin/cryptsetup luksFormat --batch-mode "$PART2" -
+      echo -n "$LUKS_PASS" | ${pkgs.cryptsetup}/bin/cryptsetup luksFormat --batch-mode "$PART3" -
+
+      ROOT_UUID=$(${pkgs.util-linux}/bin/blkid -s UUID -o value "$PART2")
+      SWAP_UUID=$(${pkgs.util-linux}/bin/blkid -s UUID -o value "$PART3")
+
+      echo -n "$LUKS_PASS" | ${pkgs.cryptsetup}/bin/cryptsetup open "$PART2" "luks-$ROOT_UUID" -
+      echo -n "$LUKS_PASS" | ${pkgs.cryptsetup}/bin/cryptsetup open "$PART3" "luks-$SWAP_UUID" -
+
+      ${pkgs.e2fsprogs}/bin/mkfs.ext4 -L NIXROOT -F "/dev/mapper/luks-$ROOT_UUID"
+      ${pkgs.util-linux}/bin/mkswap -L SWAP "/dev/mapper/luks-$SWAP_UUID"
+
+      ROOT_DEV="/dev/mapper/luks-$ROOT_UUID"
+      SWAP_DEV="/dev/mapper/luks-$SWAP_UUID"
+    else
+      ${pkgs.e2fsprogs}/bin/mkfs.ext4 -L NIXROOT -F "$PART2"
+      ${pkgs.util-linux}/bin/mkswap -L SWAP "$PART3"
+
+      ROOT_DEV="$PART2"
+      SWAP_DEV="$PART3"
+    fi
 
     # -- Mount -------------------------------------------------------------
     echo ">>> Mounting partitions ..."
 
-    mount "$PART2" "$MNT"
+    mount "$ROOT_DEV" "$MNT"
     mkdir -p "$MNT/boot"
     mount "$PART1" "$MNT/boot"
-    swapon "$PART3"
+    swapon "$SWAP_DEV"
 
     # -- Generate hardware config ------------------------------------------
     echo ">>> Generating hardware configuration ..."

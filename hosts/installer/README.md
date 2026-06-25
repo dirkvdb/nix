@@ -41,11 +41,13 @@ deploy-config
 The script will guide you through:
 
 - **Step 1** -- Select the target disk from a list of available drives
-- **Step 2** -- Pick a host configuration (e.g. mini, macbook-pro, dell-workstation)
-- **Step 3** -- Set a password (used for both the `dirk` user and `root`)
-- **Step 4** -- Review and confirm the settings
-- **Steps 5-14** -- Automated: partitioning, formatting, mounting, hardware detection,
-  config deployment, NixOS installation, password setup, keyfile decryption, and file ownership
+- **Step 2** -- Optionally enable LUKS disk encryption and set a passphrase
+- **Step 3** -- Pick a host configuration (e.g. mini, macbook-pro, dell-workstation)
+- **Step 4** -- Set a password (used for both the `dirk` user and `root`)
+- **Step 5** -- Review and confirm the settings
+- **Steps 6+** -- Automated: partitioning, encryption (if enabled), formatting, mounting,
+  hardware detection, config deployment, NixOS installation, password setup, keyfile
+  decryption, and file ownership
 
 ## Partition layout
 
@@ -56,6 +58,10 @@ The installer creates the following partition layout on the selected disk:
 | 1 | 1G   | EFI  | FAT32  | NIXBOOT |
 | 2 | rest | Root | ext4   | NIXROOT |
 | 3 | 32G  | Swap | swap   | SWAP    |
+
+When disk encryption is enabled, partitions 2 and 3 are wrapped with LUKS.
+The generated `hardware-configuration.nix` will automatically reference the
+`/dev/mapper/luks-*` devices and include the LUKS device declarations.
 
 ## After installation
 
