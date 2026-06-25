@@ -262,23 +262,9 @@
 
       apps = {
         aichat.enable = true;
-        direnv.enable = true;
-        neovim.enable = true;
-        slack.enable = true;
-        sops.enable = true;
-        spotify.enable = true;
-        vscode.enable = true;
-        whatsapp.enable = true;
-        qgis.enable = true;
         celluloid.enable = true;
-        zathura.enable = true;
-        zed = {
-          enable = true;
-          useLatestUpstream = false;
-        };
+        direnv.enable = true;
         ghostty.enable = true;
-        teams.enable = true;
-        winboat.enable = true;
         keepassxc = {
           enable = true;
           databasePaths = [
@@ -286,6 +272,8 @@
           ];
           keyfilePath = "${config.local.user.homeDir}/.local/share/desktop.key";
         };
+        neovim.enable = true;
+        qgis.enable = true;
         remmina = {
           enable = true;
           connections = {
@@ -310,6 +298,19 @@
             };
           };
         };
+        slack.enable = true;
+        sops.enable = true;
+        spotify.enable = true;
+        teams.enable = true;
+        vscode.enable = true;
+        whatsapp.enable = true;
+        winboat.enable = true;
+        zathura.enable = true;
+        zed = {
+          enable = true;
+          useLatestUpstream = false;
+        };
+        zellij.enable = true;
       };
     };
 
