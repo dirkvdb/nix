@@ -13,9 +13,13 @@ let
 
   # Fix Stylix-generated GTK button text being too dark on dark backgrounds.
   # Forces button labels to use the theme foreground color (base05).
+  # For suggested-action (primary) buttons with a light background, use dark text.
   buttonCssFix = ''
     button {
       color: #${colors.base05};
+    }
+    button.suggested-action {
+      color: #${colors.base00};
     }
   '';
 in
