@@ -32,8 +32,8 @@ let
     echo "  ============================="
     echo ""
 
-    # -- Step 1: Select target disk ----------------------------------------
-    echo "Step 1: Select target disk"
+    # -- Select target disk ------------------------------------------------
+    echo "Select target disk"
     echo ""
 
     DISKS=()
@@ -67,9 +67,9 @@ let
     read -r confirm
     [ "$confirm" = "yes" ] || { echo "Aborted."; exit 1; }
 
-    # -- Step 2: Select configuration --------------------------------------
+    # -- Select configuration ----------------------------------------------
     echo ""
-    echo "Step 2: Select a configuration"
+    echo "Select a configuration"
     echo ""
 
     HOSTS=()
@@ -100,9 +100,9 @@ let
       echo "Invalid choice, try again."
     done
 
-    # -- Step 3: Set password -----------------------------------------------
+    # -- Set password ------------------------------------------------------
     echo ""
-    echo "Step 3: Set password (used for both $TARGET_USER and root)"
+    echo "Set password (used for both $TARGET_USER and root)"
     echo ""
     while true; do
       printf "Password: "
@@ -123,7 +123,7 @@ let
       echo ""
     done
 
-    # -- Step 4: Confirm ----------------------------------------------------
+    # -- Confirm -----------------------------------------------------------
     DEST="$MNT/home/$TARGET_USER/nix"
     echo ""
     echo "  Disk:           $DISK"
@@ -140,7 +140,7 @@ let
     read -r confirm
     [[ "$confirm" =~ ^[Yy] ]] || { echo "Aborted."; exit 1; }
 
-    # -- Step 5: Partition --------------------------------------------------
+    # -- Partition ---------------------------------------------------------
     echo ""
     echo ">>> Partitioning $DISK ..."
 
@@ -173,14 +173,14 @@ let
       PART3="''${DISK}3"
     fi
 
-    # -- Step 6: Format -----------------------------------------------------
+    # -- Format ------------------------------------------------------------
     echo ">>> Formatting partitions ..."
 
     ${pkgs.dosfstools}/bin/mkfs.fat -F 32 -n NIXBOOT "$PART1"
     ${pkgs.e2fsprogs}/bin/mkfs.ext4 -L NIXROOT -F "$PART2"
     ${pkgs.util-linux}/bin/mkswap -L SWAP "$PART3"
 
-    # -- Step 7: Mount ------------------------------------------------------
+    # -- Mount -------------------------------------------------------------
     echo ">>> Mounting partitions ..."
 
     mount "$PART2" "$MNT"
@@ -188,11 +188,11 @@ let
     mount "$PART1" "$MNT/boot"
     swapon "$PART3"
 
-    # -- Step 8: Generate hardware config -----------------------------------
+    # -- Generate hardware config ------------------------------------------
     echo ">>> Generating hardware configuration ..."
     nixos-generate-config --root "$MNT"
 
-    # -- Step 9: Copy config to target --------------------------------------
+    # -- Copy config to target ---------------------------------------------
     echo ">>> Copying nix config to $DEST ..."
     mkdir -p "$DEST"
     cp -rT "$CONFIG_DIR" "$DEST"
@@ -204,7 +204,7 @@ let
       echo "    Placed generated hardware-configuration.nix in hosts/$HOSTNAME/"
     fi
 
-    # -- Step 10: Initialize git repo (flake needs it) ----------------------
+    # -- Initialize git repo (flake needs it) -----------------------------
     echo ">>> Initializing git repository ..."
     ${pkgs.git}/bin/git -C "$DEST" init -q
     ${pkgs.git}/bin/git -C "$DEST" add -A
@@ -212,31 +212,48 @@ let
       -c user.name="installer" -c user.email="installer@localhost" \
       commit -qm "Initial config from installer ISO"
 
-    # -- Step 11: Install ---------------------------------------------------
+    # -- Install -----------------------------------------------------------
     echo ""
     echo ">>> Installing NixOS with configuration '$HOSTNAME' ..."
     echo "    (this will take a while)"
     echo ""
     nixos-install --flake "$DEST#$HOSTNAME" --no-root-password |& ${pkgs.nix-output-monitor}/bin/nom
 
-    # -- Step 12: Set passwords ---------------------------------------------
+    # -- Set passwords -----------------------------------------------------
     echo ">>> Setting passwords for $TARGET_USER and root ..."
     echo "$TARGET_USER:$PASSWORD" | chpasswd -R "$MNT"
     echo "root:$PASSWORD" | chpasswd -R "$MNT"
 
-    # -- Step 13: Deploy keyfile ---------------------------------------------
+    # -- Deploy encrypted files ---------------------------------------------
     KEYFILE_ENC="$CONFIG_DIR/hosts/installer/desktop.key.enc"
     KEYFILE_DEST="$MNT/home/$TARGET_USER/.local/share/desktop.key"
-    if [ -f "$KEYFILE_ENC" ]; then
-      echo ">>> Decrypting desktop.key ..."
-      mkdir -p "$(dirname "$KEYFILE_DEST")"
-      openssl enc -d -aes-256-cbc -pbkdf2 -in "$KEYFILE_ENC" -out "$KEYFILE_DEST"
-      chmod 600 "$KEYFILE_DEST"
+    AGEKEYS_ENC="$CONFIG_DIR/hosts/installer/age-keys.txt.enc"
+    AGEKEYS_DEST="$MNT/home/$TARGET_USER/.config/sops/age/keys.txt"
+
+    if [ -f "$KEYFILE_ENC" ] || [ -f "$AGEKEYS_ENC" ]; then
+      echo ">>> Decrypting encrypted files ..."
+      printf "Decryption password: "
+      read -rs DECRYPT_PASS
+      echo ""
+
+      if [ -f "$KEYFILE_ENC" ]; then
+        mkdir -p "$(dirname "$KEYFILE_DEST")"
+        openssl enc -d -aes-256-cbc -pbkdf2 -pass "pass:$DECRYPT_PASS" -in "$KEYFILE_ENC" -out "$KEYFILE_DEST"
+        chmod 600 "$KEYFILE_DEST"
+        echo "    Deployed desktop.key"
+      fi
+
+      if [ -f "$AGEKEYS_ENC" ]; then
+        mkdir -p "$(dirname "$AGEKEYS_DEST")"
+        openssl enc -d -aes-256-cbc -pbkdf2 -pass "pass:$DECRYPT_PASS" -in "$AGEKEYS_ENC" -out "$AGEKEYS_DEST"
+        chmod 600 "$AGEKEYS_DEST"
+        echo "    Deployed age keys"
+      fi
     else
-      echo ">>> Note: no desktop.key.enc found in ISO, skipping keyfile deployment."
+      echo ">>> Note: no encrypted files found in ISO, skipping key deployment."
     fi
 
-    # -- Step 14: Fix ownership ---------------------------------------------
+    # -- Fix ownership -----------------------------------------------------
     if grep -q "^$TARGET_USER:" "$MNT/etc/passwd"; then
       TARGET_UID=$(grep "^$TARGET_USER:" "$MNT/etc/passwd" | cut -d: -f3)
       TARGET_GID=$(grep "^$TARGET_USER:" "$MNT/etc/passwd" | cut -d: -f4)
