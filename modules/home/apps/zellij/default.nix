@@ -17,6 +17,9 @@ in
   config = lib.mkIf cfg.enable (mkUserHome {
     programs.zellij = {
       enable = true;
+      settings = {
+        show_startup_tips = false;
+      };
     };
   });
 }

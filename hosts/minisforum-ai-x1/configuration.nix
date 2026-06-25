@@ -195,6 +195,7 @@
           useLatestUpstream = true;
           localModels = true;
         };
+        zellij.enable = true;
 
       };
     };
