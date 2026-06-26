@@ -3,6 +3,7 @@
   buildGoModule,
   fetchFromGitHub,
   go_1_26,
+  installShellFiles,
 }:
 
 (buildGoModule.override { go = go_1_26; }) (finalAttrs: {
@@ -18,6 +19,8 @@
 
   vendorHash = "sha256-gQbjvdKtO0hCXrs9RnWo1s0YeHf5W9t+8AgS2ELXlPo=";
 
+  nativeBuildInputs = [ installShellFiles ];
+
   doCheck = false;
 
   postInstall = ''
@@ -27,6 +30,11 @@
 
     install -Dm644 packaging/applications/hyprmoncfg.desktop $out/share/applications/hyprmoncfg.desktop
     install -Dm644 packaging/icons/hyprmoncfg.svg $out/share/icons/hicolor/scalable/apps/hyprmoncfg.svg
+
+    installShellCompletion --cmd hyprmoncfg \
+      --bash <($out/bin/hyprmoncfg completion bash) \
+      --fish <($out/bin/hyprmoncfg completion fish) \
+      --zsh <($out/bin/hyprmoncfg completion zsh)
   '';
 
   meta = {
