@@ -121,6 +121,7 @@ in
         "just"
         "glsl"
         "log"
+        "lua"
         "neocmake"
         "nix"
         "rainbow-csv"
@@ -142,6 +143,7 @@ in
           shellcheck
           codex-acp
           groovy-language-server
+          lua-language-server
           mcp-nixos
         ]
       );
@@ -272,6 +274,11 @@ in
             groovy = lib.mkIf (!pkgs.stdenv.isDarwin) {
               binary = {
                 path = "${unstablePkgs.groovy-language-server}/bin/groovy-language-server";
+              };
+            };
+            lua-language-server = lib.mkIf (!pkgs.stdenv.isDarwin) {
+              binary = {
+                path = "${unstablePkgs.lua-language-server}/bin/lua-language-server";
               };
             };
             tombi = lib.mkMerge [

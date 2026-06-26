@@ -164,6 +164,14 @@
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
         hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;
 
+        # Patch waybar to support Hyprland 0.55+ Lua IPC protocol
+        # https://github.com/Alexays/Waybar/pull/5013
+        waybar = prev.waybar.overrideAttrs (old: {
+          patches = (old.patches or [ ]) ++ [
+            ./modules/home/apps/hyprland/waybar-lua-ipc.patch
+          ];
+        });
+
         # Pin Sublime Merge to Build 2125
         sublime-merge = prev.callPackage (import
           "${inputs.nixpkgs}/pkgs/applications/version-management/sublime-merge/common.nix"

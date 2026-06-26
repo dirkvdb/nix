@@ -137,8 +137,12 @@
     # AQ_DRM_DEVICES is colon-separated, so use colon-free udev symlinks instead
     # of /dev/dri/by-path names such as pci-0000:01:00.0-card.
     home-manager.users.dirk.wayland.windowManager.hyprland.settings.env = lib.mkAfter [
-      "AQ_DRM_DEVICES,/dev/dri/intel-igpu:/dev/dri/nvidia-dgpu"
-      "SDL_VIDEODRIVER,wayland"
+      {
+        _args = [
+          "AQ_DRM_DEVICES"
+          "/dev/dri/intel-igpu:/dev/dri/nvidia-dgpu"
+        ];
+      }
     ];
 
     # Specialisation: NVIDIA dGPU drives all compositing (current/legacy setup).
@@ -151,10 +155,24 @@
       hardware.nvidia.powerManagement.finegrained = lib.mkForce false;
 
       home-manager.users.dirk.wayland.windowManager.hyprland.settings.env = lib.mkForce [
-        "AQ_DRM_DEVICES,/dev/dri/nvidia-dgpu:/dev/dri/intel-igpu"
-        "SDL_VIDEODRIVER,wayland"
-        "GBM_BACKEND,nvidia-drm"
-        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+        {
+          _args = [
+            "AQ_DRM_DEVICES"
+            "/dev/dri/nvidia-dgpu:/dev/dri/intel-igpu"
+          ];
+        }
+        {
+          _args = [
+            "GBM_BACKEND"
+            "nvidia-drm"
+          ];
+        }
+        # {
+        #   _args = [
+        #     "__GLX_VENDOR_LIBRARY_NAME"
+        #     "nvidia"
+        #   ];
+        # }
       ];
     };
 

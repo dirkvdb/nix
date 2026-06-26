@@ -522,7 +522,7 @@ in
       show_system_menu() {
         case $(menu "System" "  Lock\n󰍃  Logout\n󰤄  Suspend\n󰜉  Restart\n󰐥  Shutdown") in
         *Lock*) nixcfg-lock-screen ;;
-        *Logout*) hyprctl dispatch exit ;;
+        *Logout*) uwsm stop ;;
         *Suspend*) systemctl suspend ;;
         *Restart*) systemctl reboot ;;
         *Shutdown*) systemctl poweroff ;;
