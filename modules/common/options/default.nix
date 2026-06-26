@@ -79,24 +79,38 @@ in
     };
 
     monitors = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
+      type = lib.types.listOf (lib.types.attrsOf lib.types.anything);
       default = [ ];
-      example = [ "HDMI-A-1,preferred,auto-left,1.0" ];
+      example = [
+        {
+          output = "HDMI-A-1";
+          mode = "preferred";
+          position = "auto-left";
+          scale = "1.0";
+        }
+      ];
       description = ''
-        List of Hyprland monitor configuration strings for specific monitors.
-        Each entry follows the format: name,resolution,position,scale
+        List of Hyprland monitor configuration tables for specific monitors.
+        Each entry is an attrset with output, mode, position, and scale fields.
         A catch-all rule using the global displayScale is always appended automatically.
       '';
     };
 
     workspaces = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
+      type = lib.types.listOf (lib.types.attrsOf lib.types.anything);
       default = [ ];
-      example = [ "9, monitor:HDMI-A-1, default:true, persistent:true" ];
+      example = [
+        {
+          workspace = "9";
+          monitor = "HDMI-A-1";
+          default = true;
+          persistent = true;
+        }
+      ];
       description = ''
-        List of additional Hyprland workspace rules for host-specific monitor bindings.
-        Each entry follows Hyprland workspace rule syntax: id, rule1, rule2, ...
-        These are appended to the shared workspace list.
+        List of additional Hyprland workspace rule tables for host-specific monitor bindings.
+        Each entry is an attrset with workspace and other rule fields.
+        These are appended to the shared workspace_rule list.
       '';
     };
 

@@ -39,6 +39,7 @@ in
         "wheel"
         "hidraw"
         "i2c"
+        "input"
         "users"
         "video"
         "render"

@@ -45,12 +45,16 @@ in
     '';
 
     wayland.windowManager.hyprland.settings = {
-      exec-once = [
-        "${pkgs.hyprexpose}/bin/hyprexpose"
-      ];
-
-      bindd = [
-        "$mod, TAB, Workspace overview, exec, pkill -SIGUSR1 -x hyprexpose"
+      on = [
+        {
+          _args = [
+            "hyprland.start"
+            (lib.generators.mkLuaInline ''
+              function()
+                hl.exec_cmd("${pkgs.hyprexpose}/bin/hyprexpose")
+              end'')
+          ];
+        }
       ];
     };
   });
