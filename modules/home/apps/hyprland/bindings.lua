@@ -5,6 +5,22 @@ local terminal    = "ghostty"
 local browser     = "zen-beta"
 local applauncher = "walker -N"
 local osdclient   = 'swayosd-client --monitor "$(hyprctl monitors -j | jq -r \'.[] | select(.focused == true).name\')"'
+
+--- Focus an existing window by class, or launch the command if none found.
+--- Global so Nix-injected bindings (appended after require("bindings")) can use it.
+function launch_or_focus(class_pattern, launch_cmd)
+    launch_cmd = launch_cmd or class_pattern
+    return function()
+        for _, w in ipairs(hl.get_windows()) do
+            if w.class:find(class_pattern, 1, true) then
+                hl.dispatch(hl.dsp.focus({ window = "address:" .. w.address }))
+                return
+            end
+        end
+        hl.exec_cmd(launch_cmd)
+    end
+end
+
 ---- WINDOW MOVE / LAYOUT ----
 hl.bind(mod .. " + SHIFT + H", hl.dsp.window.move({ direction = "l" }))
 hl.bind(mod .. " + SHIFT + L", hl.dsp.window.move({ direction = "r" }))
@@ -26,7 +42,7 @@ hl.bind(mod .. " + CTRL + I", hl.dsp.exec_cmd("nixcfg-toggle-idle"), { descripti
 hl.bind(mod .. " + CTRL + N", hl.dsp.exec_cmd("nixcfg-toggle-nightlight"), { description = "Toggle nightlight" })
 ---- APP LAUNCHERS -------
 hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd(terminal .. ' --working-directory="$(nixcfg-cmd-terminal-cwd)"'), { description = "Terminal" })
-hl.bind(mod .. " + S", hl.dsp.exec_cmd("nixcfg-launch-or-focus " .. browser), { description = "Browser" })
+hl.bind(mod .. " + S", launch_or_focus(browser), { description = "Browser" })
 hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd(browser), { description = "Browser (new instance)" })
 hl.bind(mod .. " + D", hl.dsp.exec_cmd("zeditor"), { description = "Dev editor" })
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("nautilus --new-window"), { description = "File manager" })
@@ -35,10 +51,10 @@ hl.bind(mod .. " + T", hl.dsp.exec_cmd(terminal .. " -e btop"), { description = 
 hl.bind(mod .. " + V", hl.dsp.exec_cmd("walker --provider clipboard --theme clipboard"), { description = "Clipboard" })
 hl.bind(mod .. " + K", hl.dsp.exec_cmd("nixcfg-menu-keybindings"), { description = "Show key bindings" })
 ---- WEB APPS ----
-hl.bind(mod .. " + SHIFT + A", hl.dsp.exec_cmd('nixcfg-launch-or-focus-webapp ChatGPT "https://chatgpt.com"'), { description = "ChatGPT" })
-hl.bind(mod .. " + SHIFT + Y", hl.dsp.exec_cmd('nixcfg-launch-or-focus-webapp Youtube "https://youtube.com/"'), { description = "Youtube" })
-hl.bind(mod .. " + SHIFT + W", hl.dsp.exec_cmd('nixcfg-launch-or-focus-webapp Whatsapp "https://web.whatsapp.com/"'), { description = "Whatsapp" })
-hl.bind(mod .. " + SHIFT + E", hl.dsp.exec_cmd('nixcfg-launch-or-focus-webapp GMail "https://mail.google.com"'), { description = "Email" })
+hl.bind(mod .. " + SHIFT + A", launch_or_focus("ChatGPT", 'nixcfg-launch-webapp "https://chatgpt.com"'), { description = "ChatGPT" })
+hl.bind(mod .. " + SHIFT + Y", launch_or_focus("Youtube", 'nixcfg-launch-webapp "https://youtube.com/"'), { description = "Youtube" })
+hl.bind(mod .. " + SHIFT + W", launch_or_focus("Whatsapp", 'nixcfg-launch-webapp "https://web.whatsapp.com/"'), { description = "Whatsapp" })
+hl.bind(mod .. " + SHIFT + E", launch_or_focus("GMail", 'nixcfg-launch-webapp "https://mail.google.com"'), { description = "Email" })
 ---- WINDOW MANAGEMENT ---
 hl.bind(mod .. " + W", hl.dsp.window.close(), { description = "Close active window" })
 hl.bind(mod .. " + DELETE", hl.dsp.exec_cmd("hyprctl kill"), { description = "Kill window (click to kill)" })

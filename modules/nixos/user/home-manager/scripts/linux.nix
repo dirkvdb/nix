@@ -69,10 +69,13 @@ in
 
       WINDOW_PATTERN="$1"
       LAUNCH_COMMAND="''${2:- $WINDOW_PATTERN}"
-      WINDOW_ADDRESS=$(hyprctl clients -j | jq -r --arg p "$WINDOW_PATTERN" '.[]|select((.class|test("\\b" + $p + "\\b";"i")) or (.title|test("\\b" + $p + "\\b";"i")))|.address' | head -n1)
+      MATCH=$(hyprctl clients -j | jq -r --arg p "$WINDOW_PATTERN" '[.[]|select((.class|test("\\b" + $p + "\\b";"i")) or (.title|test("\\b" + $p + "\\b";"i")))] | first | "\(.address) \(.workspace.id)"' 2>/dev/null)
 
-      if [[ -n $WINDOW_ADDRESS ]]; then
-        hyprctl dispatch focuswindow "address:$WINDOW_ADDRESS"
+      WINDOW_ADDRESS="''${MATCH%% *}"
+      WORKSPACE_ID="''${MATCH##* }"
+
+      if [[ -n $WINDOW_ADDRESS && $WINDOW_ADDRESS != "null" ]]; then
+        hyprctl dispatch "hl.dsp.focus({workspace=$WORKSPACE_ID})" && hyprctl dispatch "hl.dsp.focus({window=\"address:$WINDOW_ADDRESS\"})"
       else
         eval exec $LAUNCH_COMMAND
       fi
