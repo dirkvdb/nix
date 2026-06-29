@@ -93,7 +93,7 @@ in
       enable = true;
       settings = {
         general = {
-          after_sleep_cmd = "hyprctl dispatch dpms on";
+          after_sleep_cmd = "hyprctl dispatch 'hl.dsp.dpms(\"on\")'";
           ignore_dbus_inhibit = false;
           lock_cmd = "hyprlock";
         };
@@ -118,8 +118,8 @@ in
           # the listener above, so the display is effectively off anyway.
           {
             timeout = 600; # 10min
-            on-timeout = "hyprctl dispatch dpms off";
-            on-resume = "hyprctl dispatch dpms on && sleep 2.0 && hyprctl dispatch dpms on && sleep 1.0 && hyprctl dispatch dpms on && brightnessctl -r && hyprctl dispatch focuswindow"; # Trigger a repaint to avoid empty workspace after waking up
+            on-timeout = "hyprctl dispatch 'hl.dsp.dpms(\"off\")'";
+            on-resume = "hyprctl dispatch 'hl.dsp.dpms(\"on\")' && sleep 2.0 && hyprctl dispatch 'hl.dsp.dpms(\"on\")' && sleep 1.0 && hyprctl dispatch 'hl.dsp.dpms(\"on\")' && brightnessctl -r && hyprctl dispatch 'hl.dsp.focus({ urgent_or_last = true })'";
           }
         ]
         ++ [
@@ -127,7 +127,7 @@ in
           {
             timeout = 7200; # 120min
             on-timeout = "hyprlock";
-            on-resume = "hyprctl dispatch focuswindow"; # Trigger a repaint to avoid empty workspace after unlocking
+            on-resume = "hyprctl dispatch 'hl.dsp.focus({ urgent_or_last = true })'"; # Trigger a repaint to avoid empty workspace after unlocking
           }
         ];
       };
