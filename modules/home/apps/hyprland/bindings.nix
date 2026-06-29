@@ -18,9 +18,9 @@ let
 
   musicCmd =
     if isX86 then
-      ''launch_or_focus("spotify")''
+      "nixcfg-launch-or-focus spotify"
     else
-      ''launch_or_focus("Spotify", [[nixcfg-launch-webapp "https://open.spotify.com"]])'';
+      ''nixcfg-launch-or-focus-webapp Spotify "https://open.spotify.com"'';
 in
 {
   config = lib.mkIf (isLinux && isDesktop && !isHeadless && isHyprlandEnabled) (mkUserHome {
@@ -29,7 +29,9 @@ in
     # Nix-conditional keybindings (music command depends on architecture,
     # VPN jumphost and officework are optional services).
     wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''
-      hl.bind("SUPER + SHIFT + M", ${musicCmd}, { description = "Music" })
+      hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd(${
+        lib.generators.toLua { } musicCmd
+      }), { description = "Music" })
       ${lib.optionalString vpnjumphostEnabled ''hl.bind("SUPER + ALT + J", hl.dsp.exec_cmd("nixcfg-toggle-vpn-jumphost"), { description = "Toggle VPN jumphost" })''}
       ${lib.optionalString officeworkEnabled ''hl.bind("SUPER + ALT + O", hl.dsp.exec_cmd("nixcfg-toggle-officework"), { description = "Toggle officework services" })''}
     '';
