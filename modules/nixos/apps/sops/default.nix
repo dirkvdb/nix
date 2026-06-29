@@ -44,6 +44,10 @@ in
           owner = user.name;
         };
 
+        secrets.cachix_geo_overlay_auth_token = {
+          owner = user.name;
+        };
+
         secrets.mqtt_pass = {
           owner = user.name;
         };
