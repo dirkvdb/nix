@@ -50,6 +50,7 @@ in
 
     systemd.services.nordvpnd = {
       after = [ "network-online.target" ];
+      requires = [ "nordvpnd.socket" ];
       description = "NordVPN daemon.";
       path = with pkgs; [
         e2fsprogs
@@ -67,7 +68,6 @@ in
         Group = "nordvpn";
         KillMode = "process";
         NonBlocking = true;
-        Requires = "nordvpnd.socket";
         Restart = "on-failure";
         RestartSec = 5;
         RuntimeDirectory = "nordvpn";
