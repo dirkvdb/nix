@@ -157,13 +157,14 @@ in
           fi
       fi
 
-      # Fall back to AMD sysfs
-      GPU_BUSY_FILE="/sys/class/drm/card1/device/gpu_busy_percent"
-      if [[ -r "$GPU_BUSY_FILE" ]]; then
-          percent=$(<"$GPU_BUSY_FILE")
-          printf '{"text":"%d","tooltip":"GPU %d%%","percentage":%d}' "$percent" "$percent" "$percent"
-          exit 0
-      fi
+      # Fall back to AMD sysfs (find the first card with gpu_busy_percent)
+      for card in /sys/class/drm/card*/device/gpu_busy_percent; do
+          if [[ -r "$card" ]]; then
+              percent=$(<"$card")
+              printf '{"text":"%d","tooltip":"GPU %d%%","percentage":%d}' "$percent" "$percent" "$percent"
+              exit 0
+          fi
+      done
 
       exit 1
     '')
@@ -182,25 +183,26 @@ in
           fi
       fi
 
-      # Fall back to AMD sysfs
-      GPU_PATH="/sys/class/drm/card1/device"
-      GPU_TOTAL_MEM="$GPU_PATH/mem_info_vram_total"
-      GPU_USED_MEM="$GPU_PATH/mem_info_vram_used"
-      if [[ -r "$GPU_TOTAL_MEM" ]]; then
-          total_bytes=$(<"$GPU_TOTAL_MEM")
-          used_bytes=$(<"$GPU_USED_MEM")
+      # Fall back to AMD sysfs (find the first card with VRAM info)
+      for card_dir in /sys/class/drm/card*/device; do
+          GPU_TOTAL_MEM="$card_dir/mem_info_vram_total"
+          GPU_USED_MEM="$card_dir/mem_info_vram_used"
+          if [[ -r "$GPU_TOTAL_MEM" ]]; then
+              total_bytes=$(<"$GPU_TOTAL_MEM")
+              used_bytes=$(<"$GPU_USED_MEM")
 
-          total_mib=$(( total_bytes / 1024 / 1024 ))
-          used_mib=$(( used_bytes / 1024 / 1024 ))
-          total=$(( total_mib * 10 / 1024 ))
-          used=$(( used_mib * 10 / 1024 ))
+              total_mib=$(( total_bytes / 1024 / 1024 ))
+              used_mib=$(( used_bytes / 1024 / 1024 ))
+              total=$(( total_mib * 10 / 1024 ))
+              used=$(( used_mib * 10 / 1024 ))
 
-          percentage=$(( used_bytes * 100 / total_bytes ))
+              percentage=$(( used_bytes * 100 / total_bytes ))
 
-          awk -v pct="$percentage" -v used="$used" -v total="$total" \
-            'BEGIN {printf "{\"text\":\"%d\",\"tooltip\":\"%.1fGiB / %.1fGiB used\",\"percentage\":%d}", pct, used/10, total/10, pct}'
-          exit 0
-      fi
+              awk -v pct="$percentage" -v used="$used" -v total="$total" \
+                'BEGIN {printf "{\"text\":\"%d\",\"tooltip\":\"%.1fGiB / %.1fGiB used\",\"percentage\":%d}", pct, used/10, total/10, pct}'
+              exit 0
+          fi
+      done
 
       exit 1
     '')
