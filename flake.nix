@@ -158,7 +158,6 @@
             (import inputs.nixpkgs-unstable { system = prev.stdenv.hostPlatform.system; }).rustPlatform;
         };
         decentpaste = prev.callPackage ./pkgs/decentpaste { };
-        nordvpn = prev.callPackage ./pkgs/nordvpn { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         gitcomet = prev.callPackage ./pkgs/gitcomet { };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
