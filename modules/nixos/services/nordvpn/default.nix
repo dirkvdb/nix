@@ -1,12 +1,13 @@
 {
   lib,
-  pkgs,
   config,
+  unstablePkgs,
   ...
 }:
 let
   cfg = config.local.services.nordvpn;
   inherit (config.local) user;
+  nordvpn = unstablePkgs.nordvpn;
 in
 {
   options.local.services.nordvpn = {
@@ -46,13 +47,13 @@ in
     # Required so VPN traffic is not dropped by reverse-path filtering
     networking.firewall.checkReversePath = "loose";
 
-    environment.systemPackages = [ pkgs.nordvpn ];
+    environment.systemPackages = [ nordvpn ];
 
     systemd.services.nordvpnd = {
       after = [ "network-online.target" ];
       requires = [ "nordvpnd.socket" ];
       description = "NordVPN daemon.";
-      path = with pkgs; [
+      path = with unstablePkgs; [
         e2fsprogs
         iproute2
         iptables
@@ -64,7 +65,7 @@ in
       serviceConfig = {
         AmbientCapabilities = "CAP_NET_ADMIN";
         CapabilityBoundingSet = "CAP_NET_ADMIN";
-        ExecStart = lib.getExe' pkgs.nordvpn "nordvpnd";
+        ExecStart = lib.getExe' nordvpn "nordvpnd";
         Group = "nordvpn";
         KillMode = "process";
         NonBlocking = true;
@@ -118,15 +119,15 @@ in
       };
       script =
         let
-          nordvpn = lib.getExe pkgs.nordvpn;
+          nordvpnExe = lib.getExe' nordvpn "nordvpn";
         in
         ''
           # wait for the daemon to be ready
           for i in $(seq 1 10); do
-            ${nordvpn} status >/dev/null 2>&1 && break
+            ${nordvpnExe} status >/dev/null 2>&1 && break
             sleep 1
           done
-          ${nordvpn} set lan-discovery on || true
+          ${nordvpnExe} set lan-discovery on || true
         '';
     };
 
@@ -134,7 +135,7 @@ in
       after = [ "network-online.target" ];
       description = "NordUserD Service";
       serviceConfig = {
-        ExecStart = lib.getExe' pkgs.nordvpn "norduserd";
+        ExecStart = lib.getExe' nordvpn "norduserd";
         NonBlocking = true;
         Restart = "on-failure";
         RestartSec = 5;
