@@ -1,6 +1,10 @@
 { ... }:
 {
-  security.sudo.extraRules = [
+  # Use sudo-rs, a memory-safe Rust reimplementation of sudo.
+  security.sudo.enable = false;
+  security.sudo-rs.enable = true;
+
+  security.sudo-rs.extraRules = [
     {
       groups = [ "wheel" ];
       commands = [
