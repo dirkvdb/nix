@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   mkHome,
   ...
@@ -116,7 +117,10 @@ in
           relativenumber = true;
           cursorline = true;
           cursorlineopt = "both";
+          clipboard = "unnamedplus";
         };
+
+        vim.extraPackages = lib.optionals pkgs.stdenv.isLinux [ pkgs.wl-clipboard ];
 
         vim.diagnostics = {
           enable = true;
