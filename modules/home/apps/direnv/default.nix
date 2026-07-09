@@ -18,6 +18,8 @@ in
   config = lib.mkIf cfg.enable (mkUserHome {
     programs.direnv = {
       enable = true;
+      enableFishIntegration = lib.mkForce false;
+
       config = {
         global = {
           hide_env_diff = true;
