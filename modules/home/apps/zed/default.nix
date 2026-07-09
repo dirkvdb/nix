@@ -209,7 +209,7 @@ in
             };
             default_model = {
               provider = "copilot_chat";
-              model = "claude-opus-4.6";
+              model = "claude-sonnet-5";
             };
           };
           edit_predictions = {
@@ -339,14 +339,6 @@ in
                 buffer_font_size = 14;
                 ui_font_size = 14;
               };
-              terminal = pkgs.lib.mkIf pkgs.stdenv.isDarwin {
-                shell = {
-                  program = "nu";
-                };
-                env = {
-                  XDG_CONFIG_HOME = "/Users/dirk/.config";
-                };
-              };
             };
             presentation = {
               settings = {
@@ -377,7 +369,7 @@ in
               }
               (lib.mkIf (!pkgs.stdenv.isDarwin) {
                 command = "${unstablePkgs.github-copilot-cli}/bin/copilot";
-                default_model = "claude-sonnet-4.6";
+                default_model = "claude-sonnet-5";
                 args = [
                   "--acp"
                   "--stdio"
