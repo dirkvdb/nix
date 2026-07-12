@@ -19,7 +19,6 @@ in
       with pkgs;
       [
         just
-        lazygit
         serie
         binsider
         nixd
@@ -37,6 +36,10 @@ in
       #   enable = true;
       #   package = unstablePkgs.devenv;
       # };
+
+      programs.lazygit = {
+        enable = true;
+      };
 
       # Pixi configuration
       xdg.configFile."pixi/config.toml".text = ''
