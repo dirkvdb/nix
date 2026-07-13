@@ -14,6 +14,9 @@ default:
 build:
     nh {{ os_cmd }} build . -H {{ system_config }}
 
+bumpzed version:
+    nix shell nixpkgs#python3 -c python3 ./scripts/bump-zed.py "{{ version }}"
+
 # Test the system configuration
 test:
     nh {{ os_cmd }} test . -H {{ system_config }}
