@@ -15,7 +15,7 @@ let
   inherit (config.local) theme;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
-  zedPinnedVersion = "1.8.2";
+  zedPinnedVersion = "1.10.3";
 
   zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
     version = zedPinnedVersion;
@@ -24,12 +24,12 @@ let
       owner = "zed-industries";
       repo = "zed";
       tag = "v${version}";
-      hash = "sha256-j8CwQnVBHvc//4O2N55+4AAAhcARNHGEcccUoSHK8d4=";
+      hash = "sha256-8VDB6qtU9KpQUEwqok4CHDqJDfbAxDHBzER7xjRG1cc=";
     };
     cargoDeps = unstablePkgs.rustPlatform.fetchCargoVendor {
       inherit src;
       name = "${old.pname}-${version}";
-      hash = "sha256-zTAIGL5cmswjRqaBgEN+aiyAXMMY9OYZ2bfd6sd1c4Y=";
+      hash = "sha256-efw+lPAqJOdWziW2K/LjP5yMR+/VrNAwe1IzUbiG7dI=";
     };
     env = (old.env or { }) // {
       NIX_CFLAGS_COMPILE = lib.concatStringsSep " " [
@@ -85,8 +85,8 @@ in
           max_tokens = 100000;
         }
         {
-          name = "qwen3.5-9b-FLM";
-          display_name = "Qwen 3.5 9B (FLM)";
+          name = "Qwen3.6-27B-MTP-GGUF";
+          display_name = "Qwen 3.6 27B MTP (GGUF)";
           max_tokens = 100000;
         }
       ];
