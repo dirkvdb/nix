@@ -122,6 +122,9 @@
           inherit system;
           overlays = [ devenvOverlay ];
           config.allowUnfree = true;
+          # winboat bundles electron_40, which nixpkgs currently marks
+          # insecure (EOL). Allow it explicitly.
+          config.permittedInsecurePackages = [ "electron-40.10.5" ];
         };
 
       # Custom packages overlay
