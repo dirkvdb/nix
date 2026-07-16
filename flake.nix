@@ -82,6 +82,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-cachyos-kernel = {
+      url = "github:xddxdd/nix-cachyos-kernel/release";
+      # Do not override nixpkgs; must match the kernel patches
+    };
+
     hyprexpose = {
       url = "github:ThiagoAVicente/hyprexpose";
       inputs.nixpkgs.follows = "nixpkgs";
