@@ -202,6 +202,7 @@ in
             "font.name.monospace.x-western" = theme.terminalFont;
             "font.size.variable.x-unicode" = theme.uiFontSize + 6;
             "font.size.variable.x-western" = theme.uiFontSize + 6;
+            "dom.webserial.enabled" = true;
           }
           // lib.optionalAttrs (proxyPacUrl != null) {
             "network.proxy.type" = 2;
