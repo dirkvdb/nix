@@ -136,8 +136,10 @@
       overlay = final: prev: {
         # Override aquamarine to 0.12.1 to fix split-node GPU render node fallback on Apple Silicon
         # https://github.com/hyprwm/aquamarine/pull/291
+        # Remove this override once nixpkgs ships aquamarine >= 0.12
         aquamarine =
           if prev.stdenv.hostPlatform.isAarch64 && prev.stdenv.hostPlatform.isLinux then
+            assert prev.lib.versionOlder prev.aquamarine.version "0.12";
             prev.aquamarine.overrideAttrs (old: {
               version = "0.12.1";
               src = prev.fetchFromGitHub {
