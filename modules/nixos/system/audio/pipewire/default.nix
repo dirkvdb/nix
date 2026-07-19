@@ -16,6 +16,12 @@ in
       default = false;
       description = "Airplay output support";
     };
+
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.pipewire;
+      description = "The PipeWire package to use.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -31,6 +37,7 @@ in
       pulseaudio.enable = false;
       pipewire = {
         enable = true;
+        package = lib.mkDefault cfg.package;
         alsa.enable = true;
         pulse.enable = true;
         jack.enable = false;
