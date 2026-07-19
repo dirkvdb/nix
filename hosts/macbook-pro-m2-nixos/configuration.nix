@@ -2,6 +2,7 @@
   pkgs,
   inputs,
   config,
+  lib,
   unstablePkgs,
   ...
 }:
@@ -71,6 +72,8 @@ in
         audio.pipewire = {
           enable = true;
           airplay = false;
+          # pipewire 1.6.7 fixes a bug causing max volume on boot
+          package = unstablePkgs.pipewire;
         };
 
         network = {
@@ -161,6 +164,18 @@ in
     # Disable peripheral firmware extraction
     hardware.asahi.enable = true;
     hardware.asahi.peripheralFirmwareDirectory = ./firmware;
+
+    assertions = [
+      {
+        assertion = lib.versionOlder pkgs.pipewire.version "1.6.7";
+        message = ''
+          nixpkgs pipewire (${pkgs.pipewire.version}) is now >= 1.6.7, which contains a fix for
+          max volume on boot. Remove the `local.system.audio.pipewire.package = unstablePkgs.pipewire`
+          override in hosts/macbook-pro-m2-nixos/configuration.nix.
+        '';
+      }
+    ];
+
 
     # Inject ALS calibration firmware not handled by asahi-fwextract
     hardware.firmware = [
