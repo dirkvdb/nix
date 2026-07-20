@@ -4,7 +4,6 @@
   lib,
   inputs,
   mkHome,
-  unstablePkgs,
   ...
 }:
 let
@@ -14,12 +13,10 @@ let
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable;
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
-  isNvidiaEnabled = config.local.system.video.nvidia.enable or false;
+  isWaybarEnabled = config.local.desktop.waybar.enable or false;
+  isNoctaliaEnabled = config.local.desktop.noctalia.enable or false;
   sopsEnabled = config.local.apps.sops.enable or false;
   mkUserHome = mkHome user.name;
-
-  # Directory holding all theme wallpapers. wpaperd will pick & rotate them.
-  wallpapersDir = ../../../common/theme/wallpapers;
 
   # Border colors used in general and group config sections
   activeBorderColor = "rgb(${lib.strings.removePrefix "#" theme.uiAccentColor})";
@@ -40,13 +37,10 @@ in
   imports = [
     ./bindings.nix
     ./hyprexpose.nix
-    ./waybar.nix
-    ./mako.nix
   ];
 
   config = lib.mkIf (isLinux && isDesktop && isHyprlandEnabled) (mkUserHome {
     stylix.targets.hyprland.enable = false;
-    stylix.targets.wpaperd.image.enable = false;
 
     xdg.configFile."sunsetr".source = ../../dotfiles/sunsetr;
     xdg.configFile."hypr/settings.lua".source = ./settings.lua;
@@ -85,66 +79,6 @@ in
           rounding = 8;
           shadow_passes = 0;
           fade_on_empty = false;
-        };
-      };
-    };
-
-    services.hypridle = {
-      enable = true;
-      settings = {
-        general = {
-          after_sleep_cmd = "hyprctl dispatch 'hl.dsp.dpms(\"on\")'";
-          ignore_dbus_inhibit = false;
-          lock_cmd = "hyprlock";
-        };
-
-        listener = [
-          # Save power on short time away
-          {
-            timeout = 150; # 2.5min.
-            on-timeout =
-              (lib.optionalString config.local.services.wluma.enable "systemctl --user stop wluma.service && ")
-              + "brightnessctl -s set 0"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
-            on-resume =
-              "brightnessctl -r"
-              + (lib.optionalString config.local.services.wluma.enable " && systemctl --user start wluma.service"); # monitor backlight restore.
-          }
-        ]
-        ++ lib.optionals (!isNvidiaEnabled) [
-          # Power off the monitor via DPMS after some time.
-          # Skipped on NVIDIA: the proprietary driver does not reliably
-          # reinitialise the display pipeline after dpms off → on, leaving
-          # the screen permanently black. Brightness is already at 0 from
-          # the listener above, so the display is effectively off anyway.
-          {
-            timeout = 600; # 10min
-            on-timeout = "hyprctl dispatch 'hl.dsp.dpms(\"off\")'";
-            on-resume = "hyprctl dispatch 'hl.dsp.dpms(\"on\")' && sleep 2.0 && hyprctl dispatch 'hl.dsp.dpms(\"on\")' && sleep 1.0 && hyprctl dispatch 'hl.dsp.dpms(\"on\")' && brightnessctl -r && hyprctl dispatch 'hl.dsp.focus({ urgent_or_last = true })'";
-          }
-        ]
-        ++ [
-          # Long time away - lock the screen
-          {
-            timeout = 7200; # 120min
-            on-timeout = "hyprlock";
-            on-resume = "hyprctl dispatch 'hl.dsp.focus({ urgent_or_last = true })'"; # Trigger a repaint to avoid empty workspace after unlocking
-          }
-        ];
-      };
-    };
-
-    # Use wpaperd to display and rotate wallpapers natively. It cycles through
-    # all images in the configured directory based on `duration` and `sorting`,
-    # so no custom systemd timer is required.
-    services.wpaperd = {
-      enable = true;
-      package = unstablePkgs.wpaperd;
-      settings = {
-        any = {
-          path = "${wallpapersDir}";
-          duration = "30m";
-          sorting = "random";
-          mode = "center";
         };
       };
     };
@@ -191,6 +125,8 @@ in
       extraConfig = ''
         require("settings")
         require("bindings")
+        ${lib.optionalString isWaybarEnabled ''require("bindings-waybar")''}
+        ${lib.optionalString isNoctaliaEnabled ''require("bindings-noctalia")''}
         require("monitors")
       '';
 

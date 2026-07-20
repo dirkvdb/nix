@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   mkHome,
   ...
@@ -8,13 +7,14 @@
 let
   inherit (config.local) user;
   inherit (config.local) theme;
-  isLinux = pkgs.stdenv.isLinux;
-  isDesktop = config.local.desktop.enable;
+  isDesktop = config.local.desktop.enable or false;
+  isHeadless = config.local.headless or false;
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
+  cfg = config.local.desktop.waybar;
   mkUserHome = mkHome user.name;
 in
 {
-  config = lib.mkIf (isLinux && isDesktop && isHyprlandEnabled) (mkUserHome {
+  config = lib.mkIf (isDesktop && !isHeadless && isHyprlandEnabled && cfg.enable) (mkUserHome {
     stylix.targets.mako.enable = false;
 
     services.mako = {

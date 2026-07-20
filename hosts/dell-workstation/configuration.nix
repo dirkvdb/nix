@@ -275,7 +275,7 @@
       desktop = {
         enable = true;
         displayScale = 1.5;
-        hyprland.enable = true;
+        waybar.enable = true;
       };
 
       apps = {
