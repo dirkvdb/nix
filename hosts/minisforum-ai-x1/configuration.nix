@@ -43,8 +43,6 @@
 
     # Boot display: match HDMI resolution to avoid scaling issues on fbcon
     boot.kernelParams = [
-      "video=DP-3:1920x1080@60D"
-      "video=HDMI-A-1:1920x1080@60D"
       "fbcon=nodefer"
       "initcall_blacklist=simpledrm_platform_driver_init"
     ];
@@ -74,7 +72,6 @@
 
         loginmanager.sddm = {
           enable = true;
-          display = "DP-3";
         };
 
         input.keyboard.via = true;
