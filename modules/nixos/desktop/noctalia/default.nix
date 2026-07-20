@@ -61,6 +61,7 @@ let
       margin_ends = 0;
       radius = 0;
       shadow = false;
+      thickness = 33;
       start = [
         "launcher"
         "workspaces"
@@ -223,6 +224,9 @@ let
         type = "spacer";
       };
       volume.show_label = false;
+      workspaces = {
+        active_pill_size = 1.75;
+      };
       # Append month + day-of-month after the time (e.g. "14:32  July 20").
       clock.format = "{:%H:%M  %e %B}";
     };
