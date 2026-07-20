@@ -8,9 +8,12 @@ let
   inherit (config.local) user;
   mkUserHome = mkHome user.name;
   isDesktop = config.local.desktop.enable or false;
+  isHeadless = config.local.headless or false;
+  isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
+  cfg = config.local.desktop.waybar;
 in
 {
-  config = lib.mkIf isDesktop (mkUserHome {
+  config = lib.mkIf (isDesktop && !isHeadless && isHyprlandEnabled && cfg.enable) (mkUserHome {
     services.elephant = {
       enable = true;
       settings = {

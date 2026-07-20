@@ -13,6 +13,7 @@ let
   isDesktop = config.local.desktop.enable or false;
   isHeadless = config.local.headless or false;
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
+  cfg = config.local.desktop.waybar;
   hasAmdGpu = config.local.system.video.amd.enable;
   hasNvidiaGpu = config.local.system.video.nvidia.enable;
   hasGpu = hasAmdGpu || hasNvidiaGpu;
@@ -26,11 +27,42 @@ let
   mkUserHome = mkHome user.name;
 in
 {
-  config = lib.mkIf (isLinux && isDesktop && !isHeadless && isHyprlandEnabled) (mkUserHome {
-    # Configure waybar with systemd service
-    programs.waybar = {
-      enable = true;
-      systemd = {
+  imports = [
+    ./walker.nix
+    ./wpaperd.nix
+    ./swayosd.nix
+    ./mako.nix
+    ./hypridle.nix
+  ];
+
+  options.local.desktop.waybar = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Enable the waybar-based desktop shell: waybar, walker (with the
+        elephant backend), wpaperd, swayosd, and mako.
+
+        This is an alternative to Noctalia (`local.desktop.noctalia.enable`);
+        only one of the two should be enabled at a time. Hosts must
+        explicitly choose one.
+      '';
+    };
+  };
+
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    # Waybar is a bar for Hyprland; imply Hyprland unless a host has
+    # explicitly opted out (e.g. kiosk-mode hosts).
+    { local.desktop.hyprland.enable = lib.mkDefault true; }
+
+    (lib.mkIf (isLinux && isDesktop && !isHeadless && isHyprlandEnabled) (mkUserHome {
+      # Hyprland keybindings specific to this shell (walker, swayosd).
+      xdg.configFile."hypr/bindings-waybar.lua".source = ./bindings.lua;
+
+      # Configure waybar with systemd service
+      programs.waybar = {
+        enable = true;
+        systemd = {
         enable = true;
         targets = [ "graphical-session.target" ];
       };
@@ -258,7 +290,7 @@ in
           };
 
           "custom/nixmenu" = {
-            format = "";
+            format = "";
             tooltip = false;
             on-click = "nixcfg-launch-walker";
             on-click-right = "nixcfg-launch-terminal";
@@ -289,7 +321,7 @@ in
           };
 
           "custom/gpumemory" = {
-            format = " {}% ";
+            format = " {}% ";
             interval = 5;
             exec = "nixcfg-gpu-memory";
             return-type = "json";
@@ -318,7 +350,7 @@ in
           disk = {
             interval = 10;
             path = "/";
-            format = " {percentage_used}%";
+            format = " {percentage_used}%";
             on-click = "xdg-terminal-exec -- btop";
           };
 
@@ -407,9 +439,9 @@ in
             format-muted = "";
             format-icons = {
               default = [
-                ""
-                ""
-                ""
+                ""
+                ""
+                ""
               ];
             };
           };
@@ -467,5 +499,6 @@ in
       Requires = [ "tray-ready.service" ];
       After = [ "tray-ready.service" ];
     };
-  });
+    }))
+  ]);
 }

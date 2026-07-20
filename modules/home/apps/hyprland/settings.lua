@@ -143,9 +143,16 @@ hl.layer_rule({ match = { namespace = "selection" }, no_anim = true })
 -------------------------
 ---- WORKSPACE RULES ----
 -------------------------
-
-hl.workspace_rule({ workspace = "3", no_rounding = true, decorate = false, gaps_in = 1, gaps_out = 1 })
-hl.workspace_rule({ workspace = "5", layout = "scrolling" })
+hl.workspace_rule({ workspace = "1", persistent = true })
+hl.workspace_rule({ workspace = "2", persistent = true })
+hl.workspace_rule({ workspace = "3", no_rounding = true, decorate = false, gaps_in = 1, gaps_out = 1, persistent = true })
+hl.workspace_rule({ workspace = "3", persistent = true })
+hl.workspace_rule({ workspace = "4", persistent = true })
+hl.workspace_rule({ workspace = "5", layout = "scrolling", persistent = true })
+hl.workspace_rule({ workspace = "6", persistent = true })
+hl.workspace_rule({ workspace = "7", persistent = true })
+hl.workspace_rule({ workspace = "8", persistent = true })
+hl.workspace_rule({ workspace = "9", persistent = true })
 
 
 -----------------------

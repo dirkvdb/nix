@@ -105,7 +105,7 @@ in
           enable = true;
           localDns = true;
         };
-        hyprmoncfg.enable = true;
+        hyprmoncfg.enable = false;
         ssh.enable = true;
         fwupd.enable = true;
         printing.enable = true;
@@ -126,7 +126,7 @@ in
       desktop = {
         enable = true;
         displayScale = 2.0;
-        hyprland.enable = true;
+        noctalia.enable = true;
       };
 
       apps = {

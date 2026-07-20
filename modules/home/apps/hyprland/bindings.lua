@@ -1,10 +1,10 @@
 -- Hyprland keybindings (no NixOS dependencies).
 -- Conditional binds (music, VPN, officework) are added via Nix.
+-- Shell-specific binds (launcher, clipboard, OSD) live in the waybar or
+-- Noctalia module instead.
 local mod         = "SUPER"
 local terminal    = "ghostty"
 local browser     = "zen-beta"
-local applauncher = "walker -N"
-local osdclient   = 'swayosd-client --monitor "$(hyprctl monitors -j | jq -r \'.[] | select(.focused == true).name\')"'
 ---- WINDOW MOVE / LAYOUT ----
 hl.bind(mod .. " + SHIFT + H", hl.dsp.window.move({ direction = "l" }))
 hl.bind(mod .. " + SHIFT + L", hl.dsp.window.move({ direction = "r" }))
@@ -16,9 +16,6 @@ hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 hl.bind(mod .. " + ALT + mouse:272", hl.dsp.window.resize(), { mouse = true })
 ---- SYSTEM / UTILITY ----
-hl.bind("XF86PowerOff", hl.dsp.exec_cmd("nixcfg-menu system"), { locked = true, description = "Power menu" })
-hl.bind(mod .. " + ESCAPE", hl.dsp.exec_cmd("nixcfg-menu system"), { description = "Power menu" })
-hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd(applauncher), { description = "Launch apps" })
 hl.bind(mod .. " + ALT + SPACE", hl.dsp.exec_cmd("nixcfg-menu"), { description = "Menu" })
 hl.bind(mod .. " + X", hl.dsp.workspace.toggle_special(), { description = "Special workspace" })
 hl.bind(mod .. " + CTRL + S", hl.dsp.exec_cmd("nixcfg-menu share"), { description = "Share" })
@@ -32,7 +29,6 @@ hl.bind(mod .. " + D", hl.dsp.exec_cmd("zeditor"), { description = "Dev editor" 
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("nautilus --new-window"), { description = "File manager" })
 hl.bind(mod .. " + SHIFT + G", hl.dsp.exec_cmd("sublime_merge"), { description = "Sublime merge" })
 hl.bind(mod .. " + T", hl.dsp.exec_cmd(terminal .. " -e btop"), { description = "Activity" })
-hl.bind(mod .. " + V", hl.dsp.exec_cmd("walker --provider clipboard --theme clipboard"), { description = "Clipboard" })
 hl.bind(mod .. " + K", hl.dsp.exec_cmd("nixcfg-menu-keybindings"), { description = "Show key bindings" })
 ---- WEB APPS ----
 hl.bind(mod .. " + SHIFT + A", hl.dsp.exec_cmd('nixcfg-launch-or-focus-webapp ChatGPT "https://chatgpt.com"'), { description = "ChatGPT" })
@@ -88,17 +84,5 @@ hl.bind(mod .. " + ALT + 3", hl.dsp.exec_cmd("nixcfg-cmd-screenshot window"), { 
 hl.bind(mod .. " + ALT + 2", hl.dsp.exec_cmd("nixcfg-cmd-screenshot output"), { description = "Screenshot of display" })
 hl.bind(mod .. " + ALT + 5", hl.dsp.exec_cmd("nixcfg-cmd-screenrecord"), { description = "Record screen region" })
 hl.bind(mod .. " + ALT + 6", hl.dsp.exec_cmd("pkill hyprpicker || hyprpicker -a"), { description = "Color picker" })
----- MEDIA / BRIGHTNESS ------
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(osdclient .. " --output-volume raise"), { locked = true, repeating = true, description = "Volume up" })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(osdclient .. " --output-volume lower"), { locked = true, repeating = true, description = "Volume down" })
-hl.bind("XF86AudioMute", hl.dsp.exec_cmd(osdclient .. " --output-volume mute-toggle"), { locked = true, repeating = true, description = "Mute" })
-hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd(osdclient .. " --input-volume mute-toggle"), { locked = true, repeating = true, description = "Mute microphone" })
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd(osdclient .. " --brightness +5"), { locked = true, repeating = true, description = "Brightness up" })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(osdclient .. " --brightness -5"), { locked = true, repeating = true, description = "Brightness down" })
--- Precise 1% adjustments with Alt modifier
-hl.bind("ALT + XF86AudioRaiseVolume", hl.dsp.exec_cmd(osdclient .. " --output-volume +1"), { locked = true, repeating = true, description = "Volume up precise" })
-hl.bind("ALT + XF86AudioLowerVolume", hl.dsp.exec_cmd(osdclient .. " --output-volume -1"), { locked = true, repeating = true, description = "Volume down precise" })
-hl.bind("ALT + XF86MonBrightnessUp", hl.dsp.exec_cmd(osdclient .. " --brightness +1"), { locked = true, repeating = true, description = "Brightness up precise" })
-hl.bind("ALT + XF86MonBrightnessDown", hl.dsp.exec_cmd(osdclient .. " --brightness -1"), { locked = true, repeating = true, description = "Brightness down precise" })
 ---- WORKSPACE OVERVIEW ----
 hl.bind(mod .. " + TAB", hl.dsp.exec_cmd("pkill -SIGUSR1 -x hyprexpose"), { description = "Workspace overview" })

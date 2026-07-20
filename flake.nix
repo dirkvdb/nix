@@ -96,6 +96,11 @@
       url = "github:uiriansan/SilentSDDM";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -263,6 +268,7 @@
             inputs.nixflix.nixosModules.default
             inputs.nix-amd-ai.nixosModules.default
             inputs.silent-sddm.nixosModules.default
+            inputs.noctalia.nixosModules.default
             { nixpkgs.hostPlatform = system; }
             {
               nixpkgs.overlays = [

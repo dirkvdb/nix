@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   mkHome,
   ...
@@ -8,23 +7,25 @@
 let
   inherit (config.local) user;
   inherit (config.local) theme;
-  isLinux = pkgs.stdenv.isLinux;
-  isDesktop = config.local.desktop.enable;
+  isDesktop = config.local.desktop.enable or false;
+  isHeadless = config.local.headless or false;
+  isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
+  cfg = config.local.desktop.waybar;
   mkUserHome = mkHome user.name;
 in
 {
-  config = lib.mkIf (isLinux && isDesktop) (mkUserHome {
+  config = lib.mkIf (isDesktop && !isHeadless && isHyprlandEnabled && cfg.enable) (mkUserHome {
     services.swayosd = {
       enable = true;
     };
 
-    xdg.configFile."swayosd/config.toml".text = builtins.toString ''
+    xdg.configFile."swayosd/config.toml".text = toString ''
       [server]
       show_percentage = true
       max_volume = 100
     '';
 
-    xdg.configFile."swayosd/style.css".text = builtins.toString ''
+    xdg.configFile."swayosd/style.css".text = toString ''
       @define-color background-color ${theme.uiBaseColor};
       @define-color border-color ${theme.uiAccentColor};
       @define-color label ${theme.uiAccentColor};
