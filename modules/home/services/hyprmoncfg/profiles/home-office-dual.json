@@ -1,0 +1,146 @@
+{
+  "name": "home-office-dual",
+  "created_at": "2026-07-18T18:54:02.163243709Z",
+  "updated_at": "2026-07-18T19:38:13Z",
+  "outputs": [
+    {
+      "key": "dell inc.|dell u2725qe|5z1fmf4",
+      "match_key": "dell inc.|dell u2725qe|5z1fmf4",
+      "name": "DP-10",
+      "description": "Dell Inc. DELL U2725QE 5Z1FMF4",
+      "make": "Dell Inc.",
+      "model": "DELL U2725QE",
+      "serial": "5Z1FMF4",
+      "enabled": true,
+      "mode": "3840x2160@60.00Hz",
+      "width": 3840,
+      "height": 2160,
+      "refresh": 60,
+      "x": 5863,
+      "y": 0,
+      "scale": 1.66667,
+      "transform": 0,
+      "bitdepth": 8,
+      "cm": "srgb",
+      "sdr_brightness": 1,
+      "sdr_saturation": 1,
+      "sdr_min_luminance": 0.2,
+      "sdr_max_luminance": 80,
+      "min_luminance": 0
+    },
+    {
+      "key": "lg electronics|lg hdr 4k|0x0004a5d4",
+      "match_key": "lg electronics|lg hdr 4k|0x0004a5d4",
+      "name": "DP-13",
+      "description": "LG Electronics LG HDR 4K 0x0004A5D4",
+      "make": "LG Electronics",
+      "model": "LG HDR 4K",
+      "serial": "0x0004A5D4",
+      "enabled": true,
+      "mode": "3840x2160@60.00Hz",
+      "width": 3840,
+      "height": 2160,
+      "refresh": 60,
+      "x": 3557,
+      "y": 0,
+      "scale": 1.66667,
+      "transform": 0,
+      "bitdepth": 8,
+      "cm": "srgb",
+      "sdr_brightness": 1,
+      "sdr_saturation": 1,
+      "sdr_min_luminance": 0.2,
+      "sdr_max_luminance": 80,
+      "min_luminance": 0
+    },
+    {
+      "key": "sunshine",
+      "match_key": "sunshine",
+      "name": "SUNSHINE",
+      "enabled": true,
+      "mode": "1920x1080@60.00Hz",
+      "width": 1920,
+      "height": 1080,
+      "refresh": 60,
+      "x": 8309,
+      "y": 0,
+      "scale": 1.66667,
+      "transform": 0,
+      "bitdepth": 8,
+      "cm": "srgb",
+      "sdr_brightness": 1,
+      "sdr_saturation": 1,
+      "sdr_min_luminance": 0.2,
+      "sdr_max_luminance": 80,
+      "min_luminance": 0
+    }
+  ],
+  "workspaces": {
+    "enabled": true,
+    "strategy": "sequential",
+    "max_workspaces": 10,
+    "group_size": 9,
+    "monitor_order": [
+      "dell inc.|dell u2725qe|5z1fmf4",
+      "lg electronics|lg hdr 4k|0x0004a5d4",
+      "sunshine"
+    ],
+    "rules": [
+      {
+        "workspace": "1",
+        "output_key": "dell inc.|dell u2725qe|5z1fmf4",
+        "output_name": "DP-10",
+        "default": true,
+        "persistent": true
+      },
+      {
+        "workspace": "2",
+        "output_key": "dell inc.|dell u2725qe|5z1fmf4",
+        "output_name": "DP-10"
+      },
+      {
+        "workspace": "3",
+        "output_key": "dell inc.|dell u2725qe|5z1fmf4",
+        "output_name": "DP-10"
+      },
+      {
+        "workspace": "4",
+        "output_key": "dell inc.|dell u2725qe|5z1fmf4",
+        "output_name": "DP-10"
+      },
+      {
+        "workspace": "5",
+        "output_key": "dell inc.|dell u2725qe|5z1fmf4",
+        "output_name": "DP-10"
+      },
+      {
+        "workspace": "6",
+        "output_key": "dell inc.|dell u2725qe|5z1fmf4",
+        "output_name": "DP-10"
+      },
+      {
+        "workspace": "7",
+        "output_key": "dell inc.|dell u2725qe|5z1fmf4",
+        "output_name": "DP-10"
+      },
+      {
+        "workspace": "8",
+        "output_key": "dell inc.|dell u2725qe|5z1fmf4",
+        "output_name": "DP-10"
+      },
+      {
+        "workspace": "9",
+        "output_key": "dell inc.|dell u2725qe|5z1fmf4",
+        "output_name": "DP-10"
+      },
+      {
+        "workspace": "10",
+        "output_key": "lg electronics|lg hdr 4k|0x0004a5d4",
+        "output_name": "DP-13",
+        "default": true,
+        "persistent": true
+      }
+    ]
+  },
+  "exec": ""
+}
