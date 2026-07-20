@@ -92,9 +92,11 @@ in
     # Make sure config changes get applied for apps that do not auto-reload
     (pkgs.writeShellScriptBin "nixcfg-reload" ''
       for svc in waybar elephant walker; do
-        systemctl --user cat "$svc.service" &>/dev/null && \
+        if systemctl --user cat "$svc.service" &>/dev/null; then
           systemctl --user restart "$svc.service"
+        fi
       done
+      exit 0
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-lock-screen" ''

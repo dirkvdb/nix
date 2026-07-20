@@ -46,7 +46,6 @@ in
     extraPackages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
       default = with pkgs; [
-        networkmanagerapplet
         nmrs-gui
       ];
       description = "Additional packages to install with NetworkManager";
@@ -69,8 +68,8 @@ in
 
       homeVpn = lib.mkEnableOption ''
         Home WireGuard VPN connection via NetworkManager.
-        Imports the vpn/home.conf sops secret into NetworkManager
-        so it appears in nm-applet. Not auto-connected at boot.
+        Imports the vpn/home.conf sops secret into NetworkManager.
+        Not auto-connected at boot.
       '';
     };
 
@@ -116,7 +115,7 @@ in
     networking.enableIPv6 = cfg.enableIpv6;
 
     # Import home WireGuard config into NetworkManager so it
-    # appears in nm-applet and can be toggled from the system tray.
+    # appears in uis and can be toggled from the system tray.
     sops.secrets = lib.mkIf cfg.vpn.homeVpn {
       "vpn/home.conf" = { };
     };
@@ -147,7 +146,7 @@ in
           if [ "$imported" != "home" ]; then
             nmcli connection modify "$imported" connection.id "home"
           fi
-          # Don't auto-connect at boot — toggle from nm-applet instead
+          # Don't auto-connect at boot — toggle from nm-ui instead
           nmcli connection modify "home" connection.autoconnect no
           nmcli connection down "home" 2>/dev/null || true
         '';
@@ -157,7 +156,8 @@ in
     networking.firewall.checkReversePath = lib.mkIf cfg.vpn.homeVpn "loose";
 
     environment.systemPackages = cfg.extraPackages;
-    programs.nm-applet.enable = lib.mkDefault true;
+    programs.nm-applet.enable = lib.mkDefault config.local.desktop.waybar.enable;
+
 
     assertions = [
       {
