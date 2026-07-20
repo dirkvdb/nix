@@ -22,5 +22,10 @@ in
       "${pkgs.hyprmoncfg}/share/systemd/user/hyprmoncfgd.service";
     xdg.configFile."systemd/user/default.target.wants/hyprmoncfgd.service".source =
       "${pkgs.hyprmoncfg}/share/systemd/user/hyprmoncfgd.service";
+
+    xdg.configFile."hyprmoncfg/profiles" = {
+      source = ./profiles;
+      recursive = true;
+    };
   });
 }
