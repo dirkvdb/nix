@@ -52,6 +52,36 @@ in
     (lib.mkIf (cfg.enable && isLinux && isDesktop && !isHeadless && isHyprlandEnabled) (mkUserHome {
       # Hyprland keybindings specific to this shell (Noctalia power menu).
       xdg.configFile."hypr/bindings-noctalia.lua".source = ./bindings.lua;
+
+      # Oneshot gate that blocks until the StatusNotifierWatcher D-Bus name
+      # appears. tray.target already orders After=noctalia.service, but
+      # noctalia is Type=simple so systemd considers it "started" before the
+      # tray is actually registered on D-Bus. By making tray.target also pull
+      # in this service, dependent units (e.g. keepassxc) see a tray that is
+      # genuinely ready.
+      systemd.user.services.tray-ready = {
+        Unit = {
+          Description = "Wait for system tray (StatusNotifierWatcher) on D-Bus";
+          After = [ "noctalia.service" ];
+          Requisite = [ "noctalia.service" ];
+        };
+
+        Service = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = toString (
+            pkgs.writeShellScript "wait-for-tray" ''
+              ${pkgs.glib}/bin/gdbus wait --session org.kde.StatusNotifierWatcher
+            ''
+          );
+          TimeoutStartSec = 15;
+        };
+      };
+
+      systemd.user.targets.tray.Unit = {
+        Requires = [ "tray-ready.service" ];
+        After = [ "tray-ready.service" ];
+      };
     }))
   ];
 }

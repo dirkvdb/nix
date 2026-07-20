@@ -151,7 +151,8 @@
       desktop = {
         enable = true;
         displayScale = 1.666667;
-        waybar.enable = true;
+        # waybar.enable = true;
+        noctalia.enable = true;
       };
 
       apps = {
