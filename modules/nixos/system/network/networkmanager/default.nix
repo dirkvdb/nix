@@ -45,9 +45,7 @@ in
 
     extraPackages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
-      default = with pkgs; [
-        nmrs-gui
-      ];
+      default = [ ];
       description = "Additional packages to install with NetworkManager";
     };
 

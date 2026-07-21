@@ -231,7 +231,6 @@ hl.window_rule({ match = { class = "(teams-for-linux)" }, workspace = "8 silent"
 hl.window_rule({ match = { fullscreen = true }, border_color = "rgb(FFCC66) rgb(DEC186)" })
 
 -- Float specific apps
-hl.window_rule({ match = { class = "^(org\\.nmrs\\.ui)$" }, float = true })
 hl.window_rule({ match = { class = "^(nordvpn-gui)$" }, float = true })
 
 -- Fladder media player fullscreen
