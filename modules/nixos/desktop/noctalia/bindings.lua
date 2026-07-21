@@ -7,6 +7,12 @@ local mod = "SUPER"
 hl.bind("XF86PowerOff", hl.dsp.exec_cmd("noctalia msg panel-toggle session"), { locked = true, description = "Power menu" })
 hl.bind(mod .. " + ESCAPE", hl.dsp.exec_cmd("noctalia msg panel-toggle session"), { description = "Power menu" })
 
+---- NIGHT LIGHT (Noctalia native) ----
+hl.bind(mod .. " + CTRL + N", hl.dsp.exec_cmd("noctalia msg nightlight-toggle"), { description = "Toggle nightlight" })
+
+---- IDLE LOCK / CAFFEINE (Noctalia native) ----
+hl.bind(mod .. " + CTRL + I", hl.dsp.exec_cmd("noctalia msg caffeine-toggle"), { description = "Toggle locking on idle" })
+
 ---- LAUNCHER / CLIPBOARD ----
 hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"), { description = "App launcher" })
 hl.bind(mod .. " + V", hl.dsp.exec_cmd("noctalia msg panel-toggle clipboard"), { description = "Clipboard" })

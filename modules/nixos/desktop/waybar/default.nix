@@ -59,6 +59,26 @@ in
       # Hyprland keybindings specific to this shell (walker, swayosd).
       xdg.configFile."hypr/bindings-waybar.lua".source = ./bindings.lua;
 
+      # sunsetr provides night-light transitions on this shell (backed by
+      # hyprsunset). Noctalia has its own native night light support instead.
+      home.packages = [
+        pkgs.sunsetr
+        pkgs.hyprsunset
+      ];
+      xdg.configFile."sunsetr".source = ../../../home/dotfiles/sunsetr;
+
+      wayland.windowManager.hyprland.settings.on = [
+        {
+          _args = [
+            "hyprland.start"
+            (lib.generators.mkLuaInline ''
+              function()
+                hl.exec_cmd("sunsetr")
+              end'')
+          ];
+        }
+      ];
+
       # Configure waybar with systemd service
       programs.waybar = {
         enable = true;
