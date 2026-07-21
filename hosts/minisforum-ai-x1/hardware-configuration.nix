@@ -23,7 +23,7 @@
   boot.initrd.kernelModules = [ "amdgpu" ];
   boot.kernelModules = [
     "kvm-amd"
-    "mt79225e"
+    "mt7925e"
     "r8169"
     "i2c-dev"
     "ddcci_backlight"
