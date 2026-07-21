@@ -104,7 +104,7 @@ in
     programs.silentSDDM = {
       enable = true;
       theme = cfg.theme;
-      backgrounds.wallpaper11 = ../../../../common/theme/wallpapers/wallpaper11.jpg;
+      backgrounds.wallpaper = ../../../../common/theme/wallpapers/wallpaper2.jpg;
       # Replace the default package with one that uses our custom stylix-themed config
       package = silentBase.overrideAttrs (old: {
         installPhase = old.installPhase + ''
