@@ -22,6 +22,7 @@ let
     UseOpenSSH=true
 
     [GUI]
+    ApplicationTheme=classic
     MinimizeOnClose=true
     MinimizeOnStartup=true
     MinimizeToTray=true
