@@ -13,9 +13,10 @@ let
   font = config.stylix.fonts.sansSerif.name;
   colors = config.lib.stylix.colors;
 
-  # Custom preset with stylix colors and font substituted
+  # Custom preset with stylix colors, font, and display scale substituted
   customConf = pkgs.replaceVars ./theme.conf {
     inherit font;
+    scale = toString displayScale;
     base00 = colors.base00-hex;
     base01 = colors.base01-hex;
     base02 = colors.base02-hex;
