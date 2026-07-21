@@ -144,10 +144,7 @@ in
       fi
     '')
 
-    # Launch or the wifi selection
-    (pkgs.writeShellScriptBin "nixcfg-launch-wifi" ''
-      nmrs-gui "$@"
-    '')
+
 
     (pkgs.writeShellScriptBin "nixcfg-gpu-usage" ''
       # Try NVIDIA first

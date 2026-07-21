@@ -67,11 +67,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    nmrs-gui = {
-      url = "github:networkmanager-rs/nmrs-gui";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     vpn-jumphost = {
       url = "github:VITO-RMA/vpn-jumphost";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -167,11 +162,6 @@
           in
           legacyPkgs.freeimage;
         es-de = prev.callPackage ./pkgs/es-de { freeimage = final.freeimage-pinned; };
-        nmrs-gui = prev.callPackage "${inputs.nmrs-gui}/package.nix" {
-          # set rustplatform to the nixpkgs version instead of upstreams naersk platform
-          rustPlatform =
-            (import inputs.nixpkgs-unstable { system = prev.stdenv.hostPlatform.system; }).rustPlatform;
-        };
         decentpaste = prev.callPackage ./pkgs/decentpaste { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         gitcomet = prev.callPackage ./pkgs/gitcomet { };
