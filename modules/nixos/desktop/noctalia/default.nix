@@ -253,7 +253,7 @@ let
       mOnSecondary = hex colors.base00;
       # warm shade (matches mHover), instead of an unrelated
       # stylix color (avoids e.g. sidebar hover highlights rendering as teal).
-      mTertiary = "#dbc688";
+      mTertiary = "#dbb888";
       mOnTertiary = hex colors.base00;
       mError = hex colors.base08;
       mOnError = hex colors.base00;
@@ -263,7 +263,7 @@ let
       mOnSurfaceVariant = hex colors.base04;
       mOutline = hex colors.base03;
       mShadow = hex colors.base00;
-      mHover = "#dbc688";
+      mHover = "#dbb888";
       mOnHover = hex colors.base00;
       terminal = {
         background = hex colors.base00;
