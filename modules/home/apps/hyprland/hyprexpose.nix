@@ -36,7 +36,7 @@ in
       label = "#${colors.base05}ff"
       empty_label = "#${colors.base04}94"
       window_label = "#${colors.base06}e6"
-      active_window = "#${colors.base0A}f2"
+      active_window = "${theme.uiAccentColor}f2"
 
       [behavior]
       no_preview = false
