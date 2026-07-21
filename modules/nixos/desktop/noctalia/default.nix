@@ -333,6 +333,13 @@ in
       # Noctalia's own settings (bar layout, theme, session actions, ...).
       xdg.configFile."noctalia/config.toml".source = noctaliaConfigToml;
 
+      # Upstream ships no fish completions for the noctalia CLI; provide a
+      # hand-maintained one (msg subcommands are queried live from the
+      # running instance since that list changes across releases).
+      xdg.configFile."fish/completions/noctalia.fish" = lib.mkIf (
+        user.shell.package == pkgs.fish || config.local.system.shell.fish.enable
+      ) { source = ./completions.fish; };
+
       # Custom palette generated from the active stylix colors; selected via
       # [theme] source = "custom", custom_palette = "stylix" in config.toml.
       xdg.configFile."noctalia/palettes/${noctaliaPaletteName}.json".text = builtins.toJSON noctaliaPalette;
