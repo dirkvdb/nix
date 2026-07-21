@@ -16,8 +16,11 @@ let
   mkUserHome = mkHome user.name;
 
   # Set bar thickness based on hostname (33 for macbook-pro due to the notch, 26 for others).
+  # The notch also obstructs the bar's center area, so the clock stays in
+  # the start section there instead of being centered.
   hostname = config.local.system.network.hostname or "";
-  barThickness = if hostname == "macbook-pro" then 33 else 26;
+  hasNotch = hostname == "macbook-pro";
+  barThickness = if hasNotch then 33 else 26;
 
   # stylix's base16 colors don't include the leading "#"; Noctalia's palette
   # JSON requires it.
@@ -43,7 +46,7 @@ let
   # See https://docs.noctalia.dev/v5/getting-started/nixos/ for the schema.
   noctaliaSettings = {
     bar.default = {
-      center = [ ];
+      center = lib.optionals (!hasNotch) [ "clock" ];
       end = [
         "cpu"
         "tray"
@@ -65,9 +68,7 @@ let
         "launcher"
         "workspaces"
         "spacer_2"
-        "clock"
-        "cat"
-      ];
+      ] ++ lib.optionals hasNotch [ "clock" ];
     };
 
     battery.warning_threshold = 5;
