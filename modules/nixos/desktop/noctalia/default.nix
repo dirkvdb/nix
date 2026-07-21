@@ -99,6 +99,30 @@ let
       widget = { };
     };
 
+    idle = {
+      behavior_order = [
+        "screen-off"
+        "lock"
+        "lock-and-suspend"
+      ];
+      pre_action_fade_seconds = 5;
+      behavior.lock = {
+        action = "lock";
+        enabled = false;
+        timeout = 3600.0;
+      };
+      behavior."lock-and-suspend" = {
+        action = "lock_and_suspend";
+        enabled = false;
+        timeout = 900.0;
+      };
+      behavior."screen-off" = {
+        action = "screen_off";
+        enabled = true;
+        timeout = 600.0;
+      };
+    };
+
     location.address = "Lommel, Belgium";
 
     lockscreen.fingerprint = false;
@@ -180,7 +204,7 @@ let
         {
           action = "lock_and_suspend";
           countdown_seconds = 0.0;
-          enabled = false;
+          enabled = true;
           shortcut = "3";
           variant = "default";
         }
