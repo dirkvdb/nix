@@ -135,6 +135,8 @@ let
       };
     };
 
+    nightlight.enabled = true;
+
     plugins.enabled = [ ];
 
     # Shorten NetworkManager connection status toasts (connected/disconnected)

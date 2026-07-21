@@ -19,8 +19,6 @@ hl.bind(mod .. " + ALT + mouse:272", hl.dsp.window.resize(), { mouse = true })
 hl.bind(mod .. " + ALT + SPACE", hl.dsp.exec_cmd("nixcfg-menu"), { description = "Menu" })
 hl.bind(mod .. " + X", hl.dsp.workspace.toggle_special(), { description = "Special workspace" })
 hl.bind(mod .. " + CTRL + S", hl.dsp.exec_cmd("nixcfg-menu share"), { description = "Share" })
-hl.bind(mod .. " + CTRL + I", hl.dsp.exec_cmd("nixcfg-toggle-idle"), { description = "Toggle locking on idle" })
-hl.bind(mod .. " + CTRL + N", hl.dsp.exec_cmd("nixcfg-toggle-nightlight"), { description = "Toggle nightlight" })
 ---- APP LAUNCHERS -------
 hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd(terminal .. ' --working-directory="$(nixcfg-cmd-terminal-cwd)"'), { description = "Terminal" })
 hl.bind(mod .. " + S", hl.dsp.exec_cmd("nixcfg-launch-or-focus " .. browser), { description = "Browser" })

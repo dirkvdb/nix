@@ -25,7 +25,6 @@ let
   # Auto-start applications launched via hl.on("hyprland.start", ...)
   startupCommands = [
     "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
-    "sunsetr"
     "wl-paste --watch --primary wl-copy"
     "wl-clip-persist --clipboard both"
   ]
@@ -42,7 +41,6 @@ in
   config = lib.mkIf (isLinux && isDesktop && isHyprlandEnabled) (mkUserHome {
     stylix.targets.hyprland.enable = false;
 
-    xdg.configFile."sunsetr".source = ../../dotfiles/sunsetr;
     xdg.configFile."hypr/settings.lua".source = ./settings.lua;
     xdg.configFile."hypr/bindings.lua".source = ./bindings.lua;
 

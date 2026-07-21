@@ -12,6 +12,12 @@ hl.bind(mod .. " + V", hl.dsp.exec_cmd("walker --provider clipboard --theme clip
 hl.bind("XF86PowerOff", hl.dsp.exec_cmd("nixcfg-menu system"), { locked = true, description = "Power menu" })
 hl.bind(mod .. " + ESCAPE", hl.dsp.exec_cmd("nixcfg-menu system"), { description = "Power menu" })
 
+---- NIGHT LIGHT (sunsetr / hyprsunset) ----
+hl.bind(mod .. " + CTRL + N", hl.dsp.exec_cmd("nixcfg-toggle-nightlight"), { description = "Toggle nightlight" })
+
+---- IDLE LOCK (hypridle) ----
+hl.bind(mod .. " + CTRL + I", hl.dsp.exec_cmd("nixcfg-toggle-idle"), { description = "Toggle locking on idle" })
+
 ---- MEDIA / BRIGHTNESS (swayosd) ----
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(osdclient .. " --output-volume raise"), { locked = true, repeating = true, description = "Volume up" })
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(osdclient .. " --output-volume lower"), { locked = true, repeating = true, description = "Volume down" })
