@@ -1,9 +1,9 @@
-@define-color selected-text #d3c6aa;
-@define-color text #7A8478;
-@define-color base #2d353b;
-@define-color border #d3c6aa;
-@define-color foreground #d3c6aa;
-@define-color background #2d353b;
+@define-color selected-text #dec39d;
+@define-color text #948b7e;
+@define-color base #272a2f;
+@define-color border #dec39d;
+@define-color foreground #dec39d;
+@define-color background #272a2f;
 
 * {
     all: unset;

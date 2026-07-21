@@ -28,7 +28,7 @@ in
       icon = "#${colors.base00}"
       background = "#${colors.base02}"
       separator = "#${colors.base03}"
-      host = "#${colors.base0B}"
+      host = "#${colors.base04}"
       directory = "${theme.uiAccentColor}"
       nixshell = "#${colors.base0E}"
       gitbranch = "#${colors.base05}"
@@ -71,7 +71,7 @@ in
           icon = "#${colors.base00}";
           background = "#${colors.base02}";
           separator = "#${colors.base03}";
-          host = "#${colors.base0B}";
+          host = "#${colors.base04}";
           directory = "${theme.uiAccentColor}";
           nixshell = "#${colors.base0E}";
           pixishell = "#${colors.base0A}";

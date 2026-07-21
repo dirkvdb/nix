@@ -26,20 +26,7 @@ let
   # JSON requires it.
   hex = c: "#${c}";
 
-  # Darkens a "#rrggbb" color by scaling each channel toward black. Used to
-  # derive Noctalia's secondary accent (e.g. inactive workspace pills) from
-  # the primary accent, instead of pulling in an unrelated stylix color.
-  darken =
-    amount: color:
-    let
-      h = lib.removePrefix "#" color;
-      toChannel = s: builtins.floor ((lib.fromHexString s) * (1 - amount));
-      toHex = n: lib.fixedWidthString 2 "0" (lib.toLower (lib.toHexString n));
-      r = toChannel (lib.substring 0 2 h);
-      g = toChannel (lib.substring 2 2 h);
-      b = toChannel (lib.substring 4 2 h);
-    in
-    "#" + toHex r + toHex g + toHex b;
+
 
   wallpapersDir = ../../../common/theme/wallpapers;
 
@@ -49,6 +36,8 @@ let
       center = lib.optionals (!hasNotch) [ "clock" ];
       end = [
         "cpu"
+        "ram"
+        "sysmon"
         "tray"
         "notifications"
         "clipboard"
@@ -159,7 +148,10 @@ let
       };
     };
 
-    nightlight.enabled = true;
+    nightlight = {
+      enabled = true;
+      temperature_night = 4500;
+    };
 
     plugins.enabled = [ ];
 
@@ -237,24 +229,62 @@ let
     };
 
     widget = {
-      battery.show_label = false;
-      brightness.enabled = false;
-      clipboard.enabled = false;
-      "control-center".enabled = false;
+      # Match Noctalia's end-section glyphs to the white symbolic systray
+      # icons without changing the shared Stylix-derived palette or labels.
+      ram = {
+        color = "#ffffff";
+        stat = "ram_pct";
+      };
+
+      sysmon = {
+        color = "#ffffff";
+        stat = "disk_pct";
+      };
+
+      battery = {
+        color = "#ffffff";
+        show_label = false;
+      };
+
+      bluetooth.icon_color = "#ffffff";
+      brightness = {
+        enabled = false;
+        icon_color = "#ffffff";
+      };
+      clipboard = {
+        enabled = false;
+        icon_color = "#ffffff";
+      };
+      "control-center" = {
+        enabled = false;
+        icon_color = "#ffffff";
+      };
       cpu = {
         display = "graph";
+        color = "#ffffff";
         show_label = false;
       };
       launcher.glyph = "snowflake";
       media.enabled = false;
-      network.show_label = false;
-      notifications.enabled = false;
+      network = {
+        icon_color = "#ffffff";
+        show_label = false;
+      };
+      notifications = {
+        enabled = false;
+        icon_color = "#ffffff";
+      };
       spacer_2 = {
         interactive = false;
         length = 15;
         type = "spacer";
       };
-      volume.show_label = false;
+      session.icon_color = "#ffffff";
+      tray.icon_color = "#ffffff";
+      volume = {
+        icon_color = "#ffffff";
+        show_label = false;
+      };
       workspaces = {
         active_pill_size = 1.75;
       };
@@ -271,15 +301,13 @@ let
   noctaliaPaletteName = "stylix";
   noctaliaPalette = {
     dark = {
-      mPrimary = hex colors.base0D;
+      # Keep ordinary shell chrome entirely within the neutral base00-07
+      # range. Semantic base08-0F colors are reserved for statuses and ANSI.
+      mPrimary = hex colors.base05;
       mOnPrimary = hex colors.base00;
-      # Darker shade of the primary accent, instead of an unrelated stylix
-      # color (avoids e.g. inactive workspace pills rendering as green).
-      mSecondary = darken 0.5 (hex colors.base0D);
+      mSecondary = hex colors.base04;
       mOnSecondary = hex colors.base00;
-      # warm shade (matches mHover), instead of an unrelated
-      # stylix color (avoids e.g. sidebar hover highlights rendering as teal).
-      mTertiary = "#dbb888";
+      mTertiary = hex colors.base06;
       mOnTertiary = hex colors.base00;
       mError = hex colors.base08;
       mOnError = hex colors.base00;
@@ -289,8 +317,8 @@ let
       mOnSurfaceVariant = hex colors.base04;
       mOutline = hex colors.base03;
       mShadow = hex colors.base00;
-      mHover = "#dbb888";
-      mOnHover = hex colors.base00;
+      mHover = hex colors.base02;
+      mOnHover = hex colors.base05;
       terminal = {
         background = hex colors.base00;
         foreground = hex colors.base05;
@@ -303,7 +331,7 @@ let
           red = hex colors.base08;
           green = hex colors.base0B;
           yellow = hex colors.base0A;
-          blue = hex colors.base0D;
+          blue = "#91a7b5";
           magenta = hex colors.base0E;
           cyan = hex colors.base0C;
           white = hex colors.base05;
@@ -313,7 +341,7 @@ let
           red = hex colors.base08;
           green = hex colors.base0B;
           yellow = hex colors.base0A;
-          blue = hex colors.base0D;
+          blue = "#91a7b5";
           magenta = hex colors.base0E;
           cyan = hex colors.base0C;
           white = hex colors.base07;
