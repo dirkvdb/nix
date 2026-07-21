@@ -101,6 +101,7 @@ in
         capture = "wlr";
         encoder = "vaapi";
         fec_percentage = 5;
+        system_tray = 0;
       };
 
       applications.apps = [
