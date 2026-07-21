@@ -23,7 +23,7 @@ let
   cpuIconPlaceholders = lib.concatStrings (lib.genList (i: "{icon${toString i}}") cpuCores);
   # Set waybar height based on hostname (32 for macbook-pro due to notch, 26 for others)
   hostname = config.local.system.network.hostname or "";
-  waybarHeight = if hostname == "macbook-pro" then 32 else 26;
+  waybarHeight = if hostname == "macbook-pro" then 33 else 26;
   mkUserHome = mkHome user.name;
 in
 {
@@ -377,7 +377,6 @@ in
             tooltip-format-disconnected = "Disconnected";
             interval = 3;
             spacing = 1;
-            on-click = "nixcfg-launch-wifi";
           };
 
           battery = {

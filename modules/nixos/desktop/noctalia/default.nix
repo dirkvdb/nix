@@ -15,6 +15,10 @@ let
   inherit (config.lib.stylix) colors;
   mkUserHome = mkHome user.name;
 
+  # Set bar thickness based on hostname (33 for macbook-pro due to the notch, 26 for others).
+  hostname = config.local.system.network.hostname or "";
+  barThickness = if hostname == "macbook-pro" then 33 else 26;
+
   # stylix's base16 colors don't include the leading "#"; Noctalia's palette
   # JSON requires it.
   hex = c: "#${c}";
@@ -56,7 +60,7 @@ let
       margin_ends = 0;
       radius = 0;
       shadow = false;
-      thickness = 33;
+      thickness = barThickness;
       start = [
         "launcher"
         "workspaces"
