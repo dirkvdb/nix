@@ -67,6 +67,7 @@ let
     };
 
     battery.warning_threshold = 5;
+    brightness.enable_ddcutil = config.local.system.display.brightnesscontrol.enable or false;
 
     calendar = {
       enabled = true;

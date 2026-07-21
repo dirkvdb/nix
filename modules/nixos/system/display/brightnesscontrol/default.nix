@@ -16,11 +16,29 @@ in
       description = "Name of i2c display device";
       example = "i2c-1";
     };
+
+    delay = lib.mkOption {
+      type = lib.types.nullOr lib.types.ints.positive;
+      default = null;
+      description = ''
+        Delay in milliseconds the ddcci kernel driver waits after each i2c
+        bus write. The driver defaults to 60ms, which is too short for some
+        monitors to reliably respond during the DDC/CI identification probe
+        done at attach time (seen as "core device probe failed: -19" in
+        dmesg even though tools like ddcutil communicate with the monitor
+        fine). Increase this if the monitor fails to probe.
+      '';
+      example = 200;
+    };
   };
 
   config = lib.mkIf cfg.enable {
     hardware.i2c.enable = true;
     services.ddccontrol.enable = true;
+
+    boot.extraModprobeConfig = lib.mkIf (cfg.delay != null) ''
+      options ddcci delay=${toString cfg.delay}
+    '';
 
     services = {
       udev.extraRules = ''
@@ -44,6 +62,7 @@ in
     };
 
     environment.systemPackages = with pkgs; [
+      ddcutil
       brightnessctl
     ];
   };
