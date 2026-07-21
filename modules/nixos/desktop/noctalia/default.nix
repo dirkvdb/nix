@@ -34,13 +34,8 @@ let
     in
     "#" + toHex r + toHex g + toHex b;
 
-  # Directory holding all theme wallpapers (same source wpaperd uses for the
-  # waybar shell).
   wallpapersDir = ../../../common/theme/wallpapers;
 
-  # Noctalia's own settings (bar layout, theme, session actions, ...), written
-  # in Nix and rendered to TOML so the wallpaper directory can reference a
-  # real Nix store path directly.
   # See https://docs.noctalia.dev/v5/getting-started/nixos/ for the schema.
   noctaliaSettings = {
     bar.default = {
@@ -203,7 +198,11 @@ let
       source = "custom";
     };
 
-    wallpaper.directory = "${wallpapersDir}";
+    wallpaper = {
+      automation.enabled = true;
+      directory = "${wallpapersDir}";
+      default.path = "${config.stylix.image}";
+    };
 
     widget = {
       battery.show_label = false;
