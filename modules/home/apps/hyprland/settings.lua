@@ -221,7 +221,7 @@ hl.window_rule({ match = { class = "(firefox|Firefox|librewolf)" }, workspace = 
 hl.window_rule({ match = { class = "(zen|zen-beta)" }, workspace = "2" })
 hl.window_rule({ match = { class = "(dev.zed.Zed|dev.zed.Zed-Dev)" }, workspace = "3" })
 hl.window_rule({ match = { class = "(org.gnome.Nautilus|thunar)" }, workspace = "5" })
-hl.window_rule({ match = { class = "(Spotify|chrome-open\\.spotify\\.com__.*)" }, workspace = "9" })
+hl.window_rule({ match = { class = "(spotify|Spotify|chrome-open\\.spotify\\.com__.*)" }, workspace = "9" })
 hl.window_rule({ match = { class = "(sublime_merge)" }, workspace = "6" })
 hl.window_rule({ match = { class = "(slack)" }, workspace = "7" })
 hl.window_rule({ match = { class = "(outlook-for-linux|chrome-outlook\\.office365\\.com__.*)" }, workspace = "8 silent" })
