@@ -11,7 +11,7 @@ let
   isDesktop = config.local.desktop.enable or false;
   isHeadless = config.local.headless or false;
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
-  inherit (config.local) user;
+  inherit (config.local) theme user;
   inherit (config.lib.stylix) colors;
   mkUserHome = mkHome user.name;
 
@@ -155,9 +155,6 @@ let
 
     plugins.enabled = [ ];
 
-    # Shorten NetworkManager connection status toasts (connected/disconnected)
-    # and KeePassXC popups (entry copied to clipboard, database locked, ...) to
-    # 2s instead of the default toast duration.
     notification.filter.network = {
       enabled = true;
       match = "NetworkManager";
@@ -172,6 +169,8 @@ let
 
     shell = {
       animation.speed = 3.0;
+      app_icon_color = "primary";
+      app_icon_colorize = true;
       panel = {
         control_center_position = "top_right";
         open_near_click_control_center = true;
@@ -229,60 +228,46 @@ let
     };
 
     widget = {
-      # Match Noctalia's end-section glyphs to the white symbolic systray
-      # icons without changing the shared Stylix-derived palette or labels.
       ram = {
-        color = "#ffffff";
         stat = "ram_pct";
       };
 
       sysmon = {
-        color = "#ffffff";
         stat = "disk_pct";
       };
 
       battery = {
-        color = "#ffffff";
         show_label = false;
       };
 
-      bluetooth.icon_color = "#ffffff";
       brightness = {
         enabled = false;
-        icon_color = "#ffffff";
       };
       clipboard = {
         enabled = false;
-        icon_color = "#ffffff";
       };
       "control-center" = {
         enabled = false;
-        icon_color = "#ffffff";
       };
       cpu = {
         display = "graph";
-        color = "#ffffff";
         show_label = false;
       };
       launcher.glyph = "snowflake";
       media.enabled = false;
       network = {
-        icon_color = "#ffffff";
         show_label = false;
       };
       notifications = {
         enabled = false;
-        icon_color = "#ffffff";
       };
       spacer_2 = {
         interactive = false;
         length = 15;
         type = "spacer";
       };
-      session.icon_color = "#ffffff";
-      tray.icon_color = "#ffffff";
+      tray.icon_color = theme.uiAccentColor;
       volume = {
-        icon_color = "#ffffff";
         show_label = false;
       };
       workspaces = {
