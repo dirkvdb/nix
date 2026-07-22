@@ -189,9 +189,17 @@
         # Patch keepassxc to include NativeMessageInstaller.patch
         # This avoids error messages at startup that the browser connection files cannot be written
         # They are readonly because they are managed by the Nix config
+        #
+        # Also apply TrayNotificationMonochromeIcon.patch: when a secret is accessed via the
+        # Secret Service API/browser integration, KeePassXC shows a desktop notification using
+        # QSystemTrayIcon::showMessage() with the full-color application icon. On Linux this is
+        # implemented via the StatusNotifierItem AttentionIconPixmap, causing tray hosts (e.g.
+        # Noctalia) to briefly replace the configured monochrome tray icon with the colored one.
+        # The patch reuses the monochrome-aware tray icon for this notification instead.
         keepassxc = prev.keepassxc.overrideAttrs (old: {
           patches = (old.patches or [ ]) ++ [
             ./modules/home/apps/keepassxc/NativeMessageInstaller.patch
+            ./modules/home/apps/keepassxc/TrayNotificationMonochromeIcon.patch
           ];
         });
 
