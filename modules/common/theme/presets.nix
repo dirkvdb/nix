@@ -22,7 +22,7 @@
       base0C = "82a6a0";
       # Stylix commonly maps base0D to generic UI accents, so keep it neutral.
       base0D = "dec39d";
-      base0E = "b29aaa";
+      base0E = "8f9eb6";
       base0F = "a8796b";
     };
     gtkTheme = "Adwaita-dark";
