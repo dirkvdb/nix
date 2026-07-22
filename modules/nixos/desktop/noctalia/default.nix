@@ -33,6 +33,7 @@ let
   # See https://docs.noctalia.dev/v5/getting-started/nixos/ for the schema.
   noctaliaSettings = {
     bar.default = {
+      font_family = config.stylix.fonts.sansSerif.name;
       center = lib.optionals (!hasNotch) [ "clock" ];
       end = [
         "cpu"
@@ -171,6 +172,13 @@ let
       animation.speed = 3.0;
       app_icon_color = "primary";
       app_icon_colorize = true;
+      launcher.dmenu.entry.ssh = {
+        command = "awk '/^Host /{print $2}' ~/.ssh/config"; # one candidate per stdout line
+        exec = "${lib.getExe pkgs.ghostty} -e ssh {selection}"; # {selection} = the chosen line; run detached
+        prefix = "ssh"; # trigger word (composed with provider_prefix -> "/ssh"); empty = global only
+        glyph = "server"; # optional Tabler glyph shared by every result
+        global = false; # true = also surface in unprefixed search
+      };
       panel = {
         control_center_position = "top_right";
         open_near_click_control_center = true;
