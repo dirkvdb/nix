@@ -1,0 +1,16 @@
+diff --git a/src/gui/MainWindow.cpp b/src/gui/MainWindow.cpp
+index bf0ad5ab..c5cb05e4 100644
+--- a/src/gui/MainWindow.cpp
++++ b/src/gui/MainWindow.cpp
+@@ -1937,7 +1937,10 @@ void MainWindow::displayDesktopNotification(const QString& msg, QString title,
+         title = BaseWindowTitle;
+     }
+ 
+-    m_trayIcon->showMessage(title, msg, icons()->applicationIcon(), msTimeoutHint);
++    // Use the same (monochrome-aware) icon as the persistent tray icon instead of the
++    // full-color application icon. Otherwise, on Linux/SNI hosts, the notification
++    // temporarily overrides the tray icon with the colored AttentionIconPixmap.
++    m_trayIcon->showMessage(title, msg, icons()->trayIcon(m_ui->tabWidget->hasLockableDatabases()), msTimeoutHint);
+ }
+ 
+ void MainWindow::restartApp(const QString& message)
