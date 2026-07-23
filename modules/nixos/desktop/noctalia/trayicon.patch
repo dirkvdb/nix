@@ -1,0 +1,152 @@
+diff --git a/assets/translations/en.json b/assets/translations/en.json
+index 7473b642..826ece88 100644
+--- a/assets/translations/en.json
++++ b/assets/translations/en.json
+@@ -3169,6 +3169,10 @@
+           "description": "Second gradient color in the visualizer",
+           "label": "Color 2"
+         },
++        "app-icon-colorize": {
++          "description": "Recolor system tray icons to match the active palette without colorizing other shell icons",
++          "label": "Colorize App Icons"
++        },
+         "command": {
+           "description": "Shell command run when left-clicking this button",
+           "label": "Left Click Command"
+diff --git a/example.toml b/example.toml
+index efcb85de..a943b3e3 100644
+--- a/example.toml
++++ b/example.toml
+@@ -478,6 +478,9 @@ battery_low_percent_threshold = 0   # set to e.g. 15 to enable battery_under_thr
+ # [widget.notifications]
+ # hide_when_no_unread = true
+ 
++# [widget.tray]
++# app_icon_colorize = false          # recolor only system tray icons
++
+ # [widget.network_rx]
+ # network_speed_unit = "mb"          # auto | kb | mb
+ # network_speed_compact = true       # show "1.2M" instead of "1.2 MB/s"
+diff --git a/src/shell/bar/widget_factory.cpp b/src/shell/bar/widget_factory.cpp
+index ce75d972..8d5c4565 100644
+--- a/src/shell/bar/widget_factory.cpp
++++ b/src/shell/bar/widget_factory.cpp
+@@ -648,6 +648,7 @@ std::unique_ptr<Widget> WidgetFactory::create(
+         ),
+         .inlineEntryGap = widgetSpacing,
+         .matchAdjacentSpacing = wc != nullptr ? wc->getBool("match_adjacent_spacing", false) : false,
++        .appIconColorize = wc != nullptr ? wc->getBool("app_icon_colorize", false) : false,
+     };
+     auto widget = std::make_unique<TrayWidget>(m_configService, m_tray, std::move(options));
+     widget->setContentScale(contentScale);
+diff --git a/src/shell/bar/widgets/tray_widget.cpp b/src/shell/bar/widgets/tray_widget.cpp
+index 3e78f3f6..320130a5 100644
+--- a/src/shell/bar/widgets/tray_widget.cpp
++++ b/src/shell/bar/widgets/tray_widget.cpp
+@@ -171,7 +171,7 @@ TrayWidget::TrayWidget(ConfigService& config, TrayService* tray, TrayWidgetOptio
+       m_panelGridMode(options.panelGridMode),
+       m_panelGridColumns(std::clamp<std::size_t>(options.panelGridColumns, 1U, 5U)),
+       m_inlineEntryGap(std::max(0.0f, options.inlineEntryGap)), m_matchAdjacentSpacing(options.matchAdjacentSpacing),
+-      m_customItemSize(options.customItemSize) {
++      m_customItemSize(options.customItemSize), m_appIconColorize(options.appIconColorize) {
+   auto normalizeTokens = [](std::vector<std::string>& tokens) {
+     std::vector<std::string> normalized;
+     normalized.reserve(tokens.size());
+@@ -242,7 +242,9 @@ float TrayWidget::resolvedInlineEntryGap() const {
+ }
+ 
+ std::optional<ColorSpec> TrayWidget::currentAppIconColorizeTint() const {
+-  return effectiveShellAppIconColorizationTint(m_config.config().shell);
++  ShellConfig shell = m_config.config().shell;
++  shell.appIconColorize = shell.appIconColorize || m_appIconColorize;
++  return effectiveShellAppIconColorizationTint(shell);
+ }
+ 
+ void TrayWidget::refreshAppIconColorization(Renderer& renderer) {
+diff --git a/src/shell/bar/widgets/tray_widget.h b/src/shell/bar/widgets/tray_widget.h
+index db30dd1a..cb6d1688 100644
+--- a/src/shell/bar/widgets/tray_widget.h
++++ b/src/shell/bar/widgets/tray_widget.h
+@@ -30,6 +30,7 @@ struct TrayWidgetOptions {
+   float inlineEntryGap = Style::spaceXs;
+   bool matchAdjacentSpacing = false;
+   std::optional<float> customItemSize;
++  bool appIconColorize = false;
+ };
+ 
+ class TrayWidget : public Widget {
+@@ -83,6 +84,7 @@ private:
+   float m_inlineEntryGap = Style::spaceXs;
+   bool m_matchAdjacentSpacing = false;
+   std::optional<float> m_customItemSize;
++  bool m_appIconColorize = false;
+   bool m_appIconColorizeDirty = false;
+ 
+   InputArea* m_drawerTrigger = nullptr;
+diff --git a/src/shell/settings/widget_settings_registry.cpp b/src/shell/settings/widget_settings_registry.cpp
+index d48e2106..f19b9d26 100644
+--- a/src/shell/settings/widget_settings_registry.cpp
++++ b/src/shell/settings/widget_settings_registry.cpp
+@@ -1125,6 +1125,7 @@ namespace settings {
+         }
+       }
+     } else if (type == "tray") {
++      add(boolSpec("app_icon_colorize", false));
+       add(stringListSpec("hidden"));
+       add(stringListSpec("pinned"));
+       add(boolSpec("match_adjacent_spacing", false));
+diff --git a/src/shell/tray/tray_drawer_panel.cpp b/src/shell/tray/tray_drawer_panel.cpp
+index 4eb0f966..f0a38a42 100644
+--- a/src/shell/tray/tray_drawer_panel.cpp
++++ b/src/shell/tray/tray_drawer_panel.cpp
+@@ -39,6 +39,16 @@ std::optional<float> TrayDrawerPanel::currentDrawerItemSize() const {
+   return std::nullopt;
+ }
+ 
++bool TrayDrawerPanel::currentAppIconColorize() const {
++  if (m_config == nullptr) {
++    return false;
++  }
++  if (const auto it = m_config->config().widgets.find("tray"); it != m_config->config().widgets.end()) {
++    return it->second.getBool("app_icon_colorize", false);
++  }
++  return false;
++}
++
+ float TrayDrawerPanel::preferredWidth() const {
+   const float itemSize = scaled(currentDrawerItemSize().value_or(Style::baseGlyphSize));
+   const float gap = scaled(Style::spaceXs);
+@@ -81,6 +91,7 @@ void TrayDrawerPanel::create() {
+           .inlineEntryGap = Style::spaceXs,
+           .matchAdjacentSpacing = false,
+           .customItemSize = itemSize,
++          .appIconColorize = currentAppIconColorize(),
+       }
+   );
+   m_drawerWidget->setContentScale(contentScale());
+diff --git a/src/shell/tray/tray_drawer_panel.h b/src/shell/tray/tray_drawer_panel.h
+index 20c91e87..25ac2b5c 100644
+--- a/src/shell/tray/tray_drawer_panel.h
++++ b/src/shell/tray/tray_drawer_panel.h
+@@ -29,6 +29,7 @@ private:
+   void doUpdate(Renderer& renderer) override;
+   [[nodiscard]] std::size_t currentDrawerColumns() const;
+   [[nodiscard]] std::optional<float> currentDrawerItemSize() const;
++  [[nodiscard]] bool currentAppIconColorize() const;
+   [[nodiscard]] std::vector<std::string> currentHiddenItems() const;
+   [[nodiscard]] std::vector<std::string> currentPinnedItems() const;
+   [[nodiscard]] std::size_t visibleItemCount() const;
+diff --git a/tests/config_validate/generated-config b/tests/config_validate/generated-config
+index 76cc7674..8e052222 100644
+--- a/tests/config_validate/generated-config
++++ b/tests/config_validate/generated-config
+@@ -11,6 +11,9 @@ enabled = false
+ capsule = true
+ capsule_radius = "auto"
+ 
++[widget.tray]
++app_icon_colorize = true
++
+ [plugins]
+ enabled = ["noctalia/wallhaven"]
+ 
