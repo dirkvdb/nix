@@ -176,11 +176,6 @@ in
         size = 24;
         package = pkgs.apple-cursor;
       };
-
-      # Use the GNOME/Adwaita-dark Qt style instead of Stylix's generated
-      # Kvantum theme, to match the Adwaita-dark GTK theme and get a more
-      # modern, flat look for Qt apps.
-      targets.qt.platform = lib.mkForce "gnome";
     };
   };
 }
