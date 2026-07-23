@@ -390,6 +390,8 @@ in
         enable = true;
         package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
           patches = (old.patches or [ ]) ++ [ ./trayicon.patch ];
+          mesonFlags = (old.mesonFlags or [ ]) ++ [ "-Dnative_optimizations=true" ];
+          NIX_ENFORCE_NO_NATIVE = false;
         });
 
         # Starts noctalia automatically after login via a systemd user
