@@ -39,6 +39,7 @@
     terminalFontSize = 12;
     ghosttyTheme = "Everforest Dark Hard";
     uiAccentColor = "#dec39d";
+    uiTextColor = "#c7b5aa";
     uiBaseColor = "#272a2f";
     fonts = with pkgs; [
       ubuntu-sans

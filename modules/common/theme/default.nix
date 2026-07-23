@@ -49,6 +49,16 @@ in
       description = "Base16 color scheme";
     };
 
+    uiTextColor = lib.mkOption {
+      type = lib.types.str;
+      default = selectedPreset.uiTextColor;
+      description = ''
+        Default (non-emphasized) UI text/icon color. Kept cooler and more
+        muted than uiAccentColor so ordinary text doesn't compete with
+        actual highlights.
+      '';
+    };
+
     uiBaseColor = lib.mkOption {
       type = lib.types.str;
       default = selectedPreset.uiBaseColor;
@@ -166,6 +176,11 @@ in
         size = 24;
         package = pkgs.apple-cursor;
       };
+
+      # Use the GNOME/Adwaita-dark Qt style instead of Stylix's generated
+      # Kvantum theme, to match the Adwaita-dark GTK theme and get a more
+      # modern, flat look for Qt apps.
+      targets.qt.platform = lib.mkForce "gnome";
     };
   };
 }

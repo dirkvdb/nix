@@ -27,9 +27,16 @@ let
   # JSON requires it.
   hex = c: "#${c}";
 
-  # A restrained warm neutral for Noctalia's high-emphasis UI roles. Keep it
-  # local to the shell rather than changing the shared Stylix palette.
-  noctaliaHighlight = "#c7b5aa";
+  # Default (non-emphasized) text/icon color for Noctalia's shell surfaces.
+  # Kept cooler and more muted than the accent so ordinary bar/panel content
+  # doesn't compete with actual highlights.
+  noctaliaDefaultText = theme.uiTextColor;
+
+  # Warm highlight color for Noctalia's high-emphasis UI roles (primary
+  # accent, hover state). Matches the shared theme accent color used by GTK,
+  # waybar, and hyprland borders, so highlighted text looks consistent across
+  # apps and the shell.
+  noctaliaHighlight = theme.uiAccentColor;
 
   wallpapersDir = ../../../common/theme/wallpapers;
 
@@ -308,9 +315,9 @@ let
   noctaliaPaletteName = "stylix";
   noctaliaPalette = {
     dark = {
-      # Keep ordinary shell chrome neutral. The primary highlight is a local
-      # warm neutral; semantic base08-0F colors remain reserved for statuses
-      # and ANSI.
+      # Keep ordinary shell chrome neutral. The primary highlight matches the
+      # shared theme accent color; semantic base08-0F colors remain reserved
+      # for statuses and ANSI.
       mPrimary = noctaliaHighlight;
       mOnPrimary = hex colors.base00;
       mSecondary = hex colors.base04;
@@ -321,7 +328,7 @@ let
       mError = hex colors.base08;
       mOnError = hex colors.base00;
       mSurface = hex colors.base00;
-      mOnSurface = noctaliaHighlight;
+      mOnSurface = noctaliaDefaultText;
       mSurfaceVariant = hex colors.base01;
       mOnSurfaceVariant = hex colors.base04;
       mOutline = hex colors.base03;
