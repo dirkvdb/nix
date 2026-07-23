@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="850" viewBox="0 0 1200 850">
+  <rect width="1200" height="850" fill="#202328"/>
+  <text x="48" y="55" fill="#dedbd6" font-family="sans-serif" font-size="28" font-weight="700">Noctalia warm-neutral highlight alternatives</text>
+  <text x="48" y="84" fill="#948b7e" font-family="sans-serif" font-size="16">Six restrained levels of warmth around Mushroom · existing surfaces remain unchanged</text>
+
+  <defs>
+    <g id="wifi" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+      <path d="M-13,-3 Q0,-15 13,-3"/><path d="M-7,3 Q0,-4 7,3"/><circle cx="0" cy="9" r="2" fill="currentColor" stroke="none"/>
+    </g>
+    <g id="card">
+      <rect width="346" height="320" rx="22" fill="#272a2f" stroke="#4a4b4c" stroke-width="2"/>
+      <rect x="20" y="75" width="306" height="68" rx="15" fill="#2d3035" stroke="#4a4b4c" stroke-width="2"/>
+      <rect x="20" y="160" width="188" height="126" rx="16" fill="#2d3035" stroke="currentColor" stroke-width="2.4"/>
+      <rect x="224" y="160" width="102" height="126" rx="16" fill="currentColor"/>
+    </g>
+    <g id="home"><path d="M0 10 L10 1 L20 10 V21 H14 V13 H6 V21 H0 Z"/></g>
+  </defs>
+
+  <!-- A -->
+  <g transform="translate(48 110)" color="#beb6b1">
+    <use href="#card"/><rect x="20" y="18" width="46" height="40" rx="12" fill="currentColor"/><use href="#home" x="33" y="27" fill="#272a2f"/>
+    <text x="82" y="46" fill="currentColor" font-family="sans-serif" font-size="20" font-weight="700">A · Pale stone</text>
+    <text x="36" y="105" fill="currentColor" font-family="sans-serif" font-size="18" font-weight="700">dirk</text><text x="36" y="130" fill="#948b7e" font-family="sans-serif" font-size="14">Least warm</text>
+    <circle cx="66" cy="221" r="27" fill="#948b7e"/><circle cx="66" cy="221" r="10" fill="#2d3035"/><text x="104" y="218" fill="currentColor" font-family="sans-serif" font-size="15">Nothing playing</text><text x="104" y="241" fill="#948b7e" font-family="sans-serif" font-size="13">Idle</text>
+    <use href="#wifi" x="275" y="203" color="#272a2f"/><text x="275" y="252" fill="#272a2f" text-anchor="middle" font-family="sans-serif" font-size="14">Wi-Fi</text><text x="20" y="309" fill="#948b7e" font-family="monospace" font-size="13">#beb6b1</text>
+  </g>
+
+  <!-- B -->
+  <g transform="translate(427 110)" color="#c1b6af">
+    <use href="#card"/><rect x="20" y="18" width="46" height="40" rx="12" fill="currentColor"/><use href="#home" x="33" y="27" fill="#272a2f"/>
+    <text x="82" y="46" fill="currentColor" font-family="sans-serif" font-size="20" font-weight="700">B · Soft stone</text>
+    <text x="36" y="105" fill="currentColor" font-family="sans-serif" font-size="18" font-weight="700">dirk</text><text x="36" y="130" fill="#948b7e" font-family="sans-serif" font-size="14">Gently warm</text>
+    <circle cx="66" cy="221" r="27" fill="#948b7e"/><circle cx="66" cy="221" r="10" fill="#2d3035"/><text x="104" y="218" fill="currentColor" font-family="sans-serif" font-size="15">Nothing playing</text><text x="104" y="241" fill="#948b7e" font-family="sans-serif" font-size="13">Idle</text>
+    <use href="#wifi" x="275" y="203" color="#272a2f"/><text x="275" y="252" fill="#272a2f" text-anchor="middle" font-family="sans-serif" font-size="14">Wi-Fi</text><text x="20" y="309" fill="#948b7e" font-family="monospace" font-size="13">#c1b6af</text>
+  </g>
+
+  <!-- C -->
+  <g transform="translate(806 110)" color="#c5b6ad">
+    <use href="#card"/><rect x="20" y="18" width="46" height="40" rx="12" fill="currentColor"/><use href="#home" x="33" y="27" fill="#272a2f"/>
+    <text x="82" y="46" fill="currentColor" font-family="sans-serif" font-size="20" font-weight="700">C · Mushroom</text>
+    <text x="36" y="105" fill="currentColor" font-family="sans-serif" font-size="18" font-weight="700">dirk</text><text x="36" y="130" fill="#948b7e" font-family="sans-serif" font-size="14">Original favorite</text>
+    <circle cx="66" cy="221" r="27" fill="#948b7e"/><circle cx="66" cy="221" r="10" fill="#2d3035"/><text x="104" y="218" fill="currentColor" font-family="sans-serif" font-size="15">Nothing playing</text><text x="104" y="241" fill="#948b7e" font-family="sans-serif" font-size="13">Idle</text>
+    <use href="#wifi" x="275" y="203" color="#272a2f"/><text x="275" y="252" fill="#272a2f" text-anchor="middle" font-family="sans-serif" font-size="14">Wi-Fi</text><text x="20" y="309" fill="#948b7e" font-family="monospace" font-size="13">#c5b6ad</text>
+  </g>
+
+  <!-- D -->
+  <g transform="translate(48 470)" color="#c7b5aa">
+    <use href="#card"/><rect x="20" y="18" width="46" height="40" rx="12" fill="currentColor"/><use href="#home" x="33" y="27" fill="#272a2f"/>
+    <text x="82" y="46" fill="currentColor" font-family="sans-serif" font-size="20" font-weight="700">D · Warm mushroom</text>
+    <text x="36" y="105" fill="currentColor" font-family="sans-serif" font-size="18" font-weight="700">dirk</text><text x="36" y="130" fill="#948b7e" font-family="sans-serif" font-size="14">A little warmer</text>
+    <circle cx="66" cy="221" r="27" fill="#948b7e"/><circle cx="66" cy="221" r="10" fill="#2d3035"/><text x="104" y="218" fill="currentColor" font-family="sans-serif" font-size="15">Nothing playing</text><text x="104" y="241" fill="#948b7e" font-family="sans-serif" font-size="13">Idle</text>
+    <use href="#wifi" x="275" y="203" color="#272a2f"/><text x="275" y="252" fill="#272a2f" text-anchor="middle" font-family="sans-serif" font-size="14">Wi-Fi</text><text x="20" y="309" fill="#948b7e" font-family="monospace" font-size="13">#c7b5aa</text>
+  </g>
+
+  <!-- E -->
+  <g transform="translate(427 470)" color="#c9b4a7">
+    <use href="#card"/><rect x="20" y="18" width="46" height="40" rx="12" fill="currentColor"/><use href="#home" x="33" y="27" fill="#272a2f"/>
+    <text x="82" y="46" fill="currentColor" font-family="sans-serif" font-size="20" font-weight="700">E · Dry taupe</text>
+    <text x="36" y="105" fill="currentColor" font-family="sans-serif" font-size="18" font-weight="700">dirk</text><text x="36" y="130" fill="#948b7e" font-family="sans-serif" font-size="14">Moderately warm</text>
+    <circle cx="66" cy="221" r="27" fill="#948b7e"/><circle cx="66" cy="221" r="10" fill="#2d3035"/><text x="104" y="218" fill="currentColor" font-family="sans-serif" font-size="15">Nothing playing</text><text x="104" y="241" fill="#948b7e" font-family="sans-serif" font-size="13">Idle</text>
+    <use href="#wifi" x="275" y="203" color="#272a2f"/><text x="275" y="252" fill="#272a2f" text-anchor="middle" font-family="sans-serif" font-size="14">Wi-Fi</text><text x="20" y="309" fill="#948b7e" font-family="monospace" font-size="13">#c9b4a7</text>
+  </g>
+
+  <!-- F -->
+  <g transform="translate(806 470)" color="#cbb3a4">
+    <use href="#card"/><rect x="20" y="18" width="46" height="40" rx="12" fill="currentColor"/><use href="#home" x="33" y="27" fill="#272a2f"/>
+    <text x="82" y="46" fill="currentColor" font-family="sans-serif" font-size="20" font-weight="700">F · Rich taupe</text>
+    <text x="36" y="105" fill="currentColor" font-family="sans-serif" font-size="18" font-weight="700">dirk</text><text x="36" y="130" fill="#948b7e" font-family="sans-serif" font-size="14">Warmest option</text>
+    <circle cx="66" cy="221" r="27" fill="#948b7e"/><circle cx="66" cy="221" r="10" fill="#2d3035"/><text x="104" y="218" fill="currentColor" font-family="sans-serif" font-size="15">Nothing playing</text><text x="104" y="241" fill="#948b7e" font-family="sans-serif" font-size="13">Idle</text>
+    <use href="#wifi" x="275" y="203" color="#272a2f"/><text x="275" y="252" fill="#272a2f" text-anchor="middle" font-family="sans-serif" font-size="14">Wi-Fi</text><text x="20" y="309" fill="#948b7e" font-family="monospace" font-size="13">#cbb3a4</text>
+  </g>
+
+  <text x="600" y="828" fill="#67645f" text-anchor="middle" font-family="sans-serif" font-size="14">A → F gradually increases warmth while staying muted and low-chroma</text>
+</svg>

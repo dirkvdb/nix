@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  inputs,
   mkHome,
   ...
 }:
@@ -26,7 +27,9 @@ let
   # JSON requires it.
   hex = c: "#${c}";
 
-
+  # A restrained warm neutral for Noctalia's high-emphasis UI roles. Keep it
+  # local to the shell rather than changing the shared Stylix palette.
+  noctaliaHighlight = "#c7b5aa";
 
   wallpapersDir = ../../../common/theme/wallpapers;
 
@@ -167,6 +170,14 @@ let
       override_duration = 2000;
       save_history = false;
     };
+    notification.filter.satty = {
+      allow_permanent = true;
+      enabled = true;
+      match = "satty";
+      play_sound = false;
+      save_history = false;
+      show_toast = false;
+    };
 
     shell = {
       animation.speed = 3.0;
@@ -274,7 +285,10 @@ let
         length = 15;
         type = "spacer";
       };
-      tray.icon_color = theme.uiAccentColor;
+      tray = {
+        app_icon_colorize = true;
+        icon_color = theme.uiAccentColor;
+      };
       volume = {
         show_label = false;
       };
@@ -294,24 +308,26 @@ let
   noctaliaPaletteName = "stylix";
   noctaliaPalette = {
     dark = {
-      # Keep ordinary shell chrome entirely within the neutral base00-07
-      # range. Semantic base08-0F colors are reserved for statuses and ANSI.
-      mPrimary = hex colors.base05;
+      # Keep ordinary shell chrome neutral. The primary highlight is a local
+      # warm neutral; semantic base08-0F colors remain reserved for statuses
+      # and ANSI.
+      mPrimary = noctaliaHighlight;
       mOnPrimary = hex colors.base00;
       mSecondary = hex colors.base04;
       mOnSecondary = hex colors.base00;
-      mTertiary = hex colors.base06;
+      # Noctalia uses the tertiary accent for warning-style UI.
+      mTertiary = hex colors.base0A;
       mOnTertiary = hex colors.base00;
       mError = hex colors.base08;
       mOnError = hex colors.base00;
       mSurface = hex colors.base00;
-      mOnSurface = hex colors.base05;
+      mOnSurface = noctaliaHighlight;
       mSurfaceVariant = hex colors.base01;
       mOnSurfaceVariant = hex colors.base04;
       mOutline = hex colors.base03;
       mShadow = hex colors.base00;
       mHover = hex colors.base02;
-      mOnHover = hex colors.base05;
+      mOnHover = noctaliaHighlight;
       terminal = {
         background = hex colors.base00;
         foreground = hex colors.base05;
@@ -368,6 +384,9 @@ in
 
       programs.noctalia = {
         enable = true;
+        package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+          patches = (old.patches or [ ]) ++ [ ./trayicon.patch ];
+        });
 
         # Starts noctalia automatically after login via a systemd user
         # service, tied to the same graphical-session.target that UWSM
