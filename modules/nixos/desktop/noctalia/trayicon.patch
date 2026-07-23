@@ -52,14 +52,15 @@ index 3e78f3f6..320130a5 100644
    auto normalizeTokens = [](std::vector<std::string>& tokens) {
      std::vector<std::string> normalized;
      normalized.reserve(tokens.size());
-@@ -242,7 +242,9 @@ float TrayWidget::resolvedInlineEntryGap() const {
+@@ -242,7 +242,10 @@ float TrayWidget::resolvedInlineEntryGap() const {
  }
  
  std::optional<ColorSpec> TrayWidget::currentAppIconColorizeTint() const {
 -  return effectiveShellAppIconColorizationTint(m_config.config().shell);
-+  ShellConfig shell = m_config.config().shell;
-+  shell.appIconColorize = shell.appIconColorize || m_appIconColorize;
-+  return effectiveShellAppIconColorizationTint(shell);
++  if (m_appIconColorize) {
++    return widgetIconColorOr(colorSpecFromRole(ColorRole::OnSurface));
++  }
++  return effectiveShellAppIconColorizationTint(m_config.config().shell);
  }
  
  void TrayWidget::refreshAppIconColorization(Renderer& renderer) {

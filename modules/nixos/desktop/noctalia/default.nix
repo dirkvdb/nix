@@ -189,7 +189,7 @@ let
     shell = {
       animation.speed = 3.0;
       app_icon_color = "primary";
-      app_icon_colorize = true;
+      app_icon_colorize = false;
       launcher.dmenu.entry.ssh = {
         command = "awk '/^Host /{print $2}' ~/.ssh/config"; # one candidate per stdout line
         exec = "${lib.getExe pkgs.ghostty} -e ssh {selection}"; # {selection} = the chosen line; run detached
@@ -292,15 +292,12 @@ let
         length = 15;
         type = "spacer";
       };
-      tray = {
-        app_icon_colorize = true;
-        icon_color = theme.uiAccentColor;
-      };
+      tray.app_icon_colorize = true;
       volume = {
         show_label = false;
       };
       workspaces = {
-        active_pill_size = 1.75;
+        active_pill_size = 1.5;
       };
       # Append month + day-of-month after the time (e.g. "14:32  July 20").
       clock.format = "{:%H:%M  %e %B}";
