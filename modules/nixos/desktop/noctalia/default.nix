@@ -241,7 +241,7 @@ let
       };
 
       sysmon = {
-        stat = "disk_pct";
+        stat = "disk_used_pct";
       };
 
       battery = {
