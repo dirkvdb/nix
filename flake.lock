@@ -474,11 +474,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782606274,
-        "narHash": "sha256-R3kZZKWksauG8KFgClYj4F7Ub4NoXHuVYdY9yYgdkvA=",
+        "lastModified": 1784880271,
+        "narHash": "sha256-h69gUHgdHXna2B8HybZvWFvkjWaPjTCVEuRkXZLG6/Q=",
         "owner": "ThiagoAVicente",
         "repo": "hyprexpose",
-        "rev": "c91bc2653e580fbdcfcaa83f823518043c13ff50",
+        "rev": "9d74169bde43b2642edbdba69e627ec010af5ed5",
         "type": "github"
       },
       "original": {
