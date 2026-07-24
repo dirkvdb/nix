@@ -36,6 +36,7 @@ in
       group = "${user.name}";
       extraGroups = [
         "audio"
+        "dialout"
         "wheel"
         "hidraw"
         "i2c"
