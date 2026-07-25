@@ -22,6 +22,7 @@ in
         serie
         binsider
         nixd
+        unstablePkgs.sccache
         unstablePkgs.devenv
         unstablePkgs.pixi
       ]
@@ -40,6 +41,12 @@ in
       programs.lazygit = {
         enable = true;
       };
+
+      # Use sccache to cache Rust builds
+      home.file.".cargo/config.toml".text = ''
+        [build]
+        rustc-wrapper = "${unstablePkgs.sccache}/bin/sccache"
+      '';
 
       # Pixi configuration
       xdg.configFile."pixi/config.toml".text = ''
