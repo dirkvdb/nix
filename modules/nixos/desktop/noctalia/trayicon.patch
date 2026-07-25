@@ -2,17 +2,19 @@ diff --git a/assets/translations/en.json b/assets/translations/en.json
 index 7473b642..826ece88 100644
 --- a/assets/translations/en.json
 +++ b/assets/translations/en.json
-@@ -3169,6 +3169,10 @@
-           "description": "Second gradient color in the visualizer",
-           "label": "Color 2"
+@@ -3160,6 +3160,10 @@
+         "anchor": {
+           "description": "Pin this widget as the center alignment anchor",
+           "label": "Anchor"
          },
 +        "app-icon-colorize": {
 +          "description": "Recolor system tray icons to match the active palette without colorizing other shell icons",
 +          "label": "Colorize App Icons"
 +        },
-         "command": {
-           "description": "Shell command run when left-clicking this button",
-           "label": "Left Click Command"
+         "art-size": {
+           "description": "Media artwork size in pixels",
+           "label": "Art Size"
+         },
 diff --git a/example.toml b/example.toml
 index efcb85de..a943b3e3 100644
 --- a/example.toml
@@ -88,14 +90,14 @@ diff --git a/src/shell/settings/widget_settings_registry.cpp b/src/shell/setting
 index d48e2106..f19b9d26 100644
 --- a/src/shell/settings/widget_settings_registry.cpp
 +++ b/src/shell/settings/widget_settings_registry.cpp
-@@ -1125,6 +1125,7 @@ namespace settings {
-         }
-       }
-     } else if (type == "tray") {
-+      add(boolSpec("app_icon_colorize", false));
-       add(stringListSpec("hidden"));
-       add(stringListSpec("pinned"));
-       add(boolSpec("match_adjacent_spacing", false));
+@@ -1053,6 +1053,7 @@ namespace settings {
+       } else if (type == "tray") {
++        add(boolSpec("app_icon_colorize", false));
+         add(stringListSpec("hidden"));
+         add(stringListSpec("pinned"));
+         add(boolSpec("match_adjacent_spacing", false));
+         add(boolSpec("drawer", false));
+         {
 diff --git a/src/shell/tray/tray_drawer_panel.cpp b/src/shell/tray/tray_drawer_panel.cpp
 index 4eb0f966..f0a38a42 100644
 --- a/src/shell/tray/tray_drawer_panel.cpp
