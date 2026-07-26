@@ -47,6 +47,11 @@
       "initcall_blacklist=simpledrm_platform_driver_init"
     ];
 
+
+    services.udev.packages = with pkgs; [
+      platformio-core.udev
+    ];
+
     local = {
       user = {
         enable = true;
