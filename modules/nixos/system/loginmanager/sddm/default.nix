@@ -8,7 +8,14 @@
 let
   cfg = config.local.system.loginmanager.sddm;
   displayScale = config.local.desktop.displayScale;
-  scaleInt = toString (builtins.ceil displayScale);
+  # Weston only supports integer output scales, so the compositor rounds up
+  # and advertises that integer scale to Qt, which then applies it
+  # automatically. The theme's own "scale" setting is applied *on top* of
+  # that automatic HiDPI scaling, so it must only account for the leftover
+  # fractional part, not the full displayScale, or the UI gets scaled twice.
+  scaleCeil = builtins.ceil displayScale;
+  scaleInt = toString scaleCeil;
+  themeScale = displayScale / scaleCeil;
   silentPkg = config.programs.silentSDDM.package';
   font = config.stylix.fonts.sansSerif.name;
   colors = config.lib.stylix.colors;
@@ -16,7 +23,7 @@ let
   # Custom preset with stylix colors, font, and display scale substituted
   customConf = pkgs.replaceVars ./theme.conf {
     inherit font;
-    scale = toString displayScale;
+    scale = toString themeScale;
     base00 = colors.base00-hex;
     base01 = colors.base01-hex;
     base02 = colors.base02-hex;
