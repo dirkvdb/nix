@@ -179,10 +179,6 @@ in
 
     # Inject ALS calibration firmware not handled by asahi-fwextract
     hardware.firmware = [
-      (pkgs.runCommand "aop-als-cal-firmware" { } ''
-        mkdir -p $out/lib/firmware/apple
-        cp ${./firmware/aop-als-cal.bin} $out/lib/firmware/apple/aop-als-cal.bin
-      '')
     ];
 
     # Swap fn and left ctrl keys on MacBook keyboard
