@@ -1,9 +1,8 @@
 diff --git a/assets/translations/en.json b/assets/translations/en.json
-index 7473b642..826ece88 100644
+index 12d5a28..14cf12d 100644
 --- a/assets/translations/en.json
 +++ b/assets/translations/en.json
-@@ -3160,6 +3160,10 @@
-         "anchor": {
+@@ -3208,6 +3208,10 @@
            "description": "Pin this widget as the center alignment anchor",
            "label": "Anchor"
          },
@@ -14,12 +13,11 @@ index 7473b642..826ece88 100644
          "art-size": {
            "description": "Media artwork size in pixels",
            "label": "Art Size"
-         },
 diff --git a/example.toml b/example.toml
-index efcb85de..a943b3e3 100644
+index 8fec459..55eb015 100644
 --- a/example.toml
 +++ b/example.toml
-@@ -478,6 +478,9 @@ battery_low_percent_threshold = 0   # set to e.g. 15 to enable battery_under_thr
+@@ -492,6 +492,9 @@ enabled = false
  # [widget.notifications]
  # hide_when_no_unread = true
  
@@ -29,23 +27,11 @@ index efcb85de..a943b3e3 100644
  # [widget.network_rx]
  # network_speed_unit = "mb"          # auto | kb | mb
  # network_speed_compact = true       # show "1.2M" instead of "1.2 MB/s"
-diff --git a/src/shell/bar/widget_factory.cpp b/src/shell/bar/widget_factory.cpp
-index ce75d972..8d5c4565 100644
---- a/src/shell/bar/widget_factory.cpp
-+++ b/src/shell/bar/widget_factory.cpp
-@@ -648,6 +648,7 @@ std::unique_ptr<Widget> WidgetFactory::create(
-         ),
-         .inlineEntryGap = widgetSpacing,
-         .matchAdjacentSpacing = wc != nullptr ? wc->getBool("match_adjacent_spacing", false) : false,
-+        .appIconColorize = wc != nullptr ? wc->getBool("app_icon_colorize", false) : false,
-     };
-     auto widget = std::make_unique<TrayWidget>(m_configService, m_tray, std::move(options));
-     widget->setContentScale(contentScale);
 diff --git a/src/shell/bar/widgets/tray_widget.cpp b/src/shell/bar/widgets/tray_widget.cpp
-index 3e78f3f6..320130a5 100644
+index b36cad3..a39a4f7 100644
 --- a/src/shell/bar/widgets/tray_widget.cpp
 +++ b/src/shell/bar/widgets/tray_widget.cpp
-@@ -171,7 +171,7 @@ TrayWidget::TrayWidget(ConfigService& config, TrayService* tray, TrayWidgetOptio
+@@ -171,7 +171,7 @@ TrayWidget::TrayWidget(ConfigService& config, TrayService* tray, Options options
        m_panelGridMode(options.panelGridMode),
        m_panelGridColumns(std::clamp<std::size_t>(options.panelGridColumns, 1U, 5U)),
        m_inlineEntryGap(std::max(0.0f, options.inlineEntryGap)), m_matchAdjacentSpacing(options.matchAdjacentSpacing),
@@ -54,31 +40,30 @@ index 3e78f3f6..320130a5 100644
    auto normalizeTokens = [](std::vector<std::string>& tokens) {
      std::vector<std::string> normalized;
      normalized.reserve(tokens.size());
-@@ -242,7 +242,10 @@ float TrayWidget::resolvedInlineEntryGap() const {
+@@ -242,6 +242,9 @@ float TrayWidget::resolvedInlineEntryGap() const {
  }
  
  std::optional<ColorSpec> TrayWidget::currentAppIconColorizeTint() const {
--  return effectiveShellAppIconColorizationTint(m_config.config().shell);
 +  if (m_appIconColorize) {
 +    return widgetIconColorOr(colorSpecFromRole(ColorRole::OnSurface));
 +  }
-+  return effectiveShellAppIconColorizationTint(m_config.config().shell);
+   return effectiveShellAppIconColorizationTint(m_config.config().shell);
  }
  
- void TrayWidget::refreshAppIconColorization(Renderer& renderer) {
 diff --git a/src/shell/bar/widgets/tray_widget.h b/src/shell/bar/widgets/tray_widget.h
-index db30dd1a..cb6d1688 100644
+index 1972d68..56f47a7 100644
 --- a/src/shell/bar/widgets/tray_widget.h
 +++ b/src/shell/bar/widgets/tray_widget.h
-@@ -30,6 +30,7 @@ struct TrayWidgetOptions {
-   float inlineEntryGap = Style::spaceXs;
-   bool matchAdjacentSpacing = false;
-   std::optional<float> customItemSize;
-+  bool appIconColorize = false;
- };
- 
- class TrayWidget : public Widget {
-@@ -83,6 +84,7 @@ private:
+@@ -33,6 +33,8 @@ public:
+     float inlineEntryGap = Style::spaceXs;
+     bool matchAdjacentSpacing = false;
+     std::optional<float> customItemSize;
++    // Downstream: recolor only tray icons to the palette, independent of the shell-wide setting.
++    bool appIconColorize = false;
+     // Read by TrayDrawerPanel, not by TrayWidget: they live here so the tray widget definition owns their defaults.
+     double drawerItemSize = Style::baseGlyphSize;
+     bool detachedPanel = false;
+@@ -87,6 +89,7 @@ private:
    float m_inlineEntryGap = Style::spaceXs;
    bool m_matchAdjacentSpacing = false;
    std::optional<float> m_customItemSize;
@@ -86,20 +71,22 @@ index db30dd1a..cb6d1688 100644
    bool m_appIconColorizeDirty = false;
  
    InputArea* m_drawerTrigger = nullptr;
-diff --git a/src/shell/settings/widget_settings_registry.cpp b/src/shell/settings/widget_settings_registry.cpp
-index d48e2106..f19b9d26 100644
---- a/src/shell/settings/widget_settings_registry.cpp
-+++ b/src/shell/settings/widget_settings_registry.cpp
-@@ -1053,6 +1053,7 @@ namespace settings {
-       } else if (type == "tray") {
-+        add(boolSpec("app_icon_colorize", false));
-         add(stringListSpec("hidden"));
-         add(stringListSpec("pinned"));
-         add(boolSpec("match_adjacent_spacing", false));
-         add(boolSpec("drawer", false));
-         {
+diff --git a/src/shell/bar/widgets/tray_widget_definition.cpp b/src/shell/bar/widgets/tray_widget_definition.cpp
+index d548875..6aaf64c 100644
+--- a/src/shell/bar/widgets/tray_widget_definition.cpp
++++ b/src/shell/bar/widgets/tray_widget_definition.cpp
+@@ -10,6 +10,9 @@ const noctalia::bar::WidgetDefinition<TrayWidget::Options, TrayWidgetDefinitionC
+       .type = "tray",
+       .fields =
+           {
++              field<&Options::appIconColorize>({
++                  .key = "app_icon_colorize",
++              }),
+               field<&Options::hiddenItems>({
+                   .key = "hidden",
+               }),
 diff --git a/src/shell/tray/tray_drawer_panel.cpp b/src/shell/tray/tray_drawer_panel.cpp
-index 4eb0f966..f0a38a42 100644
+index 652aaee..c2ce78e 100644
 --- a/src/shell/tray/tray_drawer_panel.cpp
 +++ b/src/shell/tray/tray_drawer_panel.cpp
 @@ -39,6 +39,16 @@ std::optional<float> TrayDrawerPanel::currentDrawerItemSize() const {
@@ -128,7 +115,7 @@ index 4eb0f966..f0a38a42 100644
    );
    m_drawerWidget->setContentScale(contentScale());
 diff --git a/src/shell/tray/tray_drawer_panel.h b/src/shell/tray/tray_drawer_panel.h
-index 20c91e87..25ac2b5c 100644
+index e17272d..f5537a6 100644
 --- a/src/shell/tray/tray_drawer_panel.h
 +++ b/src/shell/tray/tray_drawer_panel.h
 @@ -29,6 +29,7 @@ private:
@@ -140,7 +127,7 @@ index 20c91e87..25ac2b5c 100644
    [[nodiscard]] std::vector<std::string> currentPinnedItems() const;
    [[nodiscard]] std::size_t visibleItemCount() const;
 diff --git a/tests/config_validate/generated-config b/tests/config_validate/generated-config
-index 76cc7674..8e052222 100644
+index 76cc767..8e05222 100644
 --- a/tests/config_validate/generated-config
 +++ b/tests/config_validate/generated-config
 @@ -11,6 +11,9 @@ enabled = false
