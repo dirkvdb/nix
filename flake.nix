@@ -112,12 +112,15 @@
     let
       # Patch devenv fish hook to fix zoxide infinite loop
       # https://github.com/cachix/devenv/commit/8eff3cd84a4c2a86a02fe706582ae348650e3e76
+      # Remove this override once nixpkgs ships devenv >= 2.2 (fix should be included by then)
       devenvOverlay = final: prev: {
-        devenv = prev.devenv.overrideAttrs (old: {
-          postPatch = (old.postPatch or "") + ''
-            cp ${./pkgs/devenv/hook.fish} devenv/hooks/hook.fish
-          '';
-        });
+        devenv =
+          assert prev.lib.versionOlder prev.devenv.version "2.2";
+          prev.devenv.overrideAttrs (old: {
+            postPatch = (old.postPatch or "") + ''
+              cp ${./pkgs/devenv/hook.fish} devenv/hooks/hook.fish
+            '';
+          });
       };
 
       # Import unstable for ROCm packages
