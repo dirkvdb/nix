@@ -277,6 +277,9 @@ let
       cpu = {
         display = "graph";
         show_label = false;
+        actions = {
+          right = "exec ghostty -e btop";
+        };
       };
       launcher.glyph = "snowflake";
       media.enabled = false;
