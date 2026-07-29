@@ -26,21 +26,6 @@
       enable = true;
     };
 
-    # Use the latest kernel from unstable (for better AMD CPU support)
-    boot.kernelPackages = pkgs.linuxPackages_latest;
-
-    # CachyOS kernel specialisation: LTO + Zen 4 optimized kernel selectable at boot
-    local.system.kernel.cachyos.cache = true;
-    specialisation.cachyos.configuration =
-      { config, lib, ... }:
-      {
-        system.nixos.tags = [ "cachyos-lto-zen4" ];
-        local.system.kernel.cachyos.enable = true;
-        # zenpower doesn't build with Clang/LTO kernels; use k10temp instead
-        boot.extraModulePackages = lib.mkForce [ config.boot.kernelPackages.ddcci-driver ];
-        boot.blacklistedKernelModules = lib.mkForce [ ];
-      };
-
     # Boot display: match HDMI resolution to avoid scaling issues on fbcon
     boot.kernelParams = [
       "fbcon=nodefer"
@@ -63,6 +48,11 @@
       theme.preset = "everforest";
 
       system = {
+        kernel = {
+          cachyos.enable = false;
+          useLatest = true;
+        };
+
         cpu.cores = 20;
         binfmt.enable = true;
 

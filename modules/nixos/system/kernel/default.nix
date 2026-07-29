@@ -10,6 +10,8 @@ let
 in
 {
   options.local.system.kernel = {
+    useLatest = lib.mkEnableOption "the latest available kernel (pkgs.linuxPackages_latest) instead of the default nixpkgs kernel";
+
     cachyos = {
       enable = lib.mkEnableOption "CachyOS kernel with performance patches";
 
@@ -45,10 +47,24 @@ in
       };
     })
 
+    (lib.mkIf (cfg.useLatest && !cfg.cachyos.enable) {
+      boot.kernelPackages = pkgs.linuxPackages_latest;
+    })
+
     # Kernel + overlay only when fully enabled
     (lib.mkIf cfg.cachyos.enable {
       nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
-      boot.kernelPackages = lib.mkForce pkgs.cachyosKernels.${cfg.cachyos.variant};
+      boot.kernelPackages = lib.mkForce (
+        pkgs.cachyosKernels.${cfg.cachyos.variant}.extend (
+          _final: prev: {
+            # zenpower does not use kernelModuleMakeFlags, so it otherwise
+            # falls back to GCC even when the kernel was built with LLVM.
+            zenpower = prev.zenpower.overrideAttrs (old: {
+              makeFlags = prev.kernelModuleMakeFlags ++ (old.makeFlags or [ ]);
+            });
+          }
+        )
+      );
     })
   ];
 }
