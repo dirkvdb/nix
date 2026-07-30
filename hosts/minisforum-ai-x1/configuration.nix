@@ -67,6 +67,7 @@
 
         loginmanager.sddm = {
           enable = true;
+          display = "DP-3";
         };
 
         input.keyboard.via = true;
@@ -147,7 +148,6 @@
       desktop = {
         enable = true;
         displayScale = 1.666667;
-        # waybar.enable = true;
         noctalia.enable = true;
       };
 
