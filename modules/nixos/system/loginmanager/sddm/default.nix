@@ -8,22 +8,13 @@
 let
   cfg = config.local.system.loginmanager.sddm;
   displayScale = config.local.desktop.displayScale;
-  # Weston only supports integer output scales, so the compositor rounds up
-  # and advertises that integer scale to Qt, which then applies it
-  # automatically. The theme's own "scale" setting is applied *on top* of
-  # that automatic HiDPI scaling, so it must only account for the leftover
-  # fractional part, not the full displayScale, or the UI gets scaled twice.
-  scaleCeil = builtins.ceil displayScale;
-  scaleInt = toString scaleCeil;
-  themeScale = displayScale / scaleCeil;
   silentPkg = config.programs.silentSDDM.package';
   font = config.stylix.fonts.sansSerif.name;
   colors = config.lib.stylix.colors;
 
-  # Custom preset with stylix colors, font, and display scale substituted
+  # Custom preset with stylix colors and font substituted
   customConf = pkgs.replaceVars ./theme.conf {
     inherit font;
-    scale = toString themeScale;
     base00 = colors.base00-hex;
     base01 = colors.base01-hex;
     base02 = colors.base02-hex;
@@ -37,27 +28,28 @@ let
   cursorSize = toString config.stylix.cursor.size;
   cursorPackage = config.stylix.cursor.package;
 
-  # Custom weston.ini for SDDM's compositor with correct scale and optional output pinning
-  westonIni = (pkgs.formats.ini { }).generate "weston.ini" {
-    libinput = {
-      enable-tap = config.services.libinput.mouse.tapping;
-      left-handed = config.services.libinput.mouse.leftHanded;
-    };
-    keyboard = {
-      keymap_model = config.services.xserver.xkb.model;
-      keymap_layout = config.services.xserver.xkb.layout;
-      keymap_variant = config.services.xserver.xkb.variant;
-      keymap_options = config.services.xserver.xkb.options;
-    };
-
-    output = {
-      scale = scaleInt;
+  # Custom weston.ini for SDDM's compositor, optionally pinning the greeter
+  # to a specific output. No scale is set here; see the note above.
+  westonIni = (pkgs.formats.ini { }).generate "weston.ini" (
+    {
+      libinput = {
+        enable-tap = config.services.libinput.mouse.tapping;
+        left-handed = config.services.libinput.mouse.leftHanded;
+      };
+      keyboard = {
+        keymap_model = config.services.xserver.xkb.model;
+        keymap_layout = config.services.xserver.xkb.layout;
+        keymap_variant = config.services.xserver.xkb.variant;
+        keymap_options = config.services.xserver.xkb.options;
+      };
     }
     // lib.optionalAttrs (cfg.display != null) {
-      name = cfg.display;
-      "app-ids" = "sddm-greeter-qt6";
-    };
-  };
+      output = {
+        name = cfg.display;
+        "app-ids" = "sddm-greeter-qt6";
+      };
+    }
+  );
 
   # The base SilentSDDM package from the flake input (avoids infinite recursion)
   silentBase = inputs.silent-sddm.packages.${pkgs.system}.default;
@@ -89,7 +81,7 @@ in
 
     display = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
-      description = "Connector name of the display to show SDDM on (e.g. 'DP-1', 'HDMI-A-1'). When set, a kwinoutputconfig.json is created for the sddm user so the greeter appears on this display.";
+      description = "Connector name of the display to show SDDM on (e.g. 'DP-1', 'HDMI-A-1'). When set, the greeter's weston compositor is pinned to this output via its app-ids.";
       default = null;
       example = "DP-1";
     };
@@ -139,11 +131,13 @@ in
         autoLogin.relogin = lib.mkIf cfg.autologin.enable false;
 
         # The SilentSDDM module sets GreeterEnvironment without cursor settings.
-        # Weston advertises the output scale to Qt, so don't also force
-        # QT_SCREEN_SCALE_FACTORS/QT_FONT_DPI here or the greeter/cursor gets double-scaled.
+        # QT_SCALE_FACTOR applies displayScale directly and exactly (including
+        # fractional values), independent of the compositor's own output
+        # scale, so it doesn't need Weston to advertise a matching integer
+        # scale on the correct output connector.
         # XCURSOR_PATH points directly to the store path so the cursor theme
         # is available on first boot before the system profile is activated.
-        settings.General.GreeterEnvironment = lib.mkForce "QML2_IMPORT_PATH=${silentPkg}/share/sddm/themes/silent/components/,QT_IM_MODULE=qtvirtualkeyboard,XCURSOR_THEME=${cursorTheme},XCURSOR_SIZE=${cursorSize},XCURSOR_PATH=${cursorPackage}/share/icons";
+        settings.General.GreeterEnvironment = lib.mkForce "QML2_IMPORT_PATH=${silentPkg}/share/sddm/themes/silent/components/,QT_IM_MODULE=qtvirtualkeyboard,QT_SCALE_FACTOR=${toString displayScale},XCURSOR_THEME=${cursorTheme},XCURSOR_SIZE=${cursorSize},XCURSOR_PATH=${cursorPackage}/share/icons";
 
         settings.Users.DefaultUser = lib.mkIf (cfg.defaultUser != null) cfg.defaultUser;
 
@@ -151,7 +145,7 @@ in
         settings.Theme.CursorSize = cursorSize;
 
         # Override the compositor command with a custom weston.ini that
-        # sets the correct scale factor and optionally pins the greeter to a specific display.
+        # optionally pins the greeter to a specific display.
         settings.Wayland.CompositorCommand = "${lib.getExe pkgs.weston} --shell=kiosk -c ${westonIni}";
       };
     };
