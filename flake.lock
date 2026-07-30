@@ -21,6 +21,22 @@
         "type": "github"
       }
     },
+    "avd-fw": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785077389,
+        "narHash": "sha256-cq/gOgmbCg5IX0GSiS7Z5lBhpursB1Num8LSANw5fpI=",
+        "owner": "AsahiLinux",
+        "repo": "avd-fw",
+        "rev": "5e34aca83906f12ef3c2bfacb6712797de4bb7d5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AsahiLinux",
+        "repo": "avd-fw",
+        "type": "github"
+      }
+    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -957,6 +973,7 @@
     "root": {
       "inputs": {
         "apple-silicon": "apple-silicon",
+        "avd-fw": "avd-fw",
         "darwin": "darwin",
         "home-manager": "home-manager",
         "hyprexpose": "hyprexpose",
