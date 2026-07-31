@@ -49,8 +49,8 @@
 
       system = {
         kernel = {
-          cachyos.enable = false;
-          useLatest = true;
+          cachyos.enable = true;
+          # useLatest = true;
         };
 
         cpu.cores = 20;
