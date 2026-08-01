@@ -1,5 +1,6 @@
 {
   pkgs,
+  unstablePkgs,
   inputs,
   config,
   ...
@@ -230,6 +231,7 @@
       gnumeric
       onlyoffice-desktopeditors
       orca-slicer
+      unstablePkgs.openscad
     ];
   };
 }
