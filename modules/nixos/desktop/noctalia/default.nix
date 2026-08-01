@@ -391,7 +391,10 @@ in
       programs.noctalia = {
         enable = true;
         package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
-          patches = (old.patches or [ ]) ++ [ ./trayicon.patch ];
+          patches = (old.patches or [ ]) ++ [
+            ./trayicon.patch
+            ./DelayCalendarInit.patch
+          ];
           mesonFlags = (old.mesonFlags or [ ]) ++ [ "-Dnative_optimizations=true" ];
           NIX_ENFORCE_NO_NATIVE = false;
         });
