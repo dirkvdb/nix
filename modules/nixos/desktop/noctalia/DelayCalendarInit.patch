@@ -1,0 +1,27 @@
+--- a/src/app/application.h
++++ b/src/app/application.h
+@@ -374,6 +374,7 @@
+   CalendarPollSource m_calendarPollSource{m_calendarService};
+   Timer m_trayInitTimer;
+   Timer m_polkitInitTimer;
++  Timer m_calendarInitTimer;
+   Timer m_polkitIdleCloseTimer;
+   Timer m_greeterSyncTimeoutTimer;
+   Timer m_greeterAutoSyncTimer;
+--- a/src/app/application_services.cpp
++++ b/src/app/application_services.cpp
+@@ -1435,7 +1435,13 @@
+ 
+   m_locationService.initialize();
+   m_weatherService.initialize();
+-  m_calendarService.initialize();
++
++  // Delay calendar initialization briefly at startup so secret-service backed
++  // calendar credentials are not requested during the very first moments of
++  // session bring-up. This avoids racing with password-manager/tray startup.
++  m_calendarInitTimer.start(std::chrono::seconds(5), [this]() {
++    m_calendarService.initialize();
++  });
+ 
+   // LocationService is the single source of "where am I": push its resolved coordinates to the
+   // weather service, night light, and theme auto mode. Manual latitude/longitude and fixed
