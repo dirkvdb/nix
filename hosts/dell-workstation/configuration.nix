@@ -246,7 +246,16 @@
         bluetooth = {
           enable = true;
         };
+
         video.nvidia.enable = true;
+        display.brightnesscontrol = {
+          enable = true;
+          i2cDevice = "i2c-11";
+          # Dell U2725QE fails the ddcci driver's identification probe with
+          # the default 60ms delay (dmesg: "core device probe failed: -19"),
+          # even though ddcutil communicates with it over DDC/CI just fine.
+          delay = 200;
+        };
 
         fonts.enable = true;
       };
@@ -275,7 +284,7 @@
       desktop = {
         enable = true;
         displayScale = 1.5;
-        waybar.enable = true;
+        noctalia.enable = true;
       };
 
       apps = {
