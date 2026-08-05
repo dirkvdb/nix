@@ -534,6 +534,26 @@
         "type": "github"
       }
     },
+    "mqtt-viewer": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1785803648,
+        "narHash": "sha256-eyuhT84B1lCa3dqHnbia5f0g3HyHXNyZfmM5A+imfpo=",
+        "owner": "mqtt-viewer",
+        "repo": "mqtt-viewer",
+        "rev": "76bba20e10ed08fc891885ef55cec633ebce6d22",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mqtt-viewer",
+        "repo": "mqtt-viewer",
+        "type": "github"
+      }
+    },
     "nix-amd-ai": {
       "inputs": {
         "flake-compat": "flake-compat_4",
@@ -544,11 +564,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785904816,
-        "narHash": "sha256-cIoClkX17cDufHV2gQjL85gmY4pomBpZ/fX2NPkwSfk=",
+        "lastModified": 1785952677,
+        "narHash": "sha256-GfL4sDciyqaeMAlXgML8efQDjiIVE13VrM0Pijx5EEw=",
         "owner": "noamsto",
         "repo": "nix-amd-ai",
-        "rev": "509590f5a79175d418a9ccee8e1a4bcac5eed5db",
+        "rev": "77efcebdb79772cf89639b0c678fa796edda6773",
         "type": "github"
       },
       "original": {
@@ -950,6 +970,7 @@
         "hyprexpose": "hyprexpose",
         "lanzaboote": "lanzaboote",
         "librepods": "librepods",
+        "mqtt-viewer": "mqtt-viewer",
         "nix-amd-ai": "nix-amd-ai",
         "nix-cachyos-kernel": "nix-cachyos-kernel",
         "nix-index-database": "nix-index-database",
