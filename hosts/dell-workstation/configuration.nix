@@ -13,13 +13,16 @@
 
     inputs.stylix.nixosModules.stylix
 
-    # Dell Precision 7670: 12th gen Intel Core HX (Alder Lake) + Intel iGPU.
+    # Dell Pro Max 16 (MC16250): Intel Core Ultra 7 265H (Arrow Lake-H) + Intel iGPU.
+    # nixos-hardware has no dedicated arrow-lake module yet; Arrow Lake's graphics
+    # tile is architecturally a Meteor Lake derivative (Xe-LPG+), so the meteor-lake
+    # module is the closest match (sets the intel-media-driver VAAPI backend).
     inputs.nixos-hardware.nixosModules.common-gpu-intel
-    (inputs.nixos-hardware + "/common/cpu/intel/alder-lake")
-    (inputs.nixos-hardware + "/common/gpu/intel/alder-lake")
-    # Precision 7670 dGPU options are NVIDIA RTX A-series mobile GPUs (Ampere).
+    (inputs.nixos-hardware + "/common/cpu/intel/meteor-lake")
+    (inputs.nixos-hardware + "/common/gpu/intel/meteor-lake")
+    # Pro Max 16 dGPU options are NVIDIA RTX PRO mobile GPUs (Blackwell).
     inputs.nixos-hardware.nixosModules.common-gpu-nvidia
-    (inputs.nixos-hardware + "/common/gpu/nvidia/ampere")
+    (inputs.nixos-hardware + "/common/gpu/nvidia/blackwell")
     # Generic laptop power/battery modules
     inputs.nixos-hardware.nixosModules.common-pc-laptop
     inputs.nixos-hardware.nixosModules.common-pc-ssd
@@ -41,7 +44,7 @@
       ];
     };
 
-    # NVIDIA + Intel PRIME offload configuration for the Precision 7670 hybrid
+    # NVIDIA + Intel PRIME offload configuration for the Pro Max 16 hybrid
     # graphics layout. The Intel iGPU drives all displays; the NVIDIA dGPU is
     # available via offload (nvidia-offload <cmd>) and powers down when idle.
     hardware.nvidia = {
@@ -59,7 +62,8 @@
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
 
-      # Typical Precision 7670 Intel+iGPU / NVIDIA dGPU bus IDs. Verify with:
+      # Bus IDs carried over from the Precision 7670; these are very likely to
+      # differ on the Pro Max 16 and MUST be re-verified on the actual hardware:
       #   lspci | grep -E 'VGA|3D|Display'
       prime = {
         offload = {
@@ -82,11 +86,13 @@
       "nvidia-drm.fbdev=1"
     ];
 
-    # Alder Lake Dell Precision 7670 only supports s2idle (Modern Standby), not
-    # S3 deep sleep. The NVIDIA driver defaults to S3-style suspend handling;
-    # NVreg_EnableS0ixPowerManagement tells it to use s0ix/s2idle paths instead.
-    # Disable GSP firmware on the open driver: on Ampere mobile GPUs it causes
+    # Modern Dell mobile workstations (Pro Max 16 included) only support s2idle
+    # (Modern Standby), not S3 deep sleep. The NVIDIA driver defaults to
+    # S3-style suspend handling; NVreg_EnableS0ixPowerManagement tells it to use
+    # s0ix/s2idle paths instead.
+    # Disable GSP firmware on the open driver: on Ampere mobile GPUs this caused
     # screen corruption, Wayland black windows, hangs, and poor resume behavior.
+    # Re-verify whether this workaround is still needed on the Blackwell dGPU.
     boot.extraModprobeConfig = ''
       options nvidia NVreg_EnableS0ixPowerManagement=1 NVreg_EnableGpuFirmware=0
     '';
@@ -96,18 +102,22 @@
     # `luks-*` mapper devices back the file systems / swap, so no UUIDs are
     # hardcoded here (they change on every reinstall).
 
-    # Dell Precision 7670 units are often configured with Intel VMD/RST for NVMe.
+    # Dell mobile workstations are often configured with Intel VMD/RST for NVMe.
     # Including vmd keeps the initrd bootable even when the BIOS is left in RAID mode.
     boot.initrd.availableKernelModules = [ "vmd" ];
 
-    # Dell Precision laptops benefit from firmware thermal controls, especially
+    # Dell mobile workstations benefit from firmware thermal controls, especially
     # under sustained workstation CPU/GPU loads.
     services.thermald.enable = true;
 
-    # Precision 7670 has Thunderbolt 4 ports; bolt handles secure enrollment and
+    # Pro Max 16 has Thunderbolt 4 ports; bolt handles secure enrollment and
     # authorization of docks and external devices.
     services.hardware.bolt.enable = true;
 
+    # PCI addresses and the touchpad ACPI path below were detected on the old
+    # Precision 7670 and MUST be re-verified against the Pro Max 16's actual
+    # hardware (lspci for the DRM symlinks, `cat /proc/bus/input/devices` or
+    # `i2cdetect` for the touchpad) once it's installed.
     services.udev.extraRules = ''
       SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:01:00.0", SYMLINK+="dri/nvidia-dgpu"
       SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:00:02.0", SYMLINK+="dri/intel-igpu"
@@ -177,8 +187,9 @@
       theme.preset = "everforest";
 
       system = {
-        # Adjust to the actual core count of your CPU
-        cpu.cores = 24;
+        # Intel Core Ultra 7 265H: 6 P-cores + 8 E-cores + 2 LP E-cores = 16 cores.
+        # Arrow Lake has no SMT, so this is also the logical processor count.
+        cpu.cores = 16;
         binfmt.enable = true;
 
         nix = {
