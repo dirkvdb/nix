@@ -15,7 +15,7 @@ let
   inherit (config.local) theme;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
-  zedPinnedVersion = "1.13.2";
+  zedPinnedVersion = "1.14.2";
 
   zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
     version = zedPinnedVersion;
@@ -24,12 +24,12 @@ let
       owner = "zed-industries";
       repo = "zed";
       tag = "v${version}";
-      hash = "sha256-RbldT52JzEKvI1ES+HbwcNT4fTGx78vrEiT8+W83sDo=";
+      hash = "sha256-k6wZ8hgrBhvJjxUYCpR01Vuj7ecr5eZnGBUoMzsckko=";
     };
     cargoDeps = unstablePkgs.rustPlatform.fetchCargoVendor {
       inherit src;
       name = "${old.pname}-${version}";
-      hash = "sha256-9DsCcOTJJvvjjivyxFgzkVJSvq/bNFg3hbtEltJyP6M=";
+      hash = "sha256-9kjNF4TpR6t7L3fV8CgWiIU5qVzX1iPIMauB5ie20lo=";
     };
     env = (old.env or { }) // {
       NIX_CFLAGS_COMPILE = lib.concatStringsSep " " [
@@ -82,12 +82,18 @@ in
         {
           name = "gemma4-it-e4b-FLM";
           display_name = "Gemma 4 IT e4b (FLM)";
-          max_tokens = 100000;
+          max_tokens = 32000;
         }
         {
+          name = "qwen3.6-moe-35b-a3b-FLM";
+          display_name = "Qwen 3.6 MOE 35B A3B NPU (FLM)";
+          max_tokens = 32000;
+        }
+        {
+
           name = "Qwen3.6-27B-MTP-GGUF";
           display_name = "Qwen 3.6 27B MTP (GGUF)";
-          max_tokens = 100000;
+          max_tokens = 32000;
         }
       ];
       description = "Models to expose from the local lemonade server in Zed.";
@@ -202,7 +208,7 @@ in
             play_sound_when_agent_done = "always";
             inline_assistant_model = {
               provider = "copilot_chat";
-              model = "claude-sonnet-4.6";
+              model = "claude-sonnet-5";
             };
             tool_permissions = {
               default = "allow";
@@ -352,7 +358,6 @@ in
             codex-nix = lib.mkMerge [
               {
                 type = "custom";
-                default_model = "gpt-5.3-codex";
                 default_config_options = {
                   mode = "full-access";
                   reasoning_effort = "high";
@@ -369,7 +374,6 @@ in
               }
               (lib.mkIf (!pkgs.stdenv.isDarwin) {
                 command = "${unstablePkgs.github-copilot-cli}/bin/copilot";
-                default_model = "claude-sonnet-5";
                 args = [
                   "--acp"
                   "--stdio"
