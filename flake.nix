@@ -326,7 +326,7 @@
           system = "x86_64-linux";
           specialArgs = { inherit self; };
           modules = [
-            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix"
             ./hosts/installer/configuration.nix
             { nixpkgs.hostPlatform = "x86_64-linux"; }
           ];
