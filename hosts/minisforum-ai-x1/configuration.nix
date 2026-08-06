@@ -221,6 +221,7 @@
       lemonade = {
         user = config.local.user.name;
         host = "0.0.0.0";
+        allowedOrigins = [ "http://mini.fritz.box:13305" ];
       };
     };
 
