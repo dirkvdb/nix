@@ -125,7 +125,7 @@ let
 
     location.address = "Lommel, Belgium";
 
-    lockscreen.fingerprint = false;
+    lockscreen.fingerprint = cfg.fingerprint.enable;
 
     lockscreen_widgets = {
       enabled = false;
@@ -368,6 +368,13 @@ in
 {
   options.local.desktop.noctalia = {
     enable = lib.mkEnableOption "Noctalia v5 (beta) desktop shell";
+
+    fingerprint.enable = lib.mkEnableOption ''
+      fingerprint unlock on the Noctalia lock screen. Noctalia talks to fprintd
+      directly over D-Bus (net.reactivated.Fprint), so this only needs
+      services.fprintd enabled; no PAM service configuration is required.
+      Enroll fingerprints with `fprintd-enroll` after switching.
+    '';
   };
 
   config = lib.mkMerge [
@@ -387,6 +394,8 @@ in
       # Noctalia is a shell/bar; it still needs a compositor underneath.
       # Only takes effect if a host hasn't already set this explicitly.
       local.desktop.hyprland.enable = lib.mkDefault true;
+
+      services.fprintd.enable = lib.mkIf cfg.fingerprint.enable true;
 
       programs.noctalia = {
         enable = true;

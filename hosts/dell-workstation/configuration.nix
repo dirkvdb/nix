@@ -285,7 +285,10 @@
       desktop = {
         enable = true;
         displayScale = 1.5;
-        noctalia.enable = true;
+        noctalia = {
+          enable = true;
+          fingerprint.enable = true;
+        };
       };
 
       apps = {
