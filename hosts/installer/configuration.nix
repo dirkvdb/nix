@@ -299,7 +299,7 @@ let
     echo ">>> Installing NixOS with configuration '$HOSTNAME' ..."
     echo "    (this will take a while)"
     echo ""
-    nixos-install --flake "$DEST#$HOSTNAME" --no-root-password |& ${pkgs.nix-output-monitor}/bin/nom
+    nixos-install --flake "$DEST#$HOSTNAME" --no-root-password
 
     # -- Set passwords -----------------------------------------------------
     echo ">>> Setting passwords for $TARGET_USER and root ..."
@@ -385,7 +385,6 @@ in
     deploy-config-launcher
     nixos-icons
     nh
-    nix-output-monitor
     openssl
     # Partition & filesystem tools
     parted
