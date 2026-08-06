@@ -91,20 +91,10 @@
       options nvidia NVreg_EnableS0ixPowerManagement=1 NVreg_EnableGpuFirmware=0
     '';
 
-    # LUKS performance options for NVMe SSD
-    boot.initrd.luks.devices."luks-8dce0af5-f867-40c7-b060-02f5af164340" = {
-      # Pass TRIM/discard through the encryption layer so the SSD can reclaim
-      # deleted blocks, preserving write performance over time.
-      allowDiscards = true;
-      # Skip dm-crypt's internal workqueues and submit crypto ops directly;
-      # avoids unnecessary context switches on NVMe which already has efficient
-      # multi-queue I/O scheduling.
-      bypassWorkqueues = true;
-    };
-    boot.initrd.luks.devices."luks-faf7f7e5-6171-4339-9e32-bd7a858c8ae2" = {
-      allowDiscards = true;
-      bypassWorkqueues = true;
-    };
+    # LUKS SSD performance tuning (allowDiscards + bypassWorkqueues) is applied
+    # generically by modules/nixos/system/boot/disk-encryption to whichever
+    # `luks-*` mapper devices back the file systems / swap, so no UUIDs are
+    # hardcoded here (they change on every reinstall).
 
     # Dell Precision 7670 units are often configured with Intel VMD/RST for NVMe.
     # Including vmd keeps the initrd bootable even when the BIOS is left in RAID mode.
