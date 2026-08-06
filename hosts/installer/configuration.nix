@@ -1,7 +1,11 @@
-# Minimal NixOS installer ISO with automated deployment.
+# Graphical (GNOME) NixOS installer ISO with automated deployment.
 #
 # The flake source is baked into the ISO at /etc/nix-config.
-# After booting, run `sudo deploy-config` which will:
+# The live session boots into a GNOME desktop so Wi-Fi can be configured
+# via the network icon in the top bar before installing.
+#
+# After connecting to a network, launch "Install NixOS" from the desktop
+# (or run `sudo deploy-config` in a terminal) which will:
 #   1. Let you select a target disk and partition it
 #   2. Let you pick a host configuration
 #   3. Set a password for the user and root
@@ -10,6 +14,7 @@
 # Build with: just iso
 {
   pkgs,
+  lib,
   self,
   ...
 }:
@@ -334,6 +339,24 @@ let
     echo "  Future updates:  cd ~/nix && sudo nixos-rebuild switch --flake .#$HOSTNAME"
     echo ""
   '';
+
+  # Wrapper so the desktop launcher's Exec= line stays free of reserved
+  # characters (the Desktop Entry spec disallows ';', quotes, etc. there).
+  deploy-config-terminal = pkgs.writeShellScriptBin "deploy-config-terminal" ''
+    exec ${pkgs.gnome-terminal}/bin/gnome-terminal -- ${pkgs.bash}/bin/bash -c "sudo ${deploy-config}/bin/deploy-config; exec bash"
+  '';
+
+  # Desktop/app-grid launcher so the installer can be started with a click
+  # after Wi-Fi has been set up graphically.
+  deploy-config-launcher = pkgs.makeDesktopItem {
+    name = "deploy-config";
+    desktopName = "Install NixOS";
+    comment = "Partition a disk and install NixOS with your flake configuration";
+    icon = "nix-snowflake";
+    exec = "${deploy-config-terminal}/bin/deploy-config-terminal";
+    terminal = false;
+    categories = [ "System" ];
+  };
 in
 {
   # Bake the flake source into the ISO
@@ -341,6 +364,8 @@ in
 
   environment.systemPackages = with pkgs; [
     deploy-config
+    deploy-config-launcher
+    nixos-icons
     nh
     nix-output-monitor
     openssl
@@ -361,6 +386,13 @@ in
     tmux
   ];
 
+  # Pin the installer launcher and a terminal to the dock, alongside
+  # Firefox for handling captive portals during Wi-Fi setup.
+  services.desktopManager.gnome.favoriteAppsOverride = lib.mkForce ''
+    [org.gnome.shell]
+    favorite-apps=[ 'deploy-config.desktop', 'firefox.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.Nautilus.desktop', 'gparted.desktop' ]
+  '';
+
   # Enable SSH so you can connect remotely during install
   services.openssh = {
     enable = true;
@@ -373,7 +405,8 @@ in
   # Silence ZFS warning (not using ZFS)
   boot.zfs.forceImportRoot = false;
 
-  # Launch deploy-config automatically on root login
+  # If logged in directly as root (e.g. via a virtual console or SSH),
+  # launch deploy-config automatically -- no need to open a terminal.
   programs.bash.loginShellInit = ''
     if [ "$(id -u)" -eq 0 ] && [ -z "$DEPLOY_CONFIG_DONE" ]; then
       export DEPLOY_CONFIG_DONE=1

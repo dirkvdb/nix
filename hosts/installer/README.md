@@ -1,7 +1,9 @@
 # NixOS Installer ISO
 
-Custom NixOS installer that bakes your flake configuration into a bootable ISO.
-After installation, the system is fully configured and ready to use on first boot.
+Custom NixOS graphical installer that bakes your flake configuration into a bootable ISO.
+The live session boots into a GNOME desktop, so Wi-Fi (and any captive portal) can be
+configured graphically before installing. After installation, the system is fully
+configured and ready to use on first boot.
 
 ## Building the ISO
 
@@ -31,12 +33,10 @@ sudo dd if=$(ls result/iso/*.iso) of=/dev/sdX bs=4M status=progress
 ## Installation
 
 1. Boot from the USB drive
-2. Log in as `root` (no password required)
-3. Run the installer:
-
-```bash
-deploy-config
-```
+2. GNOME auto-logs in as the `nixos` user -- connect to Wi-Fi using the network icon
+   in the top-right corner (Firefox is pinned to the dock for handling captive portals)
+3. Double-click **Install NixOS** on the dock (or open a Terminal and run
+   `sudo deploy-config`)
 
 The script will guide you through:
 
