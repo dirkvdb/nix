@@ -254,7 +254,7 @@ let
     # -- Copy config to target ---------------------------------------------
     echo ">>> Copying nix config to $DEST ..."
     mkdir -p "$DEST"
-    cp -rT "$CONFIG_DIR" "$DEST"
+    cp -rLT "$CONFIG_DIR" "$DEST"
     chmod -R u+w "$DEST"
 
     # Place the generated hardware-configuration.nix into the host dir
