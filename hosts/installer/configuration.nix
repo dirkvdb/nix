@@ -256,6 +256,24 @@ let
     echo ">>> Generating hardware configuration ..."
     nixos-generate-config --root "$MNT"
 
+    # nixos-generate-config only emits `boot.initrd.luks.devices.<name>.device`
+    # for *mounted* file systems, not for encrypted swap. Without an entry the
+    # swap mapper (referenced from swapDevices) has no device defined, which
+    # fails evaluation with:
+    #   "boot.initrd.luks.devices.luks-<uuid>.device was accessed but has no
+    #    value defined".
+    # The installer knows both UUIDs, so ensure a declaration exists for each
+    # encrypted device (root is normally already present; swap is added here).
+    if [ "$ENCRYPT" = true ]; then
+      HWCFG="$MNT/etc/nixos/hardware-configuration.nix"
+      for uuid in "$ROOT_UUID" "$SWAP_UUID"; do
+        if ! grep -q "luks\.devices\.\"luks-$uuid\"" "$HWCFG"; then
+          echo "    Adding LUKS device declaration for luks-$uuid"
+          ${pkgs.gnused}/bin/sed -i '$i\'"  boot.initrd.luks.devices.\"luks-$uuid\".device = \"/dev/disk/by-uuid/$uuid\";" "$HWCFG"
+        fi
+      done
+    fi
+
     # -- Copy config to target ---------------------------------------------
     echo ">>> Copying nix config to $DEST ..."
     mkdir -p "$DEST"
