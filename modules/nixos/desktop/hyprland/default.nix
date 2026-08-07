@@ -10,6 +10,16 @@ in
 {
   options.local.desktop.hyprland = {
     enable = lib.mkEnableOption "Enable hyprland desktop environment";
+
+    devWorkspaceGapSize = lib.mkOption {
+      type = lib.types.ints.unsigned;
+      default = 0;
+      description = ''
+        Gap size (both gaps_in and gaps_out) for the dev workspace
+        (workspace 2). A value of 0 disables the override, leaving
+        workspace 2 using the global gap settings.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
