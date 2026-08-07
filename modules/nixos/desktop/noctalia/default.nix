@@ -40,8 +40,17 @@ let
 
   wallpapersDir = ../../../common/theme/wallpapers;
 
+  # use storage key mechanism instead of secrets store, because noctalia starts before
+  # the secrets store is unlocked (it waits for the systray), and causes a
+  noctaliaStorageKeyFile = config.sops.secrets.noctalia_storage_key.path;
+
   # See https://docs.noctalia.dev/v5/getting-started/nixos/ for the schema.
   noctaliaSettings = {
+    storage = {
+      key_source = "file";
+      key_file = noctaliaStorageKeyFile;
+    };
+
     bar.default = {
       font_family = config.stylix.fonts.sansSerif.name;
       center = lib.optionals (!hasNotch) [ "clock" ];
@@ -386,6 +395,14 @@ in
             local.desktop.noctalia.enable and local.desktop.waybar.enable are
             mutually exclusive desktop shells; disable local.desktop.waybar
             to use Noctalia instead.
+          '';
+        }
+        {
+          assertion = !cfg.enable || (config.local.apps.sops.enable or false);
+          message = ''
+            local.desktop.noctalia.enable requires local.apps.sops.enable, since
+            Noctalia's encrypted storage master key (clipboard history, calendar
+            event cache) is provisioned via the noctalia_storage_key sops secret.
           '';
         }
       ];
