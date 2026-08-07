@@ -353,6 +353,8 @@
       gnumeric
       onlyoffice-desktopeditors
       gitcomet
+      unstablePkgs.ferdium
+      qtcreator
     ];
   };
 }
