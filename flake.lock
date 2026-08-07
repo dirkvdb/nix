@@ -534,26 +534,6 @@
         "type": "github"
       }
     },
-    "mqtt-viewer": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1785803648,
-        "narHash": "sha256-eyuhT84B1lCa3dqHnbia5f0g3HyHXNyZfmM5A+imfpo=",
-        "owner": "mqtt-viewer",
-        "repo": "mqtt-viewer",
-        "rev": "76bba20e10ed08fc891885ef55cec633ebce6d22",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mqtt-viewer",
-        "repo": "mqtt-viewer",
-        "type": "github"
-      }
-    },
     "nix-amd-ai": {
       "inputs": {
         "flake-compat": "flake-compat_4",
@@ -649,11 +629,11 @@
         "vpn-confinement": "vpn-confinement"
       },
       "locked": {
-        "lastModified": 1785832826,
-        "narHash": "sha256-U68pdshSPijj8zUfRynCzt5dHWZbJWc8EBV5ZRSs6KE=",
+        "lastModified": 1786113870,
+        "narHash": "sha256-Zddv947ARHwMT+CT17vdWkG/MjfcbPIe8uHibWwAn/E=",
         "owner": "kiriwalawren",
         "repo": "nixflix",
-        "rev": "1e2e6c432908ebcf0cfcac99715346c8a14799c4",
+        "rev": "f1df9c3c23a85c739a20302f6d6c1faca5cd2928",
         "type": "github"
       },
       "original": {
@@ -970,7 +950,6 @@
         "hyprexpose": "hyprexpose",
         "lanzaboote": "lanzaboote",
         "librepods": "librepods",
-        "mqtt-viewer": "mqtt-viewer",
         "nix-amd-ai": "nix-amd-ai",
         "nix-cachyos-kernel": "nix-cachyos-kernel",
         "nix-index-database": "nix-index-database",
@@ -1277,11 +1256,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786047438,
-        "narHash": "sha256-+8p8XryJaRpgxaJf1/YqGFs8RBOiYYx1YiwxEDDH+bs=",
+        "lastModified": 1786118193,
+        "narHash": "sha256-RhkiElXANPrHOXTncgUmKHVw8FHuRZjAXmtUPQfB91c=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "5ce465e63be9166bff1d7282d6908ca1043b6b86",
+        "rev": "43272965c62be2c512630bc80deeb6792b2f285b",
         "type": "github"
       },
       "original": {
