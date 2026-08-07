@@ -308,6 +308,7 @@
       desktop = {
         enable = true;
         displayScale = 1.5;
+        hyprland.devWorkspaceGapSize = 1; # avoid flickering on the dell monitors with lower dpi due to fractional scaling
         noctalia = {
           enable = true;
           fingerprint.enable = true;

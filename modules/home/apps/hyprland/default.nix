@@ -16,6 +16,7 @@ let
   isWaybarEnabled = config.local.desktop.waybar.enable or false;
   isNoctaliaEnabled = config.local.desktop.noctalia.enable or false;
   sopsEnabled = config.local.apps.sops.enable or false;
+  devWorkspaceGapSize = config.local.desktop.hyprland.devWorkspaceGapSize or 0;
   mkUserHome = mkHome user.name;
 
   # Border colors used in general and group config sections
@@ -126,6 +127,9 @@ in
         ${lib.optionalString isWaybarEnabled ''require("bindings-waybar")''}
         ${lib.optionalString isNoctaliaEnabled ''require("bindings-noctalia")''}
         require("monitors")
+        ${lib.optionalString (devWorkspaceGapSize > 0) ''
+          hl.workspace_rule({ workspace = "3", gaps_in = ${toString devWorkspaceGapSize}, gaps_out = ${toString devWorkspaceGapSize} })
+        ''}
       '';
 
       # Session target management is handled by UWSM; the home-manager
