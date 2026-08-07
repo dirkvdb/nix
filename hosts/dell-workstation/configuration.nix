@@ -197,14 +197,16 @@
           nh.configurationName = "dell-workstation";
         };
 
+        kernel.useLatest = true;
+
         boot = {
           secureboot.enable = true;
           graphical = true;
           initrd-bluetooth = {
             enable = true;
             extraFirmwarePaths = [
-              "intel/ibt-1040-0041.sfi"
-              "intel/ibt-1040-0041.ddc"
+              "intel/ibt-0291-0291.sfi"
+              "intel/ibt-0291-0291.ddc"
             ];
           };
         };
@@ -225,7 +227,7 @@
 
         network = {
           enable = true;
-          hostname = "p220248";
+          hostname = "p260182";
 
           networkmanager = {
             enable = true;

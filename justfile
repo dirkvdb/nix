@@ -2,7 +2,7 @@
 
 os_cmd := if os() == "macos" { "darwin" } else { "os" }
 hostname := `hostname`
-system_config := if hostname == "p220248" { "dell-workstation" } else { hostname }
+system_config := if hostname == "p260182" { "dell-workstation" } else { hostname }
 
 # Default recipe - show available commands
 default:
