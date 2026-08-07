@@ -198,6 +198,7 @@ in
           };
 
           git_panel = {
+            tree_view = true;
             dock = "left";
           };
 
