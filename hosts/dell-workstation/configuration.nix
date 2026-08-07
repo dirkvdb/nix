@@ -72,7 +72,7 @@
         };
 
         intelBusId = "PCI:0:2:0";
-        nvidiaBusId = "PCI:1:0:0";
+        nvidiaBusId = "PCI:2:0:0";
       };
     };
 
@@ -114,12 +114,12 @@
     # authorization of docks and external devices.
     services.hardware.bolt.enable = true;
 
-    # PCI addresses and the touchpad ACPI path below were detected on the old
-    # Precision 7670 and MUST be re-verified against the Pro Max 16's actual
-    # hardware (lspci for the DRM symlinks, `cat /proc/bus/input/devices` or
-    # `i2cdetect` for the touchpad) once it's installed.
+    # PCI addresses verified against the Pro Max 16's actual hardware via `lspci`:
+    # Intel iGPU at 0000:00:02.0, NVIDIA RTX PRO 1000 Blackwell dGPU at 0000:02:00.0.
+    # The touchpad ACPI path below was carried over from the old Precision 7670
+    # and still needs re-verification (`cat /proc/bus/input/devices` or `i2cdetect`).
     services.udev.extraRules = ''
-      SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:01:00.0", SYMLINK+="dri/nvidia-dgpu"
+      SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:02:00.0", SYMLINK+="dri/nvidia-dgpu"
       SUBSYSTEM=="drm", KERNEL=="card*", KERNELS=="0000:00:02.0", SYMLINK+="dri/intel-igpu"
 
       # The I2C HID touchpad (VEN_0488 / Synaptics at _SB_.PC00.I2C1.TPD0)
