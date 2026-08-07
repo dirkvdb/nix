@@ -151,6 +151,7 @@ in
           groovy-language-server
           lua-language-server
           mcp-nixos
+          bubblewrap
         ]
       );
 
