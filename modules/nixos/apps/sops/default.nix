@@ -52,6 +52,10 @@ in
           owner = user.name;
         };
 
+        secrets.noctalia_storage_key = {
+          owner = user.name;
+        };
+
         secrets.ssh_websocat_host = {
           owner = user.name;
         };
