@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  unstablePkgs,
   inputs,
   config,
   ...
@@ -76,6 +77,14 @@
       };
     };
 
+    # Broadcom 58200 / ControlVault fingerprint reader.
+    # The reader requires Broadcom's unfree Touch OEM Driver rather than the
+    # upstream libfprint driver.
+    services.fprintd.tod = {
+      enable = true;
+      driver = pkgs.libfprint-2-tod1-broadcom-cv3plus;
+    };
+
     hardware.intelgpu = {
       driver = "i915";
     };
@@ -125,7 +134,19 @@
       # The I2C HID touchpad (VEN_0488 / Synaptics at _SB_.PC00.I2C1.TPD0)
       # generates GPIO interrupts (IRQ 14 / INTC1056) that immediately wake
       # the system from s2idle. Disable wakeup on this device.
-      ACTION=="add", SUBSYSTEM=="i2c", KERNEL=="i2c-VEN_0488:00", ATTR{power/wakeup}="disabled"
+      # ACTION=="add", SUBSYSTEM=="i2c", KERNEL=="i2c-VEN_0488:00", ATTR{power/wakeup}="disabled"
+
+      # Broadcom 58200 / ControlVault fingerprint reader: the actual hardware
+      # enumerates as USB 0a5c:5863, which is not in the cv3plus driver
+      # package's published udev/modalias list (only 5864-5867 are declared
+      # there; the plain "v3" package only covers 5842-5845). 5863 is most
+      # likely an unlisted PID of the same v3+ chip generation on this very
+      # new Dell Pro Max 16 (MC16250), so route it to the cv3plus TOD driver
+      # as well. libfprint only needs ENV{LIBFPRINT_DRIVER} set to attempt
+      # loading the driver for a device; remove this rule if it turns out
+      # cv3plus genuinely doesn't support this revision.
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="0a5c", ATTRS{idProduct}=="5863", ATTRS{dev}=="*", TEST=="power/control", ATTR{power/control}="auto"
+      SUBSYSTEM=="usb", ATTRS{idVendor}=="0a5c", ATTRS{idProduct}=="5863", ENV{LIBFPRINT_DRIVER}="Broadcom Sensors"
     '';
 
     home-manager.users.dirk.programs.fish.shellInit = lib.mkAfter ''
