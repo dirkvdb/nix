@@ -27,7 +27,14 @@ let
   startupCommands = [
     "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
     "wl-paste --watch --primary wl-copy"
-    "wl-clip-persist --clipboard both"
+    # NOTE: must be "regular" (not "both"). Persisting the PRIMARY
+    # selection causes wl-clip-persist to instantly reclaim ownership of it
+    # whenever a GTK app creates a text selection (mouse-drag or
+    # Shift+Arrow), which makes GTK immediately clear the visible
+    # highlight since GtkText/GtkEntry ties selection rendering to actually
+    # owning the Wayland PRIMARY selection. Known upstream bug, unresolved:
+    # https://github.com/Linus789/wl-clip-persist/issues/3
+    "wl-clip-persist --clipboard regular"
   ]
   ++ lib.optionals config.local.services.sunshine.enable [
     "hyprctl output create headless SUNSHINE && systemctl --user restart sunshine.service"
