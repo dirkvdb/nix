@@ -17,6 +17,10 @@ build:
 bumpzed version:
     nix shell nixpkgs#python3 -c python3 ./scripts/bump-zed.py "{{ version }}"
 
+# Apply the color palette of one image onto another (uses uv to fetch pillow/numpy)
+color-transfer source target output *args:
+    nix shell nixpkgs#uv -c uv run ./scripts/color-transfer.py "{{ source }}" "{{ target }}" "{{ output }}" {{ args }}
+
 # Test the system configuration
 test:
     nh {{ os_cmd }} test . -H {{ system_config }}
