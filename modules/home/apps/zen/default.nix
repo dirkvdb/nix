@@ -188,7 +188,7 @@ in
             "zen.view.compact.toolbar-flash-popup" = false;
             "zen.view.sidebar-expanded" = false;
             "zen.view.show-newtab-button-top" = false;
-            "zen.view.window.scheme" = 2;
+            "zen.view.window.scheme" = lib.mkForce 2;
             "zen.ui.migration.compact-mode-button-added" = true;
             "zen.welcome-screen.seen" = true;
             "zen.workspaces.continue-where-left-off" = true;
