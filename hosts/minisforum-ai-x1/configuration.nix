@@ -155,6 +155,7 @@
       apps = {
         aichat.enable = true;
         celluloid.enable = true;
+        bitwarden.enable = true;
         direnv.enable = true;
         fladder.enable = true;
         ghostty.enable = true;
