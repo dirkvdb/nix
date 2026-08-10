@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  inputs,
   mkHome,
   ...
 }:
@@ -10,14 +11,11 @@ let
   cfg = config.local.apps.remmina;
   mkUserHome = mkHome user.name;
 
-  mkConnection =
+  mkConnectionFile =
     name: conn:
     let
       settings = lib.concatStringsSep "\n" (lib.mapAttrsToList (k: v: "${k}=${toString v}") conn);
-    in
-    {
-      name = "remmina/${name}.remmina";
-      value.text = ''
+      text = ''
         [remmina]
         colordepth = 99;
         resolution_mode = 1;
@@ -27,7 +25,23 @@ let
         ignore-tls-errors = 1;
         ${settings}
       '';
-    };
+    in
+    pkgs.writeText "${name}.remmina" text;
+
+  # Remmina rewrites these files in place (e.g. to save a login password),
+  # so they must be regular, writable files rather than read-only store
+  # symlinks. Only seed the file the first time it's missing; once created
+  # it's left alone on every subsequent activation so Remmina/user changes
+  # (like saved passwords) are never overwritten or fought over.
+  mkConnectionActivation =
+    name: conn: ''
+      target="$HOME/.local/share/remmina/${name}.remmina"
+      if [ ! -e "$target" ]; then
+        mkdir -p "$HOME/.local/share/remmina"
+        install -m644 "${mkConnectionFile name conn}" "$target"
+        chmod u+w "$target"
+      fi
+    '';
 in
 {
   options.local.apps.remmina = {
@@ -42,6 +56,9 @@ in
 
   config = lib.mkIf cfg.enable (mkUserHome {
     home.packages = [ pkgs.remmina ];
-    xdg.dataFile = lib.mapAttrs' mkConnection cfg.connections;
+
+    home.activation.remminaConnections = inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] (
+      lib.concatStringsSep "\n" (lib.mapAttrsToList mkConnectionActivation cfg.connections)
+    );
   });
 }
