@@ -414,6 +414,18 @@ in
 
       services.fprintd.enable = lib.mkIf cfg.fingerprint.enable true;
 
+      # Noctalia's lockscreen authenticates passwords against the "login" PAM
+      # service while driving the fingerprint reader itself directly over
+      # D-Bus (net.reactivated.Fprint); see fingerprint.enable above. PAM's
+      # fprintAuth defaults to services.fprintd.enable, which would also
+      # insert pam_fprintd.so into that same "login" service. Since noctalia
+      # already holds the fprintd device claim, that second, PAM-driven
+      # verification attempt can't run and just blocks password auth for its
+      # ~30s timeout before falling through to pam_unix. Disable it here so
+      # password entry stays instant.
+      # https://github.com/noctalia-dev/noctalia/issues/3277
+      security.pam.services.login.fprintAuth = lib.mkIf cfg.fingerprint.enable false;
+
       programs.noctalia = {
         enable = true;
         package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
