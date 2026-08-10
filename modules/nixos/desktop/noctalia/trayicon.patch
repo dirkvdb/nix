@@ -34,7 +34,7 @@ index b36cad3..a39a4f7 100644
 @@ -171,7 +171,7 @@ TrayWidget::TrayWidget(ConfigService& config, TrayService* tray, Options options
        m_panelGridMode(options.panelGridMode),
        m_panelGridColumns(std::clamp<std::size_t>(options.panelGridColumns, 1U, 5U)),
-       m_inlineEntryGap(std::max(0.0f, options.inlineEntryGap)), m_matchAdjacentSpacing(options.matchAdjacentSpacing),
+       m_inlineEntryGap(std::max(0.0F, options.inlineEntryGap)), m_matchAdjacentSpacing(options.matchAdjacentSpacing),
 -      m_customItemSize(options.customItemSize) {
 +      m_customItemSize(options.customItemSize), m_appIconColorize(options.appIconColorize) {
    auto normalizeTokens = [](std::vector<std::string>& tokens) {
@@ -85,47 +85,6 @@ index d548875..6aaf64c 100644
                field<&Options::hiddenItems>({
                    .key = "hidden",
                }),
-diff --git a/src/shell/tray/tray_drawer_panel.cpp b/src/shell/tray/tray_drawer_panel.cpp
-index 652aaee..c2ce78e 100644
---- a/src/shell/tray/tray_drawer_panel.cpp
-+++ b/src/shell/tray/tray_drawer_panel.cpp
-@@ -39,6 +39,16 @@ std::optional<float> TrayDrawerPanel::currentDrawerItemSize() const {
-   return std::nullopt;
- }
- 
-+bool TrayDrawerPanel::currentAppIconColorize() const {
-+  if (m_config == nullptr) {
-+    return false;
-+  }
-+  if (const auto it = m_config->config().widgets.find("tray"); it != m_config->config().widgets.end()) {
-+    return it->second.getBool("app_icon_colorize", false);
-+  }
-+  return false;
-+}
-+
- float TrayDrawerPanel::preferredWidth() const {
-   const float itemSize = scaled(currentDrawerItemSize().value_or(Style::baseGlyphSize));
-   const float gap = scaled(Style::spaceXs);
-@@ -81,6 +91,7 @@ void TrayDrawerPanel::create() {
-           .inlineEntryGap = Style::spaceXs,
-           .matchAdjacentSpacing = false,
-           .customItemSize = itemSize,
-+          .appIconColorize = currentAppIconColorize(),
-       }
-   );
-   m_drawerWidget->setContentScale(contentScale());
-diff --git a/src/shell/tray/tray_drawer_panel.h b/src/shell/tray/tray_drawer_panel.h
-index e17272d..f5537a6 100644
---- a/src/shell/tray/tray_drawer_panel.h
-+++ b/src/shell/tray/tray_drawer_panel.h
-@@ -29,6 +29,7 @@ private:
-   void doUpdate(Renderer& renderer) override;
-   [[nodiscard]] std::size_t currentDrawerColumns() const;
-   [[nodiscard]] std::optional<float> currentDrawerItemSize() const;
-+  [[nodiscard]] bool currentAppIconColorize() const;
-   [[nodiscard]] std::vector<std::string> currentHiddenItems() const;
-   [[nodiscard]] std::vector<std::string> currentPinnedItems() const;
-   [[nodiscard]] std::size_t visibleItemCount() const;
 diff --git a/tests/config_validate/generated-config b/tests/config_validate/generated-config
 index 76cc767..8e05222 100644
 --- a/tests/config_validate/generated-config
