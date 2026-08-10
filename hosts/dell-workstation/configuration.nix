@@ -317,6 +317,7 @@
 
       apps = {
         aichat.enable = true;
+        bitwarden.enable = true;
         celluloid.enable = true;
         direnv.enable = true;
         ghostty.enable = true;
