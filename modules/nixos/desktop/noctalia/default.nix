@@ -53,13 +53,12 @@ let
 
     bar.default = {
       font_family = config.stylix.fonts.sansSerif.name;
-      center = lib.optionals (!hasNotch) [ "clock" ];
+      center = lib.optionals (!hasNotch) [ "clock" ] ++ [ "notifications" ];
       end = [
         "cpu"
         "ram"
         "sysmon"
         "tray"
-        "notifications"
         "clipboard"
         "network"
         "bluetooth"
@@ -284,8 +283,8 @@ let
         enabled = false;
       };
       cpu = {
-        display = "graph";
-        show_label = false;
+        visualization = "graph";
+        show_glyph = false;
         actions = {
           right = "exec ghostty -e btop";
         };
@@ -296,7 +295,8 @@ let
         show_label = false;
       };
       notifications = {
-        enabled = false;
+        enabled = true;
+        hide_when_no_unread = true;
       };
       spacer_2 = {
         interactive = false;
