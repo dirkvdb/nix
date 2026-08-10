@@ -91,6 +91,7 @@
         "es-de"
         "cemu"
         # bruno
+        "garmin-express"
         "ghostty"
         "fork"
         "microsoft-teams"
@@ -109,6 +110,11 @@
         "whatsapp"
         "zed"
         "zen"
+      ];
+
+      brews = [
+        "openconnect"
+        "ocproxy"
       ];
     };
   };

@@ -58,12 +58,12 @@ in
 
       # Restore previous session on startup so that session cookies
       # (used by Microsoft Outlook/Teams web apps) survive browser restarts.
-      (lib.mkIf (isLinux && isDesktop) {
+      (lib.mkIf (isLinux && isDesktop) (mkUserHome {
         programs.chromium = {
           enable = true;
           extraOpts.RestoreOnStartup = 1;
         };
-      })
+      }))
 
       # KeePassXC native messaging host for Chromium.
       # home-manager's programs.keepassxc module auto-adds pkgs.keepassxc to
