@@ -58,10 +58,13 @@ in
 
       # Restore previous session on startup so that session cookies
       # (used by Microsoft Outlook/Teams web apps) survive browser restarts.
+      # home-manager's programs.chromium module has no option for arbitrary
+      # preferences/policies, so set the RestoreOnStartup enterprise policy
+      # directly via a per-user managed policy file (same approach used for
+      # Vivaldi's proxy policy in modules/home/apps/vivaldi/default.nix).
       (lib.mkIf (isLinux && isDesktop) (mkUserHome {
-        programs.chromium = {
-          enable = true;
-          extraOpts.RestoreOnStartup = 1;
+        xdg.configFile."chromium/Policies/Managed/restore-on-startup.json".text = builtins.toJSON {
+          RestoreOnStartup = 1;
         };
       }))
 
