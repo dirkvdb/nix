@@ -23,6 +23,9 @@ let
   hasNotch = hostname == "macbook-pro";
   barThickness = if hasNotch then 33 else 26;
 
+  # The Outlook calendar (ICS feed) is only relevant on the dell-workstation.
+  isDellWorkstation = hostname == "dell-workstation";
+
   # stylix's base16 colors don't include the leading "#"; Noctalia's palette
   # JSON requires it.
   hex = c: "#${c}";
@@ -84,10 +87,21 @@ let
 
     calendar = {
       enabled = true;
-      account.personal_google = {
-        name = "Google Calendar";
-        type = "google";
-      };
+      account =
+        {
+          personal_google = {
+            name = "Google Calendar";
+            type = "google";
+          };
+        }
+        // lib.optionalAttrs isDellWorkstation {
+          vito_outlook = {
+            color = "tertiary";
+            name = "Vito";
+            server_url = config.sops.placeholder.vito_outlook_ics_url;
+            type = "ics";
+          };
+        };
     };
 
     control_center.hidden_tabs = [
@@ -445,13 +459,25 @@ in
         # Enables NetworkManager, Bluetooth, UPower, and a power profile service.
         recommendedServices.enable = true;
       };
+
+      # Renders config.toml with the vito_outlook calendar's ICS URL secret
+      # substituted in, so the plaintext URL never lands in the world-readable
+      # Nix store; only the placeholder token does.
+      sops.templates."noctalia-config" = {
+        path = "/home/${user.name}/.config/noctalia/config.toml";
+        owner = user.name;
+        mode = "0400";
+        content = builtins.readFile noctaliaConfigToml;
+      };
     })
     (lib.mkIf (cfg.enable && isLinux && isDesktop && !isHeadless && isHyprlandEnabled) (mkUserHome {
       # Hyprland keybindings specific to this shell (Noctalia power menu).
       xdg.configFile."hypr/bindings-noctalia.lua".source = ./bindings.lua;
 
-      # Noctalia's own settings (bar layout, theme, session actions, ...).
-      xdg.configFile."noctalia/config.toml".source = noctaliaConfigToml;
+      # Noctalia's own settings (bar layout, theme, session actions, ...) are
+      # rendered via sops.templates."noctalia-config" above instead of being
+      # symlinked directly here, since the calendar section can contain a
+      # secret (ICS feed URL).
 
       # Upstream ships no fish completions for the noctalia CLI; provide a
       # hand-maintained one (msg subcommands are queried live from the

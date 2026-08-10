@@ -56,6 +56,10 @@ in
           owner = user.name;
         };
 
+        secrets.vito_outlook_ics_url = {
+          owner = user.name;
+        };
+
         secrets.ssh_websocat_host = {
           owner = user.name;
         };
