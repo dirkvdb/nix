@@ -159,6 +159,7 @@
         direnv.enable = true;
         fladder.enable = true;
         ghostty.enable = true;
+        herdr.enable = true;
         keepassxc = {
           enable = true;
           databasePaths = [
