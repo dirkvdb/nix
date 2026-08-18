@@ -25,14 +25,6 @@ in
       nix-shell -p gdal --run "ogr2ogr -f SQLite \"$output\" \"$input\""
     '')
 
-    (pkgs.writeShellScriptBin "worktunnel" ''
-      autossh -f -M 0 -o "ServerAliveInterval 10" -D localhost:1080 -N vito
-    '')
-
-    (pkgs.writeShellScriptBin "workbrowser" ''
-      vivaldi --proxy-server=socks5://localhost:1080
-    '')
-
     # Terminal launcher script
     (pkgs.writeShellScriptBin "nixcfg-launch-terminal" ''
       exec setsid xdg-terminal-exec -- "$@"
