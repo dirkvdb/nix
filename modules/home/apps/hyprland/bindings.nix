@@ -14,6 +14,7 @@ let
   isX86 = pkgs.stdenv.isx86_64;
   vpnjumphostEnabled = config.local.services.vpnjumphost.enable;
   officeworkEnabled = config.local.services.officework.enable;
+  voxtypeEnabled = config.local.apps.voxtype.enable or false;
   mkUserHome = mkHome user.name;
 
   musicCmd =
@@ -34,6 +35,7 @@ in
       }), { description = "Music" })
       ${lib.optionalString vpnjumphostEnabled ''hl.bind("SUPER + ALT + J", hl.dsp.exec_cmd("nixcfg-toggle-vpn-jumphost"), { description = "Toggle VPN jumphost" })''}
       ${lib.optionalString officeworkEnabled ''hl.bind("SUPER + ALT + O", hl.dsp.exec_cmd("nixcfg-toggle-officework"), { description = "Toggle officework services" })''}
+      ${lib.optionalString voxtypeEnabled ''hl.bind("SUPER + SHIFT + X", hl.dsp.exec_cmd("voxtype record toggle"), { description = "Toggle dictation" })''}
     '';
   });
 }

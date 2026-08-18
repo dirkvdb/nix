@@ -26,6 +26,8 @@ let
   # The Outlook calendar (ICS feed) is only relevant on the dell-workstation.
   isDellWorkstation = hostname == "dell-workstation";
 
+  voxtypeEnabled = config.local.apps.voxtype.enable or false;
+
   # stylix's base16 colors don't include the leading "#"; Noctalia's palette
   # JSON requires it.
   hex = c: "#${c}";
@@ -56,7 +58,7 @@ let
 
     bar.default = {
       font_family = config.stylix.fonts.sansSerif.name;
-      center = lib.optionals (!hasNotch) [ "clock" ] ++ [ "notifications" ];
+      center = lib.optionals (!hasNotch) [ "clock" ] ++ [ "notifications" ] ++ lib.optionals voxtypeEnabled [ "status" ];
       end = [
         "cpu"
         "ram"
@@ -185,7 +187,7 @@ let
       temperature_night = 4500;
     };
 
-    plugins.enabled = [ ];
+    plugins.enabled = lib.optionals voxtypeEnabled [ "gabedunn/voxtype" ];
 
     notification.filter.network = {
       enabled = true;
@@ -326,6 +328,8 @@ let
       };
       # Append month + day-of-month after the time (e.g. "14:32  July 20").
       clock.format = "{:%H:%M  %e %B}";
+    } // lib.optionalAttrs voxtypeEnabled {
+      status.type = "gabedunn/voxtype:status";
     };
   };
 
