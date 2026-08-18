@@ -1233,11 +1233,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787003381,
-        "narHash": "sha256-X1plBm/3Hn9fMxVAItL92dWZCS/lWhdYiVutxLi6+50=",
+        "lastModified": 1787004351,
+        "narHash": "sha256-NlQuxYm2H1vL+j4RcWCFHIqC9caRe/o5EePW5TB/B0g=",
         "owner": "VITO-RMA",
         "repo": "vpn-jumphost",
-        "rev": "c67b0edcb2654caae1a682893984bf255dc04b32",
+        "rev": "2d9f01d42a815a5289d3df71cbf38f3f935caa00",
         "type": "github"
       },
       "original": {
@@ -1256,11 +1256,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786883935,
-        "narHash": "sha256-GE0VmDa7cLMReaNTrzYQ3sFSPUd6ARynENviHdnnUDM=",
+        "lastModified": 1787021741,
+        "narHash": "sha256-/h16jgfnGkh48iwMFPK0tY4NBLG2zp4m5HloCXstPAA=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "37dc6abfa4a2c306b131f74770b1f36288d9bf2e",
+        "rev": "fd7d5b08ac2e4da35cf908cbbf762a9276f00ddd",
         "type": "github"
       },
       "original": {
