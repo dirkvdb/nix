@@ -321,6 +321,7 @@
         celluloid.enable = true;
         direnv.enable = true;
         ghostty.enable = true;
+        herdr.enable = true;
         keepassxc = {
           enable = true;
           databasePaths = [
@@ -358,6 +359,7 @@
         sops.enable = true;
         spotify.enable = true;
         teams.enable = true;
+        voxtype.enable = true;
         vscode.enable = true;
         whatsapp.enable = true;
         winboat.enable = true;
