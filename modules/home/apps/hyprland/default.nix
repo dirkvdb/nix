@@ -62,33 +62,6 @@ in
       fi
     '';
 
-    programs.hyprlock = {
-      enable = true;
-      settings = {
-        background = {
-          blur_passes = 3;
-        };
-
-        animations.ebabled = false;
-
-        input-field = {
-          size = "650, 100";
-          position = "0, 0";
-          halign = "center";
-          valign = "center";
-
-          outline_thickness = 4;
-
-          placeholder_text = "Enter Password";
-          fail_text = "<i>$FAIL ($ATTEMPTS)</i>";
-
-          rounding = 8;
-          shadow_passes = 0;
-          fade_on_empty = false;
-        };
-      };
-    };
-
     # Enable XDG portal for screen sharing, file pickers, etc.
     xdg.portal = {
       enable = true;

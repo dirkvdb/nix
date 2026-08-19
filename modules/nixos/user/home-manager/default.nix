@@ -8,6 +8,7 @@
 let
   inherit (config.local) user;
   cfg = config.local.user.home-manager;
+  isNoctaliaEnabled = config.local.desktop.noctalia.enable or false;
 in
 {
   imports = [
@@ -24,6 +25,7 @@ in
           inputs
           system
           user
+          isNoctaliaEnabled
           ;
       };
       sharedModules = [
