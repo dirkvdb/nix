@@ -94,7 +94,7 @@ in
         nodenv = "direnv exec / fish --no-config";
       };
 
-      interactiveShellInit = lib.optionalString config.local.system.dev.enable ''
+      interactiveShellInit = lib.optionalString (config.local.system.dev.enable or false) ''
         # devenv native auto-activation (v2.1+)
         devenv hook fish | source
       '';

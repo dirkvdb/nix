@@ -154,14 +154,11 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
-    mkUserHome (
-      lib.optionalAttrs hasAnySystems {
-        home.file."ES-DE/custom_systems/es_systems.xml".text = customSystemsXml;
-      }
-      // {
-        xdg.configFile."eden/input/Moonlight.ini".source = ../../../nixos/services/sunshine/Moonlight.ini;
-      }
-    )
-  );
+  config = lib.mkIf cfg.enable (mkUserHome {
+    home.file = lib.mkIf hasAnySystems {
+      "ES-DE/custom_systems/es_systems.xml".text = customSystemsXml;
+    };
+
+    xdg.configFile."eden/input/Moonlight.ini".source = ../../../nixos/services/sunshine/Moonlight.ini;
+  });
 }
