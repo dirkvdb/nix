@@ -15,6 +15,7 @@ let
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
   isWaybarEnabled = config.local.desktop.waybar.enable or false;
   isNoctaliaEnabled = config.local.desktop.noctalia.enable or false;
+  isHyprmoncfgEnabled = config.local.services.hyprmoncfg.enable or false;
   sopsEnabled = config.local.apps.sops.enable or false;
   devWorkspaceGapSize = config.local.desktop.hyprland.devWorkspaceGapSize or 0;
   mkUserHome = mkHome user.name;
@@ -52,15 +53,19 @@ in
     xdg.configFile."hypr/settings.lua".source = ./settings.lua;
     xdg.configFile."hypr/bindings.lua".source = ./bindings.lua;
 
-    # Ensure monitors.lua exists so require("monitors") doesn't fail before
-    # hyprmoncfg writes the real file. Must be a regular file (not a store
-    # symlink) so hyprmoncfg can overwrite it.
-    home.activation.ensureMonitorsLua = inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      if [ ! -f "$HOME/.config/hypr/monitors.lua" ]; then
-        mkdir -p "$HOME/.config/hypr"
-        echo '-- Placeholder; hyprmoncfg will overwrite this.' > "$HOME/.config/hypr/monitors.lua"
-      fi
-    '';
+    xdg.configFile."hypr/hyprland.lua".force = true;
+
+    # Ensure hyprmoncfg-monitors.lua exists so the dofile() below doesn't fail
+    # before hyprmoncfg has ever applied a profile and created the real file.
+    # Must be a regular file (not a store symlink) so hyprmoncfg can overwrite it.
+    home.activation.ensureHyprmoncfgMonitorsLua = lib.mkIf isHyprmoncfgEnabled (
+      inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        if [ ! -f "$HOME/.config/hypr/hyprmoncfg-monitors.lua" ]; then
+          mkdir -p "$HOME/.config/hypr"
+          echo '-- Placeholder; hyprmoncfg will overwrite this.' > "$HOME/.config/hypr/hyprmoncfg-monitors.lua"
+        fi
+      ''
+    );
 
     # Enable XDG portal for screen sharing, file pickers, etc.
     xdg.portal = {
@@ -106,9 +111,14 @@ in
         require("bindings")
         ${lib.optionalString isWaybarEnabled ''require("bindings-waybar")''}
         ${lib.optionalString isNoctaliaEnabled ''require("bindings-noctalia")''}
-        require("monitors")
         ${lib.optionalString (devWorkspaceGapSize > 0) ''
           hl.workspace_rule({ workspace = "3", gaps_in = ${toString devWorkspaceGapSize}, gaps_out = ${toString devWorkspaceGapSize} })
+        ''}
+        ${lib.optionalString isHyprmoncfgEnabled ''
+          -- Added by hyprmoncfg: its generated monitor rules load last, so nothing before this can override the applied layout.
+          -- Statically included here (rather than left to hyprmoncfg to inject) because
+          -- hyprmoncfg's own auto-rewrite of this file is patched out; see pkgs/hyprmoncfg.
+          dofile((os.getenv("XDG_CONFIG_HOME") or os.getenv("HOME") .. "/.config") .. "/hypr/hyprmoncfg-monitors.lua")
         ''}
       '';
 
