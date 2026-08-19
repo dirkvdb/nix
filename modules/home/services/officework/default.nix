@@ -42,24 +42,8 @@ let
     };
 in
 {
-  options.local.services.officework = {
-    enable = lib.mkEnableOption "officework — auto-start work applications (Teams, Slack, Outlook)";
-
-    autostart = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Whether the officework systemd user services start automatically with the graphical session.";
-    };
-  };
-
   config = lib.mkIf cfg.enable (
     lib.mkMerge [
-      {
-        environment.systemPackages = with pkgs; [
-          teams-for-linux
-          slack
-        ];
-      }
       (mkUserHome {
         home.packages = [
           # Toggle all officework services

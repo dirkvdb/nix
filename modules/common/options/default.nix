@@ -147,6 +147,10 @@ in
     };
   };
 
+  options.local.apps.moonlight = {
+    enable = lib.mkEnableOption "Moonlight game streaming client";
+  };
+
   options.local.system.video.amd = {
     enable = lib.mkEnableOption "Enable AMD graphics support";
   };
@@ -166,6 +170,16 @@ in
 
   options.local.services.sunshine = {
     enable = lib.mkEnableOption "Sunshine game streaming";
+  };
+
+  options.local.services.officework = {
+    enable = lib.mkEnableOption "officework — auto-start work applications (Teams, Slack, Outlook)";
+
+    autostart = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether the officework systemd user services start automatically with the graphical session.";
+    };
   };
 
   options.local.system.network = {
