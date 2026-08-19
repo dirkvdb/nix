@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  isNoctaliaEnabled,
+  ...
+}:
 let
   # Use the chromium package with WideVine support from home-manager config
   chromiumPkg = config.programs.chromium.package;
@@ -92,7 +97,7 @@ in
     '')
 
     (pkgs.writeShellScriptBin "nixcfg-lock-screen" (
-      if config.local.desktop.noctalia.enable or false then
+      if isNoctaliaEnabled then
         ''
           noctalia msg session lock
         ''

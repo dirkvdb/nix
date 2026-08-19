@@ -19,6 +19,11 @@
 
   vendorHash = "sha256-gQbjvdKtO0hCXrs9RnWo1s0YeHf5W9t+8AgS2ELXlPo=";
 
+  # Temporarily disables hyprmoncfg's auto-rewrite of the root Hyprland
+  # config (hyprland.lua/.conf): it replaces a symlink there (as Home
+  # Manager manages) with a plain file. See the patch header for details.
+  patches = [ ./0001-disable-root-config-rewrite.patch ];
+
   nativeBuildInputs = [ installShellFiles ];
 
   doCheck = false;
