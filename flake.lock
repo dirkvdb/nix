@@ -420,11 +420,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786999651,
-        "narHash": "sha256-MTGMFlLDTklsXhCp4r5GXB4VAVadPdalXLvUjd/K7h0=",
+        "lastModified": 1787152495,
+        "narHash": "sha256-zWjKwcMt0h+FIr0lgn0PWVN/24+IfNf4RhfL6hId2b4=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "353742587cbaf079b3caee743115d037bc51fea6",
+        "rev": "3c3ede6ad886a6d9b0938ef19112523118fe62c2",
         "type": "github"
       },
       "original": {
@@ -628,11 +628,11 @@
         "vpn-confinement": "vpn-confinement"
       },
       "locked": {
-        "lastModified": 1786383226,
-        "narHash": "sha256-5cLjpODa1Valr3p00ReOnoiqQ3EKYjfsRZfpfcfdv0U=",
+        "lastModified": 1787151324,
+        "narHash": "sha256-5gAo7vr5uK1TZp51b1WFM3iKVn5bv8ZzjaF547qyrbg=",
         "owner": "kiriwalawren",
         "repo": "nixflix",
-        "rev": "e9c20f232d0e09e346578bf6f8a390c34952643e",
+        "rev": "e9a1017c983d66d1ef5ee9d27263e96a29ea0417",
         "type": "github"
       },
       "original": {
