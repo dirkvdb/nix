@@ -77,7 +77,7 @@ in
         man = "batman";
         nrs =
           if isStandalone then
-            "nix run home-manager/release-25.11 -- switch -b backup --flake ~/nix#${configName}"
+            "nix run home-manager/release-26.05 -- switch -b backup --flake ~/nix#${configName}"
           else if pkgs.stdenv.isDarwin then
             "nh darwin switch ~/nix${nhHostArg}"
           else
