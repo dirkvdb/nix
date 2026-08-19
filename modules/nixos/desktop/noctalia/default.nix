@@ -56,6 +56,10 @@ let
       key_file = noctaliaStorageKeyFile;
     };
 
+    brightness = {
+      sync_all_monitors = true;
+    };
+
     bar.default = {
       font_family = config.stylix.fonts.sansSerif.name;
       center = lib.optionals (!hasNotch) [ "clock" ] ++ [ "notifications" ] ++ lib.optionals voxtypeEnabled [ "status" ];
