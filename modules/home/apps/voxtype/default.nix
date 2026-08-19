@@ -66,15 +66,21 @@ in
       };
     };
 
+    systemd.user.services.voxtype.Unit.After = [ "graphical-session.target" ];
+
     # The OSD is a separate long-running process from the voxtype daemon;
     # it watches the daemon's state over its state file and shows/hides the
     # waveform overlay automatically, so it needs to stay running rather
-    # than being launched per-keypress.
+    # than being launched per-keypress. It also renders a GTK4 window, so it
+    # needs the same Wayland-session ordering as the daemon above.
     systemd.user.services.voxtype-osd = {
       Unit = {
         Description = "Voxtype dictation OSD overlay";
         PartOf = [ "default.target" ];
-        After = [ "voxtype.service" ];
+        After = [
+          "voxtype.service"
+          "graphical-session.target"
+        ];
       };
       Service = {
         Type = "exec";
