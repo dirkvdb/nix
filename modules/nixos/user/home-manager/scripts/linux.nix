@@ -91,9 +91,16 @@ in
       exit 0
     '')
 
-    (pkgs.writeShellScriptBin "nixcfg-lock-screen" ''
-      hyprlock
-    '')
+    (pkgs.writeShellScriptBin "nixcfg-lock-screen" (
+      if config.local.desktop.noctalia.enable or false then
+        ''
+          noctalia msg session lock
+        ''
+      else
+        ''
+          hyprlock
+        ''
+    ))
 
     # Toggle idle lock
     (pkgs.writeShellScriptBin "nixcfg-toggle-idle" ''

@@ -59,6 +59,33 @@ in
       # Hyprland keybindings specific to this shell (walker, swayosd).
       xdg.configFile."hypr/bindings-waybar.lua".source = ./bindings.lua;
 
+      programs.hyprlock = {
+        enable = true;
+        settings = {
+          background = {
+            blur_passes = 3;
+          };
+
+          animations.ebabled = false;
+
+          input-field = {
+            size = "650, 100";
+            position = "0, 0";
+            halign = "center";
+            valign = "center";
+
+            outline_thickness = 4;
+
+            placeholder_text = "Enter Password";
+            fail_text = "<i>$FAIL ($ATTEMPTS)</i>";
+
+            rounding = 8;
+            shadow_passes = 0;
+            fade_on_empty = false;
+          };
+        };
+      };
+
       # sunsetr provides night-light transitions on this shell (backed by
       # hyprsunset). Noctalia has its own native night light support instead.
       home.packages = [
