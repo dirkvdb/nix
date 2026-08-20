@@ -174,6 +174,7 @@
         neovim.enable = true;
         prusa-slicer.enable = true;
         qgis.enable = true;
+        voxtype.enable = true;
         remmina = {
           enable = true;
           connections = {

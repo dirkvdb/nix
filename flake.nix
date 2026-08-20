@@ -179,45 +179,17 @@
           }
         ) { };
 
-        # Patch keepassxc to include NativeMessageInstaller.patch
-        # This avoids error messages at startup that the browser connection files cannot be written
-        # They are readonly because they are managed by the Nix config
-        #
         # Also apply TrayNotificationMonochromeIcon.patch: when a secret is accessed via the
         # Secret Service API/browser integration, KeePassXC shows a desktop notification using
         # QSystemTrayIcon::showMessage() with the full-color application icon. On Linux this is
         # implemented via the StatusNotifierItem AttentionIconPixmap, causing tray hosts (e.g.
         # Noctalia) to briefly replace the configured monochrome tray icon with the colored one.
         # The patch reuses the monochrome-aware tray icon for this notification instead.
-        keepassxc = prev.keepassxc.overrideAttrs (old: {
-          patches = (old.patches or [ ]) ++ [
-            ./modules/home/apps/keepassxc/NativeMessageInstaller.patch
-            ./modules/home/apps/keepassxc/TrayNotificationMonochromeIcon.patch
-          ];
-        });
-
-        # Upgrade wluma to 4.11.0 which adds Apple Silicon ALS sensor support
-        # https://github.com/maximbaz/wluma/releases/tag/4.11.0
-        # Apply patch to ignore 0 brightness level
-        wluma = prev.wluma.overrideAttrs (old: rec {
-          patches = (old.patches or [ ]) ++ [
-            (prev.fetchpatch {
-              url = "https://github.com/max-baz/wluma/commit/d147833706eff058840fb2c53206e223380fbf3b.patch";
-              hash = "sha256-iRYYzpe7aq1/urhZjPqKQEnSTJTH5A1OjeYq+fALNeo=";
-            })
-          ];
-          version = "4.11.0";
-          src = prev.fetchFromGitHub {
-            owner = "maximbaz";
-            repo = "wluma";
-            rev = version;
-            hash = "sha256-kisxv+CYouYpVTULmjvDEGucha+/T+gQJEsGyTQkQLk=";
-          };
-          cargoDeps = prev.rustPlatform.fetchCargoVendor {
-            inherit src;
-            hash = "sha256-qL+OnnPlQoGj7gvpYegjwN42skKUsbg+FV3cnTBwNpo=";
-          };
-        });
+        # keepassxc = prev.keepassxc.overrideAttrs (old: {
+        #   patches = (old.patches or [ ]) ++ [
+        #     ./modules/home/apps/keepassxc/TrayNotificationMonochromeIcon.patch
+        #   ];
+        # });
       };
 
       hpcSystem = "x86_64-linux";
