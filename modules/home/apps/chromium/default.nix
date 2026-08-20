@@ -12,7 +12,6 @@ let
   keepassEnabled = config.local.apps.keepassxc.enable;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
-  isStandalone = config.local.home-manager.standalone or false;
   proxyPacUrl = config.local.system.network.proxy.pacUrl;
 
   # Derivation that provides the KeePassXC native messaging host JSON at the
@@ -20,20 +19,20 @@ let
   # Adding this to programs.chromium.nativeMessagingHosts merges it into the
   # symlink-join that home-manager installs at ~/.config/chromium/NativeMessagingHosts/,
   # so KeePassXC's isBrowserEnabled() check sees the file and shows the checkbox as active.
-  keepassxcChromiumHost =
-    pkgs.writeTextDir "etc/chromium/native-messaging-hosts/org.keepassxc.keepassxc_browser.json"
-      (
-        builtins.toJSON {
-          allowed_origins = [
-            "chrome-extension://pdffhmdngciaglkoonimfcmckehcpafo/"
-            "chrome-extension://oboonakemofpalcgghocfoadofidjkkk/"
-          ];
-          description = "KeePassXC integration with native messaging support";
-          name = "org.keepassxc.keepassxc_browser";
-          path = "${pkgs.keepassxc}/bin/keepassxc-proxy";
-          type = "stdio";
-        }
-      );
+  # keepassxcChromiumHost =
+  #   pkgs.writeTextDir "etc/chromium/native-messaging-hosts/org.keepassxc.keepassxc_browser.json"
+  #     (
+  #       builtins.toJSON {
+  #         allowed_origins = [
+  #           "chrome-extension://pdffhmdngciaglkoonimfcmckehcpafo/"
+  #           "chrome-extension://oboonakemofpalcgghocfoadofidjkkk/"
+  #         ];
+  #         description = "KeePassXC integration with native messaging support";
+  #         name = "org.keepassxc.keepassxc_browser";
+  #         path = "${pkgs.keepassxc}/bin/keepassxc-proxy";
+  #         type = "stdio";
+  #       }
+  #     );
 in
 {
   config = lib.mkIf (!isHeadless) (
@@ -74,9 +73,9 @@ in
       # ships lib/mozilla/…, not etc/chromium/…. We add our own derivation with
       # the JSON at the right path so it gets merged into the symlink-join that
       # home-manager builds for ~/.config/chromium/NativeMessagingHosts/.
-      (lib.mkIf (keepassEnabled && isLinux && isDesktop) (mkUserHome {
-        programs.chromium.nativeMessagingHosts = [ keepassxcChromiumHost ];
-      }))
+      # (lib.mkIf (keepassEnabled && isLinux && isDesktop) (mkUserHome {
+      #   programs.chromium.nativeMessagingHosts = [ keepassxcChromiumHost ];
+      # }))
     ]
   );
 }

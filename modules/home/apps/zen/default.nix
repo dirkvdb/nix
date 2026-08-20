@@ -52,7 +52,7 @@ in
     programs.zen-browser = {
       enable = true;
 
-      nativeMessagingHosts = lib.optionals keepassEnabled [ pkgs.keepassxc ];
+      # nativeMessagingHosts = lib.optionals keepassEnabled [ pkgs.keepassxc ];
 
       policies = {
         AutofillAddressEnabled = true;

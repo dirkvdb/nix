@@ -45,7 +45,7 @@ let
 
     [Browser]
     CustomProxyLocation=
-    Enabled=true
+    Enabled=false
   '';
 in
 {

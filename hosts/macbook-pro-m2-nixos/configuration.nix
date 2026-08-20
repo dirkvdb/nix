@@ -116,6 +116,7 @@ in
         power-profiles-daemon.enable = true;
         wluma = {
           enable = true;
+          packge = unstablePkgs.wluma;
           alsIioPath = "/sys/devices/platform/soc/2a6c00000.aop/als.1.auto";
           backlightName = "eDP-1";
           backlightPath = "/sys/class/backlight/apple-panel-bl";
