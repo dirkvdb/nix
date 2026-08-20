@@ -20,16 +20,16 @@
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "gitcomet";
-  version = "0.2.0";
+  version = "0.2.1";
 
   src = fetchFromGitHub {
     owner = "Auto-Explore";
     repo = "GitComet";
-    rev = "866913c8d136122c828a112ddd375e12df687a5a";
-    hash = "sha256-kwb/XtqP6/4P7wcn4s+4fzpwZflGfReQ+QdKfBjf4hw=";
+    rev = "a080af0358ecc1e765f9a7a92d895321082598e7";
+    hash = "sha256-VRd3HHYuHfOebAT3yC5Tv4CJdFUJkZJHQ8vTzY78OQ0=";
   };
 
-  cargoHash = "sha256-XIpliBQh5RU3KiJxA6gbtrpfEsi9Iqt+x2OAINWNwNg=";
+  cargoHash = "sha256-L/UXaXC1zymbNfv7SGmOYSvUy/767mAWqL+3jwJwWcE=";
 
   nativeBuildInputs = [
     cmake
@@ -57,20 +57,25 @@ rustPlatform.buildRustPackage (finalAttrs: {
   postInstall = ''
     install -Dm644 assets/linux/gitcomet.desktop \
       $out/share/applications/gitcomet.desktop
+    substituteInPlace $out/share/applications/gitcomet.desktop \
+      --replace-fail 'Exec=gitcomet' "Exec=$out/bin/gitcomet"
     install -Dm644 assets/gitcomet-512.png \
       $out/share/icons/hicolor/512x512/apps/gitcomet.png
     wrapProgram $out/bin/gitcomet \
       --unset DISPLAY \
-      --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [
-        alsa-lib
-        libdrm
-        libva
-        libxkbcommon
-        mesa
-        vulkan-loader
-        wayland
-        libxcb
-      ]}"
+      --set GITCOMET_NO_DESKTOP_INSTALL 1 \
+      --prefix LD_LIBRARY_PATH : "${
+        lib.makeLibraryPath [
+          alsa-lib
+          libdrm
+          libva
+          libxkbcommon
+          mesa
+          vulkan-loader
+          wayland
+          libxcb
+        ]
+      }"
   '';
 
   meta = {
