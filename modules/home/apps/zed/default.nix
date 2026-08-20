@@ -119,7 +119,7 @@ in
           unstablePkgs.zed-editor;
 
       extensions = [
-        "cargo-tom"
+        "cargo-appraiser"
         "catppuccin-icons"
         "color-highlight"
         "dockerfile"
@@ -333,6 +333,9 @@ in
                 language_server = {
                   name = "tombi";
                 };
+              };
+              inlay_hints = {
+                enabled = true;
               };
             };
           };
