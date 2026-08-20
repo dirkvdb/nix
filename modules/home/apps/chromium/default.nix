@@ -9,7 +9,7 @@ let
   inherit (config.local) user;
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable;
-  keepassEnabled = config.local.apps.keepassxc.enable;
+  bitwardenEnabled = config.local.apps.bitwarden.enable;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
   proxyPacUrl = config.local.system.network.proxy.pacUrl;
@@ -42,8 +42,8 @@ in
         programs.chromium = {
           enable = true;
 
-          extensions = lib.mkIf keepassEnabled [
-            "oboonakemofpalcgghocfoadofidjkkk" # keepassxc
+          extensions = lib.mkIf bitwardenEnabled [
+            "nngceckbapebfimnlniiiahkandclblb" # keepassxc
           ];
 
           commandLineArgs = lib.optionals (proxyPacUrl != null) [
