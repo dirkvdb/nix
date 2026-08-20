@@ -11,7 +11,6 @@ let
   isLinux = pkgs.stdenv.isLinux;
   isAarch64Linux = pkgs.stdenv.isLinux && pkgs.stdenv.isAarch64;
   isDesktop = config.local.desktop.enable;
-  keepassEnabled = config.local.apps.keepassxc.enable;
   mkUserHome = mkHome user.name;
   proxyPacUrl = config.local.system.network.proxy.pacUrl;
 
