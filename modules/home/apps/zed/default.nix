@@ -331,6 +331,7 @@ in
             Rust = {
               language_servers = [
                 "!cargo-appraiser"
+                "..."
               ];
             };
             TOML = {
