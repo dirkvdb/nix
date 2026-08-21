@@ -36,6 +36,23 @@ in
     hardware.i2c.enable = true;
     services.ddccontrol.enable = true;
 
+    # nixpkgs' ddccontrol module pulls in config.boot.kernelPackages.ddcci-driver,
+    # which currently fails to build against newer kernels (e.g. 7.2): the kernel
+    # dropped strncpy() entirely (strnlen() et al remain, so this isn't a missing
+    # #include; the symbol is just gone). Swap in strscpy(), the kernel's own
+    # drop-in replacement, which is already declared via the headers ddcci.c
+    # transitively includes.
+    # https://github.com/NixOS/nixpkgs/issues/554041
+    # Force our patched build over the upstream module's (unpatched) one until
+    # this is fixed upstream.
+    boot.extraModulePackages = lib.mkForce [
+      (config.boot.kernelPackages.ddcci-driver.overrideAttrs (old: {
+        postPatch = (old.postPatch or "") + ''
+          sed -i 's/strncpy(buf, device->/strscpy(buf, device->/g' ddcci/ddcci.c
+        '';
+      }))
+    ];
+
     boot.extraModprobeConfig = lib.mkIf (cfg.delay != null) ''
       options ddcci delay=${toString cfg.delay}
     '';
