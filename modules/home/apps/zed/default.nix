@@ -328,6 +328,11 @@ in
                 };
               };
             };
+            Rust = {
+              language_servers = [
+                "!cargo-appraiser"
+              ];
+            };
             TOML = {
               formatter = {
                 language_server = {
