@@ -70,6 +70,7 @@ in
           User = "dirk";
           Port = 6987;
           RequestTTY = "yes";
+          WarnWeakCrypto = "no-pq-kex";
           SetEnv = {
             TERM = "vt100";
           };
