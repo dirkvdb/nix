@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  unstablePkgs,
   mkHome,
   ...
 }:
@@ -12,6 +13,7 @@ in
 {
   options.local.services.wluma = {
     enable = lib.mkEnableOption "wluma automatic brightness adjustment";
+
 
     alsIioPath = lib.mkOption {
       type = lib.types.str;
@@ -53,6 +55,7 @@ in
   config = lib.mkIf cfg.enable (mkUserHome {
     services.wluma = {
       enable = true;
+      package = unstablePkgs.wluma;
       settings = {
         als.iio = {
           path = cfg.alsIioPath;
