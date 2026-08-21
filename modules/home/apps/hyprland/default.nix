@@ -36,6 +36,12 @@ let
     # owning the Wayland PRIMARY selection. Known upstream bug, unresolved:
     # https://github.com/Linus789/wl-clip-persist/issues/3
     "wl-clip-persist --clipboard regular"
+    # xdg-desktop-portal frequently fails to wire up OpenURI <-> AppChooser
+    # to the -gtk/-hyprland backends on first start, so xdg-open (used by
+    # Zed and others to open links) silently no-ops until the service is
+    # restarted. Known upstream bug, unresolved:
+    # https://github.com/NixOS/nixpkgs/issues/532476
+    "sh -c 'sleep 5 && systemctl --user restart xdg-desktop-portal.service'"
   ]
   ++ lib.optionals config.local.services.sunshine.enable [
     "hyprctl output create headless SUNSHINE && systemctl --user restart sunshine.service"
