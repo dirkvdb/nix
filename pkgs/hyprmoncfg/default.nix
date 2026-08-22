@@ -8,21 +8,16 @@
 
 (buildGoModule.override { go = go_1_26; }) (finalAttrs: {
   pname = "hyprmoncfg";
-  version = "1.14.2";
+  version = "1.15.0";
 
   src = fetchFromGitHub {
     owner = "crmne";
     repo = "hyprmoncfg";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-vp7iMuCSncxpp0EnlnzsO/FBTRdCOy85OuvSI4umCkE=";
+    hash = "sha256-M4kxX7Qt9CZqhATb0ti54CWbk9+q2FhP7onPac1rm2U=";
   };
 
   vendorHash = "sha256-gQbjvdKtO0hCXrs9RnWo1s0YeHf5W9t+8AgS2ELXlPo=";
-
-  # Temporarily disables hyprmoncfg's auto-rewrite of the root Hyprland
-  # config (hyprland.lua/.conf): it replaces a symlink there (as Home
-  # Manager manages) with a plain file. See the patch header for details.
-  patches = [ ./0001-disable-root-config-rewrite.patch ];
 
   nativeBuildInputs = [ installShellFiles ];
 
