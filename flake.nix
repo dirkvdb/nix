@@ -153,6 +153,7 @@
         es-de = prev.callPackage ./pkgs/es-de { freeimage = final.freeimage-pinned; };
         decentpaste = prev.callPackage ./pkgs/decentpaste { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
+        siffra = prev.callPackage ./pkgs/siffra { };
         # Gitcomet requires a newer rustc than the stable channel ships;
         # build it with nixpkgs-unstable's toolchain instead.
         gitcomet = prev.callPackage ./pkgs/gitcomet {
