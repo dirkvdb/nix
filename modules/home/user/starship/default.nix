@@ -63,7 +63,7 @@ in
         add_newline = false;
         palette = "default";
 
-        format = "[╭](fg:separator)$status$hostname\${custom.wsl}$directory$git_branch$nix_shell\${custom.pixi}$cmd_duration$line_break[╰](fg:separator)$character";
+        format = "[╭](fg:separator)$status$hostname\${custom.wsl}$directory$git_branch$nix_shell\${custom.pixi}$rust$cmd_duration$line_break[╰](fg:separator)$character";
 
         palettes.default = {
           prompt_ok = "#${colors.base0B}";
