@@ -21,22 +21,6 @@
         "type": "github"
       }
     },
-    "avd-fw": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1785077389,
-        "narHash": "sha256-cq/gOgmbCg5IX0GSiS7Z5lBhpursB1Num8LSANw5fpI=",
-        "owner": "AsahiLinux",
-        "repo": "avd-fw",
-        "rev": "5e34aca83906f12ef3c2bfacb6712797de4bb7d5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "AsahiLinux",
-        "repo": "avd-fw",
-        "type": "github"
-      }
-    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -579,11 +563,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1787421204,
-        "narHash": "sha256-8Tlb8D07EvNJ37S7wPYn/+lZ/eBRIvfLvrne3pvjd2A=",
+        "lastModified": 1787507561,
+        "narHash": "sha256-7Hydh9RTatdMOVKgHno3ELWgsda1zeklSMGVWJqMiWs=",
         "owner": "xddxdd",
         "repo": "nix-cachyos-kernel",
-        "rev": "8b175fd266e94395ee7b1edc4578f7c8ecc74626",
+        "rev": "dbae8dc454556968710401643aa2c6867d166440",
         "type": "github"
       },
       "original": {
@@ -807,11 +791,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1787374233,
-        "narHash": "sha256-VZY8AkhbcDhxBSXsdUlHK7oS8ez5nJ2vzYzkkNI35ok=",
+        "lastModified": 1787441254,
+        "narHash": "sha256-/7oA/UPfrk0ubngvJjDleROuiNdA7y4d+5qNcDeQuCA=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "731960f9bf65e7df135092590b2aa2f1407dcf0f",
+        "rev": "ae9396d21aa0dcfe9419f6bdc3bf415eba30a8b7",
         "type": "github"
       },
       "original": {
@@ -852,11 +836,11 @@
     },
     "nixpkgs_6": {
       "locked": {
-        "lastModified": 1787204541,
-        "narHash": "sha256-OURZPknrTjQrlNyxPdqzyqmU/81Wes1CUP/Ft1Rv/YI=",
+        "lastModified": 1787414105,
+        "narHash": "sha256-WncT27+3BOkgTaJZLnCsf3LcYf9RXMuR9ONSN4rzQ7s=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5880666fd9eb563038431edb35c2d0aa595884e6",
+        "rev": "a9e6d84f9c2f9012f5fe7d964a7851352300e61a",
         "type": "github"
       },
       "original": {
@@ -921,11 +905,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787432068,
-        "narHash": "sha256-IwY4Dfd5xCnNo66Jx2CCyVRkIuZ9ub59v8+E6kVVlIY=",
+        "lastModified": 1787514376,
+        "narHash": "sha256-wS5a1tumQcmwamA4BpSvf2Idd/P/zOQNU1hY53EzfoM=",
         "owner": "NotAShelf",
         "repo": "nvf",
-        "rev": "45ad22485d23bf131e3543eb7de16d0adf274e8b",
+        "rev": "460dad9e777df4008309f1d731a47b299dc7b41e",
         "type": "github"
       },
       "original": {
@@ -960,7 +944,6 @@
     "root": {
       "inputs": {
         "apple-silicon": "apple-silicon",
-        "avd-fw": "avd-fw",
         "darwin": "darwin",
         "home-manager": "home-manager",
         "hyprexpose": "hyprexpose",
