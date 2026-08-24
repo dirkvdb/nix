@@ -154,11 +154,6 @@
         decentpaste = prev.callPackage ./pkgs/decentpaste { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         siffra = prev.callPackage ./pkgs/siffra { };
-        # Gitcomet requires a newer rustc than the stable channel ships;
-        # build it with nixpkgs-unstable's toolchain instead.
-        gitcomet = prev.callPackage ./pkgs/gitcomet {
-          rustPlatform = (unstablePkgs prev.stdenv.hostPlatform.system).rustPlatform;
-        };
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
         hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;
 

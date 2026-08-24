@@ -230,11 +230,12 @@
 
     environment.systemPackages = with pkgs; [
       appimage-run
-      gitcomet
       freecad
       gnumeric
       onlyoffice-desktopeditors
       orca-slicer
+      unstablePkgs.ferdium
+      unstablePkgs.freetube
       unstablePkgs.openscad
     ];
   };

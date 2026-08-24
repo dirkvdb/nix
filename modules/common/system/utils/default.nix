@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  unstablePkgs,
   ...
 }:
 let
@@ -46,6 +47,7 @@ in
       ++ lib.optionals cfg.sysadmin sysadmin
       ++ lib.optionals hasDesktop [
         sublime-merge
+        unstablePkgs.gitcomet
         pinta # image editor
       ];
   };
