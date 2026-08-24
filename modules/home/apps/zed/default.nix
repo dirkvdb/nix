@@ -212,14 +212,19 @@ in
             play_sound_when_agent_done = "always";
             inline_assistant_model = {
               provider = "copilot_chat";
-              model = "claude-sonnet-5";
+              model = "gpt-5.6-luna";
+            };
+            sanbox_permissions = {
+              allow_unsandboxed = true;
             };
             tool_permissions = {
               default = "allow";
             };
             default_model = {
+              effort = "medium";
+              enable_thinking = true;
               provider = "copilot_chat";
-              model = "claude-sonnet-5";
+              model = "gpt-5.6-luna";
             };
           };
           edit_predictions = {

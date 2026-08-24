@@ -375,8 +375,10 @@
     environment.systemPackages = with pkgs; [
       intel-gpu-tools # intel_gpu_top and related tools
       appimage-run
+      gitcomet
       gnumeric
       onlyoffice-desktopeditors
+      siffra
       unstablePkgs.ferdium
       qtcreator
     ];
