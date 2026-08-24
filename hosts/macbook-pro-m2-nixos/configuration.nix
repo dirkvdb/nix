@@ -134,6 +134,7 @@ in
         celluloid.enable = true;
         direnv.enable = true;
         fladder.enable = true;
+        herdr.enable = true;
         mqtt.enable = true;
         foliate.enable = true;
         localsend.enable = true;
