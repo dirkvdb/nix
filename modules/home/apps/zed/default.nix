@@ -214,7 +214,7 @@ in
               provider = "copilot_chat";
               model = "gpt-5.6-luna";
             };
-            sanbox_permissions = {
+            sandbox_permissions = {
               allow_unsandboxed = true;
             };
             tool_permissions = {
