@@ -15,6 +15,7 @@ in
     mimeTypes = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [
+        "application/x-qgis-project-container"
         "application/x-esri-shape"
         "image/tiff"
         "image/x-tiff"
