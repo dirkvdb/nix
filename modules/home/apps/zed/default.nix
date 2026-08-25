@@ -38,6 +38,7 @@ let
       ];
     };
   });
+
 in
 {
   options.local.apps.zed = {
@@ -101,6 +102,8 @@ in
   };
 
   config = lib.mkIf (cfg.enable) (mkUserHome {
+    home.sessionVariables.CODEX_PATH = "${unstablePkgs.codex}/bin/codex";
+
     xdg.mimeApps.defaultApplications = lib.genAttrs cfg.mimeTypes (_: "dev.zed.Zed.desktop");
 
     stylix.targets.zed.enable = false;
@@ -119,7 +122,6 @@ in
           unstablePkgs.zed-editor;
 
       extensions = [
-        "cargo-appraiser"
         "catppuccin-icons"
         "color-highlight"
         "dockerfile"
@@ -147,7 +149,6 @@ in
           just-lsp
           bash-language-server
           shellcheck
-          codex-acp
           groovy-language-server
           lua-language-server
           mcp-nixos
@@ -207,6 +208,7 @@ in
             sidebar_side = "right";
             use_modifier_to_send = false;
             default_profile = "write";
+            show_turn_stats = true;
             play_sound_when_agent_done = "always";
             inline_assistant_model = {
               provider = "copilot_chat";
@@ -366,19 +368,13 @@ in
           };
 
           agent_servers = {
-            codex-nix = lib.mkMerge [
-              {
-                type = "custom";
-                default_config_options = {
-                  mode = "full-access";
-                  reasoning_effort = "high";
-                };
-              }
-              (lib.mkIf (!pkgs.stdenv.isDarwin) {
-                command = "${unstablePkgs.codex-acp}/bin/codex-acp";
-              })
-            ];
-
+            codex-acp = {
+              default_config_options = {
+                reasoning_effort = "medium";
+                model = "gpt-5.6-luna";
+              };
+              type = "registry";
+            };
             copilot = lib.mkMerge [
               {
                 type = "custom";
