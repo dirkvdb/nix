@@ -49,6 +49,7 @@ in
         sublime-merge
         unstablePkgs.gitcomet
         pinta # image editor
+        siffra # calculator
       ];
   };
 

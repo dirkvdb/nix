@@ -376,7 +376,6 @@
       intel-gpu-tools # intel_gpu_top and related tools
       appimage-run
       onlyoffice-desktopeditors
-      siffra
       unstablePkgs.ferdium
       qtcreator
     ];

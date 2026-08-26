@@ -20,16 +20,16 @@
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "siffra";
-  version = "0.3.2";
+  version = "0.3.3";
 
   src = fetchFromGitHub {
     owner = "ImpossibleReality";
     repo = "Siffra";
-    rev = "v0.3.2";
-    hash = "sha256-G5kG8xvwSQR3bFggSLadK3CvNlbrvsT6QgqFDD7TPfc=";
+    rev = "v${finalAttrs.version}";
+    hash = "sha256-l36+72ta/wrnPCW3hULDZOb3S57YlyGAK6N5M8CIVrg=";
   };
 
-  cargoHash = "sha256-SF042IVbjiEngn+MIpLmL99ZSSkwhelA452AwZuCpzo=";
+  cargoHash = "sha256-9OkUKphA0t7vcxrWoR6590b+R9y3EDyWov0Oli9pW6g=";
 
   nativeBuildInputs = [
     cmake

@@ -273,7 +273,6 @@ in
       decentpaste
       vulkan-tools
       brightnessctl
-      siffra
     ];
   };
 }
