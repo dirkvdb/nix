@@ -85,6 +85,9 @@ in
           "vito.local"
           "int.vito.be"
           "int.energyville.be"
+          "outlook.office365.com"
+          "outlook.cloud.microsoft.com"
+          "login.microsoftonline.com"
         ];
         description = "Domains routed through the VPN tunnel.";
       };
