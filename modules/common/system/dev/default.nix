@@ -28,6 +28,7 @@ in
       ]
       ++ lib.optionals pkgs.stdenv.isLinux [
         unstablePkgs.codex
+        unstablePkgs.ccusage
         unstablePkgs.github-copilot-cli
       ];
 
