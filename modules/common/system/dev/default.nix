@@ -32,11 +32,10 @@ in
       ];
 
     home-manager.users.${user.name} = {
-      # TODO: Enable this when it hits stable home manager
-      # programs.devenv = {
-      #   enable = true;
-      #   package = unstablePkgs.devenv;
-      # };
+      programs.devenv = {
+        enable = true;
+        package = unstablePkgs.devenv;
+      };
 
       programs.lazygit = {
         enable = true;
