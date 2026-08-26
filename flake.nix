@@ -261,6 +261,8 @@
         };
     in
     {
+      overlays.default = overlay;
+
       nixosConfigurations = {
         mini = mkNixos {
           system = "x86_64-linux";
