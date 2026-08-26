@@ -19,7 +19,7 @@ let
         [remmina]
         colordepth = 99;
         resolution_mode = 1;
-        quality = 2;
+        quality = 9;
         network = "autodetect";
         sound = "off";
         ignore-tls-errors = 1;
