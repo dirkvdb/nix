@@ -27,6 +27,7 @@ in
       enable = true;
       package = unstablePkgs.herdr;
       settings = {
+        onboarding = false;
         keys.prefix = "ctrl+s";
         ui = {
           sidebar_start_collapsed = true;
