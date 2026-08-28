@@ -41,9 +41,17 @@ switch_on_boot:
 update:
     nix flake update
 
-# Check all configurations for validity
+# Check all configurations that do not require host-local firmware
 check:
-    nix flake check -L
+    nix flake show
+    nix eval --raw .#nixosConfigurations.mini.config.system.build.toplevel.type
+    nix eval --raw .#nixosConfigurations.wsl.config.system.build.toplevel.type
+    nix eval --raw .#nixosConfigurations.mediastation.config.system.build.toplevel.type
+    nix eval --raw .#nixosConfigurations.macmini.config.system.build.toplevel.type
+    nix eval --raw .#nixosConfigurations.dell-workstation.config.system.build.toplevel.type
+    nix eval --raw .#nixosConfigurations.installer.config.system.build.toplevel.type
+    nix eval --raw .#darwinConfigurations.macbook-pro-osx.system.type
+    nix eval --raw .#homeConfigurations.hpc.activationPackage.type
 
 # Build a bootable installer ISO with all configs baked in
 # Cleanup task available in just 1.54

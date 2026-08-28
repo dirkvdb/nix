@@ -5,7 +5,7 @@ on:
 
 jobs:
   check:
-    name: "nix flake check"
+    name: "validate flake configurations"
     runs-on: ubuntu-latest
     permissions:
       actions: write
@@ -25,8 +25,17 @@ jobs:
           purge-created: 0
           purge-last-accessed: P1DT12H
           purge-primary-key: never
-      - name: "nix flake check"
-        run: nix flake check -L
+      - name: "Validate flake outputs"
+        run: |
+          nix flake show
+          nix eval --raw .#nixosConfigurations.mini.config.system.build.toplevel.type
+          nix eval --raw .#nixosConfigurations.wsl.config.system.build.toplevel.type
+          nix eval --raw .#nixosConfigurations.mediastation.config.system.build.toplevel.type
+          nix eval --raw .#nixosConfigurations.macmini.config.system.build.toplevel.type
+          nix eval --raw .#nixosConfigurations.dell-workstation.config.system.build.toplevel.type
+          nix eval --raw .#nixosConfigurations.installer.config.system.build.toplevel.type
+          nix eval --raw .#darwinConfigurations.macbook-pro-osx.system.type
+          nix eval --raw .#homeConfigurations.hpc.activationPackage.type
   # build:
   #   name: "nix build"
   #   runs-on: ubuntu-latest
