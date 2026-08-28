@@ -11,6 +11,8 @@ let
 in
 {
   nix = {
+    daemonCPUSchedPolicy = "idle";
+    daemonIOSchedClass = "idle";
     optimise.automatic = true;
   };
 

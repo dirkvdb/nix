@@ -211,6 +211,7 @@
         # Intel Core Ultra 7 265H: 6 P-cores + 8 E-cores + 2 LP E-cores = 16 cores.
         # Arrow Lake has no SMT, so this is also the logical processor count.
         cpu.cores = 16;
+        performance.enable = true;
         binfmt.enable = true;
 
         nix = {
