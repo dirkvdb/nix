@@ -8,6 +8,8 @@
 }:
 let
   inherit (config.local) user;
+
+  asahiPeripheralFirmwareAvailable = builtins.pathExists "/boot/vendorfw/firmware.cpio";
 in
 {
   imports = [
@@ -163,12 +165,19 @@ in
       };
     };
 
-    hardware.asahi.enable = true;
-    hardware.asahi.peripheralFirmwareDirectory = (fetchTree {
-      type = "path";
-      path = "/boot/vendorfw/";
-      narHash = "sha256-OiVIifGtvtUTTergzAy03jrxjRtD4cg3QS+CgyY8VOM=";
-    }).outPath;
+    hardware.asahi = {
+      enable = true;
+      extractPeripheralFirmware = asahiPeripheralFirmwareAvailable;
+      peripheralFirmwareDirectory =
+        if asahiPeripheralFirmwareAvailable then
+          (fetchTree {
+            type = "path";
+            path = "/boot/vendorfw/";
+            narHash = "sha256-OiVIifGtvtUTTergzAy03jrxjRtD4cg3QS+CgyY8VOM=";
+          }).outPath
+        else
+          null;
+    };
 
     assertions = [
       {
