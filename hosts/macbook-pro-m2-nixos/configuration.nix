@@ -8,6 +8,12 @@
 }:
 let
   inherit (config.local) user;
+
+  asahiPeripheralFirmware = builtins.tryEval (fetchTree {
+    type = "path";
+    path = "/boot/vendorfw/";
+    narHash = "sha256-OiVIifGtvtUTTergzAy03jrxjRtD4cg3QS+CgyY8VOM=";
+  });
 in
 {
   imports = [
@@ -162,13 +168,12 @@ in
       };
     };
 
-    # Disable peripheral firmware extraction
-    hardware.asahi.enable = true;
-    hardware.asahi.peripheralFirmwareDirectory = (fetchTree {
-      type = "path";
-      path = "/boot/vendorfw/";
-      narHash = "sha256-OiVIifGtvtUTTergzAy03jrxjRtD4cg3QS+CgyY8VOM=";
-    }).outPath;
+    hardware.asahi = {
+      enable = true;
+      extractPeripheralFirmware = asahiPeripheralFirmware.success;
+      peripheralFirmwareDirectory =
+        if asahiPeripheralFirmware.success then asahiPeripheralFirmware.value.outPath else null;
+    };
 
     assertions = [
       {
