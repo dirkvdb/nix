@@ -45,19 +45,13 @@ in
   config = lib.mkIf (!isHeadless) (mkUserHome {
     xdg.dataFile = lib.mkMerge [
       {
-        "icons/hicolor/256x256/apps/chatgpt.png".source = ./icons/ChatGPT.png;
+
         "icons/hicolor/256x256/apps/youtube.png".source = ./icons/youtube.png;
         "icons/hicolor/256x256/apps/gmail.png".source = ./icons/gmail.png;
         "icons/hicolor/256x256/apps/outlook.png".source = ./icons/outlook.png;
         "icons/hicolor/256x256/apps/slack.png".source = ./icons/slack.png;
       }
 
-      (mkWebApp {
-        name = "ChatGPT";
-        url = "https://chatgpt.com/";
-        comment = "ChatGPT Web Application";
-        icon = "chatgpt";
-      })
 
       (mkWebApp {
         name = "YouTube";
