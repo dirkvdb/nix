@@ -69,7 +69,7 @@ in
       (with pkgs; [
         age
         autossh
-        dust
+        dua
         fd
         fzf
         gh
