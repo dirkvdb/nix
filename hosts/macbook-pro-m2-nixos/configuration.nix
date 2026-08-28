@@ -164,7 +164,11 @@ in
 
     # Disable peripheral firmware extraction
     hardware.asahi.enable = true;
-    hardware.asahi.peripheralFirmwareDirectory = ./firmware;
+    hardware.asahi.peripheralFirmwareDirectory = (fetchTree {
+      type = "path";
+      path = "/boot/vendorfw/";
+      narHash = "sha256-OiVIifGtvtUTTergzAy03jrxjRtD4cg3QS+CgyY8VOM=";
+    }).outPath;
 
     assertions = [
       {
@@ -178,9 +182,6 @@ in
     ];
 
 
-    # Inject ALS calibration firmware not handled by asahi-fwextract
-    hardware.firmware = [
-    ];
 
     # Swap fn and left ctrl keys on MacBook keyboard
     # fnmode=2 Use function keys by default
