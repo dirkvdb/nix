@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-chatgpt.url = "github:amielke/nixpkgs/chatgpt-linux";
     # Pinned nixpkgs with freeimage (removed from newer nixpkgs due to vulnerabilities).
     # Needed to build ES-DE from source.
     nixpkgs-freeimage.url = "github:nixos/nixpkgs/nixos-24.11";
@@ -121,6 +122,32 @@
           config.permittedInsecurePackages = [ "electron-40.10.5" ];
         };
 
+      chatgptPkgs =
+        system:
+        let
+          pkgs = import inputs.nixpkgs-chatgpt {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        in
+        if system == "aarch64-linux" then
+          pkgs
+          // {
+            # OpenAI replaces the artifact behind its `latest` URL without changing the PR.
+            chatgpt = pkgs.chatgpt.overrideAttrs (old: {
+              src = pkgs.fetchurl {
+                url = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_arm64.deb";
+                hash = "sha256-F3X3sZt2hmTQaXxUTr3bdRT3TPVZ35FG5JisAj8lSSU=";
+              };
+              autoPatchelfIgnoreMissingDeps = old.autoPatchelfIgnoreMissingDeps ++ [
+                "libc++_shared.so"
+                "liblog.so"
+              ];
+            });
+          }
+        else
+          pkgs;
+
       # Custom packages overlay
       overlay = final: prev: {
         # Override aquamarine to 0.12.1 to fix split-node GPU render node fallback on Apple Silicon
@@ -217,6 +244,7 @@
           specialArgs = {
             inherit inputs system self;
             unstablePkgs = unstablePkgs system;
+            chatgptPkgs = chatgptPkgs system;
             mkHome = userName: attrs: { home-manager.users.${userName} = attrs; };
           };
           modules = [
@@ -251,6 +279,7 @@
           specialArgs = {
             inherit inputs system;
             unstablePkgs = unstablePkgs system;
+            chatgptPkgs = chatgptPkgs system;
             mkHome = userName: attrs: { home-manager.users.${userName} = attrs; };
           };
           modules = [

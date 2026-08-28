@@ -8,12 +8,6 @@
 }:
 let
   inherit (config.local) user;
-
-  asahiPeripheralFirmware = builtins.tryEval (fetchTree {
-    type = "path";
-    path = "/boot/vendorfw/";
-    narHash = "sha256-OiVIifGtvtUTTergzAy03jrxjRtD4cg3QS+CgyY8VOM=";
-  });
 in
 {
   imports = [
@@ -138,6 +132,7 @@ in
       apps = {
         aichat.enable = true;
         celluloid.enable = true;
+        chatgpt.enable = true;
         direnv.enable = true;
         fladder.enable = true;
         herdr.enable = true;
@@ -168,12 +163,12 @@ in
       };
     };
 
-    hardware.asahi = {
-      enable = true;
-      extractPeripheralFirmware = asahiPeripheralFirmware.success;
-      peripheralFirmwareDirectory =
-        if asahiPeripheralFirmware.success then asahiPeripheralFirmware.value.outPath else null;
-    };
+    hardware.asahi.enable = true;
+    hardware.asahi.peripheralFirmwareDirectory = (fetchTree {
+      type = "path";
+      path = "/boot/vendorfw/";
+      narHash = "sha256-OiVIifGtvtUTTergzAy03jrxjRtD4cg3QS+CgyY8VOM=";
+    }).outPath;
 
     assertions = [
       {

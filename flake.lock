@@ -696,6 +696,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-chatgpt": {
+      "locked": {
+        "lastModified": 1786535352,
+        "narHash": "sha256-TnJy1c/DmShAseM50msMidJYpV88LH7d85aIY0+wN1A=",
+        "owner": "amielke",
+        "repo": "nixpkgs",
+        "rev": "532a0b6c6aa61d75b22ef0ebc9063925f6c56cd5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "amielke",
+        "ref": "chatgpt-linux",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-freeimage": {
       "locked": {
         "lastModified": 1751274312,
@@ -956,6 +972,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_6",
+        "nixpkgs-chatgpt": "nixpkgs-chatgpt",
         "nixpkgs-freeimage": "nixpkgs-freeimage",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "noctalia": "noctalia",
