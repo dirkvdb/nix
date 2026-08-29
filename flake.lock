@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "ai-usagebar": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787969788,
+        "narHash": "sha256-QqPe+vxvada47lyPivtCiPqOt3fHG8QJG1IL2AIgwa0=",
+        "owner": "akitaonrails",
+        "repo": "ai-usagebar",
+        "rev": "7de99ca9fbb28fc2921b4d3ba848c1946fa941b8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "akitaonrails",
+        "repo": "ai-usagebar",
+        "type": "github"
+      }
+    },
     "apple-silicon": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -543,11 +563,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787204703,
-        "narHash": "sha256-9ofRgydxFmX4LZZtGyAIdZ88Lni0W68KhlgdUQZWJ0I=",
+        "lastModified": 1788024384,
+        "narHash": "sha256-BVkd6vsHeAzxQaaxPN0uUqSXrpd85zlWi9uZYH5WWfk=",
         "owner": "noamsto",
         "repo": "nix-amd-ai",
-        "rev": "d246ddf529705ba8b99b1e9176a0b3c394ce1359",
+        "rev": "3d56792f7f02a9fd5e68fc6571f463191d8bf041",
         "type": "github"
       },
       "original": {
@@ -563,11 +583,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1787881163,
-        "narHash": "sha256-6MMlOsBhfWn+KJOlZyyRNR0G/PVMjEfNyQoW0KnKBYI=",
+        "lastModified": 1787965830,
+        "narHash": "sha256-bA1wGQ8pQCPsSMW81MuyBNZDe2LQRI5FMZnMTSYnhUY=",
         "owner": "xddxdd",
         "repo": "nix-cachyos-kernel",
-        "rev": "290b62ec266d15827ab79852483e434eeba912e0",
+        "rev": "20ad7b0f65b60eef3dbe6efefff462989032842b",
         "type": "github"
       },
       "original": {
@@ -807,11 +827,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1787848627,
-        "narHash": "sha256-t3XgpB1iCGH5mR6cXVbwC9II2JdajaPqnlIHvh/unlI=",
+        "lastModified": 1787960808,
+        "narHash": "sha256-RakhMc5yg3VtTkK1Zn/G0wU921ZEwy3J9vJH25dbSeU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "7e0fb958bbf98c835549713f15243aabcf9ce741",
+        "rev": "b0aa699cd56b87a41d3e66d89f827c7fbc35ed8d",
         "type": "github"
       },
       "original": {
@@ -959,6 +979,7 @@
     },
     "root": {
       "inputs": {
+        "ai-usagebar": "ai-usagebar",
         "apple-silicon": "apple-silicon",
         "darwin": "darwin",
         "home-manager": "home-manager",
