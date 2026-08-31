@@ -3,6 +3,7 @@
   config,
   pkgs,
   unstablePkgs,
+  inputs,
   ...
 }:
 let
@@ -25,6 +26,7 @@ in
         unstablePkgs.sccache
         unstablePkgs.devenv
         unstablePkgs.pixi
+        inputs.ai-usagebar.packages.${pkgs.stdenv.hostPlatform.system}.default
       ]
       ++ lib.optionals pkgs.stdenv.isLinux [
         unstablePkgs.codex
@@ -52,6 +54,23 @@ in
       xdg.configFile."pixi/config.toml".text = ''
         [shell]
         change-ps1 = false
+      '';
+
+      xdg.configFile."ai-usagebar/config.toml".text = ''
+        [ui]
+        primary = "openai"
+
+        [anthropic]
+        enabled = false
+
+        [openai]
+        enabled = true
+
+        [zai]
+        enabled = false
+
+        [openrouter]
+        enabled = false
       '';
     };
   };

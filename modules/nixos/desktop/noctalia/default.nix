@@ -27,6 +27,7 @@ let
   isDellWorkstation = hostname == "dell-workstation";
 
   voxtypeEnabled = config.local.apps.voxtype.enable or false;
+  devUtilsEnabled = config.local.system.utils.enable && config.local.system.utils.dev;
 
   # stylix's base16 colors don't include the leading "#"; Noctalia's palette
   # JSON requires it.
@@ -60,6 +61,12 @@ let
       sync_all_monitors = true;
     };
 
+    plugin_settings = lib.optionalAttrs devUtilsEnabled {
+      "felipeartur/ai-usagebar" = {
+        panel_open_near_click = true;
+      };
+    };
+
     bar.default = {
       font_family = config.stylix.fonts.sansSerif.name;
       center = lib.optionals (!hasNotch) [ "clock" ] ++ [ "notifications" ] ++ lib.optionals voxtypeEnabled [ "status" ];
@@ -85,7 +92,8 @@ let
         "launcher"
         "workspaces"
         "spacer_2"
-      ] ++ lib.optionals hasNotch [ "clock" ];
+      ] ++ lib.optionals devUtilsEnabled [ "bar" ]
+       ++ lib.optionals hasNotch [ "clock" ];
     };
 
     battery.warning_threshold = 5;
@@ -191,7 +199,7 @@ let
       temperature_night = 4500;
     };
 
-    plugins.enabled = lib.optionals voxtypeEnabled [ "gabedunn/voxtype" ];
+    plugins.enabled = lib.optionals voxtypeEnabled [ "gabedunn/voxtype" ] ++ lib.optionals devUtilsEnabled [ "felipeartur/ai-usagebar" ];
 
     notification.filter.network = {
       enabled = true;
@@ -332,8 +340,12 @@ let
       };
       # Append month + day-of-month after the time (e.g. "14:32  July 20").
       clock.format = "{:%H:%M  %e %B}";
-    } // lib.optionalAttrs voxtypeEnabled {
+    }
+    // lib.optionalAttrs voxtypeEnabled {
       status.type = "gabedunn/voxtype:status";
+    }
+    // lib.optionalAttrs devUtilsEnabled {
+      bar.type = "felipeartur/ai-usagebar:bar";
     };
   };
 

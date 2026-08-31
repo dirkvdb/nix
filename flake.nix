@@ -10,6 +10,10 @@
     nixpkgs-freeimage.url = "github:nixos/nixpkgs/nixos-24.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    ai-usagebar = {
+      url = "github:akitaonrails/ai-usagebar";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # prebuilt database for nix-index (find packages for missing binaries)
     nix-index-database = {
