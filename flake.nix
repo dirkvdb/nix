@@ -169,7 +169,7 @@
             chatgpt = pkgs.chatgpt.overrideAttrs (_old: {
               src = pkgs.fetchurl {
                 url = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_amd64.deb";
-                hash = "sha256-IbIulcDEOj8RTz7TJpKr7cY49AV6CPmMmINuLT6aZx4=";
+                hash = "sha256-NVSwAixs+1EzJvQ/0R9xiDWncIasTXyi/z67ui1Mf0U=";
               };
               # autoPatchelf moves PT_INTERP beyond detect-libc's 2 KiB scan.
               # Its process.report fallback trips Electron's CFI, so use the

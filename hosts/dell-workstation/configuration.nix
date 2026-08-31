@@ -320,6 +320,7 @@
         aichat.enable = true;
         bitwarden.enable = true;
         celluloid.enable = true;
+        chatgpt.enable = true;
         direnv.enable = true;
         ghostty.enable = true;
         herdr.enable = true;
