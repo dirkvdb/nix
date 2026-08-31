@@ -152,10 +152,35 @@
                 "libc++_shared.so"
                 "liblog.so"
               ];
+              # autoPatchelf moves PT_INTERP beyond detect-libc's 2 KiB scan.
+              # Its process.report fallback trips Electron's CFI, so use the
+              # glibc watcher. The fork's custom unpack phase puts the files
+              # below source/ rather than at the derivation root.
+              postUnpack = ''
+                grep -aFq 'const family = familySync();' source/usr/lib/chatgpt/resources/app.asar
+                sed -i "s|const family = familySync();|const family = 'glibc'     ;|" source/usr/lib/chatgpt/resources/app.asar
+              '';
             });
           }
         else
-          pkgs;
+          pkgs
+          // {
+            # OpenAI replaces the artifact behind its `latest` URL without changing the PR.
+            chatgpt = pkgs.chatgpt.overrideAttrs (_old: {
+              src = pkgs.fetchurl {
+                url = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_amd64.deb";
+                hash = "sha256-IbIulcDEOj8RTz7TJpKr7cY49AV6CPmMmINuLT6aZx4=";
+              };
+              # autoPatchelf moves PT_INTERP beyond detect-libc's 2 KiB scan.
+              # Its process.report fallback trips Electron's CFI, so use the
+              # glibc watcher. The fork's custom unpack phase puts the files
+              # below source/ rather than at the derivation root.
+              postUnpack = ''
+                grep -aFq 'const family = familySync();' source/usr/lib/chatgpt/resources/app.asar
+                sed -i "s|const family = familySync();|const family = 'glibc'     ;|" source/usr/lib/chatgpt/resources/app.asar
+              '';
+            });
+          };
 
       # Custom packages overlay
       overlay = final: prev: {

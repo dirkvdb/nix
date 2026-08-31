@@ -155,6 +155,7 @@
       apps = {
         aichat.enable = true;
         celluloid.enable = true;
+        chatgpt.enable = true;
         bitwarden.enable = true;
         direnv.enable = true;
         fladder.enable = true;
@@ -238,6 +239,7 @@
       unstablePkgs.ferdium
       unstablePkgs.freetube
       unstablePkgs.openscad
+      unstablePkgs.openlogi
     ];
   };
 }
