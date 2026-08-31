@@ -199,6 +199,7 @@
         sops.enable = true;
         spotify.enable = true;
         teams.enable = true;
+        tether.enable = true;
         vscode.enable = true;
         whatsapp.enable = true;
         winboat.enable = true;

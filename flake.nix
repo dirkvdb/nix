@@ -101,6 +101,11 @@
       url = "github:noctalia-dev/noctalia/v5.0.0-beta.10";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    tether = {
+      url = "github:zackb/tether";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -185,6 +190,7 @@
         decentpaste = prev.callPackage ./pkgs/decentpaste { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         siffra = prev.callPackage ./pkgs/siffra { };
+        tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
         hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;
 

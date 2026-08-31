@@ -1001,6 +1001,7 @@
         "silent-sddm": "silent-sddm",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
+        "tether": "tether",
         "vpn-jumphost": "vpn-jumphost",
         "zen-browser": "zen-browser"
       }
@@ -1142,6 +1143,26 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tether": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1788143994,
+        "narHash": "sha256-0+t69CA7QB6rMzB4dXGSm8zGIdoTDQGAS6K/FZ3ixrA=",
+        "owner": "zackb",
+        "repo": "tether",
+        "rev": "d6316fe88aaeac177323d65c059defabedf6f8be",
+        "type": "github"
+      },
+      "original": {
+        "owner": "zackb",
+        "repo": "tether",
         "type": "github"
       }
     },
