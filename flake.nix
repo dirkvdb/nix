@@ -146,7 +146,7 @@
             chatgpt = pkgs.chatgpt.overrideAttrs (old: {
               src = pkgs.fetchurl {
                 url = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_arm64.deb";
-                hash = "sha256-F3X3sZt2hmTQaXxUTr3bdRT3TPVZ35FG5JisAj8lSSU=";
+                hash = "sha256-El42Ui1Dx1vXlYR3hGumsc3fLrGc78tX3agL4XQvkX8=";
               };
               autoPatchelfIgnoreMissingDeps = old.autoPatchelfIgnoreMissingDeps ++ [
                 "libc++_shared.so"
