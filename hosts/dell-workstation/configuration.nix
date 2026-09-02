@@ -347,6 +347,7 @@
           keyfilePath = "${config.local.user.homeDir}/.local/share/desktop.key";
         };
         neovim.enable = true;
+        onlyoffice.enable = true;
         qgis.enable = true;
         remmina = {
           enable = true;
@@ -393,7 +394,6 @@
       intel-gpu-tools # intel_gpu_top and related tools
       appimage-run
       make-slack-great-again
-      onlyoffice-desktopeditors
       unstablePkgs.ferdium
       qtcreator
     ];

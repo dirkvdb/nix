@@ -174,6 +174,7 @@
         moonlight.enable = true;
         mqtt.enable = true;
         neovim.enable = true;
+        onlyoffice.enable = true;
         prusa-slicer.enable = true;
         qgis.enable = true;
         voxtype.enable = true;
@@ -235,7 +236,6 @@
       appimage-run
       freecad
       gnumeric
-      onlyoffice-desktopeditors
       orca-slicer
       unstablePkgs.ferdium
       unstablePkgs.freetube
