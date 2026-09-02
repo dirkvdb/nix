@@ -36,6 +36,10 @@ in
           owner = user.name;
         };
 
+        secrets.fastpotify_web_client_id = {
+          owner = user.name;
+        };
+
         secrets.copilot_github_token = {
           owner = user.name;
         };

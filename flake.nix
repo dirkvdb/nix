@@ -106,6 +106,11 @@
       url = "github:zackb/tether";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    fastpotify = {
+      url = "github:crmne/fastpotify";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -216,6 +221,35 @@
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         siffra = prev.callPackage ./pkgs/siffra { };
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
+        fastpotify =
+          inputs.fastpotify.packages.${prev.stdenv.hostPlatform.system}.fastpotify.overrideAttrs
+            (old: {
+              # Upstream currently omits hashes for its Git-based Cargo dependencies
+              # and the X11 headers needed while compiling its bundled libprojectM.
+              buildInputs = (old.buildInputs or [ ]) ++ [ prev.libx11 ];
+              cargoDeps =
+                (prev.rustPlatform.importCargoLock {
+                  lockFile = "${inputs.fastpotify}/Cargo.lock";
+                  outputHashes = {
+                    "librespot-audio-0.8.0" = "sha256-TkHdN/dugdmK5iWmcvxGhz+0Cynki4/nNpp85F/qF/0=";
+                    "projectm-sys-1.2.3" = "sha256-sgI6IOCpQUvdc5acQ1wjCM5mhfz2EPZmoeuyNLGB5UI=";
+                  };
+                }).overrideAttrs
+                  (cargoOld: {
+                    # projectm-sys only searches $prefix/lib, while libprojectM
+                    # defaults to installing into $prefix/lib64 on Linux.
+                    buildCommand = cargoOld.buildCommand + ''
+                      cp -RL "$out/projectm-sys-1.2.3" projectm-sys-1.2.3
+                      chmod -R u+w projectm-sys-1.2.3
+                      substituteInPlace projectm-sys-1.2.3/build.rs \
+                        --replace-fail \
+                          '.define("BUILD_SHARED_LIBS", build_shared_libs) // static/dynamic' \
+                          '.define("BUILD_SHARED_LIBS", build_shared_libs).define("CMAKE_INSTALL_LIBDIR", "lib") // static/dynamic'
+                      rm "$out/projectm-sys-1.2.3"
+                      mv projectm-sys-1.2.3 "$out/projectm-sys-1.2.3"
+                    '';
+                  });
+            });
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
         hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;
 
