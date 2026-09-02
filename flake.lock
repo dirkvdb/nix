@@ -168,11 +168,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1788348594,
-        "narHash": "sha256-J7/nhxlJYg/+8YFSbRZTwykPfQTSsrTMGUyr1cGIwTQ=",
+        "lastModified": 1788360033,
+        "narHash": "sha256-FSjnxbcgBmTL8UsVRfQt21tKIwdEAGdgTjU2mlX4EZc=",
         "owner": "crmne",
         "repo": "fastpotify",
-        "rev": "5a59d0b01d10610c72f717a7e54ecb7108c36c86",
+        "rev": "0983ec4eac46e8329d8f1f1d94b42290221ef865",
         "type": "github"
       },
       "original": {
@@ -461,11 +461,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788317453,
-        "narHash": "sha256-BTVJDWIuGa5ffxQEG5WujOOm3eXPw3gZX42Wvm32gb8=",
+        "lastModified": 1788355065,
+        "narHash": "sha256-gAz5oTI7ur34CfuakQduiQd/2ZhO62Bn2XXg08nZYYQ=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "b8350fcdf54ccf553e46408053b1ac5b7038c18b",
+        "rev": "d9d750e4fc11c10cab2da677bdd31e427f3a3a71",
         "type": "github"
       },
       "original": {
@@ -893,11 +893,11 @@
     },
     "nixpkgs_6": {
       "locked": {
-        "lastModified": 1788187754,
-        "narHash": "sha256-bu1QxmXKmPuvBLN7bHP355OV9Qo13x9WCiRDH62CqRM=",
+        "lastModified": 1788297115,
+        "narHash": "sha256-Z+vUNbfd2FIKkWOTkcT7RYlh3oFCnig/d2eXD1SWf2E=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5dfba6236110080a54247d6460bc2ff5dda939cc",
+        "rev": "a3116115851d68b8952a2a4221cc25a84e56b532",
         "type": "github"
       },
       "original": {
@@ -998,6 +998,26 @@
         "type": "github"
       }
     },
+    "ram": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1788361411,
+        "narHash": "sha256-EAx/qVO+D5wXEEUQf5bdmsX6RuD2lvNjrp3v86XaHvU=",
+        "owner": "dirkvdb",
+        "repo": "ram",
+        "rev": "f0732e1554b8a73fa6e1a5225510a152a25fbd3d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dirkvdb",
+        "repo": "ram",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "ai-usagebar": "ai-usagebar",
@@ -1020,6 +1040,7 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "noctalia": "noctalia",
         "nvf": "nvf",
+        "ram": "ram",
         "silent-sddm": "silent-sddm",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
