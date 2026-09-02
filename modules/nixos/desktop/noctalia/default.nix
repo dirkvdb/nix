@@ -93,7 +93,6 @@ let
         "workspaces"
         "spacer_2"
       ] ++ lib.optionals devUtilsEnabled [
-        "bar_2"
         "bar"
       ] ++ lib.optionals hasNotch [ "clock" ];
     };
@@ -323,12 +322,8 @@ let
       bar = {
         extras = "none";
         type = "felipeartur/ai-usagebar:bar";
-        vendor = "openai";
-      };
-      bar_2 = {
-        extras = "none";
-        type = "felipeartur/ai-usagebar:bar";
-        vendor = "copilot";
+        vendor = "auto";
+        provider_limit = 2;
       };
     };
   };
