@@ -134,7 +134,6 @@ in
         celluloid.enable = true;
         chatgpt.enable = true;
         direnv.enable = true;
-        fladder.enable = true;
         herdr.enable = true;
         mqtt.enable = true;
         foliate.enable = true;
