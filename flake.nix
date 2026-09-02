@@ -218,6 +218,7 @@
           legacyPkgs.freeimage;
         es-de = prev.callPackage ./pkgs/es-de { freeimage = final.freeimage-pinned; };
         decentpaste = prev.callPackage ./pkgs/decentpaste { };
+        make-slack-great-again = prev.callPackage ./pkgs/make-slack-great-again { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         siffra = prev.callPackage ./pkgs/siffra { };
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
