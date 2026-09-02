@@ -92,8 +92,10 @@ let
         "launcher"
         "workspaces"
         "spacer_2"
-      ] ++ lib.optionals devUtilsEnabled [ "bar" ]
-       ++ lib.optionals hasNotch [ "clock" ];
+      ] ++ lib.optionals devUtilsEnabled [
+        "bar_2"
+        "bar"
+      ] ++ lib.optionals hasNotch [ "clock" ];
     };
 
     battery.warning_threshold = 5;
@@ -318,7 +320,16 @@ let
       status.type = "gabedunn/voxtype:status";
     }
     // lib.optionalAttrs devUtilsEnabled {
-      bar.type = "felipeartur/ai-usagebar:bar";
+      bar = {
+        extras = "none";
+        type = "felipeartur/ai-usagebar:bar";
+        vendor = "openai";
+      };
+      bar_2 = {
+        extras = "none";
+        type = "felipeartur/ai-usagebar:bar";
+        vendor = "copilot";
+      };
     };
   };
 
@@ -376,6 +387,57 @@ let
           magenta = hex colors.base0E;
           cyan = hex colors.base0C;
           white = hex colors.base07;
+        };
+      };
+    };
+
+    # Light variant — Rosé Pine Dawn cream surface, biscuit primary accent,
+    # all text/chrome from the everforest warm-gray scale (no purple).
+    light = {
+      # Dark charcoal primary (everforest base00) — scheme-aware, no hardcoded hex.
+      mPrimary = hex colors.base00;
+      mOnPrimary = "#faf4ed";           # cream text on dark charcoal
+      mSecondary = hex colors.base04;   # everforest warm tan
+      mOnSecondary = hex colors.base01; # everforest dark warm gray
+      mTertiary = hex colors.base0A;    # everforest warm yellow
+      mOnTertiary = hex colors.base01;
+      mError = hex colors.base08;
+      mOnError = hex colors.base01;
+      mSurface = "#faf4ed";              # Rosé Pine Dawn base — warm cream
+      mOnSurface = hex colors.base01;    # everforest #2d3035 — dark warm gray
+      # Warm stone-gray panels: same temperature as the cream bg, no blue cast.
+      mSurfaceVariant = "#e5e1db";
+      mOnSurfaceVariant = hex colors.base03; # everforest #67645f — warm muted
+      mOutline = hex colors.base04;      # everforest #948b7e — warm tan border
+      mShadow = hex colors.base03;       # everforest #67645f — warm shadow
+      mHover = "#d5cfc7";               # slightly darker warm gray
+      mOnHover = hex colors.base01;
+      terminal = {
+        background = "#faf4ed";
+        foreground = hex colors.base01;  # dark warm gray
+        cursor = hex colors.base01;
+        cursorText = "#faf4ed";
+        selectionBg = "#d5cfc7";
+        selectionFg = hex colors.base01;
+        normal = {
+          black = hex colors.base01;     # dark warm gray
+          red = hex colors.base08;
+          green = hex colors.base0B;
+          yellow = hex colors.base0A;
+          blue = "#7d9aaa";             # desaturated slate-teal, no purple
+          magenta = hex colors.base0E;
+          cyan = hex colors.base0C;
+          white = "#e5e1db";            # warm stone — matches panel bg
+        };
+        bright = {
+          black = hex colors.base03;     # everforest #67645f — warm muted
+          red = hex colors.base08;
+          green = hex colors.base0B;
+          yellow = hex colors.base0A;
+          blue = "#7d9aaa";
+          magenta = hex colors.base0E;
+          cyan = hex colors.base0C;
+          white = "#faf4ed";            # cream — brightest white
         };
       };
     };

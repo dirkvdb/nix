@@ -58,12 +58,15 @@ in
 
       xdg.configFile."ai-usagebar/config.toml".text = ''
         [ui]
-        primary = "openai"
+        primary = "copilot"
 
         [anthropic]
         enabled = false
 
         [openai]
+        enabled = true
+
+        [copilot]
         enabled = true
 
         [zai]
