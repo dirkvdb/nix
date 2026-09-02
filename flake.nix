@@ -10,6 +10,11 @@
     nixpkgs-freeimage.url = "github:nixos/nixpkgs/nixos-24.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    ram = {
+      url = "github:dirkvdb/ram";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     ai-usagebar = {
       url = "github:akitaonrails/ai-usagebar";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -221,6 +226,7 @@
         make-slack-great-again = prev.callPackage ./pkgs/make-slack-great-again { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         siffra = prev.callPackage ./pkgs/siffra { };
+        ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
         fastpotify = inputs.fastpotify.packages.${prev.stdenv.hostPlatform.system}.fastpotify;
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;

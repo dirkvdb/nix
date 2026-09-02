@@ -37,6 +37,7 @@ in
         file
         fzf
         micro
+        ram
         rsync
         ripgrep
         zip
