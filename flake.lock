@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788125279,
-        "narHash": "sha256-evw9YON8wLQ39ocCRlAYjbHVUAw/VNnjuiAXBgr4y44=",
+        "lastModified": 1788372637,
+        "narHash": "sha256-KM7tG1YasWs+ew5dlKvQtb66iHlrEF1Dc7G0Eg0tZso=",
         "owner": "akitaonrails",
         "repo": "ai-usagebar",
-        "rev": "c1414d77da87213588b4f1dadc7655e40a2190f8",
+        "rev": "5caebadf33feeb39c449c0362462842df9b84189",
         "type": "github"
       },
       "original": {
@@ -168,11 +168,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1788360033,
-        "narHash": "sha256-FSjnxbcgBmTL8UsVRfQt21tKIwdEAGdgTjU2mlX4EZc=",
+        "lastModified": 1788363536,
+        "narHash": "sha256-qHi+w10aKrrWXs/SJmEx3mMoxLZcfYQZfFoU3y1ubsw=",
         "owner": "crmne",
         "repo": "fastpotify",
-        "rev": "0983ec4eac46e8329d8f1f1d94b42290221ef865",
+        "rev": "60ff32b8789466a3bc2f21432a096a48c64974b1",
         "type": "github"
       },
       "original": {
@@ -1005,11 +1005,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788361411,
-        "narHash": "sha256-EAx/qVO+D5wXEEUQf5bdmsX6RuD2lvNjrp3v86XaHvU=",
+        "lastModified": 1788372002,
+        "narHash": "sha256-OQuz3/VmZ3Z2CvkLGxVc4X/K/DYZXucZLRsHF3ljog4=",
         "owner": "dirkvdb",
         "repo": "ram",
-        "rev": "f0732e1554b8a73fa6e1a5225510a152a25fbd3d",
+        "rev": "a5d35c5b241f4ca634e683d347fc46220497c1c2",
         "type": "github"
       },
       "original": {
@@ -1217,11 +1217,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788319572,
-        "narHash": "sha256-UkPxhrNIz8XCG20eoXzLWGIoYyJxb5Mrnzc1TpiOmNE=",
+        "lastModified": 1788371645,
+        "narHash": "sha256-7DVWf4ZBcdwDd+/hI1wGDj3NTSvHpHJWNKixzXzac94=",
         "owner": "zackb",
         "repo": "tether",
-        "rev": "ef8911cb5b4e89318f490323525fdaf53ab4e6dd",
+        "rev": "e684ef836a26725c915f81678d1dda73adebedde",
         "type": "github"
       },
       "original": {
