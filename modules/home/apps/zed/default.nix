@@ -152,6 +152,7 @@ in
           groovy-language-server
           lua-language-server
           mcp-nixos
+          uv # for mcp server launch support
           bubblewrap
         ]
       );

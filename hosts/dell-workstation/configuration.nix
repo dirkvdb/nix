@@ -153,6 +153,20 @@
       set -gx ARTIFACTORY_TOKEN (cat ${config.sops.secrets.artifactory_token.path} | string trim)
     '';
 
+    home-manager.users.dirk.programs.mcp = {
+      enable = true;
+      servers.jira = {
+        command = "uvx";
+        args = [ "mcp-atlassian" ];
+        env = {
+          HTTPS_PROXY = "socks5://127.0.0.1:1080";
+          JIRA_URL = "https://jira.vito.be";
+          JIRA_PERSONAL_TOKEN.file = config.sops.secrets.jira_personal_token.path;
+        };
+      };
+    };
+    home-manager.users.dirk.programs.zed-editor.enableMcpIntegration = true;
+
     # Intel iGPU drives the compositor. The NVIDIA dGPU is available for
     # offload only; list it second so Hyprland prefers the iGPU.
     # AQ_DRM_DEVICES is colon-separated, so use colon-free udev symlinks instead
@@ -378,6 +392,7 @@
     environment.systemPackages = with pkgs; [
       intel-gpu-tools # intel_gpu_top and related tools
       appimage-run
+      make-slack-great-again
       onlyoffice-desktopeditors
       unstablePkgs.ferdium
       qtcreator

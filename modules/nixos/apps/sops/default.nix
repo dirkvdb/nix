@@ -44,6 +44,10 @@ in
           owner = user.name;
         };
 
+        secrets.jira_personal_token = {
+          owner = user.name;
+        };
+
         secrets.artifactory_token = {
           owner = user.name;
         };
