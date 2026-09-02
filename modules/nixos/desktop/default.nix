@@ -48,10 +48,7 @@ in
         lcdfilter = "none";
       };
 
-      hinting = {
-        enable = true;
-        style = "slight"; # or "none" if you prefer shape fidelity
-      };
+      hinting.enable = false;
     };
 
     xdg.terminal-exec = {
