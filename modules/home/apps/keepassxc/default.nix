@@ -14,6 +14,7 @@ let
   keepassxcConfig = ''
     [FdoSecrets]
     Enabled=true
+    ShowNotification=false
     ConfirmAccessItem=false
     ConfirmDeleteItem=false
 
