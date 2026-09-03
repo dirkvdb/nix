@@ -94,7 +94,7 @@ let
         "spacer_2"
       ] ++ lib.optionals devUtilsEnabled [
         "bar"
-      ] ++ lib.optionals hasNotch [ "clock" ];
+      ] ++ lib.optionals hasNotch [ "spacer_3" "clock" ];
     };
 
     battery.warning_threshold = 5;
@@ -301,6 +301,11 @@ let
         hide_when_no_unread = true;
       };
       spacer_2 = {
+        interactive = false;
+        length = 15;
+        type = "spacer";
+      };
+      spacer_3 = {
         interactive = false;
         length = 15;
         type = "spacer";
