@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788372637,
-        "narHash": "sha256-KM7tG1YasWs+ew5dlKvQtb66iHlrEF1Dc7G0Eg0tZso=",
+        "lastModified": 1788446369,
+        "narHash": "sha256-Bd4U5g9xfpCJ+thlilODiG53tLC4Wir62FBqboWMj4E=",
         "owner": "akitaonrails",
         "repo": "ai-usagebar",
-        "rev": "5caebadf33feeb39c449c0362462842df9b84189",
+        "rev": "6c85bd3da670d9afe195d2357aa691ab9b61c721",
         "type": "github"
       },
       "original": {
@@ -168,11 +168,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1788427088,
-        "narHash": "sha256-bMHYmwoJzLF3JvNzOX9gJ78UVKAhN0CDdZHoZCH4YFc=",
+        "lastModified": 1788450257,
+        "narHash": "sha256-M30lC4rve4DhnFUs980936P9xOHRTWJJFJOIOt45I5E=",
         "owner": "crmne",
         "repo": "fastpotify",
-        "rev": "a3b88781a0ee8fd9735d381a1ff954d6b26e32e7",
+        "rev": "5259ed5dbfd877c2501de0e011b86847c9e208d5",
         "type": "github"
       },
       "original": {
@@ -584,11 +584,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788426355,
-        "narHash": "sha256-7fbKkIz2tugWkNQ0k4kLMN3epUt4bcEqyejg78l5c4M=",
+        "lastModified": 1788446820,
+        "narHash": "sha256-VzSdwH7HV1u2nxEPaLKLp9UydoZIDd2MNC6xyHPHXFQ=",
         "owner": "noamsto",
         "repo": "nix-amd-ai",
-        "rev": "ed5b0d202267db6e1dfec39018ce4955ab5d596c",
+        "rev": "7a739c04c33e9abf9a8ccd39fd81d65cebb5f449",
         "type": "github"
       },
       "original": {
