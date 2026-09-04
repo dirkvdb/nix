@@ -394,6 +394,7 @@
       intel-gpu-tools # intel_gpu_top and related tools
       appimage-run
       make-slack-great-again
+      orrery
       unstablePkgs.ferdium
       qtcreator
     ];

@@ -223,6 +223,7 @@
         make-slack-great-again = prev.callPackage ./pkgs/make-slack-great-again { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         siffra = prev.callPackage ./pkgs/siffra { };
+        orrery = prev.callPackage ./pkgs/orrery { };
         ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
         fastpotify = inputs.fastpotify.packages.${prev.stdenv.hostPlatform.system}.fastpotify;
