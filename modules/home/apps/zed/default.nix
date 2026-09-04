@@ -398,6 +398,11 @@ in
                 ];
               })
             ];
+            opencode = {
+              type = "custom";
+              command = "${unstablePkgs.opencode}/bin/opencode";
+              args = [ "acp" ];
+            };
           };
         }
       ];

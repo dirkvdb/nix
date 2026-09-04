@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   mkHome,
   unstablePkgs,
   ...
@@ -23,7 +24,14 @@ in
           "openai"
           "github-copilot"
         ];
+        permission = {
+          external_directory."~/.cargo/registry/**" = "allow";
+          read."~/.cargo/registry/**" = "allow";
+          edit."~/.cargo/registry/**" = "deny";
+        };
       };
     };
+
+    home.packages = lib.optional (!config.local.headless && pkgs.stdenv.isLinux) unstablePkgs.opencode-desktop;
   });
 }
