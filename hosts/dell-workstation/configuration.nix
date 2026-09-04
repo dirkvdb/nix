@@ -347,6 +347,7 @@
           keyfilePath = "${config.local.user.homeDir}/.local/share/desktop.key";
         };
         neovim.enable = true;
+        opencode.enable = true;
         onlyoffice.enable = true;
         qgis.enable = true;
         remmina = {

@@ -174,6 +174,7 @@
         moonlight.enable = true;
         mqtt.enable = true;
         neovim.enable = true;
+        opencode.enable = true;
         onlyoffice.enable = true;
         prusa-slicer.enable = true;
         qgis.enable = true;

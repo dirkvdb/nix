@@ -140,6 +140,7 @@ in
         localsend.enable = true;
         moonlight.enable = true;
         neovim.enable = true;
+        opencode.enable = true;
         vscode.enable = true;
         zathura.enable = true;
         zed.enable = true;
