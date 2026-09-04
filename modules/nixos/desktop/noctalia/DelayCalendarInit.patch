@@ -25,3 +25,19 @@
  
    // LocationService is the single source of "where am I": push its resolved coordinates to the
    // weather service, night light, and theme auto mode. Manual latitude/longitude and fixed
+--- a/src/security/secret_store.cpp
++++ b/src/security/secret_store.cpp
+@@ -269,9 +269,9 @@
+           }
+ 
+           rawError = nullptr;
+-          const auto unlockFlags =
+-              static_cast<SecretSearchFlags>(SECRET_SEARCH_ALL | SECRET_SEARCH_UNLOCK | SECRET_SEARCH_LOAD_SECRETS);
++          const auto retryFlags =
++              static_cast<SecretSearchFlags>(SECRET_SEARCH_ALL | SECRET_SEARCH_LOAD_SECRETS);
+           SecretItemListPtr unlockedItems(
+-              secret_service_search_sync(nullptr, &schema(), table.get(), unlockFlags, cancellable, &rawError)
++              secret_service_search_sync(nullptr, &schema(), table.get(), retryFlags, cancellable, &rawError)
+           );
+           error.reset(rawError);
+           if (error == nullptr) {
