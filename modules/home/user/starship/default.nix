@@ -63,7 +63,7 @@ in
         add_newline = false;
         palette = "default";
 
-        format = "[╭](fg:separator)$status$hostname\${custom.wsl}$directory$git_branch$nix_shell\${custom.pixi}$rust$cmd_duration$line_break[╰](fg:separator)$character";
+        format = "[╭](fg:separator)$status$hostname\${custom.wsl}$directory$git_branch$nix_shell\${custom.pixi}\${custom.rust}$cmd_duration$line_break[╰](fg:separator)$character";
 
         palettes.default = {
           prompt_ok = "#${colors.base0B}";
@@ -75,6 +75,7 @@ in
           directory = "${theme.uiAccentColor}";
           nixshell = "#${colors.base0E}";
           pixishell = "#${colors.base0A}";
+          rust = "#${colors.base09}";
           gitbranch = "#${colors.base05}";
           duration = "#${colors.base0A}";
           status = "#${colors.base08}";
@@ -102,6 +103,16 @@ in
           when = ''[ -n "$PIXI_PROJECT_NAME" ]'';
           command = ''echo "$PIXI_PROJECT_NAME"'';
           format = "[─](fg:separator)[](fg:pixishell)[](fg:icon bg:pixishell)[](fg:pixishell bg:background)[ $output](bg:background)[](fg:background)";
+        };
+
+        # The built-in Rust module prefers rustup's configured toolchain over
+        # the rustc selected by devenv. Read rustc from the active PATH instead.
+        custom.rust = {
+          command = "rustc --version | cut -d' ' -f2";
+          when = "command -v rustc >/dev/null 2>&1";
+          detect_files = [ "Cargo.toml" ];
+          detect_extensions = [ "rs" ];
+          format = "[─](fg:separator)[](fg:rust)[󱘗](fg:icon bg:rust)[](fg:rust bg:background)[ v$output](bg:background)[](fg:background)";
         };
 
         git_branch = {
