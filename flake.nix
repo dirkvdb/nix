@@ -113,7 +113,7 @@
     };
 
     fastpotify = {
-      url = "github:crmne/fastpotify";
+      url = "github:crmne/fastpotify/v0.6.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
