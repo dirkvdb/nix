@@ -286,6 +286,7 @@ in
 
     environment.systemPackages = with pkgs; [
       decentpaste
+      make-slack-great-again
       vulkan-tools
       brightnessctl
     ];
