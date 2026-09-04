@@ -178,6 +178,9 @@ in
           autosave = "on_focus_change";
           colorize_brackets = true;
           scroll_sensitivity = 3.0;
+          markdown_preview = {
+            limit_content_width = false;
+          };
 
           ui_font_size = 13.0;
           ui_font_family = "RobotoMono Nerd Font Propo";
