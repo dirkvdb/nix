@@ -229,6 +229,7 @@ hl.window_rule({ match = { class = "(sublime_merge)" }, workspace = "6" })
 hl.window_rule({ match = { class = "(slack)" }, workspace = "7" })
 hl.window_rule({ match = { class = "(outlook-for-linux|chrome-outlook\\.office365\\.com__.*)" }, workspace = "8 silent" })
 hl.window_rule({ match = { class = "(teams-for-linux)" }, workspace = "8 silent" })
+hl.window_rule({ match = { class = "(ferdium)" }, workspace = "8 silent" })
 
 -- Fullscreen border color indicator
 hl.window_rule({ match = { fullscreen = true }, border_color = "rgb(FFCC66) rgb(DEC186)" })
