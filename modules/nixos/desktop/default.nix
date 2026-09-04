@@ -35,6 +35,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # Let systemd-oomd kill the memory-hungry application cgroup before the
+    # kernel has to invoke the global OOM killer, which can terminate the
+    # graphical session along with the application.
+    systemd.oomd = {
+      enable = true;
+      enableUserSlices = true;
+    };
+
     # Enable polkit for privilege escalation
     security.polkit.enable = true;
 
