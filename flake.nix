@@ -15,6 +15,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    tabulite = {
+      url = "github:dirkvdb/tabulite";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     ai-usagebar = {
       url = "github:akitaonrails/ai-usagebar";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -225,6 +230,7 @@
         siffra = prev.callPackage ./pkgs/siffra { };
         orrery = prev.callPackage ./pkgs/orrery { };
         ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
+        tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
         fastpotify = inputs.fastpotify.packages.${prev.stdenv.hostPlatform.system}.fastpotify;
         librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;

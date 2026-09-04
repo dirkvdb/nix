@@ -38,6 +38,7 @@ in
         fzf
         micro
         ram
+        tabulite
         rsync
         ripgrep
         zip
