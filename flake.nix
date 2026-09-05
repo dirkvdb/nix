@@ -254,17 +254,13 @@
           }
         ) { };
 
-        # Also apply TrayNotificationMonochromeIcon.patch: when a secret is accessed via the
-        # Secret Service API/browser integration, KeePassXC shows a desktop notification using
-        # QSystemTrayIcon::showMessage() with the full-color application icon. On Linux this is
-        # implemented via the StatusNotifierItem AttentionIconPixmap, causing tray hosts (e.g.
-        # Noctalia) to briefly replace the configured monochrome tray icon with the colored one.
-        # The patch reuses the monochrome-aware tray icon for this notification instead.
-        # keepassxc = prev.keepassxc.overrideAttrs (old: {
-        #   patches = (old.patches or [ ]) ++ [
-        #     ./modules/home/apps/keepassxc/TrayNotificationMonochromeIcon.patch
-        #   ];
-        # });
+        # Do not publish Secret Service until the startup database is unlocked, so early
+        # clients cannot turn the normal key-file load into an interactive unlock prompt.
+        keepassxc = prev.keepassxc.overrideAttrs (old: {
+          patches = (old.patches or [ ]) ++ [
+            ./modules/home/apps/keepassxc/FdoSecretsDeferUntilUnlocked.patch
+          ];
+        });
       };
 
       hpcSystem = "x86_64-linux";
