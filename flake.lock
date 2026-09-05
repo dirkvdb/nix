@@ -688,11 +688,11 @@
         "vpn-confinement": "vpn-confinement"
       },
       "locked": {
-        "lastModified": 1788532869,
-        "narHash": "sha256-L+OGzRUhnTwUh09C9neDxucaMLcaA6oApLJrPvMLNjI=",
+        "lastModified": 1788573689,
+        "narHash": "sha256-YH66eQ0GXXFGp1iIj6ZREWzTF/Z/FYjK2p9rfm/Tyf4=",
         "owner": "kiriwalawren",
         "repo": "nixflix",
-        "rev": "07b5ffc95e8c5a1ab182eb4f03b0d3d0cc99e9a3",
+        "rev": "9bd61380363c07d35ee3e4cb0253c998cda422fe",
         "type": "github"
       },
       "original": {
@@ -835,11 +835,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1788404924,
-        "narHash": "sha256-lhEhY8X5EgkQ/eg6IFz4cc8jRuSYSvnxx1al7d1dvZ0=",
+        "lastModified": 1788531059,
+        "narHash": "sha256-hLD4l3QOGBQhkVp3mQ2lJ/YbEi99qUgKapb40KovZ88=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "0968519e14f7aa7d3e9b389682bd74d2b51c8ce8",
+        "rev": "801bef6abd86b91e51083066b83fb354a11fc640",
         "type": "github"
       },
       "original": {
@@ -1273,11 +1273,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788534418,
-        "narHash": "sha256-VKqirvCPQLVILy6D0sP2pXh9LBGbkejGJgvVFJq1cug=",
+        "lastModified": 1788576633,
+        "narHash": "sha256-3Kz2noIG/2NfiV6+JgdIQl6/Sk/fsxfdOsoBcoWFC1o=",
         "owner": "zackb",
         "repo": "tether",
-        "rev": "8c066138a05d8a14b345b7bbf9317d6d80f1ad5b",
+        "rev": "5d49929aa23a7e92f71603f12128bfa2392416c5",
         "type": "github"
       },
       "original": {
