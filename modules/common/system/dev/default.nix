@@ -26,6 +26,7 @@ in
         unstablePkgs.sccache
         unstablePkgs.devenv
         unstablePkgs.pixi
+        unstablePkgs.hunk
         inputs.ai-usagebar.packages.${pkgs.stdenv.hostPlatform.system}.default
       ]
       ++ lib.optionals pkgs.stdenv.isLinux [
@@ -54,6 +55,13 @@ in
         [shell]
         change-ps1 = false
       '';
+
+      # Hunk configuration
+      xdg.configFile."hunk/config.toml".text = ''
+        theme = "ayu-mirage"
+      '';
+
+      home.sessionVariables.HUNK_DISABLE_UPDATE_NOTICE = "1";
 
       xdg.configFile."ai-usagebar/config.toml".text = ''
         [ui]
