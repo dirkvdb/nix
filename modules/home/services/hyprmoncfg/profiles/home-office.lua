@@ -28,4 +28,4 @@ hl.workspace_rule({ workspace = "6", monitor = "desc:Dell Inc. DELL U2725QE 5Z1F
 hl.workspace_rule({ workspace = "7", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4" })
 hl.workspace_rule({ workspace = "8", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4" })
 hl.workspace_rule({ workspace = "9", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4" })
-hl.workspace_rule({ workspace = "10", monitor = "SUNSHINE", default = true, persistent = true })
+hl.workspace_rule({ workspace = "10", monitor = "SUNSHINE", persistent = true })

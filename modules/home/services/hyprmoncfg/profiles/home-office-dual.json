@@ -145,14 +145,12 @@
         "workspace": "10",
         "output_key": "dell inc.|dell p2214h|29c295am67yb",
         "output_name": "DP-1",
-        "default": true,
         "persistent": true
       },
       {
         "workspace": "11",
         "output_key": "sunshine",
         "output_name": "SUNSHINE",
-        "default": true,
         "persistent": true
       }
     ]

@@ -111,7 +111,6 @@
         "workspace": "10",
         "output_key": "sunshine",
         "output_name": "SUNSHINE",
-        "default": true,
         "persistent": true
       }
     ]

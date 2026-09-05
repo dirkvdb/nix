@@ -37,4 +37,4 @@ hl.workspace_rule({ workspace = "6", monitor = "desc:Dell Inc. DELL U2725QE 5Z1F
 hl.workspace_rule({ workspace = "7", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", persistent = true })
 hl.workspace_rule({ workspace = "8", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", persistent = true })
 hl.workspace_rule({ workspace = "9", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", persistent = true })
-hl.workspace_rule({ workspace = "10", monitor = "desc:LG Electronics LG HDR 4K 0x0004A5D4", default = true, persistent = true })
+hl.workspace_rule({ workspace = "10", monitor = "desc:LG Electronics LG HDR 4K 0x0004A5D4", persistent = true })
