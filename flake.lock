@@ -16,6 +16,7 @@
       },
       "original": {
         "owner": "akitaonrails",
+        "ref": "v1.11.0",
         "repo": "ai-usagebar",
         "type": "github"
       }
