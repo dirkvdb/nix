@@ -71,14 +71,6 @@ in
         icon = "outlook";
         extraArgs = [ "--restore-last-session" ];
       })
-
-
-      # The native Spotify web app is only supported on x86 so use the web version on ARM
-      (lib.optionalAttrs (pkgs.stdenv.hostPlatform.system == "aarch64-linux") (mkWebApp {
-        name = "Spotify";
-        url = "https://spotify.com/";
-        icon = "spotify";
-      }))
     ];
   });
 }

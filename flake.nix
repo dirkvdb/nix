@@ -21,7 +21,7 @@
     };
 
     ai-usagebar = {
-      url = "github:akitaonrails/ai-usagebar";
+      url = "github:akitaonrails/ai-usagebar/v1.10.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -118,7 +118,7 @@
     };
 
     fastpotify = {
-      url = "github:crmne/fastpotify/v0.6.0";
+      url = "github:crmne/fastpotify/v0.7.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

@@ -136,6 +136,7 @@ in
         direnv.enable = true;
         herdr.enable = true;
         mqtt.enable = true;
+        fastpotify.enable = true;
         foliate.enable = true;
         localsend.enable = true;
         moonlight.enable = true;
