@@ -531,11 +531,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1788709583,
-        "narHash": "sha256-1Ufm/MV32AkdSGj7sp/F1AnRS4RL3NAxHsnSEpMdmHU=",
+        "lastModified": 1788785564,
+        "narHash": "sha256-cR453kg0BJD4zBMsy7QYLIFBMRfk/HuL8iJdfHNVLDA=",
         "owner": "noamsto",
         "repo": "nix-amd-ai",
-        "rev": "77ef6970340cb0f03eb6742ae02e6ca0a123b6c0",
+        "rev": "6bc164a4cc0bbf1d74a2f5fe903674592baacae6",
         "type": "github"
       },
       "original": {
