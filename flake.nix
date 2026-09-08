@@ -5,9 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-chatgpt.url = "github:amielke/nixpkgs/chatgpt-linux";
-    # Pinned nixpkgs with freeimage (removed from newer nixpkgs due to vulnerabilities).
-    # Needed to build ES-DE from source.
-    nixpkgs-freeimage.url = "github:nixos/nixpkgs/nixos-24.11";
+
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     ram = {
@@ -21,7 +19,7 @@
     };
 
     ai-usagebar = {
-      url = "github:akitaonrails/ai-usagebar/v1.12.0";
+      url = "github:akitaonrails/ai-usagebar/v1.13.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -215,15 +213,8 @@
             prev.aquamarine;
 
         plymouth-theme-nixos = prev.callPackage ./pkgs/plymouth-theme-nixos { };
-        freeimage-pinned =
-          let
-            legacyPkgs = import inputs.nixpkgs-freeimage {
-              system = prev.stdenv.hostPlatform.system;
-              config.permittedInsecurePackages = [ "freeimage-unstable-2021-11-01" ];
-            };
-          in
-          legacyPkgs.freeimage;
-        es-de = prev.callPackage ./pkgs/es-de { freeimage = final.freeimage-pinned; };
+        freeimage = prev.callPackage ./pkgs/freeimage { };
+        es-de = prev.callPackage ./pkgs/es-de { freeimage = final.freeimage; };
         decentpaste = prev.callPackage ./pkgs/decentpaste { };
         make-slack-great-again = prev.callPackage ./pkgs/make-slack-great-again { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
@@ -305,7 +296,10 @@
             inputs.nix-amd-ai.nixosModules.default
             inputs.silent-sddm.nixosModules.default
             inputs.noctalia.nixosModules.default
-            { nixpkgs.hostPlatform = system; }
+            {
+              nixpkgs.hostPlatform = system;
+              nixpkgs.config.permittedInsecurePackages = [ "freeimage-unstable-2021-11-01" ];
+            }
             {
               nixpkgs.overlays = [
                 overlay
@@ -334,7 +328,10 @@
           modules = [
             hostPath
             nix-index-database.darwinModules.nix-index
-            { nixpkgs.overlays = [ overlay ] ++ extraOverlays; }
+            {
+              nixpkgs.config.permittedInsecurePackages = [ "freeimage-unstable-2021-11-01" ];
+              nixpkgs.overlays = [ overlay ] ++ extraOverlays;
+            }
           ];
         };
     in
