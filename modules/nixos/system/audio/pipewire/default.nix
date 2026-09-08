@@ -91,6 +91,13 @@ in
               }
             ]
           '')
+          (pkgs.writeTextDir "share/wireplumber/wireplumber.conf.d/bluetooth.conf" ''
+            monitor.bluez.properties = {
+              bluez5.roles = [ a2dp_sink a2dp_source bap_sink bap_source hsp_hs hsp_ag hfp_hf hfp_ag ]
+              bluez5.codecs = [ aac ]
+              bluez5.hfphsp-backend = "native"
+            }
+          '')
         ];
       };
     };

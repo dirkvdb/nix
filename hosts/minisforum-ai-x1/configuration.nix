@@ -23,6 +23,27 @@
   config = {
     system.stateVersion = "26.05"; # Version at install time, never change
 
+    programs.librepods.enable = true;
+    users.users.dirk.extraGroups = [ "librepods" ];
+
+    home-manager.users.dirk.systemd.user.services.librepods = {
+      Unit = {
+        Description = "LibrePods";
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.librepods}/bin/librepods --headless";
+        Environment = [
+          "QT_LOGGING_RULES=openpods.debug=false"
+        ];
+        Restart = "on-failure";
+        RestartSec = 5;
+        UMask = "0077";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
+
     stylix = {
       enable = true;
     };
@@ -169,7 +190,7 @@
           ];
           keyfilePath = "${config.local.user.homeDir}/.local/share/desktop.key";
         };
-        librepods.enable = true;
+
         localsend.enable = true;
         moonlight.enable = true;
         mqtt.enable = true;

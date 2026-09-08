@@ -70,10 +70,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    librepods = {
-      url = "github:kavishdevar/librepods/linux/rust";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     nixflix = {
       url = "github:kiriwalawren/nixflix";
@@ -225,7 +221,6 @@
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
         fastpotify = inputs.fastpotify.packages.${prev.stdenv.hostPlatform.system}.fastpotify;
-        librepods = inputs.librepods.packages.${prev.stdenv.hostPlatform.system}.default;
         hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;
 
         # Patch waybar to support Hyprland 0.55+ Lua IPC protocol
