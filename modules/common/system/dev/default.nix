@@ -23,6 +23,7 @@ in
         serie
         binsider
         nixd
+        oweka
         unstablePkgs.sccache
         unstablePkgs.devenv
         unstablePkgs.pixi

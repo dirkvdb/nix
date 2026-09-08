@@ -229,6 +229,7 @@
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         siffra = prev.callPackage ./pkgs/siffra { };
         orrery = prev.callPackage ./pkgs/orrery { };
+        oweka = prev.callPackage ./pkgs/oweka { };
         ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
