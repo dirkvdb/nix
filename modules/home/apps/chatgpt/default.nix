@@ -3,7 +3,7 @@
   config,
   pkgs,
   mkHome,
-  chatgptPkgs,
+  llmAgentsPkgs,
   ...
 }:
 let
@@ -17,6 +17,6 @@ in
   };
 
   config = lib.mkIf (cfg.enable && pkgs.stdenv.isLinux) (mkUserHome {
-    home.packages = [ chatgptPkgs.chatgpt ];
+    home.packages = [ llmAgentsPkgs.chatgpt ];
   });
 }

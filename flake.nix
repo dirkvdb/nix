@@ -1,10 +1,20 @@
 {
   description = "nix system flake";
 
+  nixConfig = {
+    extra-substituters = [ "https://cache.numtide.com" ];
+    extra-trusted-public-keys = [
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-chatgpt.url = "github:amielke/nixpkgs/chatgpt-linux";
+
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+    };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
@@ -137,56 +147,8 @@
           config.allowUnfree = true;
         };
 
-      chatgptPkgs =
-        system:
-        let
-          pkgs = import inputs.nixpkgs-chatgpt {
-            inherit system;
-            config.allowUnfree = true;
-          };
-        in
-        if system == "aarch64-linux" then
-          pkgs
-          // {
-            # OpenAI replaces the artifact behind its `latest` URL without changing the PR.
-            chatgpt = pkgs.chatgpt.overrideAttrs (old: {
-              src = pkgs.fetchurl {
-                url = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_arm64.deb";
-                hash = "sha256-El42Ui1Dx1vXlYR3hGumsc3fLrGc78tX3agL4XQvkX8=";
-              };
-              autoPatchelfIgnoreMissingDeps = old.autoPatchelfIgnoreMissingDeps ++ [
-                "libc++_shared.so"
-                "liblog.so"
-              ];
-              # autoPatchelf moves PT_INTERP beyond detect-libc's 2 KiB scan.
-              # Its process.report fallback trips Electron's CFI, so use the
-              # glibc watcher. The fork's custom unpack phase puts the files
-              # below source/ rather than at the derivation root.
-              postUnpack = ''
-                grep -aFq 'const family = familySync();' source/usr/lib/chatgpt/resources/app.asar
-                sed -i "s|const family = familySync();|const family = 'glibc'     ;|" source/usr/lib/chatgpt/resources/app.asar
-              '';
-            });
-          }
-        else
-          pkgs
-          // {
-            # OpenAI replaces the artifact behind its `latest` URL without changing the PR.
-            chatgpt = pkgs.chatgpt.overrideAttrs (_old: {
-              src = pkgs.fetchurl {
-                url = "https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_amd64.deb";
-                hash = "sha256-NVSwAixs+1EzJvQ/0R9xiDWncIasTXyi/z67ui1Mf0U=";
-              };
-              # autoPatchelf moves PT_INTERP beyond detect-libc's 2 KiB scan.
-              # Its process.report fallback trips Electron's CFI, so use the
-              # glibc watcher. The fork's custom unpack phase puts the files
-              # below source/ rather than at the derivation root.
-              postUnpack = ''
-                grep -aFq 'const family = familySync();' source/usr/lib/chatgpt/resources/app.asar
-                sed -i "s|const family = familySync();|const family = 'glibc'     ;|" source/usr/lib/chatgpt/resources/app.asar
-              '';
-            });
-          };
+      llmAgentsPkgs = system: inputs.llm-agents.packages.${system};
+
 
       # Custom packages overlay
       overlay = final: prev: {
@@ -279,7 +241,7 @@
           specialArgs = {
             inherit inputs system self;
             unstablePkgs = unstablePkgs system;
-            chatgptPkgs = chatgptPkgs system;
+            llmAgentsPkgs = llmAgentsPkgs system;
             mkHome = userName: attrs: { home-manager.users.${userName} = attrs; };
           };
           modules = [
@@ -317,7 +279,7 @@
           specialArgs = {
             inherit inputs system;
             unstablePkgs = unstablePkgs system;
-            chatgptPkgs = chatgptPkgs system;
+            llmAgentsPkgs = llmAgentsPkgs system;
             mkHome = userName: attrs: { home-manager.users.${userName} = attrs; };
           };
           modules = [
