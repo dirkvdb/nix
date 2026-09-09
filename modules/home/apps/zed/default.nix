@@ -1,6 +1,7 @@
 {
   pkgs,
   unstablePkgs,
+  llmAgentsPkgs,
   config,
   lib,
   mkHome,
@@ -102,7 +103,7 @@ in
   };
 
   config = lib.mkIf (cfg.enable) (mkUserHome {
-    home.sessionVariables.CODEX_PATH = "${unstablePkgs.codex}/bin/codex";
+    home.sessionVariables.CODEX_PATH = "${llmAgentsPkgs.codex}/bin/codex";
 
     xdg.mimeApps.defaultApplications = lib.genAttrs cfg.mimeTypes (_: "dev.zed.Zed.desktop");
 
@@ -389,7 +390,7 @@ in
                 type = "custom";
               }
               (lib.mkIf (!pkgs.stdenv.isDarwin) {
-                command = "${unstablePkgs.github-copilot-cli}/bin/copilot";
+                command = "${llmAgentsPkgs.copilot-cli}/bin/copilot";
                 args = [
                   "--acp"
                   "--stdio"
@@ -400,7 +401,7 @@ in
             ];
             opencode = {
               type = "custom";
-              command = "${unstablePkgs.opencode}/bin/opencode";
+              command = "${llmAgentsPkgs.opencode}/bin/opencode";
               args = [ "acp" ];
             };
           };

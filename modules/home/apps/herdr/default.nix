@@ -2,7 +2,7 @@
   lib,
   config,
   mkHome,
-  unstablePkgs,
+  llmAgentsPkgs,
   ...
 }:
 let
@@ -16,8 +16,7 @@ in
     enable = lib.mkEnableOption "Herdr terminal agent multiplexer";
   };
 
-  # `herdr` isn't packaged in the pinned stable nixpkgs yet, so pull it from
-  # unstablePkgs instead. Drop this once it lands on the stable channel.
+  # Herdr is maintained in the dedicated llm-agents.nix package set.
   #
   # Stylix doesn't have a herdr target yet (see the "herdr: init" PR at
   # https://github.com/nix-community/stylix/pull/2455), so its color mapping
@@ -25,7 +24,7 @@ in
   config = lib.mkIf cfg.enable (mkUserHome {
     programs.herdr = {
       enable = true;
-      package = unstablePkgs.herdr;
+      package = llmAgentsPkgs.herdr;
       settings = {
         onboarding = false;
         keys.prefix = "ctrl+s";

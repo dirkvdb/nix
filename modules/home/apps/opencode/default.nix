@@ -3,7 +3,7 @@
   config,
   pkgs,
   mkHome,
-  unstablePkgs,
+  llmAgentsPkgs,
   ...
 }:
 let
@@ -17,7 +17,7 @@ in
   config = lib.mkIf cfg.enable (mkUserHome {
     programs.opencode = {
       enable = true;
-      package = unstablePkgs.opencode;
+      package = llmAgentsPkgs.opencode;
       settings = {
         "$schema" = "https://opencode.ai/config.json";
         enabled_providers = [
@@ -32,6 +32,6 @@ in
       };
     };
 
-    home.packages = lib.optional (!config.local.headless && pkgs.stdenv.isLinux) unstablePkgs.opencode-desktop;
+    home.packages = lib.optional (!config.local.headless && pkgs.stdenv.isLinux) llmAgentsPkgs.opencode-desktop;
   });
 }

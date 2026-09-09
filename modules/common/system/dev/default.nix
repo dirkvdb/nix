@@ -3,6 +3,7 @@
   config,
   pkgs,
   unstablePkgs,
+  llmAgentsPkgs,
   inputs,
   ...
 }:
@@ -27,12 +28,12 @@ in
         unstablePkgs.sccache
         unstablePkgs.devenv
         unstablePkgs.pixi
-        unstablePkgs.hunk
+        llmAgentsPkgs.hunk
         inputs.ai-usagebar.packages.${pkgs.stdenv.hostPlatform.system}.default
       ]
       ++ lib.optionals pkgs.stdenv.isLinux [
-        unstablePkgs.codex
-        unstablePkgs.github-copilot-cli
+        llmAgentsPkgs.codex
+        llmAgentsPkgs.copilot-cli
       ];
 
     home-manager.users.${user.name} = {
