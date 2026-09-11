@@ -73,7 +73,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-
     nixflix = {
       url = "github:kiriwalawren/nixflix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -86,7 +85,7 @@
 
     nix-amd-ai = {
       url = "github:noamsto/nix-amd-ai";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-cachyos-kernel = {
