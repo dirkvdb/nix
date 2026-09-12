@@ -118,7 +118,7 @@ in
         ${lib.optionalString isWaybarEnabled ''require("bindings-waybar")''}
         ${lib.optionalString isNoctaliaEnabled ''require("bindings-noctalia")''}
         ${lib.optionalString (devWorkspaceGapSize > 0) ''
-          hl.workspace_rule({ workspace = "3", gaps_in = ${toString devWorkspaceGapSize}, gaps_out = ${toString devWorkspaceGapSize} })
+          hl.workspace_rule({ workspace = "3", gaps_in = 0, gaps_out = ${toString devWorkspaceGapSize} })
         ''}
         ${lib.optionalString isHyprmoncfgEnabled ''
           -- Added by hyprmoncfg: its generated monitor rules load last, so nothing before this can override the applied layout.

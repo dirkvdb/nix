@@ -15,9 +15,10 @@ in
       type = lib.types.ints.unsigned;
       default = 0;
       description = ''
-        Gap size (both gaps_in and gaps_out) for the dev workspace
-        (workspace 2). A value of 0 disables the override, leaving
-        workspace 2 using the global gap settings.
+        External gap size (`gaps_out`) for workspace 3, used by hosts
+        that need a display-scaling workaround. A value of 0 disables
+        the override, leaving workspace 3 with zero outer and internal
+        gaps. Other workspaces retain the global gap settings.
       '';
     };
   };
