@@ -25,9 +25,12 @@ in
           "github-copilot"
         ];
         permission = {
-          external_directory."~/.cargo/registry/**" = "allow";
-          read."~/.cargo/registry/**" = "allow";
-          edit."~/.cargo/registry/**" = "deny";
+          "*" = "allow";
+          bash = {
+            "*" = "allow";
+            sudo = "deny";
+            "sudo *" = "deny";
+          };
         };
       };
     };
