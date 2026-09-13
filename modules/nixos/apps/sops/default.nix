@@ -72,6 +72,12 @@ in
           owner = user.name;
         };
 
+        secrets.tailscale_client_secret = {
+          owner = "root";
+          group = "root";
+          mode = "0400";
+        };
+
         secrets."vpnjumphost/username" = {
           owner = user.name;
         };
