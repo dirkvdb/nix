@@ -526,11 +526,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789297647,
-        "narHash": "sha256-34JvOKQsAqCQcrkeFHWoMp6Jf4mfumS0HmFoACtVm3Q=",
+        "lastModified": 1784880271,
+        "narHash": "sha256-h69gUHgdHXna2B8HybZvWFvkjWaPjTCVEuRkXZLG6/Q=",
         "owner": "ThiagoAVicente",
         "repo": "hyprexpose",
-        "rev": "c68af578fe0c59d3483e3824eef429238cdb5d04",
+        "rev": "9d74169bde43b2642edbdba69e627ec010af5ed5",
         "type": "github"
       },
       "original": {
@@ -684,11 +684,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789286446,
-        "narHash": "sha256-xVstyCdg0DpzjyrEacm72VJAIP9DMhfWJdPDzhWxHuo=",
+        "lastModified": 1788680125,
+        "narHash": "sha256-amGSoDobwmp4CFvCn841ws2iuitus+HUJdD/gKgsrJA=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "a74e173407559083a412ea89a1cc58ea389c3b65",
+        "rev": "116ad1c2adb642405ef8916f6a94c8626f971344",
         "type": "github"
       },
       "original": {

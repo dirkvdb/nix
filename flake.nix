@@ -177,6 +177,9 @@
         fastpotify = inputs.fastpotify.packages.${prev.stdenv.hostPlatform.system}.fastpotify;
         hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;
 
+        # nixos-apple-silicon uses this firmware package before it is available in 26.05.
+        avd-fw = (unstablePkgs prev.stdenv.hostPlatform.system).avd-fw;
+
         # Patch waybar to support Hyprland 0.55+ Lua IPC protocol
         # https://github.com/Alexays/Waybar/pull/5013
         waybar = prev.waybar.overrideAttrs (old: {

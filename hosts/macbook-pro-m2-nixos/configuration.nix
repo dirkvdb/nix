@@ -165,6 +165,7 @@ in
     };
 
     hardware.asahi.enable = true;
+    hardware.asahi.avd.vaapi-support = true;
     hardware.asahi.peripheralFirmwareDirectory = (fetchTree {
       type = "path";
       path = "/boot/vendorfw/";
