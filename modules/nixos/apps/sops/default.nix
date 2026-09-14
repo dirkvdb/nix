@@ -36,7 +36,7 @@ in
           owner = user.name;
         };
 
-        secrets.fastpotify_web_client_id = {
+        secrets.spotifast_web_client_id = {
           owner = user.name;
         };
 

@@ -179,7 +179,7 @@
         chatgpt.enable = true;
         bitwarden.enable = true;
         direnv.enable = true;
-        fastpotify.enable = true;
+        spotifast.enable = true;
         fladder.enable = true;
         ghostty.enable = true;
         herdr.enable = true;

@@ -113,8 +113,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    fastpotify = {
-      url = "github:crmne/fastpotify/v0.7.0";
+    spotifast = {
+      url = "github:crmne/spotifast/v0.8.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -174,7 +174,7 @@
         ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
-        fastpotify = inputs.fastpotify.packages.${prev.stdenv.hostPlatform.system}.fastpotify;
+        spotifast = inputs.spotifast.packages.${prev.stdenv.hostPlatform.system}.spotifast;
         hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;
 
         # nixos-apple-silicon uses this firmware package before it is available in 26.05.

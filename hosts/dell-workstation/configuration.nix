@@ -336,7 +336,7 @@
         celluloid.enable = true;
         chatgpt.enable = true;
         direnv.enable = true;
-        fastpotify.enable = true;
+        spotifast.enable = true;
         ghostty.enable = true;
         herdr.enable = true;
         keepassxc = {

@@ -8,10 +8,10 @@
 }:
 let
   inherit (config.local) user;
-  cfg = config.local.apps.fastpotify;
+  cfg = config.local.apps.spotifast;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
-  settingsFile = pkgs.writeText "fastpotify-settings.json" ''
+  settingsFile = pkgs.writeText "spotifast-settings.json" ''
     {
       "device_name": ${builtins.toJSON config.local.system.network.hostname},
       "bitrate": 320,
@@ -83,19 +83,19 @@ let
   '';
 in
 {
-  options.local.apps.fastpotify = {
-    enable = lib.mkEnableOption "Fastpotify Spotify client";
+  options.local.apps.spotifast = {
+    enable = lib.mkEnableOption "Spotifast Spotify client";
   };
 
   config = lib.mkIf (cfg.enable && !isHeadless) (mkUserHome {
-    home.packages = [ pkgs.fastpotify ];
+    home.packages = [ pkgs.spotifast ];
 
     # Render the SOPS-managed client ID at activation time so it never enters
-    # the Nix store. Keep the result writable because Fastpotify updates it.
-    home.activation.fastpotifySettings = inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # the Nix store. Keep the result writable because spotifast updates it.
+    home.activation.spotifastSettings = inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       mkdir -p "$HOME/.config/fastpotify"
       ${pkgs.jq}/bin/jq \
-        --arg web_client_id "$(cat ${config.sops.secrets.fastpotify_web_client_id.path})" \
+        --arg web_client_id "$(cat ${config.sops.secrets.spotifast_web_client_id.path})" \
         '.web_client_id = $web_client_id' \
         ${settingsFile} > "$HOME/.config/fastpotify/settings.json.tmp"
       chmod 600 "$HOME/.config/fastpotify/settings.json.tmp"
