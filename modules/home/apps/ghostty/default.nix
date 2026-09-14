@@ -34,6 +34,7 @@ in
         scrollback-limit = 1000000000; # ~1GB
 
         # Window
+        clipboard-paste-protection = false;
         window-padding-x = 14;
         window-padding-y = 14;
         confirm-close-surface = false;
