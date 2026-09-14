@@ -86,7 +86,7 @@ in
           if isStandalone then
             "git -C ~/nix pull -r --autostash && nrs"
           else if pkgs.stdenv.isDarwin then
-            "nh darwin switch -j2 --update --commit-lock-file ~/nix${nhHostArg}"
+            "nh darwin switch -j2 --update ~/nix${nhHostArg}"
           else
             "git -C ~/nix pull -r --autostash && nh os switch -j2 --update --commit-lock-file ~/nix${nhHostArg}";
         tree = "lsd --tree";
