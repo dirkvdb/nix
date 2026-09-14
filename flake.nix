@@ -188,13 +188,13 @@
           ];
         });
 
-        # Pin Sublime Merge to Build 2125
+        # Pin Sublime Merge to Build 2130
         sublime-merge = prev.callPackage (import
           "${inputs.nixpkgs}/pkgs/applications/version-management/sublime-merge/common.nix"
           {
-            buildVersion = "2125";
-            aarch64sha256 = "18nwydssnmbzkxg7bp49bf33hnmmjl0zv5sq8l50x4san4libkk6";
-            x64sha256 = "1xs7ap0njcly5y6kppfs6i3xv62wsd0jwjkfa11n2vscfvi6z6fi";
+            buildVersion = "2130";
+            aarch64sha256 = "1hf0z1m2kxqzlvn481r738m1r7bi2fn71mixjpq8qwxzwqfrnia3";
+            x64sha256 = "1bi69rgxx4pfc9x7sgzxcdjvchcda6j6y2v26sbsjhzq4axcb97j";
           }
         ) { };
 
