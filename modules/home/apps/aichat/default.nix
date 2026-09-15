@@ -29,7 +29,7 @@ in
           supports_function_calling = true;
         }
         {
-          name = "Qwen3.5-4B-MTP-GGUF";
+          name = "qwen3.6-moe-35b-a3b-FLM";
           supports_function_calling = true;
         }
       ];
@@ -41,7 +41,7 @@ in
     programs.aichat = {
       enable = true;
       settings = {
-        model = "lemonade:Qwen3.5-4B-MTP-GGUF";
+        model = "lemonade:qwen3.6-moe-35b-a3b-FLM";
         clients = [
           {
             type = "openai-compatible";
