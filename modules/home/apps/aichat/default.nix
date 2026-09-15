@@ -8,9 +8,7 @@ let
   inherit (config.local) user;
   cfg = config.local.apps.aichat;
   npuCfg = config.hardware.amd-npu or { };
-  lemonadeEnabled = (npuCfg.enable or false) && (npuCfg.enableLemonade or false);
   lemonadePort = (npuCfg.lemonade or { }).port or 13305;
-  sopsEnabled = config.local.apps.sops.enable or false;
   mkUserHome = mkHome user.name;
 in
 {
@@ -30,6 +28,10 @@ in
           supports_vision = true;
           supports_function_calling = true;
         }
+        {
+          name = "Qwen3.5-4B-MTP-GGUF";
+          supports_function_calling = true;
+        }
       ];
       description = "Models to expose from the local lemonade server.";
     };
@@ -39,29 +41,19 @@ in
     programs.aichat = {
       enable = true;
       settings = {
-        model = "github:gpt-5";
-        clients =
-          lib.optional lemonadeEnabled {
+        model = "lemonade:Qwen3.5-4B-MTP-GGUF";
+        clients = [
+          {
             type = "openai-compatible";
             name = "lemonade";
-            api_base = "http://localhost:${toString lemonadePort}/api/v0";
+            api_base = "http://mini.fritz.box:${toString lemonadePort}/api/v0";
             models = cfg.lemonade.models;
           }
-          ++ lib.optional sopsEnabled {
-            type = "openai-compatible";
-            name = "github";
-            api_base = "https://models.inference.ai.azure.com";
-            # api_key is not stored in the Nix store; aichat reads GITHUB_API_KEY at runtime
-          };
+        ];
       };
     };
 
     home.shellAliases.ai = "aichat";
 
-    # Expose the GitHub token under the name aichat expects for the "github" client.
-    # Uses the same sops-managed file that GITHUB_TOKEN already reads from.
-    programs.fish.shellInit = lib.optionalString sopsEnabled ''
-      set -gx GITHUB_API_KEY (cat ${config.sops.secrets.github_token.path} | string trim)
-    '';
   });
 }
