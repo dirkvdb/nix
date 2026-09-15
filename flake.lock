@@ -180,6 +180,22 @@
         "type": "github"
       }
     },
+    "devenv-nixpkgs": {
+      "locked": {
+        "lastModified": 1787814960,
+        "narHash": "sha256-PYZq1qzCJXC2zGI0mH07vrZBsw6DRBAOX0jN1pPtqOQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c27cdad491a991b11ed731760aa2ef8db0cb0410",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c27cdad491a991b11ed731760aa2ef8db0cb0410",
+        "type": "github"
+      }
+    },
     "firefox-gnome-theme": {
       "flake": false,
       "locked": {
@@ -467,11 +483,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789386765,
-        "narHash": "sha256-4hyLFBhzQC7+qPMELWc7J/sbdA6ckXZxXU9CYRsGhsc=",
+        "lastModified": 1789482455,
+        "narHash": "sha256-pD3qVlQ4mUCFoTWrYtxecpSitQMsgJvJIN0FUIDZoEU=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "87c391f49a34660de6010f35bb50fb1bf811be9f",
+        "rev": "efa3ccb4c3cc90d832eab232976379058fa75aa3",
         "type": "github"
       },
       "original": {
@@ -532,11 +548,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1789409666,
-        "narHash": "sha256-kBfWY8VLP1u2mFRaqaeHhRQPSbPCnqMukJVNvBmv/HQ=",
+        "lastModified": 1789473883,
+        "narHash": "sha256-VpnOzjgdNUk/vcfsU4wNjARkIoxiJpL128YGkqpf2AM=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "9dd4d3486e4d6d4c544d02322b957c5e1e908efa",
+        "rev": "52aac5d0a0c206feaeb1889cbec62ad37dc8843e",
         "type": "github"
       },
       "original": {
@@ -992,6 +1008,7 @@
         "ai-usagebar": "ai-usagebar",
         "apple-silicon": "apple-silicon",
         "darwin": "darwin",
+        "devenv-nixpkgs": "devenv-nixpkgs",
         "home-manager": "home-manager",
         "hyprexpose": "hyprexpose",
         "lanzaboote": "lanzaboote",
@@ -1243,11 +1260,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789362553,
-        "narHash": "sha256-ZZvvYNRRgN+KyEGeOYTkUmpSPOSixzhEubE26aMui7w=",
+        "lastModified": 1789449888,
+        "narHash": "sha256-dU0oARGYbLNPfIZzPsLScwVWDn39Lb5UkmMxifWEaVw=",
         "owner": "zackb",
         "repo": "tether",
-        "rev": "ea3950ba88808d06ad399c551a23fd5aa2914502",
+        "rev": "4972522f623a40905b3737217c27adea068be834",
         "type": "github"
       },
       "original": {
