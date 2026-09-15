@@ -270,7 +270,11 @@
           ];
           size = 17.2;
         };
-        models = [ "Qwen3.8-27B-GGUF-UD-Q4_K_XL" ];
+        models = [
+          "Qwen3.8-27B-GGUF-UD-Q4_K_XL"
+          # Small, fast model for simple prompts and lightweight agent tasks.
+          "Qwen3.5-4B-MTP-GGUF"
+        ];
       };
     };
 
