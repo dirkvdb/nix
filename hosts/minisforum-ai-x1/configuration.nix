@@ -272,6 +272,7 @@
         };
         models = [
           "Qwen3.8-27B-GGUF-UD-Q4_K_XL"
+          "qwen3.6-moe-35b-a3b-FLM"
           # Small, fast model for simple prompts and lightweight agent tasks.
           "Qwen3.5-4B-MTP-GGUF"
         ];
