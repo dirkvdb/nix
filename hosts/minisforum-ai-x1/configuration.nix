@@ -251,6 +251,26 @@
         user = config.local.user.name;
         host = "0.0.0.0";
         allowedOrigins = [ "http://mini.fritz.box:13305" ];
+        customModels."Qwen3.8-27B-GGUF-UD-Q4_K_XL" = {
+          checkpoints = {
+            main = "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL";
+            mmproj = "unsloth/Qwen3.8-27B-GGUF:mmproj-BF16.gguf";
+          };
+          recipe = "llamacpp";
+          recipe_options = {
+            ctx_size = 32768;
+            llamacpp_backend = "vulkan";
+          };
+          labels = [
+            "custom"
+            "chat"
+            "tool-calling"
+            "vision"
+            "mtp"
+          ];
+          size = 17.2;
+        };
+        models = [ "Qwen3.8-27B-GGUF-UD-Q4_K_XL" ];
       };
     };
 

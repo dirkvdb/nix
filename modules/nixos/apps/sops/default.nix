@@ -48,6 +48,10 @@ in
           owner = user.name;
         };
 
+        secrets.home_assistant_api_key = {
+          owner = user.name;
+        };
+
         secrets.artifactory_token = {
           owner = user.name;
         };
