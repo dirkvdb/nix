@@ -28,10 +28,6 @@ in
         defaultSopsFile = ./secrets.yaml;
         defaultSopsFormat = "yaml";
 
-        secrets.openai_api_key = {
-          owner = user.name;
-        };
-
         secrets.github_token = {
           owner = user.name;
         };
