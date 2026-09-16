@@ -144,7 +144,10 @@ in
         opencode.enable = true;
         vscode.enable = true;
         zathura.enable = true;
-        zed.enable = true;
+        zed = {
+          enable = true;
+          localModels = true;
+        };
         zellij.enable = false;
         sops = {
           enable = true;
