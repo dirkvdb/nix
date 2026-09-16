@@ -10,7 +10,6 @@
 let
   cfg = config.local.apps.zed;
   npuCfg = config.hardware.amd-npu or { };
-  lemonadeEnabled = (npuCfg.enable or false) && (npuCfg.enableLemonade or false);
   lemonadePort = (npuCfg.lemonade or { }).port or 13305;
   inherit (config.local) user;
   inherit (config.local) theme;
@@ -82,28 +81,34 @@ in
       type = lib.types.listOf lib.types.attrs;
       default = [
         {
+          name = "gemma4-it-e2b-FLM";
+          display_name = "Gemma 4 IT e2b (FLM)";
+          max_tokens = 32768;
+        }
+        {
           name = "gemma4-it-e4b-FLM";
           display_name = "Gemma 4 IT e4b (FLM)";
-          max_tokens = 32000;
+          max_tokens = 32768;
         }
         {
           name = "qwen3.6-moe-35b-a3b-FLM";
           display_name = "Qwen 3.6 MOE 35B A3B NPU (FLM)";
-          max_tokens = 32000;
+          max_tokens = 32768;
         }
-        {
 
-          name = "Qwen3.6-27B-MTP-GGUF";
-          display_name = "Qwen 3.6 27B MTP (GGUF)";
-          max_tokens = 32000;
-        }
       ];
       description = "Models to expose from the local lemonade server in Zed.";
     };
   };
 
   config = lib.mkIf (cfg.enable) (mkUserHome {
-    home.sessionVariables.CODEX_PATH = "${llmAgentsPkgs.codex}/bin/codex";
+    home.sessionVariables = {
+      CODEX_PATH = "${llmAgentsPkgs.codex}/bin/codex";
+      LEMONADE_API_KEY = "dummy";
+    };
+
+    home.file.".agents/skills/grill-me".source = ../../skills/grill-me;
+    home.file.".agents/skills/grill-with-docs".source = ../../skills/grill-with-docs;
 
     xdg.mimeApps.defaultApplications = lib.genAttrs cfg.mimeTypes (_: "dev.zed.Zed.desktop");
 
@@ -159,11 +164,11 @@ in
       );
 
       userSettings = lib.mkMerge [
-        (lib.mkIf (cfg.localModels && lemonadeEnabled) {
+        (lib.mkIf cfg.localModels {
           language_models = {
             openai_compatible = {
               lemonade = {
-                api_url = "http://localhost:${toString lemonadePort}/api/v0";
+                api_url = "http://mini.fritz.box:${toString lemonadePort}/api/v0";
                 available_models = cfg.lemonade.models;
               };
             };
