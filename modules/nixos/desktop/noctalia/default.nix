@@ -27,6 +27,7 @@ let
   isDellWorkstation = hostname == "dell-workstation";
 
   voxtypeEnabled = config.local.apps.voxtype.enable or false;
+  tailscaleEnabled = config.local.services.tailscale.enable or false;
   devUtilsEnabled = config.local.system.utils.enable && config.local.system.utils.dev;
 
   # stylix's base16 colors don't include the leading "#"; Noctalia's palette
@@ -77,6 +78,9 @@ let
         "tray"
         "clipboard"
         "network"
+      ] ++ lib.optionals tailscaleEnabled [
+        "rylos/tailnet:bar"
+      ] ++ [
         "bluetooth"
         "volume"
         "brightness"
@@ -173,7 +177,10 @@ let
       temperature_night = 4500;
     };
 
-    plugins.enabled = lib.optionals voxtypeEnabled [ "gabedunn/voxtype" ] ++ lib.optionals devUtilsEnabled [ "felipeartur/ai-usagebar" ];
+    plugins.enabled =
+      lib.optionals voxtypeEnabled [ "gabedunn/voxtype" ]
+      ++ lib.optionals devUtilsEnabled [ "felipeartur/ai-usagebar" ]
+      ++ lib.optionals tailscaleEnabled [ "rylos/tailnet" ];
 
     notification.filter.network = {
       enabled = true;

@@ -11,6 +11,7 @@ in
       authKeyFile = lib.mkDefault config.sops.secrets.tailscale_client_secret.path;
       extraUpFlags = [
         "--advertise-tags=tag:nixos"
+        "--reset"
       ];
       extraSetFlags = [
         "--operator=${config.local.user.name}"
