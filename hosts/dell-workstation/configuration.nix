@@ -309,6 +309,7 @@
         printing.enable = true;
         docker.enable = true;
         power-profiles-daemon.enable = true;
+        tailscale.enable = true;
         syncthing = {
           enable = true;
           shares.secrets = true;
