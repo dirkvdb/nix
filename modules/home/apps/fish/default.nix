@@ -89,7 +89,7 @@ in
           else if pkgs.stdenv.isDarwin then
             "nh darwin switch -j2 --update ~/nix${nhHostArg}"
           else
-            "git -C ~/nix pull -r --autostash && nh os switch -j2 --update --commit-lock-file ~/nix${nhHostArg}";
+            "git -C ~/nix pull -r --autostash && nh os switch -j2 --update ~/nix${nhHostArg}";
         tree = "lsd --tree";
         zed = lib.mkIf (config.local.desktop.enable or false) "zeditor";
         nodenv = "direnv exec / fish --no-config";
