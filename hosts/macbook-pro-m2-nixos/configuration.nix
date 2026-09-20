@@ -114,6 +114,7 @@ in
           shares.secrets = true;
         };
         power-profiles-daemon.enable = true;
+        tailscale.enable = true;
         wluma = {
           enable = true;
           alsIioPath = "/sys/devices/platform/soc/2a6c00000.aop/als.1.auto";
@@ -142,6 +143,7 @@ in
         moonlight.enable = true;
         neovim.enable = true;
         opencode.enable = true;
+        affine.enable = true;
         vscode.enable = true;
         zathura.enable = true;
         zed = {
