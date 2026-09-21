@@ -42,6 +42,10 @@ in
       enable = true;
       package = pkgs.obsidian;
       defaultSettings = {
+        app = {
+          settingsPopoutWindow = false;
+        };
+
         appearance = {
           baseFontSize = lib.mkForce 16;
           showRibbon = false;
