@@ -171,6 +171,8 @@
         siffra = prev.callPackage ./pkgs/siffra { };
         orrery = prev.callPackage ./pkgs/orrery { };
         oweka = prev.callPackage ./pkgs/oweka { };
+        obsidian-lockstep-sync = prev.callPackage ./pkgs/obsidian-lockstep-sync { };
+        obsidian-cooklang = prev.callPackage ./pkgs/obsidian-cooklang { };
         ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;

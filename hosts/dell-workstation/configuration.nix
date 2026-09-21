@@ -350,6 +350,10 @@
           keyfilePath = "${config.local.user.homeDir}/.local/share/desktop.key";
         };
         neovim.enable = true;
+        obsidian = {
+          enable = true;
+          vaults.notes = "Documents/Notes";
+        };
         opencode.enable = true;
         onlyoffice.enable = true;
         qgis.enable = true;

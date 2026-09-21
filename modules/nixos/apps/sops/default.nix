@@ -60,6 +60,14 @@ in
           owner = user.name;
         };
 
+        secrets."obsidian/server_url" = {
+          owner = user.name;
+        };
+
+        secrets."obsidian/${config.local.system.network.hostname}" = {
+          owner = user.name;
+        };
+
         secrets.cachix_geo_overlay_auth_token = {
           owner = user.name;
         };
