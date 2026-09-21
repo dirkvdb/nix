@@ -401,6 +401,7 @@
       orrery
       unstablePkgs.ferdium
       qtcreator
+      qt6.qttools # Qt Linguist and related translation tools
     ];
   };
 }
