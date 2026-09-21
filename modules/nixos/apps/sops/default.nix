@@ -84,10 +84,6 @@ in
           owner = user.name;
         };
 
-        secrets.ssh_websocat_host = {
-          owner = user.name;
-        };
-
         secrets.tailscale_client_secret = {
           owner = "root";
           group = "root";

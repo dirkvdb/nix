@@ -7,7 +7,6 @@
 }:
 let
   inherit (config.local) user;
-  sopsEnabled = config.local.apps.sops.enable or false;
   winboatEnabled = config.local.apps.winboat.enable or false;
   proxyPacUrl = config.local.system.network.proxy.pacUrl;
   proxyEnabled = proxyPacUrl != null;
@@ -17,12 +16,6 @@ let
 in
 {
   config = mkUserHome {
-    home.packages = (
-      with pkgs;
-      [
-        websocat
-      ]
-    );
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
@@ -33,13 +26,6 @@ in
           User = "dirk";
           RequestTTY = "yes";
           ForwardAgent = true;
-        };
-        mini-remote = lib.mkIf sopsEnabled {
-          User = "dirk";
-          ProxyCommand = "websocat -b $(cat ${config.sops.secrets.ssh_websocat_host.path})";
-          ControlMaster = "no";
-          ControlPath = "none";
-          ControlPersist = "no";
         };
         winboat = lib.mkIf winboatEnabled {
           HostName = "127.0.0.1";
