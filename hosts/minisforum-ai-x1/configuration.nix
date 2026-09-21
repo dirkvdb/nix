@@ -195,6 +195,10 @@
         moonlight.enable = true;
         mqtt.enable = true;
         neovim.enable = true;
+        obsidian = {
+          enable = true;
+          vaults.notes = "Documents/Notes";
+        };
         opencode.enable = true;
         onlyoffice.enable = true;
         prusa-slicer.enable = true;

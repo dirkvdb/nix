@@ -142,6 +142,10 @@ in
         localsend.enable = true;
         moonlight.enable = true;
         neovim.enable = true;
+        obsidian = {
+          enable = true;
+          vaults.notes = "Documents/Notes";
+        };
         opencode.enable = true;
         affine.enable = true;
         vscode.enable = true;
