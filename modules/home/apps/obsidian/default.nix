@@ -44,6 +44,7 @@ in
       defaultSettings = {
         app = {
           settingsPopoutWindow = false;
+          frameStyle = "native";
         };
 
         appearance = {
