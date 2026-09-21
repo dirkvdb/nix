@@ -50,7 +50,7 @@ in
         appearance = {
           baseFontSize = lib.mkForce 16;
           showRibbon = false;
-          showTitleBar = false;
+          showViewHeader = false;
         };
 
         communityPlugins = [
