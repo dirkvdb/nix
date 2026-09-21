@@ -37,6 +37,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    obsidian-extensions = {
+      url = "github:karaolidis/nix-obsidian-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     darwin = {
       url = "github:lnl7/nix-darwin/nix-darwin-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -171,8 +176,7 @@
         siffra = prev.callPackage ./pkgs/siffra { };
         orrery = prev.callPackage ./pkgs/orrery { };
         oweka = prev.callPackage ./pkgs/oweka { };
-        obsidian-lockstep-sync = prev.callPackage ./pkgs/obsidian-lockstep-sync { };
-        obsidian-cooklang = prev.callPackage ./pkgs/obsidian-cooklang { };
+
         ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
@@ -257,6 +261,7 @@
             {
               nixpkgs.overlays = [
                 overlay
+                inputs.obsidian-extensions.overlays.default
                 inputs.vpn-jumphost.overlays.default
               ]
               ++ extraOverlays;
@@ -284,7 +289,10 @@
             nix-index-database.darwinModules.nix-index
             {
               nixpkgs.config.permittedInsecurePackages = [ "freeimage-unstable-2021-11-01" ];
-              nixpkgs.overlays = [ overlay ] ++ extraOverlays;
+              nixpkgs.overlays = [
+                overlay
+                inputs.obsidian-extensions.overlays.default
+              ] ++ extraOverlays;
             }
           ];
         };

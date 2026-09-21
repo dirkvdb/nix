@@ -41,10 +41,22 @@ in
     programs.obsidian = {
       enable = true;
       package = pkgs.obsidian;
-      defaultSettings.communityPlugins = [
-              pkgs.obsidian-lockstep-sync
-              pkgs.obsidian-cooklang
-            ];
+      defaultSettings = {
+        appearance = {
+          baseFontSize = lib.mkForce 16;
+          showRibbon = false;
+          showTitleBar = false;
+        };
+
+        communityPlugins = [
+          pkgs.obsidianPlugins.lockstep-sync
+          pkgs.obsidianPlugins.cooklang-obsidian
+        ];
+
+        themes = [
+          pkgs.obsidianThemes.minimal
+        ];
+      };
 
       vaults = lib.mapAttrs (_name: target: {
         inherit target;
