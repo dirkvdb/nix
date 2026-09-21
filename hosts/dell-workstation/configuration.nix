@@ -221,6 +221,8 @@
 
       theme.preset = "everforest";
 
+      apps.mcp.jira.enable = true;
+
       system = {
         # Intel Core Ultra 7 265H: 6 P-cores + 8 E-cores + 2 LP E-cores = 16 cores.
         # Arrow Lake has no SMT, so this is also the logical processor count.

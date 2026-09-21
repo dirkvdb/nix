@@ -12,6 +12,7 @@ let
   cfg = config.local.apps.opencode;
   sopsEnabled = config.local.apps.sops.enable or false;
   sopsAvailable = options ? sops.templates;
+  vpnjumphostEnabled = config.local.services.vpnjumphost.enable;
   mkUserHome = mkHome user.name;
   opencodeBaseSettings = {
     "$schema" = "https://opencode.ai/config.json";
@@ -34,8 +35,35 @@ let
       };
     };
   };
-  opencodeSettings = opencodeBaseSettings // lib.optionalAttrs cfg.homeAssistantMcp.enable {
-    mcp."home-assistant" = {
+  opencodeMcpSettings = {
+    affine = {
+      type = "local";
+      command = [
+        "sh"
+        "-c"
+        ''exec uvx --with "mcp<2" mcp-proxy --transport=streamablehttp --stateless "$AFFINE_MCP_URL/api/workspaces/5f0a038e-be51-470a-8fef-ec17b58fb0fd/mcp"''
+      ];
+      environment = {
+        AFFINE_MCP_URL = config.sops.placeholder.affine_mcp_url;
+        API_ACCESS_TOKEN = config.sops.placeholder.affine_mcp_token;
+      };
+      enabled = true;
+    };
+  }
+  // lib.optionalAttrs vpnjumphostEnabled {
+    jira = {
+      type = "local";
+      command = [ "uvx" "mcp-atlassian" ];
+      environment = {
+        HTTPS_PROXY = "socks5://127.0.0.1:1080";
+        JIRA_URL = "https://jira.vito.be";
+        JIRA_PERSONAL_TOKEN = config.sops.placeholder.jira_personal_token;
+      };
+      enabled = true;
+    };
+  }
+  // lib.optionalAttrs cfg.homeAssistantMcp.enable {
+    "home-assistant" = {
       type = "local";
       command = [
         "uvx"
@@ -49,6 +77,9 @@ let
       environment.API_ACCESS_TOKEN = config.sops.placeholder.home_assistant_api_key;
       enabled = true;
     };
+  };
+  opencodeSettings = opencodeBaseSettings // {
+    mcp = opencodeMcpSettings;
   };
 in
 {
