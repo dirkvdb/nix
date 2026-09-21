@@ -93,6 +93,8 @@
       theme.preset = "everforest";
 
       system = {
+        network.hostname = "wsl";
+
         nix = {
           ld.enable = true;
         };
