@@ -99,11 +99,10 @@
     # (Modern Standby), not S3 deep sleep. The NVIDIA driver defaults to
     # S3-style suspend handling; NVreg_EnableS0ixPowerManagement tells it to use
     # s0ix/s2idle paths instead.
-    # Disable GSP firmware on the open driver: on Ampere mobile GPUs this caused
-    # screen corruption, Wayland black windows, hangs, and poor resume behavior.
-    # Re-verify whether this workaround is still needed on the Blackwell dGPU.
+    # Use the driver's s2idle path. Blackwell uses the open kernel module and
+    # requires GSP firmware, so NVreg_EnableGpuFirmware must remain enabled.
     boot.extraModprobeConfig = ''
-      options nvidia NVreg_EnableS0ixPowerManagement=1 NVreg_EnableGpuFirmware=0
+      options nvidia NVreg_EnableS0ixPowerManagement=1
     '';
 
     # LUKS SSD performance tuning (allowDiscards + bypassWorkqueues) is applied
@@ -235,7 +234,9 @@
           nh.configurationName = "dell-workstation";
         };
 
-        kernel.useLatest = true;
+        # NVIDIA 595 does not support Linux 7.2's DRM atomic API changes yet.
+        # Use nixpkgs' current LTS kernel until a compatible driver is available.
+        kernel.useLatest = false;
 
         boot = {
           secureboot.enable = true;

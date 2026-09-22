@@ -26,9 +26,8 @@
     "mt7925e"
     "r8169"
     "i2c-dev"
-    "ddcci_backlight"
   ];
-  boot.extraModulePackages = [ config.boot.kernelPackages.ddcci-driver ];
+  boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/NIXROOT";
