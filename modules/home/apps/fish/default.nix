@@ -15,7 +15,7 @@ let
   hostname = config.local.system.network.hostname or "";
   cachePush = lib.optionalString (
     hostname == "mini" || nhConfigurationName == "dell-workstation"
-  ) " && xilo push admin/nix ./result";
+  ) " && xilo push admin/nix ~/nix/result";
   mkUserHome = mkHome user.name;
 in
 {
@@ -61,7 +61,7 @@ in
           set -gx HOME_ASSISTANT_TOKEN (cat ${config.sops.secrets.home_assistant_api_key.path} | string trim)
         ''}
 
-        ${lib.optionalString (sopsEnabled && pkgs.stdenv.hostPlatform.isx86_64) ''
+        ${lib.optionalString (sopsEnabled && pkgs.stdenv.hostPlatform.isx86_64 && config.sops.secrets ? xilo_push_token) ''
           if test -r ${config.sops.secrets.xilo_push_token.path}
             set -gx XILO_TOKEN (cat ${config.sops.secrets.xilo_push_token.path} | string trim)
           end
