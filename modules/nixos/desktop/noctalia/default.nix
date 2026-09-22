@@ -337,6 +337,12 @@ let
         vendor = "auto";
         provider_limit = 2;
       };
+    }
+    // lib.optionalAttrs tailscaleEnabled {
+      bar_2 = {
+        show_count = false;
+        type = "rylos/tailnet:bar";
+      };
     };
   };
 
