@@ -72,6 +72,10 @@ in
           owner = user.name;
         };
 
+        secrets.xilo_push_token = {
+          owner = user.name;
+        };
+
         secrets.mqtt_pass = {
           owner = user.name;
         };

@@ -3,6 +3,7 @@
 os_cmd := if os() == "macos" { "darwin" } else { "os" }
 hostname := `hostname`
 system_config := if hostname == "p260182" { "dell-workstation" } else { hostname }
+push_cache := if system_config =~ "^(mini|dell-workstation)$" { "xilo push admin/nix ./result" } else { "true" }
 
 # Default recipe - show available commands
 default:
@@ -13,6 +14,7 @@ default:
 # Build the system configuration
 build:
     nh {{ os_cmd }} build . -H {{ system_config }}
+    {{ push_cache }}
 
 bumpzed version:
     nix shell nixpkgs#python3 -c python3 ./scripts/bump-zed.py "{{ version }}"

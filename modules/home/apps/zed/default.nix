@@ -31,11 +31,8 @@ let
       name = "${old.pname}-${version}";
       hash = "sha256-8RBQrUyvZz0zwowgVGqQbd5Nf6IP6A2SEyxj1hX6C08=";
     };
-    env = (old.env or { }) // {
-      NIX_CFLAGS_COMPILE = lib.concatStringsSep " " [
-        (old.env.NIX_CFLAGS_COMPILE or "")
-        "-march=native"
-      ];
+    env = (old.env or { }) // lib.optionalAttrs unstablePkgs.stdenv.hostPlatform.isx86_64 {
+      NIX_CFLAGS_COMPILE = "-march=x86-64-v3";
     };
   });
 

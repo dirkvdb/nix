@@ -5,6 +5,11 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    xilo = {
+      url = "github:stubbedev/xilo/v1.2.1";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
     };

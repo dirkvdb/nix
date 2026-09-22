@@ -12,6 +12,10 @@ let
   configName = config.local.home-manager.configName or user.name;
   nhConfigurationName = config.local.system.nix.nh.configurationName or null;
   nhHostArg = lib.optionalString (nhConfigurationName != null) " -H ${nhConfigurationName}";
+  hostname = config.local.system.network.hostname or "";
+  cachePush = lib.optionalString (
+    hostname == "mini" || nhConfigurationName == "dell-workstation"
+  ) " && xilo push admin/nix ./result";
   mkUserHome = mkHome user.name;
 in
 {
@@ -57,6 +61,12 @@ in
           set -gx HOME_ASSISTANT_TOKEN (cat ${config.sops.secrets.home_assistant_api_key.path} | string trim)
         ''}
 
+        ${lib.optionalString (sopsEnabled && pkgs.stdenv.hostPlatform.isx86_64) ''
+          if test -r ${config.sops.secrets.xilo_push_token.path}
+            set -gx XILO_TOKEN (cat ${config.sops.secrets.xilo_push_token.path} | string trim)
+          end
+        ''}
+
         # Enable vi mode
         fish_vi_key_bindings
 
@@ -78,18 +88,18 @@ in
         man = "batman";
         nrs =
           if isStandalone then
-            "nix run home-manager/release-26.05 -- switch -b backup --flake ~/nix#${configName}"
+            "nix run home-manager/release-26.05 -- switch -b backup --flake ~/nix#${configName}${cachePush}"
           else if pkgs.stdenv.isDarwin then
-            "nh darwin switch ~/nix${nhHostArg}"
+            "nh darwin switch ~/nix${nhHostArg}${cachePush}"
           else
-            "nh os switch -j2 ~/nix${nhHostArg} && nixcfg-reload";
+            "nh os switch -j2 ~/nix${nhHostArg} && nixcfg-reload${cachePush}";
         update =
           if isStandalone then
             "git -C ~/nix pull -r --autostash && nrs"
           else if pkgs.stdenv.isDarwin then
-            "nh darwin switch -j2 --update ~/nix${nhHostArg}"
+            "nh darwin switch -j2 --update ~/nix${nhHostArg}${cachePush}"
           else
-            "git -C ~/nix pull -r --autostash && nh os switch -j2 --update ~/nix${nhHostArg}";
+            "git -C ~/nix pull -r --autostash && nh os switch -j2 --update ~/nix${nhHostArg}${cachePush}";
         tree = "lsd --tree";
         zed = lib.mkIf (config.local.desktop.enable or false) "zeditor";
         nodenv = "direnv exec / fish --no-config";

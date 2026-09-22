@@ -11,10 +11,9 @@ let
   esDe = pkgs.es-de;
 
   eden =
-    if cfg.eden.archnative then
+    if unstablePkgs.stdenv.hostPlatform.isx86_64 then
       unstablePkgs.eden.overrideAttrs (old: {
-        # Build with -march=native for maximum performance on this machine
-        NIX_CFLAGS_COMPILE = (old.NIX_CFLAGS_COMPILE or "") + " -march=native";
+        NIX_CFLAGS_COMPILE = (old.NIX_CFLAGS_COMPILE or "") + " -march=x86-64-v3";
       })
     else
       unstablePkgs.eden;
@@ -64,11 +63,7 @@ let
   };
 in
 {
-  options.local.apps.retro-emulation = {
-    eden = {
-      archnative = lib.mkEnableOption "building eden with -march=native for maximum performance";
-    };
-  };
+
 
   config = lib.mkIf cfg.enable {
     local.apps.retro-emulation.fladder.enable = lib.mkDefault true;

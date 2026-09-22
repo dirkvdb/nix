@@ -514,8 +514,10 @@ in
           patches = (old.patches or [ ]) ++ [
             ./trayicon.patch
           ];
-          mesonFlags = (old.mesonFlags or [ ]) ++ [ "-Dnative_optimizations=true" ];
-          NIX_ENFORCE_NO_NATIVE = false;
+          env = (old.env or { }) // lib.optionalAttrs pkgs.stdenv.hostPlatform.isx86_64 {
+            NIX_CFLAGS_COMPILE = "-march=x86-64-v3";
+            NIX_CXXFLAGS_COMPILE = "-march=x86-64-v3";
+          };
         });
 
         # Starts noctalia automatically after login via a systemd user

@@ -223,7 +223,6 @@
           };
         };
         retro-emulation.enable = true;
-        retro-emulation.eden.archnative = true;
         slack.enable = true;
         sops.enable = true;
         spotify.enable = true;
