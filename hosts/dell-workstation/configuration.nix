@@ -270,6 +270,7 @@
           networkmanager = {
             enable = true;
             wifi.backend = "wpa_supplicant";
+            wifi.powersave = false;
             vpn.homeVpn = true;
           };
         };
