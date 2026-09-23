@@ -1,0 +1,6 @@
+# Grant non-root access to the Arduino Opta's DFU bootloader USB device.
+# Install with:
+#   sudo cp 99-arduino-opta.rules /etc/udev/rules.d/
+#   sudo udevadm control --reload-rules
+#   sudo udevadm trigger
+SUBSYSTEM=="usb", ATTR{idVendor}=="2341", ATTR{idProduct}=="0364", MODE="0666", TAG+="uaccess"
