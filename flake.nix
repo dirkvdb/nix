@@ -27,7 +27,7 @@
     };
 
     ai-usagebar = {
-      url = "github:akitaonrails/ai-usagebar/v1.20.2";
+      url = "github:akitaonrails/ai-usagebar/v1.21.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
