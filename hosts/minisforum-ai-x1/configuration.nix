@@ -159,7 +159,7 @@
         vpnjumphost = {
           enable = true;
           autostart = false;
-          pac.enable = true;
+          pac.enable = false;
         };
         officework = {
           enable = true;
