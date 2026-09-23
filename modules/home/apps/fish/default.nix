@@ -75,6 +75,10 @@ in
         bind -M default j down-or-search
       '';
 
+      shellAliases = {
+        cp = "cpx";
+      };
+
       shellAbbrs = {
         cat = "bat";
         gd = "git diff";

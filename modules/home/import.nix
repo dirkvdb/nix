@@ -69,6 +69,7 @@ in
       (with pkgs; [
         age
         autossh
+        cpx
         dua
         fd
         fzf
