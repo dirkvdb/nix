@@ -394,7 +394,7 @@
         zathura.enable = true;
         zed = {
           enable = true;
-          useLatestUpstream = false;
+          useLatestUpstream = true;
         };
         zellij.enable = true;
       };
