@@ -83,6 +83,9 @@ in
 
         [openrouter]
         enabled = false
+
+        [commandcode]
+        enabled = false
       '';
     };
   };
