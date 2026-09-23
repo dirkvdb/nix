@@ -219,7 +219,7 @@ in
             play_sound_when_agent_done = "always";
             inline_assistant_model = {
               provider = "copilot_chat";
-              model = "gpt-5.6-luna";
+              model = "gpt-6-luna";
             };
             sandbox_permissions = {
               allow_unsandboxed = true;
@@ -231,7 +231,7 @@ in
               effort = "medium";
               enable_thinking = true;
               provider = "copilot_chat";
-              model = "gpt-5.6-luna";
+              model = "gpt-6-luna";
             };
           };
           edit_predictions = {
