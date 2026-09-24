@@ -79,7 +79,7 @@ let
         "clipboard"
         "network"
       ] ++ lib.optionals tailscaleEnabled [
-        "rylos/tailnet:bar"
+        "tailnet"
       ] ++ [
         "bluetooth"
         "volume"
@@ -340,7 +340,7 @@ let
       };
     }
     // lib.optionalAttrs tailscaleEnabled {
-      bar_2 = {
+      tailnet = {
         show_count = false;
         type = "rylos/tailnet:bar";
       };
