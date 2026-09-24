@@ -333,6 +333,7 @@ let
     // lib.optionalAttrs devUtilsEnabled {
       bar = {
         extras = "none";
+        visualization = "none";
         type = "felipeartur/ai-usagebar:bar";
         vendor = "auto";
         provider_limit = 2;
