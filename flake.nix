@@ -27,7 +27,7 @@
     };
 
     ai-usagebar = {
-      url = "github:akitaonrails/ai-usagebar/v1.22.0";
+      url = "github:akitaonrails/ai-usagebar/v1.24.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -124,7 +124,7 @@
     };
 
     spotifast = {
-      url = "github:crmne/spotifast/v0.10.0";
+      url = "github:crmne/spotifast/v0.10.1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

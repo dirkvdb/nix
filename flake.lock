@@ -7,16 +7,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1790186537,
-        "narHash": "sha256-GGNwNHQNCQ85ELuYxxgeb+hVtX5OL4M4/rjDaaTUbL4=",
+        "lastModified": 1790302095,
+        "narHash": "sha256-d/671T4V6Fe85GL7fn2eLN6GoRJKVpOqWbBTjtU6gMw=",
         "owner": "akitaonrails",
         "repo": "ai-usagebar",
-        "rev": "e2600ce18ec71b7a39333ad7dd61189d6d3673c7",
+        "rev": "df44162938a1d7e78f9206798952f0436c9f73da",
         "type": "github"
       },
       "original": {
         "owner": "akitaonrails",
-        "ref": "v1.22.0",
+        "ref": "v1.24.0",
         "repo": "ai-usagebar",
         "type": "github"
       }
@@ -1148,16 +1148,16 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1790237841,
-        "narHash": "sha256-7EvzlZseF9lw0VIaQqWJ3HUvbtRWc2bYjRvT3h0fLFI=",
+        "lastModified": 1790268397,
+        "narHash": "sha256-rLyzvv7eJSHbzJdwx0iuwk5MHXWHHneGTOkpUQwIGAg=",
         "owner": "crmne",
         "repo": "spotifast",
-        "rev": "3d8b4a6a6809dea60bee8281bfc14479330cb72d",
+        "rev": "9feee91ebe9f20cb7e940b2b30b6fb6378a78941",
         "type": "github"
       },
       "original": {
         "owner": "crmne",
-        "ref": "v0.10.0",
+        "ref": "v0.10.1",
         "repo": "spotifast",
         "type": "github"
       }

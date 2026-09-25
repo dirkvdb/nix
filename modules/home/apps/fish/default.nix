@@ -15,7 +15,7 @@ let
   hostname = config.local.system.network.hostname or "";
   cachePush = lib.optionalString (
     hostname == "mini" || nhConfigurationName == "dell-workstation"
-  ) " && xilo push admin/nix /run/current-system";
+  ) " && xilo push admin/nix ${if isStandalone then "\"$HOME/.local/state/nix/profiles/home-manager\"" else "/run/current-system"}";
   mkUserHome = mkHome user.name;
 in
 {
