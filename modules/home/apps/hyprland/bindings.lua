@@ -18,21 +18,17 @@ hl.bind(mod .. " + ALT + mouse:272", hl.dsp.window.resize(), { mouse = true })
 ---- SYSTEM / UTILITY ----
 hl.bind(mod .. " + ALT + SPACE", hl.dsp.exec_cmd("nixcfg-menu"), { description = "Menu" })
 hl.bind(mod .. " + X", hl.dsp.workspace.toggle_special(), { description = "Special workspace" })
-hl.bind(mod .. " + CTRL + S", hl.dsp.exec_cmd("nixcfg-menu share"), { description = "Share" })
 ---- APP LAUNCHERS -------
 hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd(terminal .. ' --working-directory="$(nixcfg-cmd-terminal-cwd)"'), { description = "Terminal" })
 hl.bind(mod .. " + S", hl.dsp.exec_cmd("nixcfg-launch-or-focus " .. browser), { description = "Browser" })
 hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd(browser), { description = "Browser (new instance)" })
 hl.bind(mod .. " + D", hl.dsp.exec_cmd("zeditor"), { description = "Dev editor" })
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("nautilus --new-window"), { description = "File manager" })
-hl.bind(mod .. " + SHIFT + G", hl.dsp.exec_cmd("sublime_merge"), { description = "Sublime merge" })
+hl.bind(mod .. " + G", hl.dsp.exec_cmd("sublime_merge"), { description = "Sublime merge" })
 hl.bind(mod .. " + T", hl.dsp.exec_cmd(terminal .. " -e btop"), { description = "Activity" })
-hl.bind(mod .. " + K", hl.dsp.exec_cmd("nixcfg-menu-keybindings"), { description = "Show key bindings" })
 ---- WEB APPS ----
-hl.bind(mod .. " + SHIFT + A", hl.dsp.exec_cmd('nixcfg-launch-or-focus-webapp ChatGPT "https://chatgpt.com"'), { description = "ChatGPT" })
 hl.bind(mod .. " + SHIFT + Y", hl.dsp.exec_cmd('nixcfg-launch-or-focus-webapp Youtube "https://youtube.com/"'), { description = "Youtube" })
 hl.bind(mod .. " + SHIFT + W", hl.dsp.exec_cmd('nixcfg-launch-or-focus-webapp Whatsapp "https://web.whatsapp.com/"'), { description = "Whatsapp" })
-hl.bind(mod .. " + SHIFT + E", hl.dsp.exec_cmd('nixcfg-launch-or-focus-webapp GMail "https://mail.google.com"'), { description = "Email" })
 ---- WINDOW MANAGEMENT ---
 hl.bind(mod .. " + W", hl.dsp.window.close(), { description = "Close active window" })
 hl.bind(mod .. " + DELETE", hl.dsp.exec_cmd("hyprctl kill"), { description = "Kill window (click to kill)" })
@@ -68,14 +64,14 @@ for i = 1, 10 do
 end
 
 ---- GROUPS -------
-hl.bind(mod .. " + G", hl.dsp.group.toggle(), { description = "Toggle window grouping" })
+hl.bind(mod .. " + SHIFT + G", hl.dsp.group.toggle(), { description = "Toggle window grouping" })
 hl.bind(mod .. " + ALT + G", hl.dsp.window.move({ out_of_group = true }), { description = "Move active window out of group" })
-hl.bind(mod .. " + ALT + LEFT", hl.dsp.window.move({ into_group = "l" }), { description = "Move window to group on left" })
-hl.bind(mod .. " + ALT + RIGHT", hl.dsp.window.move({ into_group = "r" }), { description = "Move window to group on right" })
+-- hl.bind(mod .. " + ALT + LEFT", hl.dsp.window.move({ into_group = "l" }), { description = "Move window to group on left" })
+-- hl.bind(mod .. " + ALT + RIGHT", hl.dsp.window.move({ into_group = "r" }), { description = "Move window to group on right" })
 hl.bind(mod .. " + ALT + UP", hl.dsp.window.move({ into_group = "u" }), { description = "Move window to group on top" })
 hl.bind(mod .. " + ALT + DOWN", hl.dsp.window.move({ into_group = "d" }), { description = "Move window to group on bottom" })
-hl.bind(mod .. " + ALT + TAB", hl.dsp.group.next(), { description = "Next window in group" })
-hl.bind(mod .. " + ALT + SHIFT + TAB", hl.dsp.group.prev(), { description = "Previous window in group" })
+hl.bind(mod .. " + ALT + H", hl.dsp.group.next(), { description = "Next window in group" })
+hl.bind(mod .. " + ALT + L", hl.dsp.group.prev(), { description = "Previous window in group" })
 ---- SCREENSHOTS --------
 hl.bind(mod .. " + ALT + 4", hl.dsp.exec_cmd("nixcfg-cmd-screenshot"), { description = "Screenshot of region" })
 hl.bind(mod .. " + ALT + 3", hl.dsp.exec_cmd("nixcfg-cmd-screenshot window"), { description = "Screenshot of window" })
