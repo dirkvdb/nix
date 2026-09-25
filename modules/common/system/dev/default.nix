@@ -42,6 +42,13 @@ in
         package = unstablePkgs.devenv;
       };
 
+      xdg.configFile."devenv/config.yaml".text = ''
+        version: 1
+        tui:
+          statusline:
+            enabled: false
+      '';
+
       programs.lazygit = {
         enable = true;
       };
