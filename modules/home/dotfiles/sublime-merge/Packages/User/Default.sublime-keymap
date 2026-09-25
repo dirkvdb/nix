@@ -1,0 +1,4 @@
+[
+    { "keys": ["ctrl+alt+o"], "command": "quick_switch_repository" },
+    { "keys": ["ctrl+shift+o"], "command": "noop" }
+]
