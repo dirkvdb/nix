@@ -17,6 +17,7 @@ let
     hostname == "mini" || nhConfigurationName == "dell-workstation"
   ) " && xilo push admin/nix ${if isStandalone then "\"$HOME/.local/state/nix/profiles/home-manager\"" else "/run/current-system"}";
   mkUserHome = mkHome user.name;
+  resetFlakeLock = "git -C ~/nix restore --source=HEAD --staged --worktree -- flake.lock";
 in
 {
   config = mkUserHome {
@@ -99,11 +100,11 @@ in
             "nh os switch -j2 ~/nix${nhHostArg} && nixcfg-reload${cachePush}";
         update =
           if isStandalone then
-            "git -C ~/nix pull -r --autostash && nrs"
+            "${resetFlakeLock} && git -C ~/nix pull -r --autostash && nrs"
           else if pkgs.stdenv.isDarwin then
-            "nh darwin switch -j2 --update ~/nix${nhHostArg}${cachePush}"
+            "${resetFlakeLock} && nh darwin switch -j2 --update ~/nix${nhHostArg}${cachePush}"
           else
-            "git -C ~/nix pull -r --autostash && nh os switch -j2 --update ~/nix${nhHostArg}${cachePush}";
+            "${resetFlakeLock} && git -C ~/nix pull -r --autostash && nh os switch -j2 --update ~/nix${nhHostArg}${cachePush}";
         tree = "lsd --tree";
         zed = lib.mkIf (config.local.desktop.enable or false) "zeditor";
         nodenv = "direnv exec / fish --no-config";
