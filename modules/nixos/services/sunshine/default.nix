@@ -97,6 +97,7 @@ in
       settings = {
         output_name = "SUNSHINE";
         origin_web_ui_allowed = "lan";
+        csrf_allowed_origins = "https://mini.fritz.box";
         gamepad = "xone";
         capture = "wlr";
         encoder = "vaapi";
