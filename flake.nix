@@ -124,7 +124,7 @@
     };
 
     spotifast = {
-      url = "github:crmne/spotifast/v0.10.1";
+      url = "github:crmne/spotifast/v0.10.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
