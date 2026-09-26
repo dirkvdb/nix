@@ -38,6 +38,13 @@ in
   };
 
   config = lib.mkIf (cfg.enable && !isHeadless) (mkUserHome {
+    assertions = [
+      {
+        assertion = !(pkgs.obsidianPlugins ? lockstep-sync);
+        message = "lockstep-sync is available in obsidian-extensions again; use pkgs.obsidianPlugins.lockstep-sync and remove pkgs/obsidian-lockstep-sync, its overlay entry, and this assertion.";
+      }
+    ];
+
     programs.obsidian = {
       enable = true;
       package = pkgs.obsidian;
@@ -54,7 +61,7 @@ in
         };
 
         communityPlugins = [
-          pkgs.obsidianPlugins.lockstep-sync
+          pkgs.obsidian-lockstep-sync
           pkgs.obsidianPlugins.cooklang-obsidian
         ];
 
