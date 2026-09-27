@@ -7,16 +7,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1790371086,
-        "narHash": "sha256-wDswxfXcMONs8zzwKuzLM21s1OLoERtvikqsAndDt5U=",
+        "lastModified": 1790524312,
+        "narHash": "sha256-w9k6Cvdj82K1o/EGgOT7dgxLIszJMs6QhlHEL/tyOqE=",
         "owner": "akitaonrails",
         "repo": "ai-usagebar",
-        "rev": "f78e266be47edcc0f80abca0f47753ef760f4596",
+        "rev": "5d1be4cb2b2ea14ca13eed6e143818716b42d873",
         "type": "github"
       },
       "original": {
         "owner": "akitaonrails",
-        "ref": "v1.25.0",
+        "ref": "v1.26.0",
         "repo": "ai-usagebar",
         "type": "github"
       }
@@ -602,11 +602,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1790513709,
-        "narHash": "sha256-n3aAHP2t+f6N5nfBbxSF0PUuF63PLKWe79sVPHhrAd0=",
+        "lastModified": 1790538925,
+        "narHash": "sha256-fEXK3KLMH34D7Wyb8p49EgXTVEFY/BBMh/KK7mJGpCA=",
         "owner": "noamsto",
         "repo": "nix-amd-ai",
-        "rev": "4b25fdbff8f2927fd7821ad51082f72b49568f6e",
+        "rev": "d2537b4d3a9ec004661dc76bda4ac2df2f204e3c",
         "type": "github"
       },
       "original": {
