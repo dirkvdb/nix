@@ -1279,11 +1279,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789421438,
-        "narHash": "sha256-PknnPlu5DMzS2HgroJzkZYvObpoSeqFTVzQ9R7IfnLI=",
+        "lastModified": 1790517622,
+        "narHash": "sha256-MN/BySxuAE94RAOhI8XsERxuLwCCFJSmYLDJhgqPjAA=",
         "owner": "dirkvdb",
         "repo": "tabulite",
-        "rev": "72f66562ca9f6eac6748d252043739be1a03ad49",
+        "rev": "de63b9a96b9f5cecead372bf6db7f576b8816a07",
         "type": "github"
       },
       "original": {
