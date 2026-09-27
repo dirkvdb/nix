@@ -134,7 +134,6 @@
       self,
       nixpkgs,
       nix-index-database,
-      nixos-wsl,
       sops-nix,
       darwin,
       lanzaboote,
@@ -257,7 +256,6 @@
             nix-index-database.nixosModules.nix-index
             sops-nix.nixosModules.sops
             inputs.nixflix.nixosModules.default
-            inputs.nix-amd-ai.nixosModules.default
             inputs.silent-sddm.nixosModules.default
             inputs.noctalia.nixosModules.default
             {
@@ -310,18 +308,20 @@
         mini = mkNixos {
           system = "x86_64-linux";
           hostPath = ./hosts/minisforum-ai-x1/configuration.nix;
+          extraModules = [ inputs.nix-amd-ai.nixosModules.default ];
         };
 
         macbook-pro = mkNixos {
           system = "aarch64-linux";
           hostPath = ./hosts/macbook-pro-m2-nixos/configuration.nix;
+          extraModules = [ inputs.apple-silicon.nixosModules.apple-silicon-support ];
           extraOverlays = [ inputs.apple-silicon.overlays.apple-silicon-overlay ];
         };
 
         wsl = mkNixos {
           system = "x86_64-linux";
           hostPath = ./hosts/wsl/configuration.nix;
-          extraModules = [ nixos-wsl.nixosModules.default ];
+          extraModules = [ inputs.nixos-wsl.nixosModules.default ];
         };
 
         mediastation = mkNixos {
