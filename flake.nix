@@ -27,7 +27,7 @@
     };
 
     ai-usagebar = {
-      url = "github:akitaonrails/ai-usagebar/v1.24.0";
+      url = "github:akitaonrails/ai-usagebar/v1.25.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -114,7 +114,7 @@
     };
 
     noctalia = {
-      url = "github:noctalia-dev/noctalia/v5.1.0";
+      url = "github:noctalia-dev/noctalia/v5.2.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
