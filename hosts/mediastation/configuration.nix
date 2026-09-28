@@ -31,18 +31,27 @@
 
     networking.hosts."192.168.1.13" = [ "nas.local" ];
 
+    environment.systemPackages = [ pkgs.ghostty.terminfo ];
+
     virtualisation.podman.enable = true;
 
     services.cockpit = {
       enable = true;
       openFirewall = true;
       plugins = [ pkgs.cockpit-podman ];
+      allowed-origins = [ "*" ];
+      settings.WebService.AllowUnencrypted = true;
+    };
+
+    systemd.services.cockpit.serviceConfig = {
+      ExecStartPre = [ "" ];
+      ExecStart = [ "" "${pkgs.cockpit}/libexec/cockpit-tls --no-tls" ];
     };
 
     services.homepage-dashboard = {
       enable = true;
       openFirewall = true;
-      allowedHosts = "localhost:8082,127.0.0.1:8082,mediastation:8082,mediastation.local:8082";
+      allowedHosts = "*";
       settings = {
         title = "Mediastation";
         description = "Service dashboard";
@@ -52,7 +61,7 @@
           Administration = [
             {
               Cockpit = {
-                href = "https://mediastation:9090";
+                href = "http://mediastation:9090";
                 description = "Host, services, logs and Podman";
                 icon = "cockpit";
               };
