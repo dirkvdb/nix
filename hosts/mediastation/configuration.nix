@@ -91,22 +91,12 @@
       };
 
       desktop = {
-        enable = true;
-        waybar.enable = true;
+        enable = false;
       };
 
       apps = {
         neovim.enable = true;
         sops.enable = true;
-        zed.enable = true;
-        ghostty.enable = true;
-        keepassxc = {
-          enable = true;
-          databasePaths = [
-            "/nas/ssd/secrets/Desktop.kdbx"
-          ];
-          keyfilePath = "/nas/secrets/desktop.key";
-        };
       };
     };
   };
