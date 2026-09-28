@@ -18,13 +18,93 @@
     system.stateVersion = "26.05";
 
     stylix.enable = true;
+    local.headless = true;
 
     hardware.graphics = {
       enable = true;
-      enable32Bit = true;
+
       extraPackages = with pkgs; [
         intel-media-driver
         libvdpau-va-gl
+      ];
+    };
+
+    # Keep the Dell's disks for the OS and small service state; bulk data lives on the NAS.
+    networking.hosts."192.168.1.13" = [ "nas.local" ];
+    fileSystems = {
+      "/data/media" = {
+        device = "nas.local:/volume1/media";
+        fsType = "nfs";
+        options = [ "nfsvers=4.1" "_netdev" "noatime" ];
+      };
+      "/data/downloads" = {
+        device = "nas.local:/volume1/downloads";
+        fsType = "nfs";
+        options = [ "nfsvers=4.1" "_netdev" "noatime" ];
+      };
+      "/data/data" = {
+        device = "nas.local:/volume1/data";
+        fsType = "nfs";
+        options = [ "nfsvers=4.1" "_netdev" "noatime" ];
+      };
+    };
+
+    virtualisation.podman.enable = true;
+
+    services.cockpit = {
+      enable = true;
+      openFirewall = true;
+      plugins = [ pkgs.cockpit-podman ];
+    };
+
+    services.homepage-dashboard = {
+      enable = true;
+      openFirewall = true;
+      allowedHosts = "localhost:8082,127.0.0.1:8082,mediastation:8082,mediastation.local:8082";
+      settings = {
+        title = "Mediastation";
+        description = "Service dashboard";
+      };
+      services = [
+        {
+          Administration = [
+            {
+              Cockpit = {
+                href = "https://mediastation:9090";
+                description = "Host, services, logs and Podman";
+                icon = "cockpit";
+              };
+            }
+            {
+              Homepage = {
+                href = "http://mediastation:8082";
+                description = "Dashboard status";
+                icon = "homepage";
+                siteMonitor = "http://127.0.0.1:8082";
+              };
+            }
+          ];
+        }
+        {
+          Storage = [
+            {
+              Synology = {
+                href = "https://nas.local:5001";
+                description = "Remote NFS storage";
+                icon = "synology";
+              };
+            }
+          ];
+        }
+      ];
+      widgets = [
+        {
+          resources = {
+            label = "Host";
+            disk = "/";
+            uptime = true;
+          };
+        }
       ];
     };
 
@@ -33,6 +113,7 @@
         enable = true;
         name = "dirk";
         home-manager.enable = true;
+
         shell.package = pkgs.fish;
       };
 
@@ -45,19 +126,7 @@
           ld.enable = true;
         };
 
-        boot = {
-          graphical = true;
-          systemd = {
-            enable = true;
-          };
-        };
-
-        loginmanager.tuigreet.enable = true;
-
-        audio.pipewire = {
-          enable = true;
-          airplay = false;
-        };
+        boot.systemd.enable = true;
         network = {
           enable = true;
           hostname = "mediastation";
@@ -68,17 +137,12 @@
           };
         };
 
-        nfs-mounts = {
-          enable = true;
-          presets.nas = true;
-        };
-
         utils = {
           sysadmin = true;
         };
-
-        fonts.enable = true;
       };
+
+      apps.sops.enable = true;
 
       services = {
         ssh = {
@@ -86,18 +150,9 @@
           disablePasswordAuth = true;
         };
         fwupd.enable = true;
-        docker.enable = true;
-        power-profiles-daemon.enable = true;
       };
 
-      desktop = {
-        enable = false;
-      };
 
-      apps = {
-        neovim.enable = true;
-        sops.enable = true;
-      };
     };
   };
 }
