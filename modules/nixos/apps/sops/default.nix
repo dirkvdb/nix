@@ -64,7 +64,7 @@ in
           owner = user.name;
         };
 
-        secrets."obsidian/${config.local.system.network.hostname}" = {
+        secrets."obsidian/${config.local.system.network.hostname}" = lib.mkIf (config.local.apps.obsidian.enable && !config.local.headless) {
           owner = user.name;
         };
 
