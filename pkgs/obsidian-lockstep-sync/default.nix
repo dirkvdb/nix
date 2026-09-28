@@ -5,16 +5,16 @@
 }:
 
 let
-  version = "1.0.8";
+  version = "1.0.9";
   baseUrl = "https://github.com/stephansergeev/obsidian-lockstep-sync/releases/download/${version}";
   pluginFiles = [
     (fetchurl {
       url = "${baseUrl}/main.js";
-      hash = "sha256-qtktq2NGrNsy1LHv8nlFDpP8Hfup6lSxzaHRJ295y7Y=";
+      hash = "sha256-VT0Rh/AXL8rbXENLIyTPlWMrKF+VPzOt5Oq/nuOtbMA=";
     })
     (fetchurl {
       url = "${baseUrl}/manifest.json";
-      hash = "sha256-MDLqu9Qi97CH0gHSht0EIty4vnfrECqpRvVcMN2lAA8=";
+      hash = "sha256-YpXEY8lIXY5oSWAEqjvMkHzeUHo68jOjYqFN9KBdd8k=";
     })
     (fetchurl {
       url = "${baseUrl}/styles.css";
