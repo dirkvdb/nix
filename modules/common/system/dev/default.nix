@@ -20,7 +20,7 @@ in
     environment.systemPackages =
       with pkgs;
       [
-        just
+        tabulite
         serie
         binsider
         nixd

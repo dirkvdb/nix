@@ -36,9 +36,9 @@ in
         curl
         file
         fzf
+        just
         micro
         ram
-        tabulite
         rsync
         ripgrep
         zip
