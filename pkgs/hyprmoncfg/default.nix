@@ -8,13 +8,13 @@
 
 (buildGoModule.override { go = go_1_26; }) (finalAttrs: {
   pname = "hyprmoncfg";
-  version = "1.19.1";
+  version = "1.20.2";
 
   src = fetchFromGitHub {
     owner = "crmne";
     repo = "hyprmoncfg";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-8CngoZQXTx9/yDSHE2nfrlyfWuVKvWE4rV998ptHO3c=";
+    hash = "sha256-M3v1LPVm1iZJX1/CwF5ToXoC+AL0J7ORJE870U+uBdM=";
   };
 
   vendorHash = "sha256-gQbjvdKtO0hCXrs9RnWo1s0YeHf5W9t+8AgS2ELXlPo=";
