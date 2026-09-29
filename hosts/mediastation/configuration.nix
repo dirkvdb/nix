@@ -129,7 +129,10 @@
         };
       };
 
-      apps.sops.enable = true;
+      apps = {
+        sops.enable = true;
+        herdr.enable = true;
+      };
 
       services = {
         ssh = {
@@ -139,7 +142,6 @@
         fwupd.enable = true;
         nixflix.enable = true;
       };
-
     };
   };
 }
