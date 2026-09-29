@@ -27,12 +27,14 @@ in
         freetype
         fribidi
         harfbuzz
+        dbus
         libGL
         libxkbcommon
         libx11
         libxcursor
         libxi
         libxrandr
+        wayland
       ];
     };
   };
