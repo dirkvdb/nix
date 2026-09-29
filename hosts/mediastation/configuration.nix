@@ -45,7 +45,10 @@
 
     systemd.services.cockpit.serviceConfig = {
       ExecStartPre = [ "" ];
-      ExecStart = [ "" "${pkgs.cockpit}/libexec/cockpit-tls --no-tls" ];
+      ExecStart = [
+        ""
+        "${pkgs.cockpit}/libexec/cockpit-tls --no-tls"
+      ];
     };
 
     services.homepage-dashboard = {
@@ -88,45 +91,61 @@
           ];
         }
         {
-          "Media *arr" = [
+          "Arr" = [
             {
               Sonarr = {
-                href = "https://sonarr.arr";
+                href = "http://sonarr.arr";
                 description = "TV series management";
                 icon = "sonarr";
-                siteMonitor = "https://sonarr.arr";
+                siteMonitor = "http://sonarr.arr";
               };
             }
             {
               Radarr = {
-                href = "https://radarr.arr";
+                href = "http://radarr.arr";
                 description = "Movie management";
                 icon = "radarr";
-                siteMonitor = "https://radarr.arr";
+                siteMonitor = "http://radarr.arr";
               };
             }
             {
               Lidarr = {
-                href = "https://lidarr.arr";
+                href = "http://lidarr.arr";
                 description = "Music management";
                 icon = "lidarr";
-                siteMonitor = "https://lidarr.arr";
+                siteMonitor = "http://lidarr.arr";
               };
             }
             {
               Prowlarr = {
-                href = "https://prowlarr.arr";
+                href = "http://prowlarr.arr";
                 description = "Indexer management";
                 icon = "prowlarr";
-                siteMonitor = "https://prowlarr.arr";
+                siteMonitor = "http://prowlarr.arr";
               };
             }
             {
               Bazarr = {
-                href = "https://bazarr.arr";
+                href = "http://bazarr.arr";
                 description = "Subtitle management";
                 icon = "bazarr";
-                siteMonitor = "https://bazarr.arr";
+                siteMonitor = "http://bazarr.arr";
+              };
+            }
+            {
+              Seerr = {
+                href = "http://seerr.arr";
+                description = "Media requests";
+                icon = "seerr";
+                siteMonitor = "http://seerr.arr";
+              };
+            }
+            {
+              Jellyfin = {
+                href = "http://jellyfin.arr";
+                description = "Media streaming";
+                icon = "jellyfin";
+                siteMonitor = "http://jellyfin.arr";
               };
             }
           ];
@@ -142,6 +161,31 @@
         }
       ];
     };
+    virtualisation.oci-containers = {
+      backend = "podman";
+      containers.homarr = {
+        image = "ghcr.io/homarr-labs/homarr:v1.77.2";
+        ports = [ "8083:7575" ];
+        volumes = [ "/var/lib/homarr/appdata:/appdata" ];
+        environmentFiles = [ "/var/lib/homarr/env" ];
+      };
+    };
+
+    systemd.services.podman-homarr = {
+      serviceConfig = {
+        StateDirectory = "homarr";
+        StateDirectoryMode = "0700";
+      };
+      preStart = ''
+        install -d -m 0700 /var/lib/homarr/appdata
+        if [ ! -s /var/lib/homarr/env ]; then
+          umask 077
+          printf 'SECRET_ENCRYPTION_KEY=%s\n' "$(${pkgs.openssl}/bin/openssl rand -hex 32)" > /var/lib/homarr/env
+        fi
+      '';
+    };
+
+    networking.firewall.allowedTCPPorts = [ 8082 ];
 
     local = {
       user = {
@@ -194,6 +238,7 @@
         };
         fwupd.enable = true;
         nixflix.enable = true;
+        # nordvpn.enable = true;
       };
     };
   };
