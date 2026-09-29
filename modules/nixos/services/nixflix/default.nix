@@ -190,11 +190,6 @@ in
     services.nginx.virtualHosts."lidarr.arr".locations."/".proxyWebsockets = lib.mkForce true;
     services.nginx.virtualHosts."prowlarr.arr".locations."/".proxyWebsockets = lib.mkForce true;
 
-    # Stable's recyclarr module still passes `--app-data`, which was removed
-    # in recyclarr 8.x. Rewrite ExecStart to the 8.x-compatible invocation.
-    systemd.services.recyclarr.serviceConfig.ExecStart =
-      lib.mkForce "${lib.getExe unstablePkgs.recyclarr} sync --config /var/lib/recyclarr/config.json";
-
     sops.secrets = {
       "vpn/nordvpn-be.conf" = { };
       "sonarr/api_key" = { };
