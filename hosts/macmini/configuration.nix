@@ -93,7 +93,6 @@
         };
         fwupd.enable = true;
         power-profiles-daemon.enable = true;
-        nixflix.enable = true;
       };
 
       desktop = {

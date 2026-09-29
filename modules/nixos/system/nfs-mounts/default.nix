@@ -37,10 +37,12 @@ in
             options = lib.mkOption {
               type = lib.types.listOf lib.types.str;
               default = [
+                "nfsvers=4.1"
                 "rw"
                 "defaults"
                 "x-systemd.automount"
                 "noauto"
+                "noatime"
                 "_netdev" # filesystem requires a network connection before it can be mounted
                 "x-systemd.idle-timeout=10min"
                 "soft" # return errors instead of hanging indefinitely when the server is unreachable

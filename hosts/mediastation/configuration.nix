@@ -29,25 +29,7 @@
       ];
     };
 
-    # Keep the Dell's disks for the OS and small service state; bulk data lives on the NAS.
     networking.hosts."192.168.1.13" = [ "nas.local" ];
-    fileSystems = {
-      "/data/media" = {
-        device = "nas.local:/volume1/media";
-        fsType = "nfs";
-        options = [ "nfsvers=4.1" "_netdev" "noatime" ];
-      };
-      "/data/downloads" = {
-        device = "nas.local:/volume1/downloads";
-        fsType = "nfs";
-        options = [ "nfsvers=4.1" "_netdev" "noatime" ];
-      };
-      "/data/data" = {
-        device = "nas.local:/volume1/data";
-        fsType = "nfs";
-        options = [ "nfsvers=4.1" "_netdev" "noatime" ];
-      };
-    };
 
     virtualisation.podman.enable = true;
 
@@ -137,6 +119,11 @@
           };
         };
 
+        nfs-mounts = {
+          enable = true;
+          presets.nas = true;
+        };
+
         utils = {
           sysadmin = true;
         };
@@ -150,8 +137,8 @@
           disablePasswordAuth = true;
         };
         fwupd.enable = true;
+        nixflix.enable = true;
       };
-
 
     };
   };
