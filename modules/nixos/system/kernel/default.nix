@@ -60,7 +60,9 @@ in
             # zenpower does not use kernelModuleMakeFlags, so it otherwise
             # falls back to GCC even when the kernel was built with LLVM.
             zenpower = prev.zenpower.overrideAttrs (old: {
-              makeFlags = prev.kernelModuleMakeFlags ++ (old.makeFlags or [ ]);
+              postPatch = (old.postPatch or "") + ''
+                substituteInPlace Makefile --replace-fail "-Wimplicit-fallthrough=3" "-Wimplicit-fallthrough"
+              '';
             });
           }
         )
