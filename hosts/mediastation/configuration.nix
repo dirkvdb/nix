@@ -78,6 +78,50 @@
             }
           ];
         }
+        {
+          "Media *arr" = [
+            {
+              Sonarr = {
+                href = "https://sonarr.arr";
+                description = "TV series management";
+                icon = "sonarr";
+                siteMonitor = "https://sonarr.arr";
+              };
+            }
+            {
+              Radarr = {
+                href = "https://radarr.arr";
+                description = "Movie management";
+                icon = "radarr";
+                siteMonitor = "https://radarr.arr";
+              };
+            }
+            {
+              Lidarr = {
+                href = "https://lidarr.arr";
+                description = "Music management";
+                icon = "lidarr";
+                siteMonitor = "https://lidarr.arr";
+              };
+            }
+            {
+              Prowlarr = {
+                href = "https://prowlarr.arr";
+                description = "Indexer management";
+                icon = "prowlarr";
+                siteMonitor = "https://prowlarr.arr";
+              };
+            }
+            {
+              Bazarr = {
+                href = "https://bazarr.arr";
+                description = "Subtitle management";
+                icon = "bazarr";
+                siteMonitor = "https://bazarr.arr";
+              };
+            }
+          ];
+        }
       ];
       widgets = [
         {
