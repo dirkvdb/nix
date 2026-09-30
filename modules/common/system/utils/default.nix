@@ -41,6 +41,7 @@ in
         ram
         rsync
         ripgrep
+        unstablePkgs.superfile
         zip
         unzip
         wget
