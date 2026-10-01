@@ -55,6 +55,10 @@
     ];
 
 
+    # Execute native ARM Linux derivations under QEMU without changing their store paths.
+    boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+    boot.binfmt.addEmulatedSystemsToNixSandbox = true;
+
     services.udev.packages = with pkgs; [
       platformio-core.udev
     ];
