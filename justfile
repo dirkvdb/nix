@@ -14,6 +14,11 @@ default:
 build:
     nh {{ os_cmd }} build . -H {{ system_config }}
 
+# Build the native ARM MacBook system and publish it to the ARM cache (no activation)
+build-arm-cache:
+    nix build .#nixosConfigurations.macbook-pro.config.system.build.toplevel --no-update-lock-file --max-jobs 1 --cores 12 --out-link result-arm --print-build-logs
+    xilo push admin/aarch64 ./result-arm
+
 bumpzed version:
     nix shell nixpkgs#python3 -c python3 ./scripts/bump-zed.py "{{ version }}"
 

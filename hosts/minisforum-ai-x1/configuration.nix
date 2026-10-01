@@ -59,6 +59,11 @@
     boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
     boot.binfmt.addEmulatedSystemsToNixSandbox = true;
 
+    nix.settings = {
+      extra-substituters = [ "https://nix-cache.hl.vandenboer.eu/c/admin/aarch64" ];
+      extra-trusted-public-keys = [ "aarch64:GXmlBw2l2lzWB3cMzNJZ3mpkyAtNaT5z1WaOK9Qcmow=" ];
+    };
+
     services.udev.packages = with pkgs; [
       platformio-core.udev
     ];

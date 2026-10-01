@@ -23,6 +23,11 @@ in
   config = {
     system.stateVersion = "26.05"; # Version at install time, never change
 
+    nix.settings = {
+      extra-substituters = [ "https://nix-cache.hl.vandenboer.eu/c/admin/aarch64" ];
+      extra-trusted-public-keys = [ "aarch64:GXmlBw2l2lzWB3cMzNJZ3mpkyAtNaT5z1WaOK9Qcmow=" ];
+    };
+
     # Enable ZRAM for memory compression
     zramSwap = {
       enable = true;
