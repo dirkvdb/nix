@@ -101,6 +101,7 @@
         "visual-studio-code"
         "orbstack"
         "db-browser-for-sqlite"
+        "dymo-connect"
         #"qgis"
         # autodesk-fusion
         "prusaslicer"
