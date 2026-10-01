@@ -69,7 +69,6 @@ in
       (with pkgs; [
         age
         autossh
-        cpx
         dua
         fd
         fzf
@@ -81,6 +80,7 @@ in
         tabiew
 
       ])
+      ++ lib.optionals pkgs.stdenv.isLinux [ pkgs.cpx ]
       ++ lib.optionals (!pkgs.stdenv.isDarwin) (
         with unstablePkgs;
         [

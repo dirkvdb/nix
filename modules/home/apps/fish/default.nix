@@ -77,7 +77,7 @@ in
       '';
 
       shellAliases = {
-        cp = "cpx";
+        cp = lib.mkIf pkgs.stdenv.isLinux "cpx";
       };
 
       shellAbbrs = {
