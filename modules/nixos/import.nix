@@ -14,8 +14,8 @@ let
 
   getDefaultNix =
     dir:
-    map (file: ./. + "/${file}") (builtins.filter (file: baseNameOf file == "default.nix") (files dir));
+    map (file: dir + "/${file}") (builtins.filter (file: baseNameOf file == "default.nix") (files dir));
 in
 {
-  imports = getDefaultNix ./. ++ [ ../common/import.nix ];
+  imports = getDefaultNix ./. ++ getDefaultNix ../quadlets ++ [ ../common/import.nix ];
 }
