@@ -167,6 +167,7 @@
     quadlets = {
       homarr.enable = true;
       frigate.enable = true;
+      daikin2mqtt.enable = true;
       home-assistant.enable = false;
     };
 
