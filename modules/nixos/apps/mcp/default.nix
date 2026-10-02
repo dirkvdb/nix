@@ -24,17 +24,7 @@ in
           JIRA_PERSONAL_TOKEN.file = config.sops.secrets.jira_personal_token.path;
         };
       };
-      servers.affine = {
-        command = "sh";
-        args = [
-          "-c"
-          ''exec uvx --with "mcp<2" mcp-proxy --transport=streamablehttp --stateless "$AFFINE_MCP_URL/api/workspaces/5f0a038e-be51-470a-8fef-ec17b58fb0fd/mcp"''
-        ];
-        env = {
-          AFFINE_MCP_URL.file = config.sops.secrets.affine_mcp_url.path;
-          API_ACCESS_TOKEN.file = config.sops.secrets.affine_mcp_token.path;
-        };
-      };
+
     };
 
     programs.zed-editor.enableMcpIntegration = true;

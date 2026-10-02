@@ -44,13 +44,6 @@ in
           owner = user.name;
         };
 
-        secrets.affine_mcp_token = {
-          owner = user.name;
-        };
-
-        secrets.affine_mcp_url = {
-          owner = user.name;
-        };
 
         secrets.home_assistant_api_key = {
           owner = user.name;

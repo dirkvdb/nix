@@ -36,19 +36,6 @@ let
     };
   };
   opencodeMcpSettings = {
-    affine = {
-      type = "local";
-      command = [
-        "sh"
-        "-c"
-        ''exec uvx --with "mcp<2" mcp-proxy --transport=streamablehttp --stateless "$AFFINE_MCP_URL/api/workspaces/5f0a038e-be51-470a-8fef-ec17b58fb0fd/mcp"''
-      ];
-      environment = {
-        AFFINE_MCP_URL = config.sops.placeholder.affine_mcp_url;
-        API_ACCESS_TOKEN = config.sops.placeholder.affine_mcp_token;
-      };
-      enabled = true;
-    };
   }
   // lib.optionalAttrs vpnjumphostEnabled {
     jira = {
