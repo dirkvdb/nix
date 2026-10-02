@@ -161,29 +161,35 @@
         }
       ];
     };
-    virtualisation.oci-containers = {
-      backend = "podman";
-      containers.homarr = {
-        image = "ghcr.io/homarr-labs/homarr:v1.77.2";
-        ports = [ "8083:7575" ];
-        volumes = [ "/var/lib/homarr/appdata:/appdata" ];
-        environmentFiles = [ "/var/lib/homarr/env" ];
-      };
-    };
+    environment.etc."containers/systemd/homarr.container".text = ''
+      [Unit]
+      Description=Homarr dashboard
 
-    systemd.services.podman-homarr = {
-      serviceConfig = {
-        StateDirectory = "homarr";
-        StateDirectoryMode = "0700";
-      };
-      preStart = ''
-        install -d -m 0700 /var/lib/homarr/appdata
+      [Container]
+      Image=ghcr.io/homarr-labs/homarr:v1.77.2
+      ContainerName=homarr
+      ServiceName=podman-homarr
+      PublishPort=8083:7575
+      Volume=/var/lib/homarr/appdata:/appdata
+      EnvironmentFile=/var/lib/homarr/env
+
+      [Service]
+      Restart=always
+      TimeoutStartSec=900
+      StateDirectory=homarr
+      StateDirectoryMode=0700
+      ExecStartPre=${pkgs.writeShellScript "homarr-prepare" ''
+        set -eu
+        ${pkgs.coreutils}/bin/install -d -m 0700 /var/lib/homarr/appdata
         if [ ! -s /var/lib/homarr/env ]; then
           umask 077
           printf 'SECRET_ENCRYPTION_KEY=%s\n' "$(${pkgs.openssl}/bin/openssl rand -hex 32)" > /var/lib/homarr/env
         fi
-      '';
-    };
+      ''}
+
+      [Install]
+      WantedBy=multi-user.target
+    '';
 
     networking.firewall.allowedTCPPorts = [ 8082 ];
 
