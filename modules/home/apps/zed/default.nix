@@ -114,6 +114,7 @@ in
     programs.zed-editor = {
       enable = true;
       mutableUserSettings = true;
+      themes.charcoal-grove = ./charcoal-grove.json;
       package =
         if pkgs.stdenv.isDarwin || isHeadless then
           null
@@ -277,9 +278,9 @@ in
             font_family = theme.terminalFont;
           };
           theme = {
-            mode = "system";
+            mode = "dark";
             light = "Ayu Light";
-            dark = "Ayu Mirage";
+            dark = "Charcoal Grove";
           };
           lsp = {
             bash-language-server = lib.mkIf (!pkgs.stdenv.isDarwin) {

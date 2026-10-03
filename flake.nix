@@ -26,6 +26,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    topq = {
+      url = "github:dirkvdb/topq";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     ai-usagebar = {
       url = "github:akitaonrails/ai-usagebar/v1.30.0";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -184,6 +189,7 @@
 
         ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
+        topq = inputs.topq.packages.${prev.stdenv.hostPlatform.system}.default;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
         spotifast = inputs.spotifast.packages.${prev.stdenv.hostPlatform.system}.spotifast;
         hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;

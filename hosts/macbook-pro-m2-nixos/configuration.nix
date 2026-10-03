@@ -141,6 +141,7 @@ in
         direnv.enable = true;
         herdr.enable = true;
         mqtt.enable = true;
+        topq.enable = true;
         spotifast.enable = true;
         foliate.enable = true;
         localsend.enable = true;
