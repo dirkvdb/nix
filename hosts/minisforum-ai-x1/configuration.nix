@@ -203,6 +203,7 @@
         localsend.enable = true;
         moonlight.enable = true;
         mqtt.enable = true;
+        topq.enable = true;
         neovim.enable = true;
         obsidian = {
           enable = true;
