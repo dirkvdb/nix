@@ -110,7 +110,7 @@
 
         video.amd.enable = true;
         display.brightnesscontrol = {
-          enable = false;
+          enable = true;
           i2cDevice = "i2c-13";
           # Dell U2725QE fails the ddcci driver's identification probe with
           # the default 60ms delay (dmesg: "core device probe failed: -19"),
