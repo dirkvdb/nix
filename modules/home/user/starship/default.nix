@@ -105,14 +105,11 @@ in
           format = "[─](fg:separator)[](fg:pixishell)[](fg:icon bg:pixishell)[](fg:pixishell bg:background)[ $output](bg:background)[](fg:background)";
         };
 
-        # The built-in Rust module prefers rustup's configured toolchain over
-        # the rustc selected by devenv. Read rustc from the active PATH instead.
+        # Show the Rust toolchain selected by devenv
         custom.rust = {
-          command = "rustc --version | cut -d' ' -f2";
-          when = "command -v rustc >/dev/null 2>&1";
-          detect_files = [ "Cargo.toml" ];
-          detect_extensions = [ "rs" ];
-          format = "[─](fg:separator)[](fg:rust)[󱘗](fg:icon bg:rust)[](fg:rust bg:background)[ v$output](bg:background)[](fg:background)";
+          command = "rustc --version 2>/dev/null | cut -d' ' -f2";
+          when = "[ -n \"$DEVENV_ROOT\" ] && rustc --version >/dev/null 2>&1";
+          format = "([─](fg:separator)[](fg:rust)[󱘗](fg:icon bg:rust)[](fg:rust bg:background)[ v$output](bg:background)[](fg:background))";
         };
 
         git_branch = {
