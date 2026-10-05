@@ -2,7 +2,7 @@
   lib,
   pkgs,
   config,
-  inputs,
+  unstablePkgs,
   mkHome,
   ...
 }:
@@ -50,6 +50,19 @@ let
   # use storage key mechanism instead of secrets store, because noctalia starts before
   # the secrets store is unlocked (it waits for the systray), and causes a
   noctaliaStorageKeyFile = config.sops.secrets.noctalia_storage_key.path;
+  noctaliaConfigPath = "/run/secrets/rendered/noctalia-config.toml";
+  noctaliaConfigLink = pkgs.runCommand "noctalia-config-link" { } ''
+    ln -s ${lib.escapeShellArg noctaliaConfigPath} "$out"
+  '';
+  noctaliaPackage = unstablePkgs.noctalia.overrideAttrs (old: {
+    patches = (old.patches or [ ]) ++ [
+      ./trayicon.patch
+    ];
+    env = (old.env or { }) // lib.optionalAttrs pkgs.stdenv.hostPlatform.isx86_64 {
+      NIX_CFLAGS_COMPILE = "-march=x86-64-v3";
+      NIX_CXXFLAGS_COMPILE = "-march=x86-64-v3";
+    };
+  });
 
   # See https://docs.noctalia.dev/v5/getting-started/nixos/ for the schema.
   noctaliaSettings = {
@@ -458,6 +471,7 @@ let
   };
 in
 {
+
   options.local.desktop.noctalia = {
     enable = lib.mkEnableOption "Noctalia v5 (beta) desktop shell";
 
@@ -509,32 +523,13 @@ in
       # https://github.com/noctalia-dev/noctalia/issues/3277
       security.pam.services.login.fprintAuth = lib.mkIf cfg.fingerprint.enable false;
 
-      programs.noctalia = {
-        enable = true;
-        package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
-          patches = (old.patches or [ ]) ++ [
-            ./trayicon.patch
-          ];
-          env = (old.env or { }) // lib.optionalAttrs pkgs.stdenv.hostPlatform.isx86_64 {
-            NIX_CFLAGS_COMPILE = "-march=x86-64-v3";
-            NIX_CXXFLAGS_COMPILE = "-march=x86-64-v3";
-          };
-        });
-
-        # Starts noctalia automatically after login via a systemd user
-        # service, tied to the same graphical-session.target that UWSM
-        # activates once Hyprland is up.
-        systemd.enable = true;
-
-        # Enables NetworkManager, Bluetooth, UPower, and a power profile service.
-        recommendedServices.enable = true;
-      };
 
       # Renders config.toml with the vito_outlook calendar's ICS URL secret
       # substituted in, so the plaintext URL never lands in the world-readable
-      # Nix store; only the placeholder token does.
+      # Nix store; only the placeholder token does. Home Manager links this
+      # runtime file into ~/.config/noctalia/config.toml.
       sops.templates."noctalia-config" = {
-        path = "/home/${user.name}/.config/noctalia/config.toml";
+        path = noctaliaConfigPath;
         owner = user.name;
         mode = "0400";
         content = builtins.readFile noctaliaConfigToml;
@@ -544,10 +539,18 @@ in
       # Hyprland keybindings specific to this shell (Noctalia power menu).
       xdg.configFile."hypr/bindings-noctalia.lua".source = ./bindings.lua;
 
-      # Noctalia's own settings (bar layout, theme, session actions, ...) are
-      # rendered via sops.templates."noctalia-config" above instead of being
-      # symlinked directly here, since the calendar section can contain a
-      # secret (ICS feed URL).
+      # Home Manager normally links its generated TOML from the Nix store;
+      # use the SOPS-rendered runtime copy to keep the calendar URL out of it.
+      xdg.configFile."noctalia/config.toml".source = lib.mkForce noctaliaConfigLink;
+
+      programs.noctalia = {
+        enable = true;
+        package = noctaliaPackage;
+        settings = noctaliaSettings;
+        customPalettes.${noctaliaPaletteName} = noctaliaPalette;
+        # Starts noctalia automatically after login via the graphical-session target.
+        systemd.enable = true;
+      };
 
       # Upstream ships no fish completions for the noctalia CLI; provide a
       # hand-maintained one (msg subcommands are queried live from the
@@ -556,9 +559,6 @@ in
         user.shell.package == pkgs.fish || config.local.system.shell.fish.enable
       ) { source = ./completions.fish; };
 
-      # Custom palette generated from the active stylix colors; selected via
-      # [theme] source = "custom", custom_palette = "stylix" in config.toml.
-      xdg.configFile."noctalia/palettes/${noctaliaPaletteName}.json".text = builtins.toJSON noctaliaPalette;
 
       # Oneshot gate that blocks until the StatusNotifierWatcher D-Bus name
       # appears. tray.target already orders After=noctalia.service, but

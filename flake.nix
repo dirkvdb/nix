@@ -118,11 +118,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    noctalia = {
-      url = "github:noctalia-dev/noctalia/v5.2.1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     tether = {
       url = "github:zackb/tether";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -263,7 +258,6 @@
             sops-nix.nixosModules.sops
             inputs.nixflix.nixosModules.default
             inputs.silent-sddm.nixosModules.default
-            inputs.noctalia.nixosModules.default
             {
               nixpkgs.hostPlatform = system;
               nixpkgs.config.permittedInsecurePackages = [ "freeimage-unstable-2021-11-01" ];
