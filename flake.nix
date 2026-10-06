@@ -123,10 +123,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    spotifast = {
-      url = "github:crmne/spotifast/v0.12.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -186,7 +182,7 @@
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
         topq = inputs.topq.packages.${prev.stdenv.hostPlatform.system}.default;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
-        spotifast = inputs.spotifast.packages.${prev.stdenv.hostPlatform.system}.spotifast;
+
         hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;
 
         # nixos-apple-silicon uses this firmware package before it is available in 26.05.

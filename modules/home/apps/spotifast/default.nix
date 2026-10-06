@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  unstablePkgs,
   mkHome,
   inputs,
   ...
@@ -88,7 +89,7 @@ in
   };
 
   config = lib.mkIf (cfg.enable && !isHeadless) (mkUserHome {
-    home.packages = [ pkgs.spotifast ];
+    home.packages = [ unstablePkgs.spotifast ];
 
     # Render the SOPS-managed client ID at activation time so it never enters
     # the Nix store. Keep the result writable because spotifast updates it.
