@@ -387,6 +387,7 @@
         sops.enable = true;
         spotify.enable = true;
         teams.enable = true;
+        topq.enable = true;
         voxtype.enable = true;
         vscode.enable = true;
         whatsapp.enable = true;
