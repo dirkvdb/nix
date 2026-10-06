@@ -213,7 +213,6 @@ in
 
           agent = {
             dock = "right";
-            sidebar_side = "right";
             use_modifier_to_send = false;
             default_profile = "write";
             show_turn_stats = true;
