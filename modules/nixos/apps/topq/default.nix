@@ -15,8 +15,8 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ pkgs.topq ];
 
-    home-manager.users.${config.local.user.name}.xdg.configFile."topq/config.json".text =
-      builtins.toJSON {
+    home-manager.users.${config.local.user.name}.xdg.configFile = {
+      "topq/config.json".text = builtins.toJSON {
         connections = [
           {
             name = "NAS";
@@ -33,5 +33,7 @@ in
         ];
         active_connection = "NAS";
       };
+      "topq/themes/charcoal-grove.json".source = ./charcoal-grove.json;
+    };
   };
 }
