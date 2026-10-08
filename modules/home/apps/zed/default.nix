@@ -15,7 +15,7 @@ let
   inherit (config.local) theme;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
-  zedPinnedVersion = "1.22.0";
+  zedPinnedVersion = "1.23.2";
 
   zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
     version = zedPinnedVersion;
@@ -24,12 +24,12 @@ let
       owner = "zed-industries";
       repo = "zed";
       tag = "v${version}";
-      hash = "sha256-XdWQjtdkbSqyEP/c2bGycPFEHS37tonSzTeVxyK1AHw=";
+      hash = "sha256-DHqtRCDp6DqdV7J5SIx4poSZixwLXl/DMjM4omQXea4=";
     };
     cargoDeps = unstablePkgs.rustPlatform.fetchCargoVendor {
       inherit src;
       name = "${old.pname}-${version}";
-      hash = "sha256-9EjEMN+oyUE2HdhC42dxPk4q20qhB49qRBTqg4iY/b8=";
+      hash = "sha256-SKLwyuR/FC307wRnHRhcIjGjD7yBRQx5sqA6jSyDIOI=";
     };
     env = (old.env or { }) // lib.optionalAttrs unstablePkgs.stdenv.hostPlatform.isx86_64 {
       NIX_CFLAGS_COMPILE = "-march=x86-64-v3";
