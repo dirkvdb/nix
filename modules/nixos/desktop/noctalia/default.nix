@@ -215,6 +215,16 @@ let
       show_toast = false;
     };
 
+    # When the disk is encrypted, a password was already entered to boot
+    # Only lock the session at boot when the disk is unencrypted
+    hooks = lib.optionalAttrs (
+      config.local.system.loginmanager.sddm.enable
+      && config.local.system.loginmanager.sddm.autologin.enable
+      && config.boot.initrd.luks.devices == { }
+    ) {
+      started = "${lib.getExe noctaliaPackage} msg session lock";
+    };
+
     shell = {
       animation.speed = 3.0;
       app_icon_color = "primary";

@@ -252,10 +252,7 @@
 
         loginmanager.sddm = {
           enable = true;
-          autologin = {
-            enable = true;
-            user = "dirk";
-          };
+          autologin.enable = true;
         };
 
         input.keyboard.via = true;

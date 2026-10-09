@@ -90,6 +90,7 @@ in
       enable = lib.mkEnableOption "Auto-login (useful when LUKS already provides authentication)";
       user = lib.mkOption {
         type = lib.types.str;
+        default = config.local.user.name;
         description = "The username to auto-login as";
       };
     };

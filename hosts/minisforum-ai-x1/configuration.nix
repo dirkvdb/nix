@@ -98,6 +98,7 @@
 
         loginmanager.sddm = {
           enable = true;
+          autologin.enable = true;
           display = "DP-3";
         };
 

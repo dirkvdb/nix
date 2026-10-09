@@ -67,6 +67,7 @@ in
 
         loginmanager.sddm = {
           enable = true;
+          autologin.enable = true;
           defaultUser = user.name;
           display = "eDP-1";
         };
