@@ -186,6 +186,7 @@ in
             limit_content_width = false;
           };
 
+          agent_ui_font_size = 14.0;
           ui_font_size = 13.0;
           ui_font_family = "RobotoMono Nerd Font Propo";
           ui_font_features = {
