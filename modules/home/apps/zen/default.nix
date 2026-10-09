@@ -195,6 +195,8 @@ in
             "browser.translations.neverTranslateLanguages" = "nl";
             "browser.toolbars.bookmarks.visibility" = "always";
             "browser.download.autohideButton" = true;
+            # The firefox print dialof always hangs
+            "print.prefer_system_dialog" = true;
             "extensions.ui.dictionary.hidden" = true;
             "font.name.serif.x-western" = theme.uiFontSerif;
             "font.name.sans-serif.x-western" = theme.uiFont;
