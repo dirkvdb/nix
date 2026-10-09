@@ -9,6 +9,11 @@ let
 in
 {
   config = mkUserHome {
+    programs.gh = {
+      enable = true;
+      settings.git_protocol = "ssh";
+    };
+
     programs.git = {
       enable = true;
       lfs.enable = true;
