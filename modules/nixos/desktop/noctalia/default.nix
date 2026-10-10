@@ -58,10 +58,12 @@ let
     patches = (old.patches or [ ]) ++ [
       ./trayicon.patch
     ];
-    env = (old.env or { }) // lib.optionalAttrs pkgs.stdenv.hostPlatform.isx86_64 {
-      NIX_CFLAGS_COMPILE = "-march=x86-64-v3";
-      NIX_CXXFLAGS_COMPILE = "-march=x86-64-v3";
-    };
+    env =
+      (old.env or { })
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isx86_64 {
+        NIX_CFLAGS_COMPILE = "-march=x86-64-v3";
+        NIX_CXXFLAGS_COMPILE = "-march=x86-64-v3";
+      };
   });
 
   # See https://docs.noctalia.dev/v5/getting-started/nixos/ for the schema.
@@ -83,7 +85,10 @@ let
 
     bar.default = {
       font_family = config.stylix.fonts.sansSerif.name;
-      center = lib.optionals (!hasNotch) [ "clock" ] ++ [ "notifications" ] ++ lib.optionals voxtypeEnabled [ "status" ];
+      center =
+        lib.optionals (!hasNotch) [ "clock" ]
+        ++ [ "notifications" ]
+        ++ lib.optionals voxtypeEnabled [ "status" ];
       end = [
         "cpu"
         "ram"
@@ -91,9 +96,11 @@ let
         "tray"
         "clipboard"
         "network"
-      ] ++ lib.optionals tailscaleEnabled [
+      ]
+      ++ lib.optionals tailscaleEnabled [
         "tailnet"
-      ] ++ [
+      ]
+      ++ [
         "bluetooth"
         "volume"
         "brightness"
@@ -109,9 +116,14 @@ let
         "launcher"
         "workspaces"
         "spacer_2"
-      ] ++ lib.optionals devUtilsEnabled [
+      ]
+      ++ lib.optionals devUtilsEnabled [
         "bar"
-      ] ++ lib.optionals hasNotch [ "spacer_3" "clock" ];
+      ]
+      ++ lib.optionals hasNotch [
+        "spacer_3"
+        "clock"
+      ];
     };
 
     battery.warning_threshold = 5;
@@ -119,21 +131,20 @@ let
 
     calendar = {
       enabled = true;
-      account =
-        {
-          personal_google = {
-            name = "Google Calendar";
-            type = "google";
-          };
-        }
-        // lib.optionalAttrs isDellWorkstation {
-          vito_outlook = {
-            color = "tertiary";
-            name = "Vito";
-            server_url = config.sops.placeholder.vito_outlook_ics_url;
-            type = "ics";
-          };
+      account = {
+        personal_google = {
+          name = "Google Calendar";
+          type = "google";
         };
+      }
+      // lib.optionalAttrs isDellWorkstation {
+        vito_outlook = {
+          color = "tertiary";
+          name = "Vito";
+          server_url = config.sops.placeholder.vito_outlook_ics_url;
+          type = "ics";
+        };
+      };
     };
 
     control_center.hidden_tabs = [
@@ -218,13 +229,16 @@ let
 
     # When the disk is encrypted, a password was already entered to boot
     # Only lock the session at boot when the disk is unencrypted
-    hooks = lib.optionalAttrs (
-      config.local.system.loginmanager.sddm.enable
-      && config.local.system.loginmanager.sddm.autologin.enable
-      && config.boot.initrd.luks.devices == { }
-    ) {
-      started = "${lib.getExe noctaliaPackage} msg session lock";
-    };
+    hooks =
+      lib.optionalAttrs
+        (
+          config.local.system.loginmanager.sddm.enable
+          && config.local.system.loginmanager.sddm.autologin.enable
+          && config.boot.initrd.luks.devices == { }
+        )
+        {
+          started = "${lib.getExe noctaliaPackage} msg session lock";
+        };
 
     shell = {
       animation.speed = 3.0;
@@ -434,48 +448,48 @@ let
     light = {
       # Dark charcoal primary (everforest base00) — scheme-aware, no hardcoded hex.
       mPrimary = hex colors.base00;
-      mOnPrimary = "#faf4ed";           # cream text on dark charcoal
-      mSecondary = hex colors.base04;   # everforest warm tan
+      mOnPrimary = "#faf4ed"; # cream text on dark charcoal
+      mSecondary = hex colors.base04; # everforest warm tan
       mOnSecondary = hex colors.base01; # everforest dark warm gray
-      mTertiary = hex colors.base0A;    # everforest warm yellow
+      mTertiary = hex colors.base0A; # everforest warm yellow
       mOnTertiary = hex colors.base01;
       mError = hex colors.base08;
       mOnError = hex colors.base01;
-      mSurface = "#faf4ed";              # Rosé Pine Dawn base — warm cream
-      mOnSurface = hex colors.base01;    # everforest #2d3035 — dark warm gray
+      mSurface = "#faf4ed"; # Rosé Pine Dawn base — warm cream
+      mOnSurface = hex colors.base01; # everforest #2d3035 — dark warm gray
       # Warm stone-gray panels: same temperature as the cream bg, no blue cast.
       mSurfaceVariant = "#e5e1db";
       mOnSurfaceVariant = hex colors.base03; # everforest #67645f — warm muted
-      mOutline = hex colors.base04;      # everforest #948b7e — warm tan border
-      mShadow = hex colors.base03;       # everforest #67645f — warm shadow
-      mHover = "#d5cfc7";               # slightly darker warm gray
+      mOutline = hex colors.base04; # everforest #948b7e — warm tan border
+      mShadow = hex colors.base03; # everforest #67645f — warm shadow
+      mHover = "#d5cfc7"; # slightly darker warm gray
       mOnHover = hex colors.base01;
       terminal = {
         background = "#faf4ed";
-        foreground = hex colors.base01;  # dark warm gray
+        foreground = hex colors.base01; # dark warm gray
         cursor = hex colors.base01;
         cursorText = "#faf4ed";
         selectionBg = "#d5cfc7";
         selectionFg = hex colors.base01;
         normal = {
-          black = hex colors.base01;     # dark warm gray
+          black = hex colors.base01; # dark warm gray
           red = hex colors.base08;
           green = hex colors.base0B;
           yellow = hex colors.base0A;
-          blue = "#7d9aaa";             # desaturated slate-teal, no purple
+          blue = "#7d9aaa"; # desaturated slate-teal, no purple
           magenta = hex colors.base0E;
           cyan = hex colors.base0C;
-          white = "#e5e1db";            # warm stone — matches panel bg
+          white = "#e5e1db"; # warm stone — matches panel bg
         };
         bright = {
-          black = hex colors.base03;     # everforest #67645f — warm muted
+          black = hex colors.base03; # everforest #67645f — warm muted
           red = hex colors.base08;
           green = hex colors.base0B;
           yellow = hex colors.base0A;
           blue = "#7d9aaa";
           magenta = hex colors.base0E;
           cyan = hex colors.base0C;
-          white = "#faf4ed";            # cream — brightest white
+          white = "#faf4ed"; # cream — brightest white
         };
       };
     };
@@ -534,7 +548,6 @@ in
       # https://github.com/noctalia-dev/noctalia/issues/3277
       security.pam.services.login.fprintAuth = lib.mkIf cfg.fingerprint.enable false;
 
-
       # Renders config.toml with the vito_outlook calendar's ICS URL secret
       # substituted in, so the plaintext URL never lands in the world-readable
       # Nix store; only the placeholder token does. Home Manager links this
@@ -569,7 +582,6 @@ in
       xdg.configFile."fish/completions/noctalia.fish" = lib.mkIf (
         user.shell.package == pkgs.fish || config.local.system.shell.fish.enable
       ) { source = ./completions.fish; };
-
 
       # Oneshot gate that blocks until the StatusNotifierWatcher D-Bus name
       # appears. tray.target already orders After=noctalia.service, but

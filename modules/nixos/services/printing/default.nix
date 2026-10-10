@@ -46,7 +46,9 @@ in
           location = "Office";
           deviceUri = "ipp://192.168.1.45/ipp/print";
           model = "HP/HP-LaserJet-MFP-M426fdw.ppd";
-          ppdOptions = { InputSlot = "Tray2"; };
+          ppdOptions = {
+            InputSlot = "Tray2";
+          };
         }
       ];
     };

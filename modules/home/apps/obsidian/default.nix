@@ -22,7 +22,6 @@ in
   options.local.apps.obsidian = {
     enable = lib.mkEnableOption "Obsidian knowledge base";
 
-
     vaults = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = { };
@@ -68,40 +67,46 @@ in
       }) cfg.vaults;
     };
 
-    home.activation.obsidianLockstepSettings = inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      ${lib.concatMapStringsSep "\n" (target: let
-        pluginDir = "${user.homeDir}/${target}/.obsidian/plugins/lockstep-sync";
-        dataFile = "${pluginDir}/data.json";
-      in ''
-        plugin_dir=${lib.escapeShellArg pluginDir}
-        data_file=${lib.escapeShellArg dataFile}
-        if [ -L "$plugin_dir" ]; then
-          plugin_copy=$(mktemp -d)
-          cp -a "$plugin_dir"/. "$plugin_copy"/
-          rm "$plugin_dir"
-          mv "$plugin_copy" "$plugin_dir"
-        fi
-        if [ -d "$plugin_dir" ]; then
-          token=""
-          server_url=""
-          if [ -r ${lib.escapeShellArg tokenFile} ]; then
-            token=$(cat ${lib.escapeShellArg tokenFile})
-          fi
-          if [ -r ${lib.escapeShellArg serverFile} ]; then
-            server_url=$(cat ${lib.escapeShellArg serverFile})
-          fi
-          if [ -f "$data_file" ]; then
-            settings=$(cat "$data_file")
-          else
-            settings='{}'
-          fi
-          ${pkgs.jq}/bin/jq --arg serverUrl "$server_url" --arg token "$token" \
-            '. + {serverUrl: $serverUrl, token: $token}' \
-            <<<"$settings" > "$data_file.tmp"
-          install -m 600 "$data_file.tmp" "$data_file"
-          rm -f "$data_file.tmp"
-        fi
-      '') vaultTargets}
-    '';
+    home.activation.obsidianLockstepSettings =
+      inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ]
+        ''
+          ${lib.concatMapStringsSep "\n" (
+            target:
+            let
+              pluginDir = "${user.homeDir}/${target}/.obsidian/plugins/lockstep-sync";
+              dataFile = "${pluginDir}/data.json";
+            in
+            ''
+              plugin_dir=${lib.escapeShellArg pluginDir}
+              data_file=${lib.escapeShellArg dataFile}
+              if [ -L "$plugin_dir" ]; then
+                plugin_copy=$(mktemp -d)
+                cp -a "$plugin_dir"/. "$plugin_copy"/
+                rm "$plugin_dir"
+                mv "$plugin_copy" "$plugin_dir"
+              fi
+              if [ -d "$plugin_dir" ]; then
+                token=""
+                server_url=""
+                if [ -r ${lib.escapeShellArg tokenFile} ]; then
+                  token=$(cat ${lib.escapeShellArg tokenFile})
+                fi
+                if [ -r ${lib.escapeShellArg serverFile} ]; then
+                  server_url=$(cat ${lib.escapeShellArg serverFile})
+                fi
+                if [ -f "$data_file" ]; then
+                  settings=$(cat "$data_file")
+                else
+                  settings='{}'
+                fi
+                ${pkgs.jq}/bin/jq --arg serverUrl "$server_url" --arg token "$token" \
+                  '. + {serverUrl: $serverUrl, token: $token}' \
+                  <<<"$settings" > "$data_file.tmp"
+                install -m 600 "$data_file.tmp" "$data_file"
+                rm -f "$data_file.tmp"
+              fi
+            ''
+          ) vaultTargets}
+        '';
   });
 }

@@ -40,7 +40,10 @@ let
   // lib.optionalAttrs vpnjumphostEnabled {
     jira = {
       type = "local";
-      command = [ "uvx" "mcp-atlassian" ];
+      command = [
+        "uvx"
+        "mcp-atlassian"
+      ];
       environment = {
         HTTPS_PROXY = "socks5://127.0.0.1:1080";
         JIRA_URL = "https://jira.vito.be";
@@ -75,33 +78,34 @@ in
     homeAssistantMcp.enable = lib.mkEnableOption "Home Assistant MCP server";
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    (lib.optionalAttrs sopsAvailable {
-      assertions = [
-        {
-          assertion = sopsEnabled;
-          message = "local.apps.opencode.enable requires local.apps.sops.enable for the OpenCode configuration template.";
-        }
-      ];
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      (lib.optionalAttrs sopsAvailable {
+        assertions = [
+          {
+            assertion = sopsEnabled;
+            message = "local.apps.opencode.enable requires local.apps.sops.enable for the OpenCode configuration template.";
+          }
+        ];
 
-      # Keep the generated OpenCode configuration out of the world-readable Nix store.
-      sops.templates."opencode-config" = {
-        path = "/home/${user.name}/.config/opencode/opencode.json";
-        owner = user.name;
-        mode = "0400";
-        content = builtins.toJSON opencodeSettings;
-      };
-    })
-    (mkUserHome {
-      programs.opencode = {
-        enable = true;
-        package = llmAgentsPkgs.opencode;
-        settings = lib.optionalAttrs (!sopsAvailable) opencodeBaseSettings;
-      };
+        # Keep the generated OpenCode configuration out of the world-readable Nix store.
+        sops.templates."opencode-config" = {
+          path = "/home/${user.name}/.config/opencode/opencode.json";
+          owner = user.name;
+          mode = "0400";
+          content = builtins.toJSON opencodeSettings;
+        };
+      })
+      (mkUserHome {
+        programs.opencode = {
+          enable = true;
+          package = llmAgentsPkgs.opencode;
+          settings = lib.optionalAttrs (!sopsAvailable) opencodeBaseSettings;
+        };
 
-      # OpenCode custom providers do not discover /models themselves. Populate
-      # the provider from Lemonade at startup so its model list stays dynamic.
-      xdg.configFile."opencode/plugins/lemonade-models.js".text = ''
+        # OpenCode custom providers do not discover /models themselves. Populate
+        # the provider from Lemonade at startup so its model list stays dynamic.
+        xdg.configFile."opencode/plugins/lemonade-models.js".text = ''
           export const LemonadeModels = async () => ({
             config: async (config) => {
               const provider = config.provider?.lemonade
@@ -137,11 +141,11 @@ in
           })
         '';
 
-      home.packages = [
-        pkgs.uv
-      ] ++ lib.optional (
-        !config.local.headless && pkgs.stdenv.isLinux
-      ) llmAgentsPkgs.opencode-desktop;
-    })
-  ]);
+        home.packages = [
+          pkgs.uv
+        ]
+        ++ lib.optional (!config.local.headless && pkgs.stdenv.isLinux) llmAgentsPkgs.opencode-desktop;
+      })
+    ]
+  );
 }

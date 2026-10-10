@@ -148,8 +148,6 @@ in
       fi
     '')
 
-
-
     (pkgs.writeShellScriptBin "nixcfg-gpu-usage" ''
       # Try NVIDIA first
       if command -v nvidia-smi &>/dev/null; then

@@ -50,501 +50,503 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    # Waybar is a bar for Hyprland; imply Hyprland unless a host has
-    # explicitly opted out (e.g. kiosk-mode hosts).
-    { local.desktop.hyprland.enable = lib.mkDefault true; }
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      # Waybar is a bar for Hyprland; imply Hyprland unless a host has
+      # explicitly opted out (e.g. kiosk-mode hosts).
+      { local.desktop.hyprland.enable = lib.mkDefault true; }
 
-    (lib.mkIf (isLinux && isDesktop && !isHeadless && isHyprlandEnabled) (mkUserHome {
-      # Hyprland keybindings specific to this shell (walker, swayosd).
-      xdg.configFile."hypr/bindings-waybar.lua".source = ./bindings.lua;
+      (lib.mkIf (isLinux && isDesktop && !isHeadless && isHyprlandEnabled) (mkUserHome {
+        # Hyprland keybindings specific to this shell (walker, swayosd).
+        xdg.configFile."hypr/bindings-waybar.lua".source = ./bindings.lua;
 
-      programs.hyprlock = {
-        enable = true;
-        settings = {
-          background = {
-            blur_passes = 3;
-          };
+        programs.hyprlock = {
+          enable = true;
+          settings = {
+            background = {
+              blur_passes = 3;
+            };
 
-          animations.ebabled = false;
+            animations.ebabled = false;
 
-          input-field = {
-            size = "650, 100";
-            position = "0, 0";
-            halign = "center";
-            valign = "center";
+            input-field = {
+              size = "650, 100";
+              position = "0, 0";
+              halign = "center";
+              valign = "center";
 
-            outline_thickness = 4;
+              outline_thickness = 4;
 
-            placeholder_text = "Enter Password";
-            fail_text = "<i>$FAIL ($ATTEMPTS)</i>";
+              placeholder_text = "Enter Password";
+              fail_text = "<i>$FAIL ($ATTEMPTS)</i>";
 
-            rounding = 8;
-            shadow_passes = 0;
-            fade_on_empty = false;
+              rounding = 8;
+              shadow_passes = 0;
+              fade_on_empty = false;
+            };
           };
         };
-      };
 
-      # sunsetr provides night-light transitions on this shell (backed by
-      # hyprsunset). Noctalia has its own native night light support instead.
-      home.packages = [
-        pkgs.sunsetr
-        pkgs.hyprsunset
-      ];
-      xdg.configFile."sunsetr".source = ../../../home/dotfiles/sunsetr;
+        # sunsetr provides night-light transitions on this shell (backed by
+        # hyprsunset). Noctalia has its own native night light support instead.
+        home.packages = [
+          pkgs.sunsetr
+          pkgs.hyprsunset
+        ];
+        xdg.configFile."sunsetr".source = ../../../home/dotfiles/sunsetr;
 
-      wayland.windowManager.hyprland.settings.on = [
-        {
-          _args = [
-            "hyprland.start"
-            (lib.generators.mkLuaInline ''
-              function()
-                hl.exec_cmd("sunsetr")
-              end'')
+        wayland.windowManager.hyprland.settings.on = [
+          {
+            _args = [
+              "hyprland.start"
+              (lib.generators.mkLuaInline ''
+                function()
+                  hl.exec_cmd("sunsetr")
+                end'')
+            ];
+          }
+        ];
+
+        # Configure waybar with systemd service
+        programs.waybar = {
+          enable = true;
+          systemd = {
+            enable = true;
+            targets = [ "graphical-session.target" ];
+          };
+          style = ''
+            @define-color foreground ${theme.uiAccentColor};
+            @define-color background ${theme.uiBaseColor};
+
+            * {
+                background-color: @background;
+                color: @foreground;
+
+                font-family: "RobotoMono Nerd Font Propo";
+                font-weight: 600;
+                font-size: 12px;
+            }
+
+            .modules-left {
+                margin-left: 8px;
+            }
+
+            .modules-right {
+                margin-right: 8px;
+            }
+
+            #workspaces button {
+                all: initial;
+                background-color: transparent;
+                color: @foreground;
+                border: none;
+                border-radius: 0;
+                min-height: 0;
+                padding: 0 6px;
+                margin: 0 1.5px;
+                min-width: 9px;
+            }
+
+            #workspaces button.empty {
+                opacity: 0.5;
+            }
+
+            #custom-nixmenu {
+                margin-right: 4px;
+            }
+
+            #cpu,
+            #memory,
+            #battery,
+            #pulseaudio,
+
+            #custom-screenrecording-indicator,
+            #custom-update {
+                min-width: 12px;
+                margin: 0 7.5px;
+            }
+
+            #tray {
+                margin-right: 16px;
+            }
+
+            #bluetooth {
+                margin-right: 17px;
+            }
+
+            #network {
+                margin-right: 13px;
+            }
+
+            #custom-expand-icon {
+                margin-right: 20px;
+            }
+
+            tooltip {
+                margin: 0;
+                padding: 0;
+                border: none;
+                background-color: transparent;
+            }
+
+            tooltip.background {
+                background-color: transparent;
+                border: none;
+            }
+
+            tooltip * {
+                background-color: transparent;
+            }
+
+            tooltip label {
+                margin: 0;
+                padding: 3px 6px;
+                border: 1px solid @foreground;
+                border-radius: 6px;
+                background-color: @background;
+                color: @foreground;
+            }
+
+            window.popup {
+                background-color: transparent;
+            }
+
+            menu {
+                background-color: @background;
+                border: 1px solid @foreground;
+                border-radius: 6px;
+                padding: 4px 0;
+            }
+
+            menu > .background {
+                background-color: @background;
+                border-radius: 6px;
+            }
+
+            menu * {
+                background-color: transparent;
+            }
+
+            /* Re-assert background for nested submenus, which would otherwise be
+               caught by the `menu *` rule above (higher specificity than `menu`). */
+            menu menu {
+                background-color: @background;
+                border: 1px solid @foreground;
+                border-radius: 6px;
+                padding: 4px 0;
+            }
+
+            menu menu > .background {
+                background-color: @background;
+                border-radius: 6px;
+            }
+
+            menu menuitem {
+                padding: 4px 10px;
+                border-radius: 4px;
+            }
+
+            menu menuitem:hover,
+            menu menuitem:selected {
+                background-color: alpha(@foreground, 0.12);
+            }
+
+            /* Use normal weight in tray menus so Pango <b> markup
+               (e.g. the active network name) is visually distinct. */
+            menu menuitem label {
+                font-weight: 400;
+            }
+
+            #custom-update {
+                font-size: 10px;
+            }
+
+            #clock {
+                margin-left: 8.75px;
+            }
+
+            .hidden {
+                opacity: 0;
+            }
+
+            #custom-screenrecording-indicator {
+                min-width: 12px;
+                margin-left: 8.75px;
+                font-size: 10px;
+            }
+
+            #custom-screenrecording-indicator.active {
+                color: #a55555;
+            }
+          '';
+          settings = [
+            {
+              reload_style_on_change = true;
+              layer = "top";
+              position = "top";
+              spacing = 0;
+              height = waybarHeight;
+              modules-left = [
+                "custom/nixmenu"
+                "hyprland/workspaces"
+              ]
+              ++ lib.optionals (hostname == "macbook-pro") [ "clock" ];
+              modules-center = lib.optionals (hostname != "macbook-pro") [ "clock" ];
+              modules-right = [
+                "cpu"
+                "memory"
+              ]
+              ++ lib.optionals hasGpu [
+                "custom/gpuusage"
+                "custom/gpumemory"
+              ]
+              ++ [
+                "disk"
+                "tray"
+                "battery"
+                "bluetooth"
+                "network"
+                "pulseaudio"
+              ];
+
+              "hyprland/workspaces" = {
+                on-click = "activate";
+                format = "{icon}";
+                format-icons = {
+                  default = "";
+                  "1" = "1";
+                  "2" = "2";
+                  "3" = "3";
+                  "4" = "4";
+                  "5" = "5";
+                  "6" = "6";
+                  "7" = "7";
+                  "8" = "8";
+                  "9" = "9";
+                  active = "󱓻";
+                };
+                persistent-workspaces = {
+                  "1" = [ ];
+                  "2" = [ ];
+                  "3" = [ ];
+                  "4" = [ ];
+                  "5" = [ ];
+                  "6" = [ ];
+                  "7" = [ ];
+                  "8" = [ ];
+                };
+              };
+
+              "custom/nixmenu" = {
+                format = "";
+                tooltip = false;
+                on-click = "nixcfg-launch-walker";
+                on-click-right = "nixcfg-launch-terminal";
+              };
+
+              cpu = {
+                interval = 2;
+                format = "  ${cpuIconPlaceholders}";
+                format-icons = [
+                  "<span> </span>"
+                  "<span color='#a7c080'>▁</span>"
+                  "<span color='#a7c080'>▂</span>"
+                  "<span color='#83c092'>▃</span>"
+                  "<span color='#83c092'>▄</span>"
+                  "<span color='#dbbc7f'>▅</span>"
+                  "<span color='#dbbc7f'>▆</span>"
+                  "<span color='#e69875'>▇</span>"
+                  "<span color='#e67e80'>█</span>"
+                ];
+                on-click = "xdg-terminal-exec -- btop";
+              };
+
+              memory = {
+                interval = 2;
+                format = "󰍛 {percentage}%";
+                tooltip-format = "{used:0.1f}GiB / {total:0.1f}GiB used";
+                on-click = "xdg-terminal-exec -- btop";
+              };
+
+              "custom/gpumemory" = {
+                format = " {}% ";
+                interval = 5;
+                exec = "nixcfg-gpu-memory";
+                return-type = "json";
+                on-click = "xdg-terminal-exec -- btop";
+              };
+
+              "custom/gpuusage" = {
+                interval = 2;
+                exec = "nixcfg-gpu-usage";
+                return-type = "json";
+                format = "{icon} ";
+                format-icons = [
+                  "<span> </span>"
+                  "<span color='#a7c080'>▁</span>"
+                  "<span color='#a7c080'>▂</span>"
+                  "<span color='#83c092'>▃</span>"
+                  "<span color='#83c092'>▄</span>"
+                  "<span color='#dbbc7f'>▅</span>"
+                  "<span color='#dbbc7f'>▆</span>"
+                  "<span color='#e69875'>▇</span>"
+                  "<span color='#e67e80'>█</span>"
+                ];
+                on-click = "xdg-terminal-exec -- btop";
+              };
+
+              disk = {
+                interval = 10;
+                path = "/";
+                format = " {percentage_used}%";
+                on-click = "xdg-terminal-exec -- btop";
+              };
+
+              clock = {
+                format = "{:L%d %b %H:%M}";
+                format-alt = "{:L%d %B W%V %Y}";
+                tooltip = false;
+              };
+
+              network = {
+                format-icons = [
+                  "󰤯"
+                  "󰤟"
+                  "󰤢"
+                  "󰤥"
+                  "󰤨"
+                ];
+                format = "{icon}";
+                format-wifi = "{icon}";
+                format-ethernet = "󰀂";
+                format-disconnected = "󰤮";
+                tooltip-format-wifi = "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+                tooltip-format-ethernet = "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
+                tooltip-format-disconnected = "Disconnected";
+                interval = 3;
+                spacing = 1;
+              };
+
+              battery = {
+                format = "{capacity}% {icon}";
+                format-discharging = "{icon}";
+                format-charging = "{icon}";
+                format-plugged = "";
+                format-icons = {
+                  charging = [
+                    "󰢜"
+                    "󰂆"
+                    "󰂇"
+                    "󰂈"
+                    "󰢝"
+                    "󰂉"
+                    "󰢞"
+                    "󰂊"
+                    "󰂋"
+                    "󰂅"
+                  ];
+                  default = [
+                    "󰁺"
+                    "󰁻"
+                    "󰁼"
+                    "󰁽"
+                    "󰁾"
+                    "󰁿"
+                    "󰂀"
+                    "󰂁"
+                    "󰂂"
+                    "󰁹"
+                  ];
+                };
+                format-full = "󰂅";
+                tooltip-format-discharging = "{power:>1.0f}W↓ {capacity}%";
+                tooltip-format-charging = "{power:>1.0f}W↑ {capacity}%";
+                interval = 5;
+                on-click = "nixcfg-menu power";
+                states = {
+                  warning = 20;
+                  critical = 10;
+                };
+              };
+
+              bluetooth = {
+                format = "󰂯";
+                format-disabled = "󰂲";
+                format-connected = "󰂱";
+                tooltip-format = "Devices connected: {num_connections}";
+                on-click = "overskride";
+              };
+
+              pulseaudio = {
+                format = "{icon}";
+                on-click = "xdg-terminal-exec --app-id=TUI.float -- wiremix";
+                on-click-right = "pamixer -t";
+                tooltip-format = "Playing at {volume}%";
+                scroll-step = 5;
+                format-muted = "";
+                format-icons = {
+                  default = [
+                    ""
+                    ""
+                    ""
+                  ];
+                };
+              };
+
+              "group/tray-expander" = {
+                orientation = "inherit";
+                drawer = {
+                  transition-duration = 600;
+                  children-class = "tray-group-item";
+                };
+                modules = [
+                  "custom/expand-icon"
+                  "tray"
+                ];
+              };
+
+              "custom/expand-icon" = {
+                format = " ";
+                tooltip = false;
+              };
+
+              tray = {
+                icon-size = 12;
+                spacing = 12;
+              };
+            }
           ];
-        }
-      ];
+        };
 
-      # Configure waybar with systemd service
-      programs.waybar = {
-        enable = true;
-        systemd = {
-        enable = true;
-        targets = [ "graphical-session.target" ];
-      };
-      style = ''
-        @define-color foreground ${theme.uiAccentColor};
-        @define-color background ${theme.uiBaseColor};
-
-        * {
-            background-color: @background;
-            color: @foreground;
-
-            font-family: "RobotoMono Nerd Font Propo";
-            font-weight: 600;
-            font-size: 12px;
-        }
-
-        .modules-left {
-            margin-left: 8px;
-        }
-
-        .modules-right {
-            margin-right: 8px;
-        }
-
-        #workspaces button {
-            all: initial;
-            background-color: transparent;
-            color: @foreground;
-            border: none;
-            border-radius: 0;
-            min-height: 0;
-            padding: 0 6px;
-            margin: 0 1.5px;
-            min-width: 9px;
-        }
-
-        #workspaces button.empty {
-            opacity: 0.5;
-        }
-
-        #custom-nixmenu {
-            margin-right: 4px;
-        }
-
-        #cpu,
-        #memory,
-        #battery,
-        #pulseaudio,
-
-        #custom-screenrecording-indicator,
-        #custom-update {
-            min-width: 12px;
-            margin: 0 7.5px;
-        }
-
-        #tray {
-            margin-right: 16px;
-        }
-
-        #bluetooth {
-            margin-right: 17px;
-        }
-
-        #network {
-            margin-right: 13px;
-        }
-
-        #custom-expand-icon {
-            margin-right: 20px;
-        }
-
-        tooltip {
-            margin: 0;
-            padding: 0;
-            border: none;
-            background-color: transparent;
-        }
-
-        tooltip.background {
-            background-color: transparent;
-            border: none;
-        }
-
-        tooltip * {
-            background-color: transparent;
-        }
-
-        tooltip label {
-            margin: 0;
-            padding: 3px 6px;
-            border: 1px solid @foreground;
-            border-radius: 6px;
-            background-color: @background;
-            color: @foreground;
-        }
-
-        window.popup {
-            background-color: transparent;
-        }
-
-        menu {
-            background-color: @background;
-            border: 1px solid @foreground;
-            border-radius: 6px;
-            padding: 4px 0;
-        }
-
-        menu > .background {
-            background-color: @background;
-            border-radius: 6px;
-        }
-
-        menu * {
-            background-color: transparent;
-        }
-
-        /* Re-assert background for nested submenus, which would otherwise be
-           caught by the `menu *` rule above (higher specificity than `menu`). */
-        menu menu {
-            background-color: @background;
-            border: 1px solid @foreground;
-            border-radius: 6px;
-            padding: 4px 0;
-        }
-
-        menu menu > .background {
-            background-color: @background;
-            border-radius: 6px;
-        }
-
-        menu menuitem {
-            padding: 4px 10px;
-            border-radius: 4px;
-        }
-
-        menu menuitem:hover,
-        menu menuitem:selected {
-            background-color: alpha(@foreground, 0.12);
-        }
-
-        /* Use normal weight in tray menus so Pango <b> markup
-           (e.g. the active network name) is visually distinct. */
-        menu menuitem label {
-            font-weight: 400;
-        }
-
-        #custom-update {
-            font-size: 10px;
-        }
-
-        #clock {
-            margin-left: 8.75px;
-        }
-
-        .hidden {
-            opacity: 0;
-        }
-
-        #custom-screenrecording-indicator {
-            min-width: 12px;
-            margin-left: 8.75px;
-            font-size: 10px;
-        }
-
-        #custom-screenrecording-indicator.active {
-            color: #a55555;
-        }
-      '';
-      settings = [
-        {
-          reload_style_on_change = true;
-          layer = "top";
-          position = "top";
-          spacing = 0;
-          height = waybarHeight;
-          modules-left = [
-            "custom/nixmenu"
-            "hyprland/workspaces"
-          ]
-          ++ lib.optionals (hostname == "macbook-pro") [ "clock" ];
-          modules-center = lib.optionals (hostname != "macbook-pro") [ "clock" ];
-          modules-right = [
-            "cpu"
-            "memory"
-          ]
-          ++ lib.optionals hasGpu [
-            "custom/gpuusage"
-            "custom/gpumemory"
-          ]
-          ++ [
-            "disk"
-            "tray"
-            "battery"
-            "bluetooth"
-            "network"
-            "pulseaudio"
-          ];
-
-          "hyprland/workspaces" = {
-            on-click = "activate";
-            format = "{icon}";
-            format-icons = {
-              default = "";
-              "1" = "1";
-              "2" = "2";
-              "3" = "3";
-              "4" = "4";
-              "5" = "5";
-              "6" = "6";
-              "7" = "7";
-              "8" = "8";
-              "9" = "9";
-              active = "󱓻";
-            };
-            persistent-workspaces = {
-              "1" = [ ];
-              "2" = [ ];
-              "3" = [ ];
-              "4" = [ ];
-              "5" = [ ];
-              "6" = [ ];
-              "7" = [ ];
-              "8" = [ ];
-            };
+        # Oneshot gate that blocks until the StatusNotifierWatcher D-Bus name
+        # appears.  tray.target already orders After=waybar.service, but waybar
+        # is Type=simple so systemd considers it "started" before the tray is
+        # actually registered on D-Bus.  By making tray.target also pull in
+        # this service, dependent units see a tray that is genuinely ready.
+        systemd.user.services.tray-ready = {
+          Unit = {
+            Description = "Wait for system tray (StatusNotifierWatcher) on D-Bus";
+            After = [ "waybar.service" ];
+            Requisite = [ "waybar.service" ];
           };
 
-          "custom/nixmenu" = {
-            format = "";
-            tooltip = false;
-            on-click = "nixcfg-launch-walker";
-            on-click-right = "nixcfg-launch-terminal";
+          Service = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+            ExecStart = toString (
+              pkgs.writeShellScript "wait-for-tray" ''
+                ${pkgs.glib}/bin/gdbus wait --session org.kde.StatusNotifierWatcher
+              ''
+            );
+            TimeoutStartSec = 15;
           };
+        };
 
-          cpu = {
-            interval = 2;
-            format = "  ${cpuIconPlaceholders}";
-            format-icons = [
-              "<span> </span>"
-              "<span color='#a7c080'>▁</span>"
-              "<span color='#a7c080'>▂</span>"
-              "<span color='#83c092'>▃</span>"
-              "<span color='#83c092'>▄</span>"
-              "<span color='#dbbc7f'>▅</span>"
-              "<span color='#dbbc7f'>▆</span>"
-              "<span color='#e69875'>▇</span>"
-              "<span color='#e67e80'>█</span>"
-            ];
-            on-click = "xdg-terminal-exec -- btop";
-          };
-
-          memory = {
-            interval = 2;
-            format = "󰍛 {percentage}%";
-            tooltip-format = "{used:0.1f}GiB / {total:0.1f}GiB used";
-            on-click = "xdg-terminal-exec -- btop";
-          };
-
-          "custom/gpumemory" = {
-            format = " {}% ";
-            interval = 5;
-            exec = "nixcfg-gpu-memory";
-            return-type = "json";
-            on-click = "xdg-terminal-exec -- btop";
-          };
-
-          "custom/gpuusage" = {
-            interval = 2;
-            exec = "nixcfg-gpu-usage";
-            return-type = "json";
-            format = "{icon} ";
-            format-icons = [
-              "<span> </span>"
-              "<span color='#a7c080'>▁</span>"
-              "<span color='#a7c080'>▂</span>"
-              "<span color='#83c092'>▃</span>"
-              "<span color='#83c092'>▄</span>"
-              "<span color='#dbbc7f'>▅</span>"
-              "<span color='#dbbc7f'>▆</span>"
-              "<span color='#e69875'>▇</span>"
-              "<span color='#e67e80'>█</span>"
-            ];
-            on-click = "xdg-terminal-exec -- btop";
-          };
-
-          disk = {
-            interval = 10;
-            path = "/";
-            format = " {percentage_used}%";
-            on-click = "xdg-terminal-exec -- btop";
-          };
-
-          clock = {
-            format = "{:L%d %b %H:%M}";
-            format-alt = "{:L%d %B W%V %Y}";
-            tooltip = false;
-          };
-
-          network = {
-            format-icons = [
-              "󰤯"
-              "󰤟"
-              "󰤢"
-              "󰤥"
-              "󰤨"
-            ];
-            format = "{icon}";
-            format-wifi = "{icon}";
-            format-ethernet = "󰀂";
-            format-disconnected = "󰤮";
-            tooltip-format-wifi = "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
-            tooltip-format-ethernet = "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
-            tooltip-format-disconnected = "Disconnected";
-            interval = 3;
-            spacing = 1;
-          };
-
-          battery = {
-            format = "{capacity}% {icon}";
-            format-discharging = "{icon}";
-            format-charging = "{icon}";
-            format-plugged = "";
-            format-icons = {
-              charging = [
-                "󰢜"
-                "󰂆"
-                "󰂇"
-                "󰂈"
-                "󰢝"
-                "󰂉"
-                "󰢞"
-                "󰂊"
-                "󰂋"
-                "󰂅"
-              ];
-              default = [
-                "󰁺"
-                "󰁻"
-                "󰁼"
-                "󰁽"
-                "󰁾"
-                "󰁿"
-                "󰂀"
-                "󰂁"
-                "󰂂"
-                "󰁹"
-              ];
-            };
-            format-full = "󰂅";
-            tooltip-format-discharging = "{power:>1.0f}W↓ {capacity}%";
-            tooltip-format-charging = "{power:>1.0f}W↑ {capacity}%";
-            interval = 5;
-            on-click = "nixcfg-menu power";
-            states = {
-              warning = 20;
-              critical = 10;
-            };
-          };
-
-          bluetooth = {
-            format = "󰂯";
-            format-disabled = "󰂲";
-            format-connected = "󰂱";
-            tooltip-format = "Devices connected: {num_connections}";
-            on-click = "overskride";
-          };
-
-          pulseaudio = {
-            format = "{icon}";
-            on-click = "xdg-terminal-exec --app-id=TUI.float -- wiremix";
-            on-click-right = "pamixer -t";
-            tooltip-format = "Playing at {volume}%";
-            scroll-step = 5;
-            format-muted = "";
-            format-icons = {
-              default = [
-                ""
-                ""
-                ""
-              ];
-            };
-          };
-
-          "group/tray-expander" = {
-            orientation = "inherit";
-            drawer = {
-              transition-duration = 600;
-              children-class = "tray-group-item";
-            };
-            modules = [
-              "custom/expand-icon"
-              "tray"
-            ];
-          };
-
-          "custom/expand-icon" = {
-            format = " ";
-            tooltip = false;
-          };
-
-          tray = {
-            icon-size = 12;
-            spacing = 12;
-          };
-        }
-      ];
-    };
-
-    # Oneshot gate that blocks until the StatusNotifierWatcher D-Bus name
-    # appears.  tray.target already orders After=waybar.service, but waybar
-    # is Type=simple so systemd considers it "started" before the tray is
-    # actually registered on D-Bus.  By making tray.target also pull in
-    # this service, dependent units see a tray that is genuinely ready.
-    systemd.user.services.tray-ready = {
-      Unit = {
-        Description = "Wait for system tray (StatusNotifierWatcher) on D-Bus";
-        After = [ "waybar.service" ];
-        Requisite = [ "waybar.service" ];
-      };
-
-      Service = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = toString (
-          pkgs.writeShellScript "wait-for-tray" ''
-            ${pkgs.glib}/bin/gdbus wait --session org.kde.StatusNotifierWatcher
-          ''
-        );
-        TimeoutStartSec = 15;
-      };
-    };
-
-    systemd.user.targets.tray.Unit = {
-      Requires = [ "tray-ready.service" ];
-      After = [ "tray-ready.service" ];
-    };
-    }))
-  ]);
+        systemd.user.targets.tray.Unit = {
+          Requires = [ "tray-ready.service" ];
+          After = [ "tray-ready.service" ];
+        };
+      }))
+    ]
+  );
 }

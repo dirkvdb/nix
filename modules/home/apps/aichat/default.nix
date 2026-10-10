@@ -56,6 +56,5 @@ in
     home.shellAliases.ai = "aichat --model lemonade:gemma4-it-e4b-FLM"; # fastest
     home.shellAliases.aiai = "aichat --model lemonade:qwen3.6-moe-35b-a3b-FLM"; # slower but better
 
-
   });
 }

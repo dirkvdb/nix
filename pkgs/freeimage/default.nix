@@ -38,49 +38,47 @@ stdenv.mkDerivation (finalAttrs: {
     ./libtiff-4.4.0.diff
   ];
 
-  postPatch =
-    ''
-      # To support cross compilation, use the correct `pkg-config`.
-      substituteInPlace Makefile.fip \
-        --replace "pkg-config" "$PKG_CONFIG"
-      substituteInPlace Makefile.gnu \
-        --replace "pkg-config" "$PKG_CONFIG"
+  postPatch = ''
+    # To support cross compilation, use the correct `pkg-config`.
+    substituteInPlace Makefile.fip \
+      --replace "pkg-config" "$PKG_CONFIG"
+    substituteInPlace Makefile.gnu \
+      --replace "pkg-config" "$PKG_CONFIG"
 
-      # FreeImage 3.19 predates the public header locations in current
-      # OpenEXR/libtiff releases. The G3 plugin also depends on libtiff's
-      # private tiffiop.h, which is no longer installed.
-      substituteInPlace Source/FreeImage/PluginEXR.cpp Source/FreeImage/PluginTIFF.cpp \
-        --replace-fail "<OpenEXR/half.h>" "<Imath/half.h>"
-      substituteInPlace Source/FreeImage/PluginEXR.cpp \
-        --replace-fail "Imath::Int64" "uint64_t"
-      # These old sources require private libtiff and libjpeg headers that
-      # current nixpkgs intentionally does not install. Disable those optional
-      # plugins rather than reintroducing bundled copies.
-      substituteInPlace Makefile.srcs fipMakefile.srcs \
-        --replace-fail "./Source/FreeImage/PluginG3.cpp " "" \
-        --replace-fail "./Source/FreeImage/PluginTIFF.cpp " "" \
-        --replace-fail "./Source/Metadata/XTIFF.cpp " "" \
-        --replace-fail "./Source/FreeImageToolkit/JPEGTransform.cpp " ""
-      substituteInPlace Source/FreeImage/Plugin.cpp \
-        --replace-fail "s_plugins->AddNode(InitTIFF);" "" \
-        --replace-fail "s_plugins->AddNode(InitG3);" ""
-    ''
-    + lib.optionalString (stdenv.hostPlatform.isDarwin && stdenv.hostPlatform.isAarch64) ''
-      # Upstream Makefile hardcodes i386 and x86_64 architectures only
-      substituteInPlace Makefile.osx --replace "x86_64" "arm64"
-    '';
+    # FreeImage 3.19 predates the public header locations in current
+    # OpenEXR/libtiff releases. The G3 plugin also depends on libtiff's
+    # private tiffiop.h, which is no longer installed.
+    substituteInPlace Source/FreeImage/PluginEXR.cpp Source/FreeImage/PluginTIFF.cpp \
+      --replace-fail "<OpenEXR/half.h>" "<Imath/half.h>"
+    substituteInPlace Source/FreeImage/PluginEXR.cpp \
+      --replace-fail "Imath::Int64" "uint64_t"
+    # These old sources require private libtiff and libjpeg headers that
+    # current nixpkgs intentionally does not install. Disable those optional
+    # plugins rather than reintroducing bundled copies.
+    substituteInPlace Makefile.srcs fipMakefile.srcs \
+      --replace-fail "./Source/FreeImage/PluginG3.cpp " "" \
+      --replace-fail "./Source/FreeImage/PluginTIFF.cpp " "" \
+      --replace-fail "./Source/Metadata/XTIFF.cpp " "" \
+      --replace-fail "./Source/FreeImageToolkit/JPEGTransform.cpp " ""
+    substituteInPlace Source/FreeImage/Plugin.cpp \
+      --replace-fail "s_plugins->AddNode(InitTIFF);" "" \
+      --replace-fail "s_plugins->AddNode(InitG3);" ""
+  ''
+  + lib.optionalString (stdenv.hostPlatform.isDarwin && stdenv.hostPlatform.isAarch64) ''
+    # Upstream Makefile hardcodes i386 and x86_64 architectures only
+    substituteInPlace Makefile.osx --replace "x86_64" "arm64"
+  '';
 
-  nativeBuildInputs =
-    [
-      pkg-config
-    ]
-    ++ lib.optionals stdenv.hostPlatform.isDarwin [
-      cctools
-      fixDarwinDylibNames
-    ]
-    ++ lib.optionals (stdenv.hostPlatform.isDarwin && stdenv.hostPlatform.isAarch64) [
-      autoSignDarwinBinariesHook
-    ];
+  nativeBuildInputs = [
+    pkg-config
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    cctools
+    fixDarwinDylibNames
+  ]
+  ++ lib.optionals (stdenv.hostPlatform.isDarwin && stdenv.hostPlatform.isAarch64) [
+    autoSignDarwinBinariesHook
+  ];
   buildInputs = [
     libtiff
     libpng
@@ -100,14 +98,13 @@ stdenv.mkDerivation (finalAttrs: {
   INCDIR = "${placeholder "out"}/include";
   INSTALLDIR = "${placeholder "out"}/lib";
 
-  preInstall =
-    ''
-      mkdir -p $INCDIR $INSTALLDIR
-    ''
-    # Workaround for Makefiles.osx not using ?=
-    + lib.optionalString stdenv.hostPlatform.isDarwin ''
-      makeFlagsArray+=( "INCDIR=$INCDIR" "INSTALLDIR=$INSTALLDIR" )
-    '';
+  preInstall = ''
+    mkdir -p $INCDIR $INSTALLDIR
+  ''
+  # Workaround for Makefiles.osx not using ?=
+  + lib.optionalString stdenv.hostPlatform.isDarwin ''
+    makeFlagsArray+=( "INCDIR=$INCDIR" "INSTALLDIR=$INSTALLDIR" )
+  '';
 
   postInstall =
     lib.optionalString (!stdenv.hostPlatform.isDarwin) ''

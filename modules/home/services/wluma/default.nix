@@ -14,7 +14,6 @@ in
   options.local.services.wluma = {
     enable = lib.mkEnableOption "wluma automatic brightness adjustment";
 
-
     alsIioPath = lib.mkOption {
       type = lib.types.str;
       description = "Path to the IIO ambient light sensor sysfs node.";

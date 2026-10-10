@@ -52,7 +52,6 @@ in
         "icons/hicolor/256x256/apps/slack.png".source = ./icons/slack.png;
       }
 
-
       (mkWebApp {
         name = "YouTube";
         url = "https://youtube.com/";

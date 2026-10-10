@@ -13,9 +13,11 @@ let
   nhConfigurationName = config.local.system.nix.nh.configurationName or null;
   nhHostArg = lib.optionalString (nhConfigurationName != null) " -H ${nhConfigurationName}";
   hostname = config.local.system.network.hostname or "";
-  cachePush = lib.optionalString (
-    hostname == "mini" || nhConfigurationName == "dell-workstation"
-  ) " && xilo push admin/nix ${if isStandalone then "\"$HOME/.local/state/nix/profiles/home-manager\"" else "/run/current-system"}";
+  cachePush =
+    lib.optionalString (hostname == "mini" || nhConfigurationName == "dell-workstation")
+      " && xilo push admin/nix ${
+         if isStandalone then "\"$HOME/.local/state/nix/profiles/home-manager\"" else "/run/current-system"
+       }";
   mkUserHome = mkHome user.name;
   resetFlakeLock = "git -C ~/nix restore --source=HEAD --staged --worktree -- flake.lock";
 in
@@ -62,11 +64,14 @@ in
           set -gx HOME_ASSISTANT_TOKEN (cat ${config.sops.secrets.home_assistant_api_key.path} | string trim)
         ''}
 
-        ${lib.optionalString (sopsEnabled && pkgs.stdenv.hostPlatform.isx86_64 && config.sops.secrets ? xilo_push_token) ''
-          if test -r ${config.sops.secrets.xilo_push_token.path}
-            set -gx XILO_TOKEN (cat ${config.sops.secrets.xilo_push_token.path} | string trim)
-          end
-        ''}
+        ${lib.optionalString
+          (sopsEnabled && pkgs.stdenv.hostPlatform.isx86_64 && config.sops.secrets ? xilo_push_token)
+          ''
+            if test -r ${config.sops.secrets.xilo_push_token.path}
+              set -gx XILO_TOKEN (cat ${config.sops.secrets.xilo_push_token.path} | string trim)
+            end
+          ''
+        }
 
         # Enable vi mode
         fish_vi_key_bindings

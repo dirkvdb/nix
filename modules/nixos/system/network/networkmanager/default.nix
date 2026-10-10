@@ -156,7 +156,6 @@ in
     environment.systemPackages = cfg.extraPackages;
     programs.nm-applet.enable = lib.mkDefault config.local.desktop.waybar.enable;
 
-
     assertions = [
       {
         assertion = !(config.local.system.network.ethernet.enable or false) || !cfg.enable;

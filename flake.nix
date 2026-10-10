@@ -146,7 +146,6 @@
 
       llmAgentsPkgs = system: inputs.llm-agents.packages.${system};
 
-
       # Custom packages overlay
       overlay = final: prev: {
         # Override aquamarine to 0.12.1 to fix split-node GPU render node fallback on Apple Silicon
@@ -176,7 +175,6 @@
         siffra = prev.callPackage ./pkgs/siffra { };
         orrery = prev.callPackage ./pkgs/orrery { };
         oweka = prev.callPackage ./pkgs/oweka { };
-
 
         ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
@@ -292,7 +290,8 @@
               nixpkgs.overlays = [
                 overlay
                 inputs.obsidian-extensions.overlays.default
-              ] ++ extraOverlays;
+              ]
+              ++ extraOverlays;
             }
           ];
         };

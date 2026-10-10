@@ -33,15 +33,14 @@ let
   # symlinks. Only seed the file the first time it's missing; once created
   # it's left alone on every subsequent activation so Remmina/user changes
   # (like saved passwords) are never overwritten or fought over.
-  mkConnectionActivation =
-    name: conn: ''
-      target="$HOME/.local/share/remmina/${name}.remmina"
-      if [ ! -e "$target" ]; then
-        mkdir -p "$HOME/.local/share/remmina"
-        install -m644 "${mkConnectionFile name conn}" "$target"
-        chmod u+w "$target"
-      fi
-    '';
+  mkConnectionActivation = name: conn: ''
+    target="$HOME/.local/share/remmina/${name}.remmina"
+    if [ ! -e "$target" ]; then
+      mkdir -p "$HOME/.local/share/remmina"
+      install -m644 "${mkConnectionFile name conn}" "$target"
+      chmod u+w "$target"
+    fi
+  '';
 in
 {
   options.local.apps.remmina = {

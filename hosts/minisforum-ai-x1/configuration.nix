@@ -54,7 +54,6 @@
       "initcall_blacklist=simpledrm_platform_driver_init"
     ];
 
-
     # Execute native ARM Linux derivations under QEMU without changing their store paths.
     boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
     boot.binfmt.addEmulatedSystemsToNixSandbox = true;

@@ -52,17 +52,22 @@ rustPlatform.buildRustPackage (finalAttrs: {
     zlib
   ];
 
-  cargoBuildFlags = [ "--package" "orrery" ];
+  cargoBuildFlags = [
+    "--package"
+    "orrery"
+  ];
 
   postInstall = ''
     wrapProgram $out/bin/orrery \
       --prefix PATH : ${lib.makeBinPath [ git ]} \
-      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [
-        libxcb
-        libxkbcommon
-        vulkan-loader
-        wayland
-      ]}
+      --prefix LD_LIBRARY_PATH : ${
+        lib.makeLibraryPath [
+          libxcb
+          libxkbcommon
+          vulkan-loader
+          wayland
+        ]
+      }
 
     install -Dm644 packaging/orrery.desktop \
       $out/share/applications/orrery.desktop

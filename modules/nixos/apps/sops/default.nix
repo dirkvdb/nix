@@ -44,7 +44,6 @@ in
           owner = user.name;
         };
 
-
         secrets.home_assistant_api_key = {
           owner = user.name;
         };
@@ -57,9 +56,11 @@ in
           owner = user.name;
         };
 
-        secrets."obsidian/${config.local.system.network.hostname}" = lib.mkIf (config.local.apps.obsidian.enable && !config.local.headless) {
-          owner = user.name;
-        };
+        secrets."obsidian/${config.local.system.network.hostname}" =
+          lib.mkIf (config.local.apps.obsidian.enable && !config.local.headless)
+            {
+              owner = user.name;
+            };
 
         secrets.cachix_geo_overlay_auth_token = {
           owner = user.name;

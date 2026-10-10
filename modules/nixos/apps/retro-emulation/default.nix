@@ -64,7 +64,6 @@ let
 in
 {
 
-
   config = lib.mkIf cfg.enable {
     local.apps.retro-emulation.fladder.enable = lib.mkDefault true;
     local.apps.retro-emulation.moonlight.enable = lib.mkDefault true;

@@ -181,12 +181,12 @@ in
 
     hardware.asahi.enable = true;
     hardware.asahi.avd.vaapi-support = true;
-    hardware.asahi.peripheralFirmwareDirectory = (fetchTree {
-      type = "path";
-      path = "/boot/vendorfw/";
-      narHash = "sha256-OiVIifGtvtUTTergzAy03jrxjRtD4cg3QS+CgyY8VOM=";
-    }).outPath;
-
+    hardware.asahi.peripheralFirmwareDirectory =
+      (fetchTree {
+        type = "path";
+        path = "/boot/vendorfw/";
+        narHash = "sha256-OiVIifGtvtUTTergzAy03jrxjRtD4cg3QS+CgyY8VOM=";
+      }).outPath;
 
     assertions = [
       {
@@ -211,8 +211,6 @@ in
         '';
       }
     ];
-
-
 
     # Swap fn and left ctrl keys on MacBook keyboard
     # fnmode=2 Use function keys by default

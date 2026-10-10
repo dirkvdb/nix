@@ -11,14 +11,16 @@ let
 in
 {
   imports = [
-    (let
-      upstream = import "${inputs.nixpkgs-unstable}/nixos/modules/services/networking/nordvpn.nix" {
-        inherit config lib;
-        pkgs = unstablePkgs;
-      };
-    in
-    # The unstable module's manual page has no redirect in the 26.05 manual.
-    upstream // { meta = builtins.removeAttrs upstream.meta [ "doc" ]; })
+    (
+      let
+        upstream = import "${inputs.nixpkgs-unstable}/nixos/modules/services/networking/nordvpn.nix" {
+          inherit config lib;
+          pkgs = unstablePkgs;
+        };
+      in
+      # The unstable module's manual page has no redirect in the 26.05 manual.
+      upstream // { meta = builtins.removeAttrs upstream.meta [ "doc" ]; }
+    )
   ];
 
   options.local.services.nordvpn = {
