@@ -180,6 +180,7 @@ let
     location.address = "Lommel, Belgium";
 
     lockscreen.fingerprint = cfg.fingerprint.enable;
+    lockscreen.transition = [ ];
 
     lockscreen_widgets = {
       enabled = false;
