@@ -143,7 +143,7 @@ hl.layer_rule({ match = { namespace = "selection" }, no_anim = true })
 -------------------------
 ---- WORKSPACE RULES ----
 -------------------------
-hl.workspace_rule({ workspace = "1", persistent = true })
+hl.workspace_rule({ workspace = "1", no_rounding = true, decorate = false, gaps_in = 0, gaps_out = 0, persistent = true })
 hl.workspace_rule({ workspace = "2", persistent = true })
 hl.workspace_rule({ workspace = "3", no_rounding = true, decorate = false, gaps_in = 0, gaps_out = 0, persistent = true })
 hl.workspace_rule({ workspace = "3", persistent = true })
@@ -219,9 +219,9 @@ hl.window_rule({ match = { tag = "pip" }, move = "100%-w-40 4%" })
 hl.window_rule({ match = { class = "^(Bitwarden|org.keepassxc.KeePassXC)$" }, no_screen_share = true })
 
 -- Workspace assignments
-hl.window_rule({ match = { class = "(vivaldi-stable)" }, workspace = "2" })
-hl.window_rule({ match = { class = "(firefox|Firefox|librewolf)" }, workspace = "2" })
-hl.window_rule({ match = { class = "(zen|zen-beta)" }, workspace = "2" })
+hl.window_rule({ match = { class = "(vivaldi-stable)" }, workspace = "1" })
+hl.window_rule({ match = { class = "(firefox|Firefox|librewolf)" }, workspace = "1" })
+hl.window_rule({ match = { class = "(zen|zen-beta)" }, workspace = "1" })
 hl.window_rule({ match = { class = "(dev.zed.Zed|dev.zed.Zed-Dev)" }, workspace = "3" })
 hl.window_rule({ match = { class = "(org.gnome.Nautilus|thunar)" }, workspace = "5" })
 hl.window_rule({ match = { class = "(spotify|Spotify|spotifast|chrome-open\\.spotify\\.com__.*)" }, workspace = "9" })
