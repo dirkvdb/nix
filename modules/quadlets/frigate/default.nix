@@ -85,6 +85,7 @@ in
       [Container]
       # Matches the pinned native nixpkgs package; upstream's stable 0.17.2 release.
       Image=ghcr.io/blakeblackshear/frigate:0.17.2
+      AutoUpdate=registry
       ContainerName=frigate
       PublishPort=8085:8971
       EnvironmentFile=${config.sops.templates."frigate-env".path}

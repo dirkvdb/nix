@@ -36,6 +36,7 @@
 
       [Container]
       Image=ghcr.io/homarr-labs/homarr:v1.77.2
+      AutoUpdate=registry
       ContainerName=homarr
       ServiceName=podman-homarr
       PublishPort=8083:7575

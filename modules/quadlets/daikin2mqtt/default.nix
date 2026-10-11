@@ -14,10 +14,16 @@
     networking.firewall.allowedTCPPorts = [ 8076 ];
 
     services.homepage-dashboard.quadletEntries.Daikin = {
-      href = "http://${config.networking.hostName}:8076/";
+      href = "{{HOMEPAGE_VAR_DAIKIN_REDIRECT_URI}}";
       description = "Daikin cloud to MQTT bridge";
       icon = "mdi-air-conditioner";
       siteMonitor = "http://127.0.0.1:8076/";
+    };
+    services.homepage-dashboard.environmentFiles = [ config.sops.templates."homepage-daikin-env".path ];
+
+    systemd.services.homepage-dashboard = lib.mkIf config.sops.useSystemdActivation {
+      requires = [ "sops-install-secrets.service" ];
+      after = [ "sops-install-secrets.service" ];
     };
 
     systemd.packages = [
@@ -47,6 +53,13 @@
         MQTT_PASSWORD=${config.sops.placeholder.mqtt_pass}
       '';
     };
+    sops.templates."homepage-daikin-env" = {
+      mode = "0400";
+      restartUnits = [ "homepage-dashboard.service" ];
+      content = ''
+        HOMEPAGE_VAR_DAIKIN_REDIRECT_URI=${config.sops.placeholder.daikin_oauth_callback}
+      '';
+    };
 
     environment.etc."containers/systemd/daikin2mqtt.container".text = ''
       [Unit]
@@ -58,6 +71,7 @@
 
       [Container]
       Image=docker.io/dirkvdb/daikin2mqtt:latest
+      AutoUpdate=registry
       ContainerName=daikin2mqtt
       ServiceName=podman-daikin2mqtt
       PublishPort=8076:8076

@@ -39,6 +39,7 @@
 
       [Container]
       Image=ghcr.io/home-assistant/home-assistant:2026.9.4
+      AutoUpdate=registry
       ContainerName=home-assistant
       ServiceName=podman-home-assistant
       Network=host
