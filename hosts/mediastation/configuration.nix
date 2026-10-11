@@ -168,6 +168,7 @@
       homarr.enable = true;
       frigate.enable = true;
       daikin2mqtt.enable = true;
+      dockhand.enable = true;
       home-assistant.enable = false;
     };
 
