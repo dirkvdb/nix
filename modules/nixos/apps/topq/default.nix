@@ -6,6 +6,8 @@
 }:
 let
   cfg = config.local.apps.topq;
+  themeFamily = builtins.fromJSON (builtins.readFile ../../../../configs/themes/charcoal-grove.json);
+  topqTheme = import ../../../../configs/themes/zed-to-gpui-kit.nix themeFamily;
 in
 {
   options.local.apps.topq = {
@@ -17,6 +19,8 @@ in
 
     home-manager.users.${config.local.user.name}.xdg.configFile = {
       "topq/config.json".text = builtins.toJSON {
+        light_theme = "Ayu Light";
+        dark_theme = "Charcoal Grove";
         connections = [
           {
             name = "NAS";
@@ -33,7 +37,7 @@ in
         ];
         active_connection = "NAS";
       };
-      "topq/themes/charcoal-grove.json".source = ./charcoal-grove.json;
+      "topq/themes/charcoal-grove.json".text = builtins.toJSON topqTheme;
     };
   };
 }
