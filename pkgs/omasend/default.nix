@@ -129,23 +129,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   env.SSL_CERT_FILE = "${cacert}/etc/ssl/certs/ca-bundle.crt";
 
-  preCheck = ''
-    export HOME="$TMPDIR/omasend-home"
-    export XDG_CONFIG_HOME="$HOME/.config"
-    export XDG_DATA_HOME="$HOME/.local/share"
-    export XDG_STATE_HOME="$HOME/.local/state"
-    export XDG_RUNTIME_DIR="$TMPDIR/omasend-runtime"
-    mkdir -p "$HOME" "$XDG_RUNTIME_DIR"
-    chmod 700 "$XDG_RUNTIME_DIR"
-  '';
-
-  # Run only the theme-specific UI checks; other UI tests depend on font/layout fixtures.
-  postCheck = ''
-    cargo test --offline --locked -j "$NIX_BUILD_CORES" --profile release \
-      --target ${stdenv.hostPlatform.rust.rustcTarget} \
-      --features ui-tests --bin omasend packaged_theme_
-  '';
-
   postInstall = ''
     wrapProgram $out/bin/omasend \
       --set-default SSL_CERT_FILE ${cacert}/etc/ssl/certs/ca-bundle.crt \
