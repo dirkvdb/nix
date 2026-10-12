@@ -15,7 +15,7 @@ let
   inherit (config.local) theme;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
-  zedPinnedVersion = "1.23.2";
+  zedPinnedVersion = "1.23.3";
 
   zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
     version = zedPinnedVersion;
@@ -24,12 +24,12 @@ let
       owner = "zed-industries";
       repo = "zed";
       tag = "v${version}";
-      hash = "sha256-DHqtRCDp6DqdV7J5SIx4poSZixwLXl/DMjM4omQXea4=";
+      hash = "sha256-i+YLDeCzkojymMzF2UvA8UyJJ52ZC5aY3lhlrW8MaAE=";
     };
     cargoDeps = unstablePkgs.rustPlatform.fetchCargoVendor {
       inherit src;
       name = "${old.pname}-${version}";
-      hash = "sha256-SKLwyuR/FC307wRnHRhcIjGjD7yBRQx5sqA6jSyDIOI=";
+      hash = "sha256-JYw55EhoPLacaGP4a3rRLCVkBvjpB9MQDkAW6PEDwMc=";
     };
     env =
       (old.env or { })
@@ -90,8 +90,8 @@ in
           max_tokens = 32768;
         }
         {
-          name = "qwen3.6-moe-35b-a3b-FLM";
-          display_name = "Qwen 3.6 MOE 35B A3B NPU (FLM)";
+          name = "qwen3.8-mtp-27b-FLM";
+          display_name = "Qwen 3.8 MTP 27B NPU (FLM)";
           max_tokens = 32768;
         }
 
@@ -116,7 +116,7 @@ in
     programs.zed-editor = {
       enable = true;
       mutableUserSettings = true;
-      themes.charcoal-grove = ./charcoal-grove.json;
+      themes.charcoal-grove = ../../../../configs/themes/charcoal-grove.json;
       package =
         if pkgs.stdenv.isDarwin || isHeadless then
           null
