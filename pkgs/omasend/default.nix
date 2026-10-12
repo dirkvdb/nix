@@ -7,6 +7,7 @@
   pkg-config,
   cmake,
   makeWrapper,
+  imagemagick,
   cacert,
   coreutils,
   runtimeShell,
@@ -108,6 +109,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   nativeBuildInputs = [
     cmake
+    imagemagick
     makeWrapper
     pkg-config
     rustPlatform.bindgenHook
@@ -165,7 +167,24 @@ rustPlatform.buildRustPackage (finalAttrs: {
         ]
       }
     install -Dm644 packaging/omasend.desktop $out/share/applications/omasend.desktop
-    install -Dm644 assets/omasend.png $out/share/icons/hicolor/1024x1024/apps/omasend.png
+    # Only indexed hicolor sizes are searched by desktop icon resolvers.
+    for size in 32 48 64 128 256 512; do
+      dimensions="$size"x"$size"
+      iconDir="$out/share/icons/hicolor/$dimensions/apps"
+      mkdir -p "$iconDir"
+      magick assets/omasend.png -resize "$dimensions" "$iconDir/omasend.png"
+    done
+  '';
+
+  doInstallCheck = true;
+  installCheckPhase = ''
+    runHook preInstallCheck
+    for size in 32 48 64 128 256 512; do
+      dimensions="$size"x"$size"
+      icon="$out/share/icons/hicolor/$dimensions/apps/omasend.png"
+      test "$(magick identify -format '%wx%h' "$icon")" = "$dimensions"
+    done
+    runHook postInstallCheck
   '';
 
   meta = {
