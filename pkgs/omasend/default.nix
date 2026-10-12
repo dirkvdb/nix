@@ -150,6 +150,11 @@ rustPlatform.buildRustPackage (finalAttrs: {
         ]
       }
     install -Dm644 packaging/omasend.desktop $out/share/applications/omasend.desktop
+    # Noctalia prefers SVGs and rasterizes them at the requested display size.
+    mkdir -p "$out/share/icons/hicolor/scalable/apps"
+    substitute assets/logo.svg "$out/share/icons/hicolor/scalable/apps/omasend.svg" \
+      --replace-fail 'fill="currentColor"' 'fill="#9ac357"'
+
     # Only indexed hicolor sizes are searched by desktop icon resolvers.
     for size in 32 48 64 128 256 512; do
       dimensions="$size"x"$size"
@@ -162,6 +167,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   doInstallCheck = true;
   installCheckPhase = ''
     runHook preInstallCheck
+    test -s "$out/share/icons/hicolor/scalable/apps/omasend.svg"
     for size in 32 48 64 128 256 512; do
       dimensions="$size"x"$size"
       icon="$out/share/icons/hicolor/$dimensions/apps/omasend.png"
