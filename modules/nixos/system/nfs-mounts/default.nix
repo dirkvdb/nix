@@ -75,6 +75,9 @@ in
         "/nas/arr" = {
           device = lib.mkDefault "nas.local:/volume1/arr";
         };
+        "/nas/docker" = {
+          device = lib.mkDefault "nas.local:/volume2/docker";
+        };
       };
     })
     (lib.mkIf cfg.enable {
