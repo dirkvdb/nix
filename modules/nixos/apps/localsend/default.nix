@@ -23,6 +23,7 @@ in
           enable = true;
           openFirewall = true;
         };
+        environment.systemPackages = [ pkgs.omasend ];
       }
 
       (mkUserHome {

@@ -175,6 +175,7 @@
         siffra = prev.callPackage ./pkgs/siffra { };
         orrery = prev.callPackage ./pkgs/orrery { };
         oweka = prev.callPackage ./pkgs/oweka { };
+        omasend = prev.callPackage ./pkgs/omasend { };
 
         ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;

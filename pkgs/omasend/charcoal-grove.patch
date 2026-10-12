@@ -1,0 +1,145 @@
+diff --git a/src/views/theme.rs b/src/views/theme.rs
+--- a/src/views/theme.rs
++++ b/src/views/theme.rs
+@@ -1,6 +1,8 @@
+ use gpui_kit::{App, Global, Window, WindowAppearance};
+ use gpui_omarchy::Theme;
+ use std::sync::OnceLock;
++
++include!("charcoal-grove.rs");
+ 
+ #[derive(Clone, Copy, Default, PartialEq, Eq)]
+ pub enum ThemeMode {
+@@ -26,23 +28,18 @@
+             Self::Dark => "dark",
+         }
+     }
++    fn palette_for(self, appearance: WindowAppearance) -> Theme {
++        match self {
++            Self::Light => charcoal_grove_light(),
++            Self::Dark => charcoal_grove_dark(),
++            Self::System => match appearance {
++                WindowAppearance::Light | WindowAppearance::VibrantLight => charcoal_grove_light(),
++                _ => charcoal_grove_dark(),
++            },
++        }
++    }
+     pub fn apply(self, window: &Window, cx: &mut App) {
+-        match self {
+-            Self::Light => Theme::flexoki_light().apply(cx),
+-            Self::Dark => Theme::tokyo_night().apply(cx),
+-            Self::System => {
+-                if cfg!(target_os = "linux") {
+-                    Theme::follow_system(cx);
+-                } else {
+-                    match window.appearance() {
+-                        WindowAppearance::Light | WindowAppearance::VibrantLight => {
+-                            Theme::flexoki_light().apply(cx)
+-                        }
+-                        _ => Theme::tokyo_night().apply(cx),
+-                    }
+-                }
+-            }
+-        }
++        self.palette_for(window.appearance()).apply(cx);
+     }
+     pub fn select(self, window: &Window, cx: &mut App) {
+         let selected = if is_omarchy() { Self::System } else { self };
+@@ -108,6 +105,36 @@
+ #[cfg(test)]
+ mod tests {
+     use super::*;
++
++    #[test]
++    fn packaged_theme_matches_explicit_and_system_appearance() {
++        use gpui_kit::base::ThemeAppearance;
++        for appearance in [
++            WindowAppearance::Light,
++            WindowAppearance::VibrantLight,
++            WindowAppearance::Dark,
++            WindowAppearance::VibrantDark,
++        ] {
++            let light = ThemeMode::Light.palette_for(appearance);
++            let dark = ThemeMode::Dark.palette_for(appearance);
++            assert_eq!(light.name.as_ref(), "Charcoal Grove Light");
++            assert_eq!(light.appearance, ThemeAppearance::Light);
++            assert_eq!(dark.name.as_ref(), "Charcoal Grove");
++            assert_eq!(dark.appearance, ThemeAppearance::Dark);
++            assert_ne!(light.background, dark.background);
++            assert_eq!(light.background.a, 1.0);
++            let system = ThemeMode::System.palette_for(appearance);
++            let expected = if matches!(
++                appearance,
++                WindowAppearance::Light | WindowAppearance::VibrantLight
++            ) {
++                light
++            } else {
++                dark
++            };
++            assert_eq!(system, expected);
++        }
++    }
+     #[test]
+     fn preferences_default_to_system_and_round_trip() {
+         for value in ["", "invalid", "system"] {
+diff --git a/src/views/home.rs b/src/views/home.rs
+--- a/src/views/home.rs
++++ b/src/views/home.rs
+@@ -114,7 +114,7 @@
+         use super::theme::ThemeMode;
+         cx.global::<ThemeMode>().to_owned().apply(window, cx);
+         cx.observe_window_appearance(window, |_, window, cx| {
+-            if *cx.global::<ThemeMode>() == ThemeMode::System && !cfg!(target_os = "linux") {
++            if *cx.global::<ThemeMode>() == ThemeMode::System {
+                 ThemeMode::System.apply(window, cx);
+                 cx.notify();
+             }
+@@ -1248,33 +1248,29 @@
+     }
+ 
+     #[gpui::test]
+-    fn explicit_theme_and_system_appearance_switch_immediately(cx: &mut TestAppContext) {
++    fn packaged_theme_switches_between_charcoal_grove_variants(cx: &mut TestAppContext) {
+         with_home(cx, |_, cx| {
+             use super::super::theme::ThemeMode;
+             cx.update(|window, cx| {
+-                assert!(*cx.global::<ThemeMode>() == ThemeMode::System);
+                 ThemeMode::Light.apply(window, cx);
++                assert_eq!(cx.omarchy().name.as_ref(), "Charcoal Grove Light");
++                assert_eq!(cx.omarchy().appearance, gpui_kit::base::ThemeAppearance::Light);
++                ThemeMode::Dark.apply(window, cx);
++                assert_eq!(cx.omarchy().name.as_ref(), "Charcoal Grove");
++                assert_eq!(cx.omarchy().appearance, gpui_kit::base::ThemeAppearance::Dark);
++                ThemeMode::System.apply(window, cx);
++                let light = matches!(
++                    window.appearance(),
++                    gpui_kit::WindowAppearance::Light | gpui_kit::WindowAppearance::VibrantLight
++                );
+                 assert_eq!(
+-                    cx.omarchy().appearance,
+-                    gpui_kit::base::ThemeAppearance::Light
++                    cx.omarchy().appearance == gpui_kit::base::ThemeAppearance::Light,
++                    light
+                 );
+-                ThemeMode::Dark.apply(window, cx);
+                 assert_eq!(
+-                    cx.omarchy().appearance,
+-                    gpui_kit::base::ThemeAppearance::Dark
++                    cx.omarchy().name.as_ref(),
++                    if light { "Charcoal Grove Light" } else { "Charcoal Grove" }
+                 );
+-                ThemeMode::System.apply(window, cx);
+-                if !cfg!(target_os = "linux") {
+-                    let light = matches!(
+-                        window.appearance(),
+-                        gpui_kit::WindowAppearance::Light
+-                            | gpui_kit::WindowAppearance::VibrantLight
+-                    );
+-                    assert_eq!(
+-                        cx.omarchy().appearance == gpui_kit::base::ThemeAppearance::Light,
+-                        light
+-                    );
+-                }
+             });
+         });
+     }
