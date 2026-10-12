@@ -284,7 +284,7 @@ in
           };
           theme = {
             mode = "dark";
-            light = "Ayu Light";
+            light = "Charcoal Grove Light";
             dark = "Charcoal Grove";
           };
           lsp = {

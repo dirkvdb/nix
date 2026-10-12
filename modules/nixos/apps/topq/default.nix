@@ -19,7 +19,7 @@ in
 
     home-manager.users.${config.local.user.name}.xdg.configFile = {
       "topq/config.json".text = builtins.toJSON {
-        light_theme = "Ayu Light";
+        light_theme = "Charcoal Grove Light";
         dark_theme = "Charcoal Grove";
         connections = [
           {
