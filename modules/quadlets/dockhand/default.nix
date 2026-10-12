@@ -4,12 +4,22 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.quadlets.dockhand;
+in
 {
   imports = [ ../homepage.nix ];
 
-  options.quadlets.dockhand.enable = lib.mkEnableOption "the Dockhand Podman Quadlet";
+  options.quadlets.dockhand = {
+    enable = lib.mkEnableOption "the Dockhand Podman Quadlet";
+    stacksDirectory = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Host directory to mount at /opt/stacks in the Dockhand container";
+    };
+  };
 
-  config = lib.mkIf config.quadlets.dockhand.enable {
+  config = lib.mkIf cfg.enable {
     virtualisation.podman = {
       enable = true;
       dockerSocket.enable = true;
@@ -40,7 +50,9 @@
       Wants=network-online.target
       After=network-online.target podman.socket
       Requires=podman.socket
-      RequiresMountsFor=/var/lib/dockhand
+      RequiresMountsFor=/var/lib/dockhand${
+        lib.optionalString (cfg.stacksDirectory != null) " ${cfg.stacksDirectory}"
+      }
 
       [Container]
       Image=docker.io/fnsys/dockhand:v1.0.53
@@ -51,7 +63,9 @@
       PublishPort=3000:3000
       Volume=/run/podman/podman.sock:/var/run/docker.sock
       Volume=/var/lib/dockhand:/var/lib/dockhand
+      ${lib.optionalString (cfg.stacksDirectory != null) "Volume=${cfg.stacksDirectory}:/opt/stacks"}
       Environment=DATA_DIR=/var/lib/dockhand
+      ${lib.optionalString (cfg.stacksDirectory != null) "Environment=STACKS_DIR=/opt/stacks"}
 
       [Service]
       Restart=always

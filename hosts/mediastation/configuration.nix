@@ -168,7 +168,10 @@
       homarr.enable = true;
       frigate.enable = true;
       daikin2mqtt.enable = true;
-      dockhand.enable = true;
+      dockhand = {
+        enable = true;
+        stacksDirectory = "/nas/docker";
+      };
       home-assistant.enable = false;
     };
 
