@@ -534,6 +534,8 @@ in
       # Only takes effect if a host hasn't already set this explicitly.
       local.desktop.hyprland.enable = lib.mkDefault true;
 
+      # Noctalia detects the system battery through UPower, not directly through sysfs.
+      services.upower.enable = true;
       services.fprintd.enable = lib.mkIf cfg.fingerprint.enable true;
 
       # Noctalia's lockscreen authenticates passwords against the "login" PAM
