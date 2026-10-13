@@ -70,6 +70,10 @@ in
           owner = user.name;
         };
 
+        secrets.xilo_aarch64_push_token = {
+          owner = user.name;
+        };
+
         secrets.mqtt_pass = {
           owner = user.name;
         };

@@ -17,7 +17,7 @@ build:
 # Build the native ARM MacBook system and publish it to the ARM cache (no activation)
 build-arm-cache:
     nix build .#nixosConfigurations.macbook-pro.config.system.build.toplevel --no-update-lock-file --max-jobs 1 --cores 12 --out-link result-arm --print-build-logs
-    xilo push admin/aarch64 ./result-arm
+    just push-arm-cache ./result-arm
 
 # Cross-compile pinned Zed on x86_64; refuse any ARM builds under QEMU
 build-zed-arm cores="12":
@@ -25,7 +25,12 @@ build-zed-arm cores="12":
 
 # Publish the cross-built Zed closure to the cache used by the ARM MacBook
 publish-zed-arm cores="12": (build-zed-arm cores)
-    xilo push admin/aarch64 ./result-zed-arm
+    just push-arm-cache ./result-zed-arm
+
+# Upload an existing ARM build using its dedicated SOPS token
+push-arm-cache path:
+    @test -r /run/secrets/xilo_aarch64_push_token && test -s /run/secrets/xilo_aarch64_push_token || { echo "ARM cache token is missing or unreadable: deploy xilo_aarch64_push_token first." >&2; exit 1; }
+    @XILO_TOKEN="$(cat /run/secrets/xilo_aarch64_push_token)" xilo push admin/aarch64 "{{ path }}"
 
 bumpzed version:
     nix shell nixpkgs#python3 -c python3 ./scripts/bump-zed.py "{{ version }}"
