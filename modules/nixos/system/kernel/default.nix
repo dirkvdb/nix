@@ -48,7 +48,20 @@ in
     })
 
     (lib.mkIf (cfg.useLatest && !cfg.cachyos.enable) {
-      boot.kernelPackages = pkgs.linuxPackages_latest;
+      boot.kernelPackages = pkgs.linuxPackages_latest.extend (
+        _final: prev: {
+          zenpower = prev.zenpower.overrideAttrs (old: {
+            # Newer kernels no longer expose CPUID helpers through the AMD headers.
+            postPatch = (old.postPatch or "") + ''
+              if [ -f ${prev.kernel.dev}/lib/modules/${prev.kernel.modDirVersion}/source/arch/x86/include/asm/cpuid/api.h ]; then
+                substituteInPlace zenpower.c \
+                  --replace-fail '#include <linux/version.h>' '#include <linux/version.h>
+              #include <asm/cpuid/api.h>'
+              fi
+            '';
+          });
+        }
+      );
     })
 
     # Kernel + overlay only when fully enabled
