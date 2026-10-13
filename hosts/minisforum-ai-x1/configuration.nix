@@ -88,8 +88,8 @@
 
       system = {
         kernel = {
-          cachyos.enable = true;
-          # useLatest = true;
+          cachyos.enable = false;
+          useLatest = true;
         };
 
         cpu.cores = 20;
