@@ -15,32 +15,8 @@ let
   inherit (config.local) theme;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
-  zedPinnedVersion = "1.23.3";
-
-  zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
-    version = zedPinnedVersion;
-    doCheck = false;
-    patches = (old.patches or [ ]) ++ [
-      # https://github.com/zed-industries/zed/pull/55857 (adapted for 1.23.3)
-      ./wayland-kinetic-scroll.patch
-    ];
-    src = unstablePkgs.fetchFromGitHub {
-      owner = "zed-industries";
-      repo = "zed";
-      tag = "v${version}";
-      hash = "sha256-i+YLDeCzkojymMzF2UvA8UyJJ52ZC5aY3lhlrW8MaAE=";
-    };
-    cargoDeps = unstablePkgs.rustPlatform.fetchCargoVendor {
-      inherit src;
-      name = "${old.pname}-${version}";
-      hash = "sha256-JYw55EhoPLacaGP4a3rRLCVkBvjpB9MQDkAW6PEDwMc=";
-    };
-    env =
-      (old.env or { })
-      // lib.optionalAttrs unstablePkgs.stdenv.hostPlatform.isx86_64 {
-        NIX_CFLAGS_COMPILE = "-march=x86-64-v3";
-      };
-  });
+  zedEditorPinned = unstablePkgs.callPackage ../../../../pkgs/zed-editor { };
+  zedPinnedVersion = zedEditorPinned.version;
 
 in
 {
@@ -55,6 +31,20 @@ in
       type = lib.types.bool;
       default = false;
       description = "Use the pinned upstream Zed version when newer than unstable.";
+    };
+
+    package = lib.mkOption {
+      type = lib.types.nullOr lib.types.package;
+      default =
+        if pkgs.stdenv.isDarwin || isHeadless then
+          null
+        else if
+          cfg.useLatestUpstream && !(lib.versionOlder zedPinnedVersion unstablePkgs.zed-editor.version)
+        then
+          zedEditorPinned
+        else
+          unstablePkgs.zed-editor;
+      description = "Zed package to install, optionally built on another architecture.";
     };
 
     localModels = lib.mkEnableOption "local model providers in Zed (e.g. lemonade)";
@@ -121,15 +111,7 @@ in
       enable = true;
       mutableUserSettings = true;
       themes.charcoal-grove = ../../../../configs/themes/charcoal-grove.json;
-      package =
-        if pkgs.stdenv.isDarwin || isHeadless then
-          null
-        else if
-          cfg.useLatestUpstream && !(lib.versionOlder zedPinnedVersion unstablePkgs.zed-editor.version)
-        then
-          zedEditorPinned
-        else
-          unstablePkgs.zed-editor;
+      package = cfg.package;
 
       extensions = [
         "catppuccin-icons"
@@ -240,7 +222,7 @@ in
             default_model = {
               effort = "medium";
               enable_thinking = true;
-              provider = "chatgpt";
+              provider = "openai-subscribed";
               model = "gpt-6.1-sol";
             };
           };

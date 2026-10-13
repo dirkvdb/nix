@@ -300,6 +300,10 @@
     {
       overlays.default = overlay;
 
+      packages.x86_64-linux.zed-editor-aarch64 = import ./pkgs/zed-editor/cross.nix {
+        nixpkgs = inputs.nixpkgs-unstable;
+      };
+
       nixosConfigurations = {
         mini = mkNixos {
           system = "x86_64-linux";

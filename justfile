@@ -19,6 +19,14 @@ build-arm-cache:
     nix build .#nixosConfigurations.macbook-pro.config.system.build.toplevel --no-update-lock-file --max-jobs 1 --cores 12 --out-link result-arm --print-build-logs
     xilo push admin/aarch64 ./result-arm
 
+# Cross-compile pinned Zed on x86_64; refuse any ARM builds under QEMU
+build-zed-arm cores="12":
+    nix build .#zed-editor-aarch64 --no-update-lock-file --max-jobs 1 --cores {{ cores }} --option extra-platforms "" --builders "" --out-link result-zed-arm --print-build-logs
+
+# Publish the cross-built Zed closure to the cache used by the ARM MacBook
+publish-zed-arm cores="12": (build-zed-arm cores)
+    xilo push admin/aarch64 ./result-zed-arm
+
 bumpzed version:
     nix shell nixpkgs#python3 -c python3 ./scripts/bump-zed.py "{{ version }}"
 

@@ -42,8 +42,8 @@ def set_version(text: str, version: str) -> str:
 
 def set_hash(text: str, target: str, value: str) -> str:
     expressions = {
-        "src": r'(src = unstablePkgs\.fetchFromGitHub \{.*?\n\s*hash = )(?:"[^"]+"|lib\.fakeHash);',
-        "cargoDeps": r'(cargoDeps = unstablePkgs\.rustPlatform\.fetchCargoVendor \{.*?\n\s*hash = )(?:"[^"]+"|lib\.fakeHash);',
+        "src": r'(src = fetchFromGitHub \{.*?\n\s*hash = )(?:"[^"]+"|lib\.fakeHash);',
+        "cargoDeps": r'(cargoDeps = rustPlatform\.fetchCargoVendor \{.*?\n\s*hash = )(?:"[^"]+"|lib\.fakeHash);',
     }
     return replace_once(text, expressions[target], rf"\g<1>{value};", f"{target}.hash")
 
@@ -88,7 +88,7 @@ def run_build(repo_root: Path, *, expect_hash_for: str | None = None) -> str | N
 def main() -> int:
     args = parse_args()
     repo_root = Path(__file__).resolve().parent.parent
-    zed_file = repo_root / "modules/home/apps/zed/default.nix"
+    zed_file = repo_root / "pkgs/zed-editor/default.nix"
     original = zed_file.read_text()
 
     try:
