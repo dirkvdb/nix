@@ -34,7 +34,7 @@ in
 
   config = lib.mkIf cfg.enable {
     hardware.i2c.enable = true;
-    services.ddccontrol.enable = true;
+    # services.ddccontrol.enable = true;
 
     boot.extraModprobeConfig = lib.mkIf (cfg.delay != null) ''
       options ddcci delay=${toString cfg.delay}
