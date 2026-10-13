@@ -36,7 +36,7 @@ in
         curl
         file
         fzf
-        just
+        unstablePkgs.just
         micro
         ram
         rsync
