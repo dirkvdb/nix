@@ -48,6 +48,12 @@
       enable = true;
     };
 
+    # Apple Magic Trackpad driver and BlueZ's userspace HID transport.
+    boot.kernelModules = [
+      "hid_magicmouse"
+      "uhid"
+    ];
+
     # Boot display: match HDMI resolution to avoid scaling issues on fbcon
     boot.kernelParams = [
       "fbcon=nodefer"
