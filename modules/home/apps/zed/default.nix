@@ -20,6 +20,10 @@ let
   zedEditorPinned = unstablePkgs.zed-editor.overrideAttrs (old: rec {
     version = zedPinnedVersion;
     doCheck = false;
+    patches = (old.patches or [ ]) ++ [
+      # https://github.com/zed-industries/zed/pull/55857 (adapted for 1.23.3)
+      ./wayland-kinetic-scroll.patch
+    ];
     src = unstablePkgs.fetchFromGitHub {
       owner = "zed-industries";
       repo = "zed";
