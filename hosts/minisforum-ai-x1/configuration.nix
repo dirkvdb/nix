@@ -58,6 +58,9 @@
     boot.kernelParams = [
       "fbcon=nodefer"
       "initcall_blacklist=simpledrm_platform_driver_init"
+      # DC_SKIP_DETECTION_LT: HPD detection retrains sleeping DP links and wakes
+      # the Dell U2725QE backlight. Skip detection-time training, not normal wake.
+      "amdgpu.dcdebugmask=0x200000"
     ];
 
     # Execute native ARM Linux derivations under QEMU without changing their store paths.
