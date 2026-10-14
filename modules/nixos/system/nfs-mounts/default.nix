@@ -6,6 +6,12 @@ in
   options.local.system.nfs-mounts = {
     enable = lib.mkEnableOption "NFS mounts";
 
+    automount = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Include on-demand automounting and a 10-minute idle timeout in the default mount options; disable to mount at boot and keep mounted";
+    };
+
     presets.nas = lib.mkEnableOption "standard NAS mounts (ssd, downloads, data, media, arr)";
     hosts = lib.mkOption {
       description = "Additional /etc/hosts entries, useful for pinning NFS server hostnames to IPv4 when IPv6 is also enabled";
@@ -40,14 +46,16 @@ in
                 "nfsvers=4.1"
                 "rw"
                 "defaults"
-                "x-systemd.automount"
-                "noauto"
                 "noatime"
                 "_netdev" # filesystem requires a network connection before it can be mounted
-                "x-systemd.idle-timeout=10min"
                 "soft" # return errors instead of hanging indefinitely when the server is unreachable
                 "timeo=50" # 5 second timeout (units are deciseconds)
                 "retrans=2" # retry twice then give up
+              ]
+              ++ lib.optionals cfg.automount [
+                "x-systemd.automount"
+                "noauto"
+                "x-systemd.idle-timeout=10min"
               ];
               description = "Default mount options";
             };

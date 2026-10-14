@@ -206,7 +206,12 @@
 
         nfs-mounts = {
           enable = true;
-          presets.nas = true;
+          automount = false;
+          mounts = {
+            "/nas/docker".device = "nas.fritz.box:/volume2/docker";
+            "/nas/media".device = "nas.fritz.box:/volume1/media";
+            "/nas/downloads".device = "nas.fritz.box:/volume1/downloads";
+          };
         };
 
         utils = {

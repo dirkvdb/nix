@@ -50,9 +50,6 @@ in
       Wants=network-online.target
       After=network-online.target podman.socket
       Requires=podman.socket
-      RequiresMountsFor=/var/lib/dockhand${
-        lib.optionalString (cfg.stacksDirectory != null) " ${cfg.stacksDirectory}"
-      }
 
       [Container]
       Image=docker.io/fnsys/dockhand:v1.0.53
