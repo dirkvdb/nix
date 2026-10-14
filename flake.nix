@@ -170,7 +170,7 @@
         plymouth-theme-nixos = prev.callPackage ./pkgs/plymouth-theme-nixos { };
         freeimage = prev.callPackage ./pkgs/freeimage { };
         es-de = prev.callPackage ./pkgs/es-de { freeimage = final.freeimage; };
-        decentpaste = prev.callPackage ./pkgs/decentpaste { };
+
         make-slack-great-again = prev.callPackage ./pkgs/make-slack-great-again { };
         hyprmoncfg = prev.callPackage ./pkgs/hyprmoncfg { };
         siffra = prev.callPackage ./pkgs/siffra { };

@@ -301,7 +301,7 @@ in
     boot.kernel.sysctl."vm.mmap_rnd_bits" = 18;
 
     environment.systemPackages = with pkgs; [
-      decentpaste
+
       make-slack-great-again
       vulkan-tools
       brightnessctl
