@@ -7,18 +7,6 @@ let
   inherit (nativePkgs) lib;
   buildPkgs = crossPkgs.buildPackages;
 
-  # auto-patchelf runs on x86, but derives the ELF architecture and interpreter
-  # from its stdenv's bintools. A plain native instance silently skips ARM ELFs.
-  autoPatchelfHook = buildPkgs.autoPatchelfHook.overrideAttrs (_old: {
-    propagatedBuildInputs = [
-      (buildPkgs.auto-patchelf.override {
-        stdenv = crossPkgs.stdenv;
-        python3 = nativePkgs.python3;
-      })
-      buildPkgs.bintools
-    ];
-  });
-
   # Cached native Qt's dev output propagates ARM build tools. Keep its target
   # metadata and libraries, but adapt the setup hook and native propagation.
   qtbaseDev = nativePkgs.runCommand "qtbase-arm-cross-dev" { } ''
@@ -86,28 +74,6 @@ let
     });
 in
 {
-  decentpaste =
-    (crossPkgs.callPackage ../decentpaste/default.nix {
-      inherit (armPkgs)
-        cairo
-        dbus
-        gdk-pixbuf
-        glib
-        gtk3
-        libsoup_3
-        webkitgtk_4_1
-        gst_all_1
-        libayatana-appindicator
-        ;
-      inherit autoPatchelfHook;
-      inherit (buildPkgs) makeWrapper;
-    }).overrideAttrs
-      (old: {
-        # The cross stdenv only supplies a target-prefixed ar; unpacking a .deb
-        # archive needs the ordinary build-machine executable. Use unwrapped
-        # binutils so its setup hook cannot replace the ARM NIX_BINTOOLS.
-        nativeBuildInputs = old.nativeBuildInputs ++ [ nativePkgs.binutils-unwrapped ];
-      });
 
   make-slack-great-again =
     (crossPkgs.callPackage ../make-slack-great-again/default.nix {
