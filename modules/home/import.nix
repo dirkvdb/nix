@@ -44,7 +44,7 @@ in
     };
   };
 
-  imports = getDefaultNix ./.;
+  imports = getDefaultNix ./. ++ [ ../nixos/user/home-manager/scripts/linux.nix ];
 
   config = mkUserHome {
     xdg.enable = true;

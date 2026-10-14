@@ -1,15 +1,42 @@
 {
   pkgs,
   config,
-  isNoctaliaEnabled,
+  lib,
+  mkHome,
   ...
 }:
 let
+  inherit (config.local) user;
+  isStandalone = config.local.home-manager.standalone or false;
+  isNoctaliaEnabled = config.local.desktop.noctalia.enable or false;
+  configName = config.local.home-manager.configName or user.name;
+  nhConfigurationName = config.local.system.nix.nh.configurationName or null;
+  nhHostArg = lib.optionalString (nhConfigurationName != null) " -H ${nhConfigurationName}";
+  hostname = config.local.system.network.hostname or "";
+  cachePush =
+    lib.optionalString (hostname == "mini" || nhConfigurationName == "dell-workstation")
+      " && xilo push admin/nix ${
+         if isStandalone then "\"$HOME/.local/state/nix/profiles/home-manager\"" else "/run/current-system"
+       }";
+  switchCommand =
+    if isStandalone then
+      "nix run home-manager/release-26.05 -- switch -b backup --flake ~/nix#${configName}${cachePush}"
+    else if pkgs.stdenv.isDarwin then
+      "nh darwin switch ~/nix${nhHostArg}${cachePush}"
+    else
+      "nh os switch -j2 ~/nix${nhHostArg} && nixcfg-reload${cachePush}";
+  resetFlakeLock = "git -C ~/nix restore --source=HEAD --staged --worktree -- flake.lock";
+  updateCommand =
+    if isStandalone then
+      "${resetFlakeLock} && git -C ~/nix pull -r --autostash && nixcfg-switch"
+    else if pkgs.stdenv.isDarwin then
+      "${resetFlakeLock} && nh darwin switch -j2 --update ~/nix${nhHostArg}${cachePush}"
+    else
+      "${resetFlakeLock} && git -C ~/nix pull -r --autostash && nh os switch -j2 --update ~/nix${nhHostArg}${cachePush}";
+
   # Use the chromium package with WideVine support from home-manager config
-  chromiumPkg = config.programs.chromium.package;
-in
-{
-  home.packages = [
+  chromiumPkg = config.home-manager.users.${user.name}.programs.chromium.package;
+  linuxScripts = [
     # convet tabular geospatial files to sqlite format for easier inspection
     (pkgs.writeShellScriptBin "geo-to-sqlite" ''
       set -euo pipefail
@@ -557,4 +584,13 @@ in
       fi
     '')
   ];
+in
+{
+  config = mkHome user.name {
+    home.packages = [
+      (pkgs.writeShellScriptBin "nixcfg-switch" switchCommand)
+      (pkgs.writeShellScriptBin "nixcfg-update" updateCommand)
+    ]
+    ++ lib.optionals (pkgs.stdenv.isLinux && !isStandalone) linuxScripts;
+  };
 }

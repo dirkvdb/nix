@@ -4,9 +4,6 @@
   ...
 }:
 {
-  imports = [
-    ./scripts/linux.nix
-  ];
 
   config = {
     programs.home-manager.enable = true;

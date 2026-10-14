@@ -9,17 +9,7 @@ let
   inherit (config.local) user;
   sopsEnabled = config.local.apps.sops.enable or false;
   isStandalone = config.local.home-manager.standalone or false;
-  configName = config.local.home-manager.configName or user.name;
-  nhConfigurationName = config.local.system.nix.nh.configurationName or null;
-  nhHostArg = lib.optionalString (nhConfigurationName != null) " -H ${nhConfigurationName}";
-  hostname = config.local.system.network.hostname or "";
-  cachePush =
-    lib.optionalString (hostname == "mini" || nhConfigurationName == "dell-workstation")
-      " && xilo push admin/nix ${
-         if isStandalone then "\"$HOME/.local/state/nix/profiles/home-manager\"" else "/run/current-system"
-       }";
   mkUserHome = mkHome user.name;
-  resetFlakeLock = "git -C ~/nix restore --source=HEAD --staged --worktree -- flake.lock";
 in
 {
   config = mkUserHome {
@@ -29,6 +19,7 @@ in
       [
         fzf
         fishPlugins.fzf
+
       ]
       ++ lib.optionals isStandalone [
         # In standalone home-manager, fish needs to be explicitly installed
@@ -96,20 +87,8 @@ in
         lg = "lazygit";
         dv = "zeditor .";
         man = "batman";
-        nrs =
-          if isStandalone then
-            "nix run home-manager/release-26.05 -- switch -b backup --flake ~/nix#${configName}${cachePush}"
-          else if pkgs.stdenv.isDarwin then
-            "nh darwin switch ~/nix${nhHostArg}${cachePush}"
-          else
-            "nh os switch -j2 ~/nix${nhHostArg} && nixcfg-reload${cachePush}";
-        update =
-          if isStandalone then
-            "${resetFlakeLock} && git -C ~/nix pull -r --autostash && nrs"
-          else if pkgs.stdenv.isDarwin then
-            "${resetFlakeLock} && nh darwin switch -j2 --update ~/nix${nhHostArg}${cachePush}"
-          else
-            "${resetFlakeLock} && git -C ~/nix pull -r --autostash && nh os switch -j2 --update ~/nix${nhHostArg}${cachePush}";
+        nrs = "nixcfg-switch";
+        update = "nixcfg-update";
         tree = "lsd --tree";
         zed = lib.mkIf (config.local.desktop.enable or false) "zeditor";
         nodenv = "direnv exec / fish --no-config";
