@@ -18,6 +18,7 @@ in
   config = lib.mkIf (cfg.enable && !isHeadless) (mkUserHome {
     programs.vscode = {
       enable = true;
+      profiles.default.mutableUserSettings = true;
     };
 
     # Force VSCode to use libsecret password store
