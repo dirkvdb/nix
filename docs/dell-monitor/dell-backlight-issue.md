@@ -2,6 +2,8 @@
 
 Investigation recorded: **2026-10-13**. Host: **`mini`** (`hosts/minisforum-ai-x1`).
 
+**Update 2026-10-14:** a hard hang was captured on the **standard 7.2.10 kernel**, with the backlight workaround already active, after NordVPN and brightness control were re-enabled. The journal confirms a graphics-ring timeout, failed GPU recovery, and CPU stalls. The earlier observations do **not** establish that hard hangs are exclusive to CachyOS. See [Hard-hang follow-up](#hard-hang-follow-up-2026-10-14).
+
 ## Status and conclusion
 
 **The immediate wake mechanism was identified by kernel tracing:** AMD's hotplug-detection worker performs destructive DisplayPort link-capability verification while the display is asleep. That verification temporarily powers the receiver back up (D0), trains the link, and powers it down again (D3). The user observed the Dell's backlight returning during this activity, before the normal desktop wake.
@@ -40,8 +42,8 @@ The latest standard kernel is required for the user's Lemonade/FastFlowLM NPU wo
 |---|---|---|
 | Standard stable `6.18.55` | Not observed | Display sleeps correctly; `amdxdna` 0.1.0 does not support the user's required NPU requests/workload |
 | Standard latest `7.2.9` | Not observed | Backlight problem reproduced; `amdxdna` 0.10.0 supports the required workload |
-| Standard latest `7.2.10` | Backlight investigation continued here | Final call-stack trace reproduced the problem on this version |
-| CachyOS `7.2.8-cachyos-lto` | Reproducible | Separate stability problem; keep CachyOS disabled |
+| Standard latest `7.2.10` | Hard hang captured 2026-10-14 | Backlight tracing identified detection-time training; the later GPU hang occurred with that workaround active |
+| CachyOS `7.2.8-cachyos-lto` | Reproducible in earlier tests | Keep disabled; whether the old hangs share the later GPU failure mechanism is unknown |
 
 The configuration retains:
 
@@ -54,7 +56,7 @@ local.system.kernel = {
 
 Both previously compared standard kernels loaded DMUB firmware `0x09005300`. Display Core versions were `3.2.351` on the stable kernel and `3.2.384` on latest `7.2.9`. This is GPU firmware information, **not the Dell monitor's firmware version**.
 
-The old CachyOS hangs included a recorded hardware-watchdog reset. They should not be conflated with this DisplayPort sleep issue.
+The old CachyOS hangs included a recorded hardware-watchdog reset. Neither that reset nor the earlier I/O-pressure measurements establish that those hangs share a cause with the backlight wake or the later standard-kernel GPU hang.
 
 ## Experiments and evidence
 
@@ -271,6 +273,87 @@ Recheck mappings after a reboot rather than hardcoding these IDs. SUNSHINE is a 
 - **Aquamarine DPMS/page-flip bugs:** a relevant upstream fix exists, but the demonstrated unsolicited pulse was inside AMD's HPD detection path. Upgrading Aquamarine was not established as the fix for this occurrence.
 - **No kernel error means hardware slept:** false; the power writes succeeded while the visible result was still wrong.
 - **D3 acknowledgement proves the monitor's backlight is off:** false; it establishes completion of the DPCD helper write, not physical standby.
+
+## Hard-hang follow-up: 2026-10-14
+
+### Incident and confirmed failure
+
+The user re-enabled NordVPN and brightness control, worked on another PC connected to the same Dell monitor, then found `mini` unresponsive and performed a hard reset.
+
+Failed boot ID: **`3030d11c31d442db967d7c674c4bbe95`**. It started 2026-10-13 at 20:11:30 CEST. Last recorded events were 2026-10-14 at **16:33:48 CEST**; the next boot began at 17:40:03.
+
+The failed boot was **standard Linux 7.2.10**, not CachyOS. Its recorded command line already contained `amdgpu.dcdebugmask=0x200000`.
+
+| Time (CEST) | Journal evidence |
+|---|---|
+| 16:33:19 | `Fence fallback timer expired on ring gfx_0.0.0` |
+| 16:33:21 | `Dumping IP State` |
+| 16:33:27–42 | Repeated `SMU: No response msg_reg: 1a resp_reg: 0` and `Failed to disable gfxoff!` |
+| 16:33:42 | RCU stall on CPU 2; `hyprmoncfgd` thread blocked in `madvise` → TLB flush → `smp_call_function_many_cond` |
+| 16:33:42 | `ring gfx_0.0.0 timeout`; affected submission identified as `.noctalia-wrapp`, thread `noctalia:cs0` |
+| 16:33:44 | `MES failed to respond to msg=RESET`, reset timeout `-110`, ring reset failed, then `GPU reset begin!` |
+| 16:33:48 | `watchdog: BUG: soft lockup - CPU#3 stuck for 26s! [jemalloc_bg_thd:2961]` |
+
+**Confirmed:** a GPU timeout with unresponsive recovery/firmware paths and CPU stalls. **Unconfirmed:** the event that initially triggered the GPU failure, and whether the earlier CachyOS hangs were the same failure.
+
+Important interpretation limits:
+
+- The timeout names the GPU submission owner; it does not prove a Noctalia application bug caused the GPU to hang.
+- The RCU trace names a task caught waiting for a CPU TLB shootdown; it does not establish `hyprmoncfgd` as the cause.
+- In kernel 7.2.10, the timed-out-job handler performs its device dump **before printing** the ring-timeout/process lines. The dump itself requests GFXOFF disable. The `Failed to disable gfxoff!` messages can therefore be consequences of an already-unresponsive GPU, not proof that GFXOFF initiated the failure.
+- The CPFW pipe-reset warning describes an unsupported recovery path in this source; it does not by itself establish that installed firmware is obsolete.
+- There were no recorded DDC/I²C failure messages around the crash, nor recorded NFS-server-not-responding, NVMe timeout/reset, or OOM messages explaining it. Missing messages do not prove those subsystems were uninvolved.
+- The earlier detection-training workaround is not a general GPU-hang fix and does not disable GFXOFF.
+
+### Brightness-control implementation actually present
+
+The brightness module couples `local.system.display.brightnesscontrol.enable` to Noctalia's `brightness.enable_ddcutil`. Re-enabling it therefore enables userspace DDC traffic through AMD's DisplayPort AUX implementation.
+
+After the reset:
+
+- `ddcutil` was **2.2.7**.
+- Bus `i2c-13` identified itself as `AMDGPU DM aux hw bus 3` (Dell DP-3).
+- An I²C client named `ddcci` existed at `13-0037`, but it had **no bound driver**.
+- Neither `ddcci` nor `ddcci_backlight` was loaded; `/sys/class/backlight` was empty.
+- The failed boot likewise logged client instantiation, without recorded driver/backlight initialization. That supports, but cannot conclusively reconstruct, the historical binding state.
+
+Thus an active kernel-ddcci/userspace-ddcutil conflict was **not demonstrated**. The attachment service's success and `options ddcci delay=200` do not prove that a kernel backlight driver is functioning. Noctalia's own DDC calls use their own timing arguments; the module delay does not control them.
+
+Source inspection found Noctalia DDC detection/query work triggered by startup, configuration/output changes and monitor-control interactions, not a periodic DDC refresh timer. DDC remains a plausible input-switch/hotplug trigger to isolate, not a proven explanation for the graphics-ring failure.
+
+### I/O-pressure and reset diagnostics gap
+
+The previously added diagnostics had been removed from the configuration before this incident:
+
+- `io-pressure-snapshot.service` was absent, with no entries for the failed boot.
+- sysstat collection was inactive; no `sa14` file existed. The newest retained activity file stopped on October 13 at 19:53.
+- Runtime hardware watchdog was disabled (`RuntimeWatchdogUSec=0` on the new boot), and the current host configuration no longer set it.
+
+There is therefore **no captured I/O-pressure history for this incident** to compare with the GPU failure. The old high-pressure measurements remain observations, not proof of a storage/NFS cause or a common cause across all hangs.
+
+The new boot recorded an ACPI power-state transition reset reason, not a hardware-watchdog-expired reason. A GPU devcoredump was created during the failed boot, but no such dump remained in sysfs after reboot.
+
+### Recommended next isolation step (not implemented)
+
+Change **only Noctalia's `brightness.enable_ddcutil` to false**, holding NordVPN, the kernel, the display workaround and the attachment service fixed. Use a fresh Noctalia session with DDC disabled; reloading cannot retract a command already stuck in kernel I/O.
+
+This isolates the active brightness-DDC implementation without attempting a live kernel-driver unbind. A stable result would implicate DDC-triggered activity as a contributor, not establish a dual-driver conflict or identify the underlying GPU defect. Do not simultaneously disable NordVPN or add GPU power-management masks, because that would destroy the comparison.
+
+Restore selected crash/I/O diagnostics only as a deliberate follow-up; none were restored automatically during this investigation. No service, display state, kernel setting or running configuration was changed in the follow-up analysis.
+
+For revisiting the raw journal while it is retained:
+
+```sh
+journalctl -k -b 3030d11c31d442db967d7c674c4bbe95 --no-pager \
+  --since '2026-10-14 16:32:00' --until '2026-10-14 16:34:00'
+```
+
+A closely matching Strix Point/890M display-off GPU/SMU failure is reported in [AMD issue #5822](https://gitlab.freedesktop.org/drm/amd/-/issues/5822), on a different machine/kernel. It is a useful comparison, **not a confirmed diagnosis or verified fix** for `mini`.
+
+Relevant source checks:
+
+- [7.2.10: timed-out-job dump and process reporting](https://github.com/gregkh/linux/blob/v7.2.10/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c#L37-L170)
+- [7.2.10: GFXOFF-disable requests during the graphics IP dump](https://github.com/gregkh/linux/blob/v7.2.10/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c#L7178-L7249)
 
 ## Source references
 
