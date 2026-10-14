@@ -19,6 +19,18 @@ build-arm-cache:
     nix build .#nixosConfigurations.macbook-pro.config.system.build.toplevel --no-update-lock-file --max-jobs 1 --cores 12 --out-link result-arm --print-build-logs
     just push-arm-cache ./result-arm
 
+# Build all selected MacBook user-space apps on x86_64, without QEMU
+build-macbook-apps cores="12":
+    nix build .#macbook-arm-apps --no-update-lock-file --max-jobs 1 --cores {{ cores }} --option extra-platforms "" --builders "" --out-link result-macbook-apps --print-build-logs
+
+# Build one app (e.g. topq, omasend or tabulite) without rebuilding the bundle
+build-macbook-app package cores="12":
+    nix build ".#{{ package }}-aarch64" --no-update-lock-file --max-jobs 1 --cores {{ cores }} --option extra-platforms "" --builders "" --out-link "result-{{ package }}-arm" --print-build-logs
+
+# Build and upload all MacBook apps using the dedicated ARM cache token
+publish-macbook-apps cores="12": (build-macbook-apps cores)
+    just push-arm-cache ./result-macbook-apps
+
 # Cross-compile pinned Zed on x86_64; refuse any ARM builds under QEMU
 build-zed-arm cores="12":
     nix build .#zed-editor-aarch64 --no-update-lock-file --max-jobs 1 --cores {{ cores }} --option extra-platforms "" --builders "" --out-link result-zed-arm --print-build-logs

@@ -4,12 +4,12 @@
   pkgs,
   unstablePkgs,
   llmAgentsPkgs,
-  inputs,
   ...
 }:
 let
   cfg = config.local.system.dev;
   inherit (config.local) user;
+
 in
 {
   options.local.system.dev = {
@@ -29,7 +29,7 @@ in
         unstablePkgs.devenv
         unstablePkgs.pixi
         llmAgentsPkgs.hunk
-        inputs.ai-usagebar.packages.${pkgs.stdenv.hostPlatform.system}.default
+        ai-usagebar
       ]
       ++ lib.optionals pkgs.stdenv.isLinux [
         llmAgentsPkgs.codex

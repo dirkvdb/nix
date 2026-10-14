@@ -158,7 +158,7 @@ in
         zathura.enable = true;
         zed = {
           enable = true;
-          package = inputs.self.packages.x86_64-linux.zed-editor-aarch64;
+          package = pkgs.zed-editor;
           localModels = true;
         };
         zellij.enable = false;

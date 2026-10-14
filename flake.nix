@@ -145,6 +145,7 @@
         };
 
       llmAgentsPkgs = system: inputs.llm-agents.packages.${system};
+      macbookArmApps = import ./pkgs/macbook-arm { inherit inputs; };
 
       # Custom packages overlay
       overlay = final: prev: {
@@ -177,6 +178,8 @@
         oweka = prev.callPackage ./pkgs/oweka { };
         omasend = prev.callPackage ./pkgs/omasend { };
 
+        xilo-cli = inputs.xilo.packages.${prev.stdenv.hostPlatform.system}.xilo-cli;
+        ai-usagebar = inputs.ai-usagebar.packages.${prev.stdenv.hostPlatform.system}.default;
         ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
         topq = inputs.topq.packages.${prev.stdenv.hostPlatform.system}.default;
@@ -300,9 +303,13 @@
     {
       overlays.default = overlay;
 
-      packages.x86_64-linux.zed-editor-aarch64 = import ./pkgs/zed-editor/cross.nix {
-        nixpkgs = inputs.nixpkgs-unstable;
-      };
+      packages.x86_64-linux =
+        nixpkgs.lib.mapAttrs' (
+          name: package: nixpkgs.lib.nameValuePair "${name}-aarch64" package
+        ) macbookArmApps.packages
+        // {
+          macbook-arm-apps = macbookArmApps.bundle;
+        };
 
       nixosConfigurations = {
         mini = mkNixos {
@@ -315,7 +322,11 @@
           system = "aarch64-linux";
           hostPath = ./hosts/macbook-pro-m2-nixos/configuration.nix;
           extraModules = [ inputs.apple-silicon.nixosModules.apple-silicon-support ];
-          extraOverlays = [ inputs.apple-silicon.overlays.apple-silicon-overlay ];
+          extraOverlays = [
+            inputs.apple-silicon.overlays.apple-silicon-overlay
+            macbookArmApps.overlay
+          ];
+
         };
 
         wsl = mkNixos {

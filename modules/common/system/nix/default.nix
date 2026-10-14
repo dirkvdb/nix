@@ -1,16 +1,17 @@
 {
   config,
-  inputs,
+
   lib,
   pkgs,
   ...
 }:
 let
   inherit (config.local) user;
+
 in
 {
   environment.systemPackages = [
-    inputs.xilo.packages.${pkgs.stdenv.hostPlatform.system}.xilo-cli
+    pkgs.xilo-cli
   ];
 
   environment.variables.XILO_URL = lib.mkIf pkgs.stdenv.hostPlatform.isx86_64 "https://nix-cache.hl.vandenboer.eu";

@@ -7,6 +7,15 @@ sudo sbctl create-keys
 Register the KeePassXC Git credential helper:
 - git-credential-keepassxc configure
 
+# MacBook ARM application cache
+
+Build the MacBook's custom user-space applications without
+QEMU or remote builders:
+
+```bash
+just publish-macbook-apps
+```
+
 # Podman Quadlets
 
 Reusable Quadlet modules live in `modules/quadlets/<name>/default.nix` and are
