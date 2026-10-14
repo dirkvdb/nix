@@ -1,8 +1,7 @@
 diff --git a/crates/gpui_linux/src/linux/wayland.rs b/crates/gpui_linux/src/linux/wayland.rs
-index cbc962bcffe742..4321aa348137cf 100644
 --- a/crates/gpui_linux/src/linux/wayland.rs
 +++ b/crates/gpui_linux/src/linux/wayland.rs
-@@ -3,6 +3,7 @@ mod clipboard;
+@@ -3,6 +3,7 @@
  mod cursor;
  mod display;
  mod popup;
@@ -11,10 +10,9 @@ index cbc962bcffe742..4321aa348137cf 100644
  mod window;
  
 diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/src/linux/wayland/client.rs
-index a28343fcf83c51..30b8a81533bdc1 100644
 --- a/crates/gpui_linux/src/linux/wayland/client.rs
 +++ b/crates/gpui_linux/src/linux/wayland/client.rs
-@@ -38,7 +38,7 @@ use wayland_client::{
+@@ -42,7 +42,7 @@
      },
  };
  use wayland_protocols::wp::pointer_gestures::zv1::client::{
@@ -23,7 +21,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
  };
  use wayland_protocols::wp::primary_selection::zv1::client::zwp_primary_selection_offer_v1::{
      self, ZwpPrimarySelectionOfferV1,
-@@ -77,6 +77,7 @@ use xkbcommon::xkb::{self, KEYMAP_COMPILE_NO_FLAGS, Keycode};
+@@ -81,6 +81,7 @@
  
  use super::{
      display::WaylandDisplay,
@@ -31,7 +29,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
      window::{ImeInput, WaylandWindowStatePtr},
  };
  
-@@ -320,6 +321,7 @@ pub(crate) struct WaylandClientState {
+@@ -356,6 +357,7 @@
      wl_seat: wl_seat::WlSeat, // TODO: Multi seat support
      wl_pointer: Option<wl_pointer::WlPointer>,
      pinch_gesture: Option<zwp_pointer_gesture_pinch_v1::ZwpPointerGesturePinchV1>,
@@ -39,7 +37,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
      pinch_scale: f32,
      wl_keyboard: Option<wl_keyboard::WlKeyboard>,
      cursor_shape_device: Option<wp_cursor_shape_device_v1::WpCursorShapeDeviceV1>,
-@@ -349,9 +351,13 @@ pub(crate) struct WaylandClientState {
+@@ -385,9 +387,13 @@
      pub mouse_location: Option<Point<Pixels>>,
      continuous_scroll_delta: Option<Point<Pixels>>,
      discrete_scroll_delta: Option<Point<f32>>,
@@ -53,20 +51,20 @@ index a28343fcf83c51..30b8a81533bdc1 100644
      enter_token: Option<()>,
      button_pressed: Option<MouseButton>,
      mouse_focused_window: Option<WaylandWindowStatePtr>,
-@@ -777,6 +783,12 @@ impl WaylandClientState {
+@@ -832,6 +838,12 @@
+             cursor_style_to_icon_names(style),
              scale,
          );
-     }
++    }
 +
 +    fn cancel_kinetic_scroll(&mut self) -> Option<(WaylandWindowStatePtr, PlatformInput)> {
 +        let scroll_update = self.kinetic_scroll_controller.cancel_kinetic_scroll()?;
 +        let target = self.kinetic_scroll_target.take()?;
 +        Some(scroll_update.platform_input(&target))
-+    }
+     }
  }
  
- #[derive(Clone)]
-@@ -993,6 +1005,7 @@ impl WaylandClient {
+@@ -1026,6 +1038,7 @@
              wl_pointer: None,
              wl_keyboard: None,
              pinch_gesture: None,
@@ -74,7 +72,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
              pinch_scale: 1.0,
              cursor_shape_device: None,
              data_device,
-@@ -1038,10 +1051,14 @@ impl WaylandClient {
+@@ -1071,10 +1084,14 @@
              },
              capslock: Capslock { on: false },
              scroll_event_received: false,
@@ -89,7 +87,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
              vertical_modifier: -1.0,
              horizontal_modifier: -1.0,
              button_pressed: None,
-@@ -1542,9 +1559,26 @@ impl Dispatch<WlCallback, ObjectId> for WaylandClientStatePtr {
+@@ -1626,9 +1643,26 @@
          let Some(window) = get_window(&mut state, surface_id) else {
              return;
          };
@@ -109,17 +107,20 @@ index a28343fcf83c51..30b8a81533bdc1 100644
 +        };
          drop(state);
  
-         if let wl_callback::Event::Done { .. } = event {
+         if let wl_callback::Event::Done { callback_data } = event {
 +            if let Some((window, input)) = kinetic_input {
 +                window.handle_input(input);
 +            }
-             window.frame_callback_fired();
-         }
-     }
-@@ -1856,6 +1890,17 @@ impl Dispatch<wl_seat::WlSeat, ()> for WaylandClientStatePtr {
-                     },
-                 );
- 
+             window.frame_callback_fired(PlatformFrameSignal::capture(|| {
+                 frame_callback_signal_at(callback_data)
+             }));
+@@ -1940,6 +1974,17 @@
+                 state.pinch_gesture = state.globals.gesture_manager.as_ref().map(
+                     |gesture_manager: &zwp_pointer_gestures_v1::ZwpPointerGesturesV1| {
+                         gesture_manager.get_pinch_gesture(&pointer, qh, ())
++                    },
++                );
++
 +                if let Some(hold_gesture) = state.hold_gesture.take() {
 +                    hold_gesture.destroy();
 +                }
@@ -128,13 +129,10 @@ index a28343fcf83c51..30b8a81533bdc1 100644
 +                    |gesture_manager: &zwp_pointer_gestures_v1::ZwpPointerGesturesV1| {
 +                        (gesture_manager.version() >= 3)
 +                            .then(|| gesture_manager.get_hold_gesture(&pointer, qh, ()))
-+                    },
-+                );
-+
-                 if let Some(wl_pointer) = &state.wl_pointer {
-                     wl_pointer.release();
-                 }
-@@ -2287,6 +2332,7 @@ impl Dispatch<wl_pointer::WlPointer, ()> for WaylandClientStatePtr {
+                     },
+                 );
+ 
+@@ -2377,6 +2422,7 @@
                  }
                  state.mouse_location = Some(point(px(surface_x as f32), px(surface_y as f32)));
                  state.restore_cursor_after_hide();
@@ -142,7 +140,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
  
                  if let Some(window) = state.mouse_focused_window.clone() {
                      if window.is_blocked() {
-@@ -2327,6 +2373,9 @@ impl Dispatch<wl_pointer::WlPointer, ()> for WaylandClientStatePtr {
+@@ -2417,6 +2463,9 @@
                          modifiers: state.modifiers,
                      });
                      drop(state);
@@ -152,7 +150,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
                      window.handle_input(input);
                  }
              }
-@@ -2426,6 +2475,7 @@ impl Dispatch<wl_pointer::WlPointer, ()> for WaylandClientStatePtr {
+@@ -2516,6 +2565,7 @@
              }
              wl_pointer::Event::Axis {
                  axis: WEnum::Value(axis),
@@ -160,7 +158,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
                  value,
                  ..
              } => {
-@@ -2456,6 +2506,9 @@ impl Dispatch<wl_pointer::WlPointer, ()> for WaylandClientStatePtr {
+@@ -2546,6 +2596,9 @@
                      }
                      _ => unreachable!(),
                  }
@@ -170,7 +168,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
              }
              wl_pointer::Event::AxisDiscrete {
                  axis: WEnum::Value(axis),
-@@ -2512,24 +2565,42 @@ impl Dispatch<wl_pointer::WlPointer, ()> for WaylandClientStatePtr {
+@@ -2602,24 +2655,42 @@
                      _ => unreachable!(),
                  }
              }
@@ -217,7 +215,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
                      {
                          let input = PlatformInput::ScrollWheel(ScrollWheelEvent {
                              position: state.mouse_location.unwrap(),
-@@ -2537,6 +2608,16 @@ impl Dispatch<wl_pointer::WlPointer, ()> for WaylandClientStatePtr {
+@@ -2627,6 +2698,16 @@
                              modifiers: state.modifiers,
                              touch_phase: TouchPhase::Moved,
                          });
@@ -234,7 +232,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
                          drop(state);
                          window.handle_input(input);
                      }
-@@ -2587,6 +2668,7 @@ impl Dispatch<zwp_pointer_gesture_pinch_v1::ZwpPointerGesturePinchV1, ()>
+@@ -2677,6 +2758,7 @@
                  surface: _,
                  fingers: _,
              } => {
@@ -242,7 +240,7 @@ index a28343fcf83c51..30b8a81533bdc1 100644
                  state.pinch_scale = 1.0;
                  let input = PlatformInput::Pinch(PinchEvent {
                      position: state.mouse_location.unwrap_or(point(px(0.0), px(0.0))),
-@@ -2595,6 +2677,9 @@ impl Dispatch<zwp_pointer_gesture_pinch_v1::ZwpPointerGesturePinchV1, ()>
+@@ -2685,6 +2767,9 @@
                      phase: TouchPhase::Started,
                  });
                  drop(state);
@@ -252,10 +250,14 @@ index a28343fcf83c51..30b8a81533bdc1 100644
                  window.handle_input(input);
              }
              zwp_pointer_gesture_pinch_v1::Event::Update { time: _, scale, .. } => {
-@@ -2632,6 +2717,26 @@ impl Dispatch<zwp_pointer_gesture_pinch_v1::ZwpPointerGesturePinchV1, ()>
-     }
- }
- 
+@@ -2718,6 +2803,26 @@
+                 window.handle_input(input);
+             }
+             _ => {}
++        }
++    }
++}
++
 +impl Dispatch<zwp_pointer_gesture_hold_v1::ZwpPointerGestureHoldV1, ()> for WaylandClientStatePtr {
 +    fn event(
 +        this: &mut Self,
@@ -272,16 +274,11 @@ index a28343fcf83c51..30b8a81533bdc1 100644
 +                drop(state);
 +                window.handle_input(input);
 +            }
-+        }
-+    }
-+}
-+
- impl Dispatch<wp_fractional_scale_v1::WpFractionalScaleV1, ObjectId> for WaylandClientStatePtr {
-     fn event(
-         this: &mut Self,
+         }
+     }
+ }
 diff --git a/crates/gpui_linux/src/linux/wayland/scroll.rs b/crates/gpui_linux/src/linux/wayland/scroll.rs
 new file mode 100644
-index 00000000000000..e8b89a69ee3e70
 --- /dev/null
 +++ b/crates/gpui_linux/src/linux/wayland/scroll.rs
 @@ -0,0 +1,233 @@
