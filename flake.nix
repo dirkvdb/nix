@@ -177,6 +177,7 @@
         orrery = prev.callPackage ./pkgs/orrery { };
         oweka = prev.callPackage ./pkgs/oweka { };
         omasend = prev.callPackage ./pkgs/omasend { };
+        gliff = prev.callPackage ./pkgs/gliff { };
 
         xilo-cli = inputs.xilo.packages.${prev.stdenv.hostPlatform.system}.xilo-cli;
         ai-usagebar = inputs.ai-usagebar.packages.${prev.stdenv.hostPlatform.system}.default;

@@ -401,6 +401,7 @@
     environment.systemPackages = with pkgs; [
       intel-gpu-tools # intel_gpu_top and related tools
       appimage-run
+      gliff
       make-slack-great-again
       orrery
       unstablePkgs.ferdium

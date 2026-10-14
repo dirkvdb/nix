@@ -300,6 +300,7 @@
     environment.systemPackages = with pkgs; [
       appimage-run
       freecad
+      gliff
       gnumeric
       orca-slicer
       orrery

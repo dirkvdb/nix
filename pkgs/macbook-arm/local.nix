@@ -111,6 +111,34 @@ in
     }
   );
 
+  gliff =
+    (crossPkgs.callPackage ../gliff/default.nix {
+      inherit (armPkgs)
+        dbus
+        gtk4
+        libadwaita
+        libdrm
+        libgbm
+        libva
+        libxkbcommon
+        openssh
+        vulkan-loader
+        wayland
+        ;
+      inherit (buildPkgs) pkg-config nasm;
+      wrapGAppsHook4 = crossPkgs.wrapGAppsHook4.override {
+        inherit (armPkgs) dconf librsvg;
+        gtk3 = armPkgs.gtk4;
+        inherit (buildPkgs) makeWrapper;
+      };
+    }).overrideAttrs
+      (old: {
+        # Cached ARM Avahi needs the native GCC libssp's fortified printf symbols.
+        env = (old.env or { }) // {
+          NIX_LDFLAGS = "-L${armPkgs.stdenv.cc.cc.lib}/lib -lssp";
+        };
+      });
+
   oweka = crossPkgs.callPackage ../oweka/default.nix { };
 
   omasend = withZstd (
