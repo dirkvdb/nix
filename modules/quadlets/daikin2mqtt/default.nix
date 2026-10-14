@@ -81,6 +81,7 @@
       Environment=SECRETSPEC_PROVIDER=env
       Environment=DAIKIN_CLIENT_ID=1m6p4D6Wzyu9VHBpo16EJd8i
       Environment=DAIKIN_DATA_DIR=/data
+      Environment=DAIKIN_HASS_DISCOVERY=true
       Environment=DAIKIN_WEB_LISTEN=0.0.0.0:8076
 
       Environment=DAIKIN_MQTT_ADDRESS=mqtt.lan
