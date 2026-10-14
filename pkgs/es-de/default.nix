@@ -24,11 +24,11 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "es-de";
-  version = "3.4.1";
+  version = "3.5.0";
 
   src = fetchurl {
     url = "https://gitlab.com/es-de/emulationstation-de/-/archive/v${finalAttrs.version}/emulationstation-de-v${finalAttrs.version}.tar.bz2";
-    hash = "sha256-dZJhY8hmLf4fwykvkF6U4lbaq1UqKE8ubf3FEx0rJXM=";
+    hash = "sha256-kXp0gAaII8BMLj/W3uPlyS3P8h1Xz9W7WiGPxuu0ZKo=";
   };
 
   nativeBuildInputs = [
