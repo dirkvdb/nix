@@ -89,6 +89,7 @@
         };
 
         cpu.cores = 20;
+        performance.enable = true;
         binfmt.enable = true;
 
         nix = {
