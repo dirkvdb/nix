@@ -1353,11 +1353,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791921236,
-        "narHash": "sha256-qFL5yqWXStoLgrzV7432hu46AqIbuQRjL425C0lTT8U=",
+        "lastModified": 1792088474,
+        "narHash": "sha256-eQE3VpbjB+VNEWmz7+/U9nlp2HML3DwptjoenLnNx18=",
         "owner": "dirkvdb",
         "repo": "topq",
-        "rev": "3a80eceda00a1760d9c8961a1c388da53e89a8c3",
+        "rev": "95e943d8da5cbbe6b7fe87e5045246e54459ff3f",
         "type": "github"
       },
       "original": {
