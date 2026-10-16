@@ -117,6 +117,23 @@ hl.device({
     scroll_factor        = 0.3,
 })
 
+-- USB exposes two pointer devices; cover both as well as the Bluetooth name.
+for _, name in ipairs({ "apple-inc.-magic-trackpad", "apple-inc.-magic-trackpad-1" }) do
+    hl.device({
+        name                    = name,
+        sensitivity             = 0.2,
+        accel_profile           = "adaptive",
+
+        natural_scroll          = true,
+        clickfinger_behavior    = true,
+        tap_to_click            = true,
+        tap_and_drag            = true,
+        drag_lock               = false,
+        middle_button_emulation = false,
+        scroll_factor           = 0.3,
+    })
+end
+
 hl.device({
     name       = "apple-mtp-keyboard",
     kb_options = "",
@@ -128,8 +145,13 @@ hl.device({
 ------------------
 
 hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
-hl.gesture({ fingers = 3, direction = "up", action = "fullscreen", scale = 1.5 })
-hl.gesture({ fingers = 3, direction = "down", action = "close" })
+hl.gesture({
+    fingers = 3,
+    direction = "up",
+    action = function()
+        os.execute("pkill -SIGUSR1 -x hyprexpose")
+    end
+})
 
 
 ---------------------
