@@ -24,7 +24,11 @@
     system.stateVersion = "26.05"; # Version at install time, never change
 
     programs.librepods.enable = true;
-    users.users.dirk.extraGroups = [ "librepods" ];
+    users.users.dirk.extraGroups = [
+      "librepods"
+      "vboxusers"
+    ];
+    virtualisation.virtualbox.host.enable = true;
 
     home-manager.users.dirk.systemd.user.services.librepods = {
       Unit = {
@@ -116,7 +120,7 @@
 
         video.amd.enable = true;
         display.brightnesscontrol = {
-          enable = true;
+          enable = false;
           i2cDevice = "i2c-13";
           # Dell U2725QE fails the ddcci driver's identification probe with
           # the default 60ms delay (dmesg: "core device probe failed: -19"),
@@ -269,7 +273,10 @@
       lemonade = {
         user = config.local.user.name;
         host = "0.0.0.0";
-        allowedOrigins = [ "http://mini.fritz.box:13305" ];
+        allowedOrigins = [
+          "http://mini.fritz.box:13305"
+          "https://ai.hl.vandenboer.eu/"
+        ];
         customModels."Qwen3.8-27B-GGUF-UD-Q4_K_XL" = {
           checkpoints = {
             main = "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL";
@@ -291,7 +298,7 @@
         };
         models = [
           "Qwen3.8-27B-GGUF-UD-Q4_K_XL"
-          "qwen3.6-moe-35b-a3b-FLM"
+          "qwen3.8-mtp-27b-FLM"
           # Small, fast model for simple prompts and lightweight agent tasks.
           "Qwen3.5-4B-MTP-GGUF"
         ];
