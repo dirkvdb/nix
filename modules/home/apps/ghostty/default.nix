@@ -30,6 +30,11 @@ in
         font-style = "Regular";
         font-size = theme.terminalFontSize;
 
+        keybind = [
+          "ctrl+shift+h=previous_tab"
+          "ctrl+shift+l=next_tab"
+        ];
+
         # Scrollback
         scrollback-limit = 1000000000; # ~1GB
 
