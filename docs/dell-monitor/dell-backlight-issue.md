@@ -4,7 +4,7 @@ Investigation recorded: **2026-10-13**. Host: **`mini`** (`hosts/minisforum-ai-x
 
 **Update 2026-10-14:** a hard hang was captured on the **standard 7.2.10 kernel**, with the backlight workaround already active, after NordVPN and brightness control were re-enabled. The journal confirms a graphics-ring timeout, failed GPU recovery, and CPU stalls. The earlier observations do **not** establish that hard hangs are exclusive to CachyOS. See [Hard-hang follow-up](#hard-hang-follow-up-2026-10-14).
 
-**Update 2026-10-17:** another unresponsive-system incident required a manual reset. Brightness control is now disabled, but this boot has **no retained GPU/SMU/RCU failure signature**. Its journal ends with successful activity the previous evening; the hang time and whether it was a full-machine or display-only failure are unknown. See [October 17 recurrence](#hard-reset-recurrence-2026-10-17).
+**Update 2026-10-17:** another unresponsive-system incident required a manual reset. Brightness control is now disabled, but this boot has **no retained GPU/SMU/RCU failure signature**. The user confirmed that **ping worked but SSH did not**. Its journal ends with successful activity the previous evening; the hang time and failed subsystem remain unknown. Local diagnostics, a remote recorder and a boot-time GFXOFF-off trial are now prepared, **not activated**. See [October 17 recurrence](#hard-reset-recurrence-2026-10-17).
 
 ## Status and conclusion
 
@@ -377,19 +377,112 @@ The user reported needing another hard reset in the morning. Failed boot ID: **`
 
 **The last journal timestamp is not the established hang time.** Neither successful fwupd refresh nor SCSI module initialization identifies the cause. Silence afterward could reflect a later unrecorded hang, failed logging, or simply an interval without retained messages.
 
-The earlier October 14 GPU hang remains confirmed, but **this recurrence cannot yet be classified as the same fault**. SSH or other independent responsiveness during the failure was not established. The brightness-off configuration has not prevented the reported symptom; that does not by itself identify which component failed this time.
+The earlier October 14 GPU hang remains confirmed, but **this recurrence cannot yet be classified as the same fault**. The user subsequently confirmed that **ping still worked, but SSH was not possible**. This demonstrates partial network/kernel responsiveness, not working userspace or a proven total CPU freeze. VPN policy, an SSH-specific problem, blocked userspace and kernel stalls still need distinguishing. The brightness-off configuration has not prevented the reported symptom; that does not by itself identify which component failed this time.
 
 ### Remaining evidence gap and next tests
 
-The quiet I/O recorder and sysstat collection remain absent. `RuntimeWatchdogUSec=0` still means no systemd-managed hardware-reset watchdog. The NMI detector is a separate mechanism and is enabled (`kernel.nmi_watchdog=1`). There is no new historical I/O-pressure capture to recover.
+At inspection, before the changes below, the quiet I/O recorder and sysstat collection were absent. `RuntimeWatchdogUSec=0` meant no systemd-managed hardware-reset watchdog. The NMI detector is a separate mechanism and is enabled (`kernel.nmi_watchdog=1`). There is no new historical I/O-pressure capture to recover.
 
 Before another reset, a prevalidated LAN SSH path from the other PC would help separate a display/input failure from a deeper lockup. Successful SSH commands establish that userspace still runs; failed SSH alone does not prove a CPU freeze because VPN/network policy can also block access. A bounded remote heartbeat/PSI recording would preserve evidence on the other PC rather than depend entirely on local journal persistence. The same instrumentation should be used in any subsequent A/B because it can perturb idle behavior.
 
-A **GFXOFF-off experiment** remains a reasonable hypothesis test based on the October 14 GPU/SMU incident, **not a confirmed fix or diagnosis of this silent recurrence**. The actual inspected power-feature mask is `0xfff7bfff`; clearing only `PP_GFXOFF_MASK` (`0x8000`) yields `0xfff73fff`. For this kernel/current mask, the corresponding candidate boot parameter would be `amdgpu.ppfeaturemask=0xfff73fff`. It is separate from `dcdebugmask`, may increase idle power, and must not be carried forward blindly if the kernel/default mask changes. No such parameter or live power-management change was applied.
+A **GFXOFF-off experiment** remains a reasonable hypothesis test based on the October 14 GPU/SMU incident, **not a confirmed fix or diagnosis of this silent recurrence**. The actual inspected power-feature mask is `0xfff7bfff`; clearing only `PP_GFXOFF_MASK` (`0x8000`) yields `0xfff73fff`. For this kernel/current mask, the boot parameter is `amdgpu.ppfeaturemask=0xfff73fff`. It is separate from `dcdebugmask`, may increase idle power, and must not be carried forward blindly if the kernel/default mask changes. It is now configured for the next user-applied boot, not applied to the running GPU.
 
 Source verification: [7.2.10 power-feature bits](https://github.com/gregkh/linux/blob/v7.2.10/drivers/gpu/drm/amd/include/amd_shared.h#L231) and [the `ppfeaturemask` parameter](https://github.com/gregkh/linux/blob/v7.2.10/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c#L494-L500). A fresh check of AMD issue #5822 found no accessible confirmed fix; its discussion was not fully accessible, so an upstream resolution cannot be asserted.
 
-No services, display state, kernel parameters or running configuration were changed during this follow-up. Only these incident notes were updated.
+### Authorized follow-up: prepared diagnostics and GFXOFF trial
+
+After the ping-only clarification, the user authorized the recommended actions. The configuration now imports `hosts/minisforum-ai-x1/freeze-diagnostics.nix`, using `hosts/minisforum-ai-x1/io-pressure-snapshot.sh`. No running service, display state or GPU setting was changed by the agent; activation and reboot remain user actions.
+
+The prepared configuration adds:
+
+- **Quiet I/O snapshots:** sample `/proc/pressure/io` every 30 seconds; log only when `some avg10 >= 5%`, with a 120-second cooldown after each snapshot. Capture D-state thread names/wait channels/kernel stacks, CPU/memory/I/O PSI, `iostat`, `pidstat`, `vmstat`, and NFS client counters. Each section has a 10-second budget. It does not inspect process arguments/environments, probe GPU/DDC state, or traverse NFS files. Elevated I/O PSI means tasks are stalled, not necessarily that a physical disk is the cause.
+- **sysstat history:** collect every minute; the package's default retention is seven days. This intentionally retains a small baseline even when the threshold-triggered journal recorder is quiet.
+- **Journal flushing:** `SyncIntervalSec=30s` reduces the normal persistence window. It cannot guarantee writes during a storage/kernel stall and adds modest write activity.
+- **Best-effort crash evidence:** enable EFI pstore writes with `efi_pstore.pstore_disable=N`, report hung tasks after 60 seconds, and request all-CPU backtraces on hung-task/soft-lockup/hard-lockup reports. SysRq mask `24` permits diagnostic dumps and sync, not keyboard-triggered kill/reboot. Pstore depends on firmware support and an oops/panic; a silent hang or hard reset may leave nothing.
+- **Hardware watchdog:** `RuntimeWatchdogSec=1min`, fed by systemd PID 1, not by the recorder. Upon activation, a supported watchdog can reset the machine if systemd stops feeding it, potentially losing unsaved work. A GPU hang with healthy PID 1 may keep the watchdog fed; recovery is not guaranteed. No panic-on-lockup behavior was added.
+- **Controlled GPU power trial:** `amdgpu.ppfeaturemask=0xfff73fff` clears only GFXOFF from the inspected mask. Latest standard kernel, Lemonade/NPU support, `amdgpu.dcdebugmask=0x200000`, DDC-off, NordVPN and the existing performance settings are retained. This is not a broad power-management disable.
+
+#### Apply and verify (user action)
+
+From this repository on `mini`, prepare the next boot and then reboot when ready:
+
+```sh
+just switch_on_boot
+sudo reboot
+```
+
+After boot, verify the actual settings rather than assuming the build activated them:
+
+```sh
+uname -r
+cat /proc/cmdline
+cat /sys/module/amdgpu/parameters/ppfeaturemask
+systemctl show --property=RuntimeWatchdogUSec
+systemctl status io-pressure-snapshot.service sysstat-collect.timer --no-pager
+journalctl -b --no-pager -g 'watchdog|pstore'
+```
+
+Expected AMD parameters are `amdgpu.dcdebugmask=0x200000` and `amdgpu.ppfeaturemask=0xfff73fff`; the module's effective power-feature mask should be `0xfff73fff`. The manager should report a one-minute runtime watchdog; check its boot messages for actual hardware selection. A healthy I/O recorder produces **no snapshots** until the threshold is met.
+
+#### Record from the other PC
+
+`scripts/watch-mini.py` must run on **another PC**, with Python 3 and native SSH/ping (Linux/macOS; use WSL on Windows). First verify key-based LAN SSH while `mini` is healthy and NordVPN is in the intended test state, and establish/trust its host key normally. The recorder refuses unknown/changed host keys or interactive authentication; do not weaken those checks to make the test work.
+
+With this script available on that PC:
+
+```sh
+ssh dirk@mini.fritz.box true
+python3 scripts/watch-mini.py dirk@mini.fritz.box result-mini-watch --hours 12
+```
+
+The mandatory SSH preflight must succeed before recording begins. If using an SSH alias that is not also a resolvable LAN name, add `--ping-host mini.fritz.box` (or the verified LAN IP). It opens a persistent, bounded remote sampling session, recording uptime/boot ID, CPU/memory/I/O PSI, selected memory/cgroup counters and D-state process names/wait channels every 30 seconds. Independent ping checks run every 10 seconds; SSH reconnects are attempted after failures. No root, process arguments/environments, or GPU probes are used.
+
+Two timestamped private logs are stored **on the other PC**, each capped at 16 MiB. The recorder stops after 12 hours by default, when either byte cap is reached, or on Ctrl-C; remote sampling also has a time limit. Increase `--hours` if the observation window crosses the next morning. SSH activity can perturb idle behavior, so use the **same instrumentation for baseline and trial**.
+
+#### Automatic recorder on mediastation
+
+`hosts/mediastation/watch-mini.nix` now configures **`watch-mini.service`** on `mediastation`, using the same recorder. It starts at boot after `network-online.target`, runs as `dirk`, records 24-hour sessions, and restarts after one minute on completion, byte-cap exhaustion or failure. Failed initial SSH preflights are therefore retried rather than permanently disabling monitoring. Ping recording begins only after the first healthy SSH preflight; once that has succeeded in a session, ping continues independently through SSH failures.
+
+Logs stay on **mediastation's local disk** in **`/var/lib/watch-mini/`**, not on an NFS share or on `mini`. The directory is private (`0700`), logs are `0600`, and each of the two logs per session remains capped at 16 MiB. Systemd-tmpfiles cleans files unused for seven days; this is age-based retention, not a hard aggregate byte quota. Standard output/errors go to the `watch-mini` journal, while the detailed samples go to the files. State is retained across service restarts and reboots.
+
+The service uses `dirk`'s existing SSH configuration and identity files, **not an interactive session's SSH agent**. Mediastation does not use KeePass to populate an agent. The user supplied the public key `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP4oqfUXoR8JbTTg8dY00q4ScAvCDje2n/KGnkahHsJ7 mediastation-mini-monitor`, whose matching private key belongs at `/home/dirk/.ssh/id_ed25519` on mediastation only and must be usable unattended. The public key is now authorized in mini's host configuration with `restrict`, disabling PTY allocation, forwarding and user SSH rc execution; it still permits commands as `dirk`, not only the sampler. Existing authorized keys are retained. No private key is generated, copied or stored in Nix by the agent. After applying mini's updated configuration, test from mediastation with no inherited agent:
+
+```sh
+sudo -Hu dirk env -u SSH_AUTH_SOCK -u SSH_AGENT_PID \
+  ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o ControlPath=none \
+  dirk@mini.fritz.box true
+```
+
+The host's Ed25519 public key is pinned in mediastation's system-wide known hosts, verified directly on `mini` during implementation: **`SHA256:qw9mWSIxngAh70r6v341c9nmmbjDmJyzshksv34v5qY`**. A reinstall/key rotation must be verified independently before updating the pin; strict checking is not disabled. LAN routing/firewall access with NordVPN enabled must also work. The recorder neither changes VPN policy nor opens an inbound port on mediastation.
+
+After the user deploys the updated mediastation configuration, inspect it there:
+
+```sh
+systemctl status watch-mini.service --no-pager
+journalctl -u watch-mini.service -n 30 --no-pager
+ls -lt /var/lib/watch-mini/
+```
+
+Validation: the complete mediastation system built successfully with `nix build .#nixosConfigurations.mediastation.config.system.build.toplevel --no-update-lock-file --out-link result-mediastation --print-build-logs`. The generated unit was inspected, the current host's `just build` passed, and all 14 recorder unit tests passed again. Existing unrelated version/deprecation warnings remain. Live SSH authentication from mediastation and the running service have not been verified. No service was activated or started by the agent. Keep this same service running for both baseline and GFXOFF-off observations, since monitoring activity can change idle behavior.
+
+#### Evidence after another incident
+
+Keep the other PC's two logs, note local time and whether ping/SSH worked, and collect the previous boot's local records after recovery:
+
+```sh
+journalctl -b -1 -u io-pressure-snapshot.service --no-pager
+journalctl -k -b -1 --no-pager
+ls -l /var/log/sa
+sudo ls -l /sys/fs/pstore /var/lib/systemd/pstore
+```
+
+Use `sar -A -f /var/log/sa/saDD` with the actual retained file/day, not an assumed crash timestamp. Systemd may move pstore records into `/var/lib/systemd/pstore`. No GPU devcoredump archiver was added; a transient GPU dump can still be lost across reboot.
+
+For a controlled baseline, remove **only** `amdgpu.ppfeaturemask=0xfff73fff`, rebuild and boot, keeping the diagnostics, DDC/VPN/performance settings, workload, and input-switch/idle sequence identical. Restore the parameter for the trial. Do not toggle GFXOFF live via debugfs. If the trial helps, that implicates a power-state path but does not establish the original trigger or prove an upstream fix. A kernel update requires checking its default mask and re-evaluating this experiment.
+
+Validation on October 17: **`just build` passed** without activating the configuration. The remote recorder's **14 hermetic unit tests passed** (`nix shell nixpkgs#python3 --command python3 -B scripts/test_watch_mini.py`); Bash syntax and ShellCheck passed for the local helper. Full host evaluation confirmed both AMD parameters, sysstat's one-minute cadence, the one-minute watchdog setting, diagnostic sysctls, and the recorder unit. Existing unrelated deprecation/version-mismatch evaluation warnings remain. There is **no post-boot stability result yet**.
+
+A direct, unprivileged packaged-helper `--once` test also exercised the real threshold-triggered path. Around **09:10 CEST on October 17**, after the build, I/O PSI was already high (`some avg10=75.86%`, `full avg10=71.31%`), with negligible CPU/memory PSI. The one-second `iostat` interval reported no active device and `pidstat` identified no active disk-I/O producer; there were no D-state threads at that snapshot instant. A follow-up found D-state `kworker/u82:3+events_unbound` (PID/TID `41031`), but its stack could not be collected because non-interactive sudo was unavailable. These short observations do **not** identify the producer, establish a storage/GPU cause, or reconstruct the overnight failure. The future systemd recorder runs as root and attempts kernel stacks when blocked threads coincide with a sample; no service was started for this one-shot test.
 
 ## Source references
 

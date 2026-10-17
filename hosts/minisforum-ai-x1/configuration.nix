@@ -8,6 +8,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./freeze-diagnostics.nix
     ../../modules/nixos/import.nix
     ../../modules/home/import.nix
 
@@ -24,6 +25,9 @@
     system.stateVersion = "26.05"; # Version at install time, never change
 
     programs.librepods.enable = true;
+    users.users.dirk.openssh.authorizedKeys.keys = [
+      "restrict ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP4oqfUXoR8JbTTg8dY00q4ScAvCDje2n/KGnkahHsJ7 mediastation-mini-monitor"
+    ];
     users.users.dirk.extraGroups = [
       "librepods"
       "vboxusers"
@@ -65,6 +69,9 @@
       # DC_SKIP_DETECTION_LT: HPD detection retrains sleeping DP links and wakes
       # the Dell U2725QE backlight. Skip detection-time training, not normal wake.
       "amdgpu.dcdebugmask=0x200000"
+      # GFXOFF-off trial: clear only 0x8000 from the observed 7.2.10 mask
+      # 0xfff7bfff. Recheck the default mask when changing kernels.
+      "amdgpu.ppfeaturemask=0xfff73fff"
     ];
 
     nix.settings = {
