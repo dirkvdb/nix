@@ -32,6 +32,10 @@ in
           name = "qwen3.6-moe-35b-a3b-FLM";
           supports_function_calling = true;
         }
+        {
+          name = "qwen3.8-mtp-27b-FLM";
+          supports_function_calling = true;
+        }
       ];
       description = "Models to expose from the local lemonade server.";
     };

@@ -84,9 +84,14 @@ in
           max_tokens = 32768;
         }
         {
+          name = "qwen3.6-moe-35b-a3b-FLM";
+          display_name = "Qwen 3.6 MoE 35B-A3B NPU (FLM)";
+          max_tokens = 32768;
+        }
+        {
           name = "qwen3.8-mtp-27b-FLM";
           display_name = "Qwen 3.8 MTP 27B NPU (FLM)";
-          max_tokens = 32768;
+          max_tokens = 8192;
         }
 
       ];
