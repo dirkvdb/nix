@@ -4,6 +4,8 @@ Investigation recorded: **2026-10-13**. Host: **`mini`** (`hosts/minisforum-ai-x
 
 **Update 2026-10-14:** a hard hang was captured on the **standard 7.2.10 kernel**, with the backlight workaround already active, after NordVPN and brightness control were re-enabled. The journal confirms a graphics-ring timeout, failed GPU recovery, and CPU stalls. The earlier observations do **not** establish that hard hangs are exclusive to CachyOS. See [Hard-hang follow-up](#hard-hang-follow-up-2026-10-14).
 
+**Update 2026-10-17:** another unresponsive-system incident required a manual reset. Brightness control is now disabled, but this boot has **no retained GPU/SMU/RCU failure signature**. Its journal ends with successful activity the previous evening; the hang time and whether it was a full-machine or display-only failure are unknown. See [October 17 recurrence](#hard-reset-recurrence-2026-10-17).
+
 ## Status and conclusion
 
 **The immediate wake mechanism was identified by kernel tracing:** AMD's hotplug-detection worker performs destructive DisplayPort link-capability verification while the display is asleep. That verification temporarily powers the receiver back up (D0), trains the link, and powers it down again (D3). The user observed the Dell's backlight returning during this activity, before the normal desktop wake.
@@ -333,7 +335,9 @@ There is therefore **no captured I/O-pressure history for this incident** to com
 
 The new boot recorded an ACPI power-state transition reset reason, not a hardware-watchdog-expired reason. A GPU devcoredump was created during the failed boot, but no such dump remained in sysfs after reboot.
 
-### Recommended next isolation step (not implemented)
+### Recommended isolation step at the time
+
+This was the recommendation on October 14. By October 17 the host's shared brightness-control option had been disabled; additional performance settings had also changed. That is not the exact single-variable experiment described below.
 
 Change **only Noctalia's `brightness.enable_ddcutil` to false**, holding NordVPN, the kernel, the display workaround and the attachment service fixed. Use a fresh Noctalia session with DDC disabled; reloading cannot retract a command already stuck in kernel I/O.
 
@@ -354,6 +358,38 @@ Relevant source checks:
 
 - [7.2.10: timed-out-job dump and process reporting](https://github.com/gregkh/linux/blob/v7.2.10/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c#L37-L170)
 - [7.2.10: GFXOFF-disable requests during the graphics IP dump](https://github.com/gregkh/linux/blob/v7.2.10/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c#L7178-L7249)
+
+## Hard-reset recurrence: 2026-10-17
+
+The user reported needing another hard reset in the morning. Failed boot ID: **`9001e089eb804f02881f61d9ab709eb9`**. It started October 16 at **20:49:39 CEST**; the next boot began October 17 at **08:34:58 CEST**.
+
+### Observed configuration and chronology
+
+- Standard kernel **7.2.10**, CachyOS disabled, detection-training workaround `amdgpu.dcdebugmask=0x200000` active.
+- Brightness control is now **disabled** in the host configuration. The inspected rendered Noctalia configuration contains `enable_ddcutil = false`. The failed boot used the same NixOS init generation as the new boot, and its inspected Noctalia log did not select a DDC backend.
+- NordVPN remains enabled.
+- Additional performance settings are now active: `preempt=full`, irqbalance and ananicy. They were not present in the October 14 baseline, so this was not a strictly isolated DDC-only A/B.
+- **21:00:32 on October 16:** Noctalia requested screen-off.
+- **21:00:35:** `hyprmoncfgd` detected sleep and paused switching.
+- **21:09:01:** `sd_mod` loaded successfully during fwupd startup; `SCSI subsystem initialized` was its kernel message, not a recorded disk error.
+- **21:09:02.127:** fwupd metadata refresh completed successfully; this was the last retained journal record.
+- No later wake, orderly shutdown, GPU timeout, SMU failure, RCU stall, blocked-task report, NFS nonresponse, NVMe timeout/reset or OOM event was retained for this boot.
+
+**The last journal timestamp is not the established hang time.** Neither successful fwupd refresh nor SCSI module initialization identifies the cause. Silence afterward could reflect a later unrecorded hang, failed logging, or simply an interval without retained messages.
+
+The earlier October 14 GPU hang remains confirmed, but **this recurrence cannot yet be classified as the same fault**. SSH or other independent responsiveness during the failure was not established. The brightness-off configuration has not prevented the reported symptom; that does not by itself identify which component failed this time.
+
+### Remaining evidence gap and next tests
+
+The quiet I/O recorder and sysstat collection remain absent. `RuntimeWatchdogUSec=0` still means no systemd-managed hardware-reset watchdog. The NMI detector is a separate mechanism and is enabled (`kernel.nmi_watchdog=1`). There is no new historical I/O-pressure capture to recover.
+
+Before another reset, a prevalidated LAN SSH path from the other PC would help separate a display/input failure from a deeper lockup. Successful SSH commands establish that userspace still runs; failed SSH alone does not prove a CPU freeze because VPN/network policy can also block access. A bounded remote heartbeat/PSI recording would preserve evidence on the other PC rather than depend entirely on local journal persistence. The same instrumentation should be used in any subsequent A/B because it can perturb idle behavior.
+
+A **GFXOFF-off experiment** remains a reasonable hypothesis test based on the October 14 GPU/SMU incident, **not a confirmed fix or diagnosis of this silent recurrence**. The actual inspected power-feature mask is `0xfff7bfff`; clearing only `PP_GFXOFF_MASK` (`0x8000`) yields `0xfff73fff`. For this kernel/current mask, the corresponding candidate boot parameter would be `amdgpu.ppfeaturemask=0xfff73fff`. It is separate from `dcdebugmask`, may increase idle power, and must not be carried forward blindly if the kernel/default mask changes. No such parameter or live power-management change was applied.
+
+Source verification: [7.2.10 power-feature bits](https://github.com/gregkh/linux/blob/v7.2.10/drivers/gpu/drm/amd/include/amd_shared.h#L231) and [the `ppfeaturemask` parameter](https://github.com/gregkh/linux/blob/v7.2.10/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c#L494-L500). A fresh check of AMD issue #5822 found no accessible confirmed fix; its discussion was not fully accessible, so an upstream resolution cannot be asserted.
+
+No services, display state, kernel parameters or running configuration were changed during this follow-up. Only these incident notes were updated.
 
 ## Source references
 
