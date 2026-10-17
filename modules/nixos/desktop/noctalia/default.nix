@@ -202,10 +202,12 @@ let
       temperature_night = 4500;
     };
 
-    plugins.enabled =
-      lib.optionals voxtypeEnabled [ "gabedunn/voxtype" ]
-      ++ lib.optionals devUtilsEnabled [ "felipeartur/ai-usagebar" ]
-      ++ lib.optionals tailscaleEnabled [ "rylos/tailnet" ];
+    plugins.enabled = [
+      "liamwh/emoji-picker"
+    ]
+    ++ lib.optionals voxtypeEnabled [ "gabedunn/voxtype" ]
+    ++ lib.optionals devUtilsEnabled [ "felipeartur/ai-usagebar" ]
+    ++ lib.optionals tailscaleEnabled [ "rylos/tailnet" ];
 
     notification.filter.network = {
       enabled = true;

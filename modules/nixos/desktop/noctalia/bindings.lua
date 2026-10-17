@@ -13,9 +13,10 @@ hl.bind(mod .. " + CTRL + N", hl.dsp.exec_cmd("noctalia msg nightlight-toggle"),
 ---- IDLE LOCK / CAFFEINE (Noctalia native) ----
 hl.bind(mod .. " + CTRL + I", hl.dsp.exec_cmd("noctalia msg caffeine-toggle"), { description = "Toggle locking on idle" })
 
----- LAUNCHER / CLIPBOARD ----
+---- LAUNCHER / CLIPBOARD / EMOJI ----
 hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"), { description = "App launcher" })
 hl.bind(mod .. " + V", hl.dsp.exec_cmd("noctalia msg panel-toggle clipboard"), { description = "Clipboard" })
+hl.bind(mod .. " + period", hl.dsp.exec_cmd("noctalia msg panel-toggle liamwh/emoji-picker:wide"), { description = "Emoji picker" })
 
 ---- BRIGHTNESS (Noctalia OSD) ----
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("noctalia msg brightness-up"), { locked = true, repeating = true, description = "Brightness up" })
