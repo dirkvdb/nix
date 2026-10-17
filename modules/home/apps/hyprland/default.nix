@@ -101,6 +101,7 @@ in
       XDG_SESSION_DESKTOP = "Hyprland";
       GDK_BACKEND = "wayland,x11,*";
       QT_QPA_PLATFORM = "wayland;xcb";
+      QT_SCALE_FACTOR = toString config.local.desktop.displayScale;
       SDL_VIDEODRIVER = "wayland";
       MOZ_ENABLE_WAYLAND = "1";
       ELECTRON_OZONE_PLATFORM_HINT = "wayland";
