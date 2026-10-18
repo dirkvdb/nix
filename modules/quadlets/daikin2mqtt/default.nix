@@ -17,7 +17,7 @@
       href = "{{HOMEPAGE_VAR_DAIKIN_REDIRECT_URI}}";
       description = "Daikin cloud to MQTT bridge";
       icon = "mdi-air-conditioner";
-      siteMonitor = "http://127.0.0.1:8076/";
+      siteMonitor = "http://127.0.0.1:8076/api/health";
     };
     services.homepage-dashboard.environmentFiles = [ config.sops.templates."homepage-daikin-env".path ];
 
@@ -76,6 +76,12 @@
       ContainerName=daikin2mqtt
       ServiceName=podman-daikin2mqtt
       PublishPort=8076:8076
+      HealthCmd=/usr/local/bin/curl --fail --silent --show-error --max-time 5 http://127.0.0.1:8076/api/health
+      HealthInterval=300s
+      HealthTimeout=10s
+      HealthRetries=3
+      HealthStartPeriod=60s
+      Volume=${pkgs.pkgsStatic.curl}/bin/curl:/usr/local/bin/curl:ro
       Volume=/var/lib/daikin2mqtt/data:/data
       Volume=${config.sops.secrets."mqtt/cert".path}:/run/secrets/mqtt-ca.crt:ro
 
