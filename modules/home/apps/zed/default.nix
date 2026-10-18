@@ -105,9 +105,6 @@ in
       LEMONADE_API_KEY = "dummy";
     };
 
-    home.file.".agents/skills/grill-me".source = ../../skills/grill-me;
-    home.file.".agents/skills/grill-with-docs".source = ../../skills/grill-with-docs;
-
     xdg.mimeApps.defaultApplications = lib.genAttrs cfg.mimeTypes (_: "dev.zed.Zed.desktop");
 
     stylix.targets.zed.enable = false;
