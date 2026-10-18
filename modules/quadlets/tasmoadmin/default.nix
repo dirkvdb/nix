@@ -31,10 +31,34 @@
     ];
     systemd.units."podman-tasmoadmin.service".wantedBy = [ "multi-user.target" ];
 
+    systemd.timers.tasmoadmin-healthcheck = {
+      wantedBy = [ "podman-tasmoadmin.service" ];
+      bindsTo = [ "podman-tasmoadmin.service" ];
+      after = [ "podman-tasmoadmin.service" ];
+      partOf = [ "podman-tasmoadmin.service" ];
+      timerConfig = {
+        OnActiveSec = "30s";
+        OnUnitActiveSec = "30s";
+        AccuracySec = "1s";
+      };
+    };
+
+    systemd.services.tasmoadmin-healthcheck = {
+      description = "Check TasmoAdmin container health";
+      after = [ "podman-tasmoadmin.service" ];
+      requisite = [ "podman-tasmoadmin.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${config.virtualisation.podman.package}/bin/podman healthcheck run tasmoadmin";
+        # Podman records failed probes in container health; only execution errors fail this unit.
+        SuccessExitStatus = [ 1 ];
+      };
+    };
+
     environment.etc."containers/systemd/tasmoadmin.container".text = ''
       [Unit]
       Description=TasmoAdmin Tasmota device management
-      RequiresMountsFor=/volume2/docker/tasmoadmin/data
+      RequiresMountsFor=/nas/docker/tasmoadmin/data
 
       [Container]
       Image=ghcr.io/tasmoadmin/tasmoadmin:latest
@@ -42,10 +66,11 @@
       ContainerName=tasmoadmin
       ServiceName=podman-tasmoadmin
       PublishPort=9999:80
-      Volume=/volume2/docker/tasmoadmin/data:/data
+      Volume=/nas/docker/tasmoadmin/data:/data
       WorkingDir=/tasmoadmin
+
       HealthCmd=curl -fsS http://127.0.0.1:80/ > /dev/null || exit 1
-      HealthInterval=30s
+      HealthInterval=disable
       HealthTimeout=10s
       HealthRetries=3
       HealthStartPeriod=30s
@@ -55,7 +80,7 @@
       RestartSec=5
       TimeoutStartSec=900
       TimeoutStopSec=90
-      ExecStartPre=${pkgs.coreutils}/bin/mkdir -p /volume2/docker/tasmoadmin/data
+      ExecStartPre=${pkgs.coreutils}/bin/mkdir -p /nas/docker/tasmoadmin/data
 
       [Install]
       WantedBy=multi-user.target
