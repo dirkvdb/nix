@@ -169,6 +169,7 @@
       homarr.enable = true;
       frigate.enable = true;
       daikin2mqtt.enable = true;
+      chromecast2mqtt.enable = true;
       dockhand = {
         enable = true;
         stacksDirectory = "/nas/docker";
