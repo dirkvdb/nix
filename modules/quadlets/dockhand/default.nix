@@ -52,7 +52,7 @@ in
       Requires=podman.socket
 
       [Container]
-      Image=docker.io/fnsys/dockhand:v1.0.53
+      Image=docker.io/fnsys/dockhand:v1.0.54
       AutoUpdate=registry
       ContainerName=dockhand
       ServiceName=podman-dockhand
