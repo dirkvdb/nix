@@ -5,6 +5,7 @@ hl.monitor({
   mode = "3840x2160@120.00",
   position = "5961x0",
   scale = 1.66667,
+  vrr = 1,
   bitdepth = 10,
   sdr_min_luminance = 0.2,
   sdr_max_luminance = 80,
@@ -13,19 +14,20 @@ hl.monitor({
 hl.monitor({
   output = "SUNSHINE",
   mode = "1920x1080@60.00",
-  position = "8309x0",
-  scale = 1.66667,
+  position = "8324x0",
+  scale = 1,
+  vrr = 0,
   sdr_min_luminance = 0.2,
   sdr_max_luminance = 80,
 })
 
 hl.workspace_rule({ workspace = "1", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", default = true, persistent = true })
-hl.workspace_rule({ workspace = "2", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4" })
-hl.workspace_rule({ workspace = "3", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4" })
-hl.workspace_rule({ workspace = "4", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4" })
-hl.workspace_rule({ workspace = "5", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4" })
-hl.workspace_rule({ workspace = "6", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4" })
-hl.workspace_rule({ workspace = "7", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4" })
-hl.workspace_rule({ workspace = "8", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4" })
-hl.workspace_rule({ workspace = "9", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4" })
-hl.workspace_rule({ workspace = "10", monitor = "SUNSHINE", persistent = true })
+hl.workspace_rule({ workspace = "2", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", persistent = true })
+hl.workspace_rule({ workspace = "3", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", persistent = true })
+hl.workspace_rule({ workspace = "4", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", persistent = true })
+hl.workspace_rule({ workspace = "5", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", persistent = true })
+hl.workspace_rule({ workspace = "6", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", persistent = true })
+hl.workspace_rule({ workspace = "7", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", persistent = true })
+hl.workspace_rule({ workspace = "8", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", persistent = true })
+hl.workspace_rule({ workspace = "9", monitor = "desc:Dell Inc. DELL U2725QE 5Z1FMF4", persistent = true })
+hl.workspace_rule({ workspace = "11", monitor = "SUNSHINE", persistent = true })
