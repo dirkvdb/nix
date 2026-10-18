@@ -42,6 +42,7 @@
       daikin_oauth_callback = { };
       mqtt_user = { };
       mqtt_pass = { };
+      "mqtt/cert".restartUnits = [ "podman-daikin2mqtt.service" ];
     };
     sops.templates."daikin2mqtt-env" = {
       mode = "0400";
@@ -76,6 +77,7 @@
       ServiceName=podman-daikin2mqtt
       PublishPort=8076:8076
       Volume=/var/lib/daikin2mqtt/data:/data
+      Volume=${config.sops.secrets."mqtt/cert".path}:/run/secrets/mqtt-ca.crt:ro
 
       EnvironmentFile=${config.sops.templates."daikin2mqtt-env".path}
       Environment=SECRETSPEC_PROVIDER=env
@@ -85,6 +87,8 @@
       Environment=DAIKIN_WEB_LISTEN=0.0.0.0:8076
 
       Environment=DAIKIN_MQTT_ADDRESS=mqtt.lan
+      Environment=DAIKIN_MQTT_PORT=8883
+      Environment=DAIKIN_MQTT_CA_CERT=/run/secrets/mqtt-ca.crt
       StopTimeout=60
 
       [Service]
