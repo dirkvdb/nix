@@ -177,6 +177,7 @@ in
           settings = {
             "zen.tabs.show-newtab-vertical" = false;
             "zen.theme.gradient" = true;
+            "zen.library.enabled" = false;
             "zen.theme.gradient.show-custom-colors" = false;
             "zen.theme.accent-color" = "AccentColor";
             "zen.urlbar.behavior" = "float";
