@@ -76,7 +76,7 @@
       ContainerName=daikin2mqtt
       ServiceName=podman-daikin2mqtt
       PublishPort=8076:8076
-      HealthCmd=/usr/local/bin/curl --fail --silent --show-error --max-time 5 http://127.0.0.1:8076/api/health
+      HealthCmd=CMD /usr/local/bin/curl --fail --silent --show-error --max-time 5 http://127.0.0.1:8076/api/health
       HealthInterval=300s
       HealthTimeout=10s
       HealthRetries=3
