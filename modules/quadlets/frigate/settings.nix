@@ -2,6 +2,9 @@
   mqtt = {
     enabled = true;
     host = "mqtt.lan";
+    port = 8883;
+    tls_ca_certs = "/run/secrets/mqtt-ca.crt";
+    tls_insecure = false;
     user = "{FRIGATE_MQTT_USER}";
     password = "{FRIGATE_MQTT_PASSWORD}";
   };

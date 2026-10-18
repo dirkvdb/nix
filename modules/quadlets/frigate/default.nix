@@ -57,6 +57,7 @@ in
     sops.secrets = {
       mqtt_user = { };
       mqtt_pass = { };
+      "mqtt/cert".restartUnits = [ "frigate.service" ];
       frigate_birdcam_main_url = { };
       frigate_birdcam_sub_url = { };
       frigate_email.restartUnits = [ "frigate.service" ];
@@ -96,6 +97,7 @@ in
       # Keep absolute native recording/export paths in the existing DB usable.
       Volume=/var/lib/frigate:/var/lib/frigate
       Volume=/run/frigate-quadlet:/run/frigate-quadlet
+      Volume=${config.sops.secrets."mqtt/cert".path}:/run/secrets/mqtt-ca.crt:ro
       Volume=${./sync-admin.py}:/usr/local/bin/frigate-sync-admin.py:ro
       ShmSize=256m
       Tmpfs=/tmp/cache:rw,size=1000000000
