@@ -171,6 +171,7 @@
       daikin2mqtt.enable = true;
       chromecast2mqtt.enable = true;
       stromer2mqtt.enable = true;
+      lgtv2mqtt.enable = true;
       tasmoadmin.enable = true;
       dockhand = {
         enable = true;
