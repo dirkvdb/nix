@@ -36,14 +36,6 @@ in
             run chmod u+w "$target"
           done
 
-          # Refresh the generated monitor config too, without requiring a new login.
-          if status=$(${pkgs.hyprmoncfg}/bin/hyprmoncfg status --json) &&
-             ${pkgs.jq}/bin/jq -e '.daemon.running == true' <<< "$status" >/dev/null; then
-            activeProfile=$(${pkgs.jq}/bin/jq -r '.active_profile.name // empty' <<< "$status")
-            if [ -n "$activeProfile" ] && [ -f "${./profiles}/$activeProfile.json" ]; then
-              run ${pkgs.hyprmoncfg}/bin/hyprmoncfg apply "$activeProfile" --confirm-timeout 0
-            fi
-          fi
         '';
   });
 }
