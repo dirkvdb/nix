@@ -44,7 +44,7 @@
       ${lib.optionalString config.sops.useSystemdActivation "Requires=sops-install-secrets.service"}
 
       [Container]
-      Image=ghcr.io/dirkvdb/chromecast2mqtt:latest
+      Image=docker.io/dirkvdb/chromecast2mqtt:latest
       AutoUpdate=registry
       ContainerName=chromecast2mqtt
       ServiceName=podman-chromecast2mqtt
