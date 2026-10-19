@@ -12,6 +12,19 @@
   auth.enabled = true;
   database.path = "/config/frigate.db";
   ffmpeg.hwaccel_args = "preset-vaapi";
+  detectors.ov = {
+    type = "openvino";
+    device = "GPU";
+  };
+  model = {
+    model_type = "ssd";
+    width = 300;
+    height = 300;
+    input_tensor = "nhwc";
+    input_pixel_format = "bgr";
+    path = "/openvino-model/ssdlite_mobilenet_v2.xml";
+    labelmap_path = "/openvino-model/coco_91cl_bkgr.txt";
+  };
   go2rtc.streams = {
     birdcam = [ "{FRIGATE_BIRDCAM_MAIN_URL}" ];
     birdcam_sub = [ "{FRIGATE_BIRDCAM_SUB_URL}" ];
@@ -54,7 +67,10 @@
   };
   cameras.benchcam = {
     enabled = true;
-    detect.enabled = false;
+    detect = {
+      enabled = true;
+      fps = 5;
+    };
     ffmpeg.inputs = [
       {
         path = "rtsp://127.0.0.1:8554/benchcam";
