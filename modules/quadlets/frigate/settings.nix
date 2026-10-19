@@ -11,6 +11,7 @@
   tls.enabled = false;
   auth.enabled = true;
   database.path = "/config/frigate.db";
+  ffmpeg.hwaccel_args = "preset-vaapi";
   go2rtc.streams = {
     birdcam = [ "{FRIGATE_BIRDCAM_MAIN_URL}" ];
     birdcam_sub = [ "{FRIGATE_BIRDCAM_SUB_URL}" ];
@@ -53,6 +54,7 @@
   };
   cameras.benchcam = {
     enabled = true;
+    detect.enabled = false;
     ffmpeg.inputs = [
       {
         path = "rtsp://127.0.0.1:8554/benchcam";

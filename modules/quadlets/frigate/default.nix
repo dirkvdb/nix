@@ -92,6 +92,8 @@ in
       Image=ghcr.io/blakeblackshear/frigate:0.17.2
       AutoUpdate=registry
       ContainerName=frigate
+      # Render-node access is sufficient for VAAPI and OpenVINO; no display access needed.
+      AddDevice=/dev/dri/renderD128:/dev/dri/renderD128:rw
       PublishPort=8085:8971
       EnvironmentFile=${config.sops.templates."frigate-env".path}
       Environment=TZ=${if config.time.timeZone == null then "UTC" else config.time.timeZone}
