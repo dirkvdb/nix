@@ -67,8 +67,9 @@
   };
   cameras.benchcam = {
     enabled = true;
+    motion.enabled = false;
     detect = {
-      enabled = true;
+      enabled = false;
       fps = 5;
     };
     ffmpeg.inputs = [

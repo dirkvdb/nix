@@ -21,18 +21,22 @@ drivers. No privileged mode or host graphics-library mounts are needed. Explicit
 VAAPI configuration does not fall back to CPU decoding if GPU initialization fails;
 check `sudo journalctl -u frigate.service` for FFmpeg/VAAPI errors after deployment.
 
-Object detection uses an OpenVINO GPU detector with the bundled FP16 SSDLite
-MobileNet v2 model (300×300 input). It is enabled for `benchcam` at 5 detection fps
-using its substream; `birdcam` object detection remains disabled. Motion analysis
-still runs on the CPU. GPU discovery can be checked with:
+An OpenVINO GPU detector is configured with the bundled FP16 SSDLite MobileNet v2
+model (300×300 input), but object detection is disabled for both `benchcam` and
+`birdcam`. Motion analysis is also disabled for `benchcam`; its live view remains
+available, but the current motion-only retention policy will not retain new
+benchcam recordings without motion or object events. `birdcam` motion analysis
+and motion-based recording remain enabled; motion analysis runs on the CPU.
+GPU discovery can be checked with:
 
 ```sh
 sudo podman exec frigate python3 -c 'from openvino import Core; print(Core().available_devices)'
 ```
 
 The detector explicitly selects `GPU` rather than falling back to CPU inference.
-After deployment, check the service logs for OpenVINO model compilation errors
-and Frigate's System Metrics for detector `ov` inference times and skipped frames.
+If object detection is re-enabled, check the service logs for OpenVINO model
+compilation errors and Frigate's System Metrics for detector `ov` inference times
+and skipped frames.
 GPU discovery alone does not verify successful model execution.
 
 ## Migration from the native service
