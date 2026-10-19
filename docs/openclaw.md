@@ -4,8 +4,8 @@
 image as `podman-openclaw.service`. `Pull=always` refreshes the image on every
 service start. Like the other server Quadlets, this is a
 system-level Podman service, not the upstream installer's rootless user service.
-The container runs as the image's non-root `node` user (UID/GID 1000), with no
-host container socket or host home directory mounted.
+The container runs as non-root UID/GID `1024:100`, matching the existing NAS
+storage owner, with no host container socket or host home directory mounted.
 
 ## Models and state
 
@@ -22,8 +22,17 @@ model is configured; workspace files and session state remain persistent.
 - Workspace and agent files: `/nas/docker/openclaw/data`, mounted at
   `/home/node/.openclaw/workspace` in the container.
 - The service waits for the NAS mount and bind-mounts the existing directories
-  without changing their ownership or permissions. They must be writable by
-  container UID/GID 1000.
+  without changing their ownership or permissions. The configuration directory
+  must be owned by UID 1024, not just writable: OpenClaw checks that its state
+  belongs to the running user. Both directories must be writable by UID/GID `1024:100`.
+  OpenClaw itself enforces mode 0700 on its ownership directories; the NAS ACLs
+  must allow that permission change.
+- Temporary files and cache: a private in-memory `/tmp/openclaw` owned by
+  UID/GID `1024:100` with mode 0700. Both `TMPDIR` and `XDG_CACHE_HOME` point
+  there. SQLite snapshot staging uses `XDG_CACHE_HOME` independently of `TMPDIR`;
+  without it, startup fails trying to create `/home/node/.cache/openclaw-1024`
+  in the image's UID-1000 home directory. These temporary files do not survive
+  container replacement; persistent databases remain on the NAS.
 - Gateway token: generated once at runtime in `/var/lib/openclaw/env` (root-only).
 - Declarative config: `modules/quadlets/openclaw/settings.nix`, mounted read-only.
   Change settings there and rebuild; container replacement picks up the new file.
@@ -38,10 +47,10 @@ If an earlier deployment kept all state in `/var/lib/openclaw/state` or directly
 in `/nas/docker/openclaw/data`, stop the service and back up that directory first.
 Copy the old state into `/nas/docker/openclaw/config` and place the contents of
 its old `workspace` subdirectory directly in `/nas/docker/openclaw/data`,
-preserving UID/GID 1000. Existing data is not moved automatically or deleted.
+with ownership matching UID/GID `1024:100`. Existing data is not moved automatically or deleted.
 
 `/nas/docker` is an NFS mount. Its export permissions must allow container
-UID/GID 1000 access. OpenClaw's SQLite databases and
+UID/GID `1024:100` access. OpenClaw's SQLite databases and
 state ownership checks require reliable filesystem locking; a successful Nix
 build does not verify NAS compatibility. If startup reports unsupported locking
 or state-ownership primitives, stop the service and use a compatible filesystem
@@ -49,15 +58,29 @@ rather than bypassing those checks.
 
 ## Dashboard access
 
-Only host loopback ports **18789** (gateway) and **18790** (bridge) are published;
-no firewall ports are opened. From your workstation, keep an SSH tunnel open:
+Open <https://claw.hl.vandenboer.eu> through your external reverse proxy; no SSH
+tunnel is required. Homepage links to this address.
 
-```sh
-ssh -N -L 18789:127.0.0.1:18789 dirk@mediastation
-```
+Configure the reverse proxy with:
 
-Open <http://127.0.0.1:18789> and paste the gateway token into the dashboard's
-authentication settings. Read it on mediastation (do not share the output):
+- HTTPS frontend: `claw.hl.vandenboer.eu`, with a valid TLS certificate.
+- HTTP upstream: `http://mediastation:18789` (or mediastation's LAN IP on port 18789).
+- WebSocket support enabled, including HTTP/1.1 `Upgrade` / `Connection` handling
+  and timeouts suitable for long-lived connections.
+- Preserve the public `Host` and browser `Origin`; set `X-Forwarded-Proto: https`
+  and overwrite `X-Forwarded-For` with the actual client IP rather than trusting
+  client-supplied forwarding headers.
+
+Both reverse-proxy addresses, `192.168.1.13` and `192.168.1.14`, are trusted by
+OpenClaw. Gateway port **18789** is published on IPv4 host interfaces, with a
+service-managed packet filter allowing remote access only from these two IPs.
+The filter runs before Podman's port-forwarding rules and does not depend on
+the host's currently disabled firewall service. Local health checks still work.
+Bridge port **18790** remains loopback-only and must not be proxied.
+
+Token authentication and device pairing remain enabled. Paste the gateway token
+into the dashboard's authentication settings. Read it on mediastation (do not
+share the output):
 
 ```sh
 sudo cat /var/lib/openclaw/env
@@ -71,8 +94,13 @@ sudo podman exec openclaw openclaw devices list
 sudo podman exec openclaw openclaw devices approve REQUEST_ID
 ```
 
-Replace `REQUEST_ID` with the ID from the list. Do not disable device authentication
-or expose the gateway on the LAN just to bypass pairing.
+Replace `REQUEST_ID` with the ID from the list. The HTTPS origin has its own
+browser identity, so a browser previously paired through localhost may need a
+new approval. Do not disable device authentication to bypass pairing.
+
+If logs report `proxy_attribution_required`, verify that the immediate proxy
+peer seen by the gateway is one of the two configured IPs. Do not work around
+this by trusting an entire LAN or container subnet.
 
 ## Operations
 

@@ -1,8 +1,14 @@
 {
   gateway = {
     mode = "local";
+    publicOrigin = "https://claw.hl.vandenboer.eu";
     auth.mode = "token";
+    trustedProxies = [
+      "192.168.1.13"
+      "192.168.1.14"
+    ];
     controlUi.allowedOrigins = [
+      "https://claw.hl.vandenboer.eu"
       "http://127.0.0.1:18789"
       "http://localhost:18789"
     ];
