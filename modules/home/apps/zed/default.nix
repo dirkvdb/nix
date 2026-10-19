@@ -172,6 +172,8 @@ in
           autosave = "on_focus_change";
           colorize_brackets = true;
           scroll_sensitivity = 3.0;
+          vertical_scroll_margin = 999;
+          scroll_beyond_last_line = "one_page";
           markdown_preview = {
             limit_content_width = false;
           };
