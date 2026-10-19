@@ -34,9 +34,12 @@ model is configured; workspace files and session state remain persistent.
   in the image's UID-1000 home directory. These temporary files do not survive
   container replacement; persistent databases remain on the NAS.
 - Gateway token: generated once at runtime in `/var/lib/openclaw/env` (root-only).
-- Declarative config: `modules/quadlets/openclaw/settings.nix`, mounted read-only.
-  Change settings there and rebuild; container replacement picks up the new file.
-  CLI/UI config writes are intentionally disabled (`OPENCLAW_CONFIG_READONLY=1`).
+- Initial configuration: `modules/quadlets/openclaw/settings.nix`, supplied as
+  `/etc/openclaw/defaults.json`. Startup seeds a writable
+  `/home/node/.openclaw/openclaw.json` only if it is missing or empty. Existing
+  configuration is preserved so plugin installation and guided UI setup can
+  save changes. Changing the Nix defaults does not overwrite an existing config;
+  edit that config through OpenClaw or on the NAS instead.
 
 Back up both `/nas/docker/openclaw/config` and `/nas/docker/openclaw/data`, plus
 `/var/lib/openclaw/env`, before image upgrades. OpenClaw's image entrypoint runs
@@ -55,6 +58,93 @@ state ownership checks require reliable filesystem locking; a successful Nix
 build does not verify NAS compatibility. If startup reports unsupported locking
 or state-ownership primitives, stop the service and use a compatible filesystem
 rather than bypassing those checks.
+
+### Confirmed NFS atomic-write incompatibility
+
+With OpenClaw 2026.10.5 / `@openclaw/fs-safe` 0.25.0, chat initialization on
+this Synology NFS export fails with `FsSafeError: staged file publish failed`.
+An isolated test on the same export exposed the underlying
+`hardlinked path not allowed` error after successful publication.
+
+The no-clobber publication fallback links the staged file to its destination,
+then unlinks the still-open staging name. Linux NFS preserves that open name as
+`.nfs…` until its descriptor closes, leaving two hard links during OpenClaw's
+verification. The probe confirmed two names/link count 2 while open, followed by
+one name/link count 1 after closing. The same operation passes on local storage.
+
+Changing ownership, disabling attribute caching, or disabling the native
+fs-safe backend does not solve this open-unlink behavior. Do not bypass the
+hardlink safety check, delete live `.nfs…` files, or assume the database is
+corrupt. The existing NAS binds are preserved; resolving this requires an
+upstream-compatible publication implementation or migrating the affected live
+storage to a compatible local filesystem after stopping the service and
+backing up state.
+
+## Signal and npm plugins
+
+On container creation, `start.mjs` installs Signal through OpenClaw's npm
+installer before handing control back to the image's Doctor/gateway entrypoint:
+
+```sh
+openclaw plugins install npm:@openclaw/signal --force --accept-capabilities
+```
+
+This uses the installer’s host-version compatibility selection, records plugin
+provenance, and enables Signal. The plugin is not packaged or version-pinned in
+Nix. `--force` permits updating an existing installation; only this explicitly
+requested plugin is installed automatically. Other npm plugins and channel
+settings can be managed through OpenClaw. Config, plugin files and install
+records persist under `/nas/docker/openclaw/config`. The npm cache is persistent
+too. Creation needs access to the npm registry and fails if installation fails;
+it does not silently start without the requested plugin. Installation is
+bounded to ten minutes.
+
+`signal-cli` and its Java runtime are provided read-only by Nix. Only their
+runtime closure is mounted, not the host's entire Nix store. The OpenClaw image
+remains `ghcr.io/openclaw/openclaw:latest` with `Pull=always`.
+
+Complete Signal's guided setup in the UI, or run:
+
+```sh
+sudo podman exec -it openclaw openclaw channels add --channel signal
+```
+
+Prefer a dedicated bot Signal number. To link an existing Signal account:
+
+```sh
+sudo podman exec -it openclaw signal-cli --config /home/node/.openclaw/signal-cli link -n OpenClaw
+```
+
+Complete authorization in Signal's linked-device settings. Do not register your
+personal number blindly: registration can de-authenticate its existing Signal
+app. Messages sent by the linked account itself are ignored by loop protection.
+After setup, check the channel and approve the first sender's pairing code:
+
+```sh
+sudo podman exec openclaw signal-cli --version
+sudo podman exec openclaw openclaw channels status --probe
+sudo podman exec openclaw openclaw pairing list signal
+sudo podman exec openclaw openclaw pairing approve signal PAIRING_CODE
+```
+
+Signal account keys persist in `/nas/docker/openclaw/config/signal-cli`, mounted
+at `/home/node/.openclaw/signal-cli`. `XDG_DATA_HOME` points at the persistent
+state directory so direct CLI commands use the same storage by default.
+Back up these keys as sensitive credentials. Keep the Signal daemon bound to
+container loopback, retain DM pairing, and restrict groups during setup. No
+extra host port is published. Signal replies still depend on resolving the NFS
+atomic-write issue above.
+
+## GitHub authorization
+
+The container also includes the GitHub CLI (`gh`), required by OpenClaw's GitHub
+authorization flow. `GH_CONFIG_DIR=/home/node/.openclaw/gh` keeps authorization
+state on the NAS rather than the image's unwritable home directory. Complete
+GitHub authorization in the UI after deployment; no token is stored in Nix.
+
+```sh
+sudo podman exec openclaw gh --version
+```
 
 ## Dashboard access
 
@@ -120,4 +210,5 @@ start this OCI image.
 
 References: [Podman installation](https://docs.openclaw.ai/install/podman),
 [Docker image](https://docs.openclaw.ai/install/docker), and
-[custom providers](https://docs.openclaw.ai/concepts/model-providers/custom-providers).
+[custom providers](https://docs.openclaw.ai/concepts/model-providers/custom-providers), and
+[Signal](https://docs.openclaw.ai/channels/signal).

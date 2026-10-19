@@ -2,12 +2,20 @@
   pkgs,
   podman,
   name,
-  text,
+  source ? null,
+  text ? null,
   serviceName ? name,
 }:
 pkgs.runCommand "${name}-quadlet-units"
   {
-    QUADLET_UNIT_DIRS = pkgs.writeTextDir "${name}.container" text;
+    QUADLET_UNIT_DIRS =
+      if source == null then
+        pkgs.writeTextDir "${name}.container" text
+      else
+        pkgs.runCommand "${name}-quadlet-source" { } ''
+          mkdir -p "$out"
+          ln -s ${source} "$out/${name}.container"
+        '';
     PODMAN = "${podman}/bin/podman";
     preferLocalBuild = true;
   }
