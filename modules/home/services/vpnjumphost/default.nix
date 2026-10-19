@@ -88,6 +88,8 @@ in
           "outlook.office365.com"
           "outlook.cloud.microsoft.com"
           "login.microsoftonline.com"
+          "vitoresearch.atlassian.net"
+          "atlassian.com"
         ];
         description = "Domains routed through the VPN tunnel.";
       };
