@@ -209,7 +209,7 @@ in
             threads_sidebar = {
               position = "right";
             };
-            use_modifier_to_send = false;
+            use_modifier_to_send = true;
             default_profile = "write";
             show_turn_stats = true;
             play_sound_when_agent_done = "always";
