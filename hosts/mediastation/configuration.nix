@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   inputs,
   ...
 }:
@@ -33,6 +34,32 @@
     networking.hosts."192.168.1.13" = [ "nas.local" ];
 
     environment.systemPackages = [ pkgs.ghostty.terminfo ];
+
+    # Intel GPU utilization uses PMU counters; avoid relaxing perf_event_paranoid globally.
+    security.wrappers.btop = {
+      source = "${pkgs.btop}/bin/btop";
+      owner = "root";
+      group = "wheel";
+      permissions = "0750";
+      capabilities = "cap_perfmon+ep";
+    };
+
+    home-manager.users.dirk.xdg.configFile."btop".source = lib.mkForce (
+      pkgs.writeTextDir "btop.conf" (
+        lib.replaceStrings
+          [
+            ''shown_boxes = "mem cpu proc"''
+            "cpu:1:default,proc:0:default"
+            ''show_gpu_info = "Auto"''
+          ]
+          [
+            ''shown_boxes = "mem cpu gpu0 proc"''
+            "cpu:1:default,gpu0:0:default,proc:0:default"
+            ''show_gpu_info = "On"''
+          ]
+          (builtins.readFile ../../modules/home/dotfiles/btop/btop.conf)
+      )
+    );
 
     virtualisation.podman.enable = true;
 
