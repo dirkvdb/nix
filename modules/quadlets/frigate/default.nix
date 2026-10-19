@@ -60,6 +60,8 @@ in
       "mqtt/cert".restartUnits = [ "frigate.service" ];
       frigate_birdcam_main_url = { };
       frigate_birdcam_sub_url = { };
+      frigate_benchcam_main_url = { };
+      frigate_benchcam_sub_url = { };
       frigate_email.restartUnits = [ "frigate.service" ];
       hl_service_pass.restartUnits = [ "frigate.service" ];
     };
@@ -73,6 +75,8 @@ in
         FRIGATE_NOTIFICATION_EMAIL=${config.sops.placeholder.frigate_email}
         FRIGATE_BIRDCAM_MAIN_URL=${config.sops.placeholder.frigate_birdcam_main_url}
         FRIGATE_BIRDCAM_SUB_URL=${config.sops.placeholder.frigate_birdcam_sub_url}
+        FRIGATE_BENCHCAM_MAIN_URL=${config.sops.placeholder.frigate_benchcam_main_url}
+        FRIGATE_BENCHCAM_SUB_URL=${config.sops.placeholder.frigate_benchcam_sub_url}
       '';
     };
 

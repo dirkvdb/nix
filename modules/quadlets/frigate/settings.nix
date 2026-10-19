@@ -14,6 +14,8 @@
   go2rtc.streams = {
     birdcam = [ "{FRIGATE_BIRDCAM_MAIN_URL}" ];
     birdcam_sub = [ "{FRIGATE_BIRDCAM_SUB_URL}" ];
+    benchcam = [ "{FRIGATE_BENCHCAM_MAIN_URL}" ];
+    benchcam_sub = [ "{FRIGATE_BENCHCAM_SUB_URL}" ];
   };
   cameras.birdcam = {
     enabled = true;
@@ -48,6 +50,25 @@
       inertia = 3;
     };
     review.alerts.required_zones = [ "Nest" ];
+  };
+  cameras.benchcam = {
+    enabled = true;
+    ffmpeg.inputs = [
+      {
+        path = "rtsp://127.0.0.1:8554/benchcam";
+        input_args = "preset-rtsp-restream";
+        roles = [ "record" ];
+      }
+      {
+        path = "rtsp://127.0.0.1:8554/benchcam_sub";
+        input_args = "preset-rtsp-restream";
+        roles = [ "detect" ];
+      }
+    ];
+    live.streams = {
+      main_stream = "benchcam";
+      sub_stream = "benchcam_sub";
+    };
   };
   detect.enabled = true;
   record = {
