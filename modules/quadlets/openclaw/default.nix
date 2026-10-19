@@ -8,10 +8,19 @@ let
   settingsFile = pkgs.writeText "openclaw.json" (builtins.toJSON (import ./settings.nix));
 in
 {
+  imports = [ ../homepage.nix ];
+
   options.quadlets.openclaw.enable = lib.mkEnableOption "the OpenClaw gateway Podman Quadlet";
 
   config = lib.mkIf config.quadlets.openclaw.enable {
     virtualisation.podman.enable = true;
+
+    services.homepage-dashboard.quadletEntries.OpenClaw = {
+      href = "http://127.0.0.1:18789/";
+      description = "AI agent gateway (SSH tunnel required)";
+      icon = "mdi-robot";
+      siteMonitor = "http://127.0.0.1:18789/healthz";
+    };
 
     systemd.packages = [
       (import ../generate-units.nix {
