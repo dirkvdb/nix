@@ -4,8 +4,8 @@
 image as `podman-openclaw.service`. `Pull=always` refreshes the image on every
 service start. Like the other server Quadlets, this is a
 system-level Podman service, not the upstream installer's rootless user service.
-The container runs as non-root UID/GID `1024:100`, matching the existing NAS
-storage owner, with no host container socket or host home directory mounted.
+The container runs as non-root UID/GID `1024:100`, preserving the existing state
+ownership, with no host container socket or host home directory mounted.
 
 ## Models and state
 
@@ -17,47 +17,72 @@ The provider key is a non-secret dummy value: the endpoint currently needs no
 authentication. Embedding-backed memory search is disabled because no embedding
 model is configured; workspace files and session state remain persistent.
 
-- Configuration and agent state (credentials, sessions and databases):
-  `/nas/docker/openclaw/config`, mounted at `/home/node/.openclaw` in the container.
-- Workspace and agent files: `/nas/docker/openclaw/data`, mounted at
-  `/home/node/.openclaw/workspace` in the container.
-- The service waits for the NAS mount and bind-mounts the existing directories
-  without changing their ownership or permissions. The configuration directory
-  must be owned by UID 1024, not just writable: OpenClaw checks that its state
-  belongs to the running user. Both directories must be writable by UID/GID `1024:100`.
-  OpenClaw itself enforces mode 0700 on its ownership directories; the NAS ACLs
-  must allow that permission change.
+- Configuration and agent state (credentials, sessions, databases, plugins and
+  authorization): `/var/lib/openclaw/config`, mounted at `/home/node/.openclaw`.
+- Workspace and agent files: `/var/lib/openclaw/data`, mounted at
+  `/home/node/.openclaw/workspace`.
+- Both live directories are on mediastation's local ext4 filesystem, not NFS.
+  NixOS tmpfiles creates them with owner `1024:100` and mode 0700. Their parent,
+  `/var/lib/openclaw`, remains root-owned with mode 0700 to protect the token.
+  Container paths and UID/GID are unchanged; no NAS ownership changes are needed.
+  The gateway no longer waits for or mounts the NAS.
 - Temporary files and cache: a private in-memory `/tmp/openclaw` owned by
   UID/GID `1024:100` with mode 0700. Both `TMPDIR` and `XDG_CACHE_HOME` point
   there. SQLite snapshot staging uses `XDG_CACHE_HOME` independently of `TMPDIR`;
   without it, startup fails trying to create `/home/node/.cache/openclaw-1024`
   in the image's UID-1000 home directory. These temporary files do not survive
-  container replacement; persistent databases remain on the NAS.
+  container replacement; persistent databases remain on the local disk.
 - Gateway token: generated once at runtime in `/var/lib/openclaw/env` (root-only).
 - Initial configuration: `modules/quadlets/openclaw/settings.nix`, supplied as
   `/etc/openclaw/defaults.json`. Startup seeds a writable
   `/home/node/.openclaw/openclaw.json` only if it is missing or empty. Existing
   configuration is preserved so plugin installation and guided UI setup can
   save changes. Changing the Nix defaults does not overwrite an existing config;
-  edit that config through OpenClaw or on the NAS instead.
+  edit that config through OpenClaw or in `/var/lib/openclaw/config` instead.
 
-Back up both `/nas/docker/openclaw/config` and `/nas/docker/openclaw/data`, plus
-`/var/lib/openclaw/env`, before image upgrades. OpenClaw's image entrypoint runs
+Back up `/var/lib/openclaw/config`, `/var/lib/openclaw/data`, and
+`/var/lib/openclaw/env` before image upgrades. OpenClaw's image entrypoint runs
 Doctor to migrate retained state. Backups may be needed to roll back an image
-and its matching database schema together.
+and its matching database schema together. The NAS is suitable for backup
+archives, but is no longer used for live state. No recurring backup job is
+configured by this module.
 
-If an earlier deployment kept all state in `/var/lib/openclaw/state` or directly
-in `/nas/docker/openclaw/data`, stop the service and back up that directory first.
-Copy the old state into `/nas/docker/openclaw/config` and place the contents of
-its old `workspace` subdirectory directly in `/nas/docker/openclaw/data`,
-with ownership matching UID/GID `1024:100`. Existing data is not moved automatically or deleted.
+### One-time migration from the NAS
 
-`/nas/docker` is an NFS mount. Its export permissions must allow container
-UID/GID `1024:100` access. OpenClaw's SQLite databases and
-state ownership checks require reliable filesystem locking; a successful Nix
-build does not verify NAS compatibility. If startup reports unsupported locking
-or state-ownership primitives, stop the service and use a compatible filesystem
-rather than bypassing those checks.
+Perform this maintenance step **on mediastation before activating the new
+configuration**. Root access is required. Stop all OpenClaw writers, including
+any independent CLI/setup commands, before copying. The two local destination
+directories must be absent or empty; if they already contain state, stop and
+inspect it instead of overwriting it.
+
+```sh
+sudo systemctl stop podman-openclaw.service
+sudo install -d -m 0700 -o 1024 -g 100 /var/lib/openclaw/config /var/lib/openclaw/data
+sudo /etc/profiles/per-user/dirk/bin/rsync -a --numeric-ids /nas/docker/openclaw/config/ /var/lib/openclaw/config/
+sudo /etc/profiles/per-user/dirk/bin/rsync -a --numeric-ids /nas/docker/openclaw/data/ /var/lib/openclaw/data/
+sudo chmod 0700 /var/lib/openclaw/config /var/lib/openclaw/data
+```
+
+The explicit rsync path is the existing executable on mediastation. Check each
+command succeeds before continuing. This is an offline filesystem relocation:
+copy each complete tree, including hidden files and all SQLite WAL, SHM and
+journal files. Never copy live databases, delete their sidecars, or manually
+clear ownership/lease records. Existing numeric ownership is retained, and the
+container paths stay identical. For the upstream-supported archive migration
+and recovery workflow, see [Migrating](https://docs.openclaw.ai/install/migrating).
+
+Leave `/var/lib/openclaw/env` in place; it retains the gateway token. The NAS
+source trees are not modified or removed and remain the pre-migration copy.
+Deploy the new configuration only after both copies complete. Then check Doctor
+and gateway logs and make a test request. If the old service was explicitly
+stopped and is not started by deployment, start the **new** unit with
+`sudo systemctl start podman-openclaw.service`.
+
+Do not restart the old NAS-backed unit after copying, or it may create state
+that is absent from the local copy. Do not copy the stale NAS trees over the
+local state after cutover. For future NAS backups, use OpenClaw's verified
+backup workflow or a complete offline backup; protect archives containing
+credentials and the gateway token.
 
 ### Confirmed NFS atomic-write incompatibility
 
@@ -75,10 +100,8 @@ one name/link count 1 after closing. The same operation passes on local storage.
 Changing ownership, disabling attribute caching, or disabling the native
 fs-safe backend does not solve this open-unlink behavior. Do not bypass the
 hardlink safety check, delete live `.nfs…` files, or assume the database is
-corrupt. The existing NAS binds are preserved; resolving this requires an
-upstream-compatible publication implementation or migrating the affected live
-storage to a compatible local filesystem after stopping the service and
-backing up state.
+corrupt. The Quadlet now uses local persistent storage to avoid this NFS
+behavior, without weakening any filesystem safety checks.
 
 ## Signal and npm plugins
 
@@ -94,7 +117,7 @@ provenance, and enables Signal. The plugin is not packaged or version-pinned in
 Nix. `--force` permits updating an existing installation; only this explicitly
 requested plugin is installed automatically. Other npm plugins and channel
 settings can be managed through OpenClaw. Config, plugin files and install
-records persist under `/nas/docker/openclaw/config`. The npm cache is persistent
+records persist under `/var/lib/openclaw/config`. The npm cache is persistent
 too. Creation needs access to the npm registry and fails if installation fails;
 it does not silently start without the requested plugin. Installation is
 bounded to ten minutes.
@@ -127,19 +150,18 @@ sudo podman exec openclaw openclaw pairing list signal
 sudo podman exec openclaw openclaw pairing approve signal PAIRING_CODE
 ```
 
-Signal account keys persist in `/nas/docker/openclaw/config/signal-cli`, mounted
+Signal account keys persist in `/var/lib/openclaw/config/signal-cli`, mounted
 at `/home/node/.openclaw/signal-cli`. `XDG_DATA_HOME` points at the persistent
 state directory so direct CLI commands use the same storage by default.
 Back up these keys as sensitive credentials. Keep the Signal daemon bound to
 container loopback, retain DM pairing, and restrict groups during setup. No
-extra host port is published. Signal replies still depend on resolving the NFS
-atomic-write issue above.
+extra host port is published.
 
 ## GitHub authorization
 
 The container also includes the GitHub CLI (`gh`), required by OpenClaw's GitHub
 authorization flow. `GH_CONFIG_DIR=/home/node/.openclaw/gh` keeps authorization
-state on the NAS rather than the image's unwritable home directory. Complete
+state in local persistent storage rather than the image's unwritable home directory. Complete
 GitHub authorization in the UI after deployment; no token is stored in Nix.
 
 ```sh

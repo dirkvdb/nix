@@ -25,6 +25,12 @@ in
     virtualisation.podman.enable = true;
     networking.firewall.allowedTCPPorts = [ 18789 ];
 
+    systemd.tmpfiles.rules = [
+      "d /var/lib/openclaw 0700 root root -"
+      "d /var/lib/openclaw/config 0700 1024 100 -"
+      "d /var/lib/openclaw/data 0700 1024 100 -"
+    ];
+
     systemd.services.openclaw-proxy-filter = {
       description = "Restrict OpenClaw ingress to its reverse proxy";
       serviceConfig = {
@@ -68,7 +74,7 @@ in
           BindsTo=openclaw-proxy-filter.service
           PartOf=openclaw-proxy-filter.service
           After=network-online.target openclaw-proxy-filter.service
-          RequiresMountsFor=/var/lib/openclaw /nas/docker/openclaw/config /nas/docker/openclaw/data
+          RequiresMountsFor=/var/lib/openclaw/config /var/lib/openclaw/data
 
           [Container]
           Image=ghcr.io/openclaw/openclaw:latest
@@ -80,8 +86,8 @@ in
           NoNewPrivileges=true
           PublishPort=0.0.0.0:18789:18789
           PublishPort=127.0.0.1:18790:18790
-          Volume=/nas/docker/openclaw/config:/home/node/.openclaw
-          Volume=/nas/docker/openclaw/data:/home/node/.openclaw/workspace
+          Volume=/var/lib/openclaw/config:/home/node/.openclaw
+          Volume=/var/lib/openclaw/data:/home/node/.openclaw/workspace
           Volume=${settingsFile}:/etc/openclaw/defaults.json:ro
           Volume=${startup}:/etc/openclaw/start.mjs:ro
           Volume=${pkgs.signal-cli}/bin/signal-cli:/usr/local/bin/signal-cli:ro
@@ -96,7 +102,6 @@ in
           Environment=NPM_CONFIG_CACHE=/home/node/.openclaw/.npm
           Environment=GH_CONFIG_DIR=/home/node/.openclaw/gh
           Environment=OPENCLAW_NO_RESPAWN=1
-
           Environment=OPENCLAW_STATE_DIR=/home/node/.openclaw
           Exec=node /etc/openclaw/start.mjs
           StopTimeout=60
