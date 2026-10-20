@@ -22,6 +22,7 @@
       # This OpenClaw release requires a key even for an unauthenticated provider.
       apiKey = "lemonade-local";
       authHeader = false;
+      timeoutSeconds = 600;
       models = [
         {
           id = "qwen3.6-moe-35b-a3b-FLM";
@@ -49,6 +50,7 @@
   };
 
   agents.defaults = {
+    timeoutSeconds = 600;
     workspace = "/home/node/.openclaw/workspace";
     model.primary = "lemonade/qwen3.6-moe-35b-a3b-FLM";
     subagents.model = "lemonade/qwen3.6-moe-35b-a3b-FLM";
