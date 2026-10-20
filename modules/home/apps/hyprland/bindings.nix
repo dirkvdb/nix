@@ -11,24 +11,19 @@ let
   isDesktop = config.local.desktop.enable or false;
   isHeadless = config.local.headless or false;
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
-  isX86 = pkgs.stdenv.isx86_64;
+
   vpnjumphostEnabled = config.local.services.vpnjumphost.enable;
   officeworkEnabled = config.local.services.officework.enable;
   voxtypeEnabled = config.local.apps.voxtype.enable or false;
   mkUserHome = mkHome user.name;
 
-  musicCmd =
-    if isX86 then
-      "nixcfg-launch-or-focus spotify"
-    else
-      ''nixcfg-launch-or-focus-webapp Spotify "https://open.spotify.com"'';
+  musicCmd = "nixcfg-launch-or-focus spotifast";
 in
 {
   config = lib.mkIf (isLinux && isDesktop && !isHeadless && isHyprlandEnabled) (mkUserHome {
     wayland.windowManager.hyprland.configType = "lua";
 
-    # Nix-conditional keybindings (music command depends on architecture,
-    # VPN jumphost and officework are optional services).
+    # Music shortcut and Nix-conditional keybindings for optional services.
     wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''
       hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd(${
         lib.generators.toLua { } musicCmd
