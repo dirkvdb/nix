@@ -10,7 +10,7 @@ Zed installs the JSON directly. Topq's module generates GPUI Kit JSON using
 and supported editor/status colors. The adapter contains no separate palette.
 Topq-specific controls reuse the closest shared color role.
 
-All three applications select Charcoal Grove for dark mode and Charcoal Grove
+Zed, topq, and Omasend select Charcoal Grove for dark mode and Charcoal Grove
 Light for light mode. Zed retains its dark-mode default; topq and Omasend retain
 their system-following defaults.
 

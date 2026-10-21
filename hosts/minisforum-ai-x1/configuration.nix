@@ -228,6 +228,7 @@
         };
         opencode.enable = true;
         onlyoffice.enable = true;
+        panda-reader.enable = true;
         prusa-slicer.enable = true;
         qgis.enable = true;
         voxtype.enable = true;

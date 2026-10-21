@@ -153,6 +153,7 @@ in
           vaults.notes = "Documents/Notes";
         };
         opencode.enable = true;
+        panda-reader.enable = true;
         affine.enable = true;
         vscode.enable = true;
         zathura.enable = true;

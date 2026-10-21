@@ -139,6 +139,33 @@ in
         };
       });
 
+  panda-reader = withZstd (
+    crossPkgs.callPackage ../panda-reader/default.nix {
+      inherit (armPkgs)
+        alsa-lib
+        fontconfig
+        freetype
+        libxkbcommon
+        libxcb
+        libX11
+        openssl
+        udev
+        vulkan-loader
+        wayland
+        xdg-utils
+        zstd
+        ;
+      inherit (buildPkgs)
+        pkg-config
+        cmake
+        makeWrapper
+        copyDesktopItems
+        imagemagick
+        ;
+      inherit (nativePkgs) writeText makeDesktopItem;
+    }
+  );
+
   oweka = crossPkgs.callPackage ../oweka/default.nix { };
 
   omasend = withZstd (

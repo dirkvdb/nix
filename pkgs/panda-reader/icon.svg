@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Panda Reader</title>
+  <desc>A charcoal panda and open book on a warm, softly rounded tile.</desc>
+  <rect x="32" y="32" width="448" height="448" rx="88" fill="#d8d3c4"/>
+  <g fill="none" stroke="#2c3036" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M88 136Q172 110 256 150Q340 110 424 136V368Q340 342 256 382Q172 342 88 368Z"/>
+    <path d="M256 354V382"/>
+  </g>
+  <g transform="translate(143.5 137) scale(.225)" fill="#2c3036">
+    <path d="M305 160C260 94 178 86 119 133C57 183 55 269 95 318C111 338 133 349 157 353C171 263 225 196 305 160Z"/>
+    <path d="M695 160C740 94 822 86 881 133C943 183 945 269 905 318C889 338 867 349 843 353C829 263 775 196 695 160Z"/>
+    <path d="M128 489L347 382C389 361 427 381 416 421L322 791L84 655L119 511Q121 496 128 489Z"/>
+    <path d="M872 489L653 382C611 361 573 381 584 421L678 791L916 655L881 511Q879 496 872 489Z"/>
+    <path d="M488 604Q500 598 512 604L576 633C609 648 594 682 566 698L512 721Q500 727 488 721L434 698C406 682 391 648 424 633Z"/>
+    <path d="M332 790L488 752Q500 749 512 752L668 790L509 894Q500 900 491 894Z"/>
+  </g>
+</svg>

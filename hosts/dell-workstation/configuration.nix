@@ -355,6 +355,7 @@
         };
         opencode.enable = true;
         onlyoffice.enable = true;
+        panda-reader.enable = true;
         qgis.enable = true;
         remmina = {
           enable = true;

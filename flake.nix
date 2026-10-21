@@ -178,6 +178,7 @@
         oweka = prev.callPackage ./pkgs/oweka { };
         omasend = prev.callPackage ./pkgs/omasend { };
         gliff = prev.callPackage ./pkgs/gliff { };
+        panda-reader = prev.callPackage ./pkgs/panda-reader { };
 
         xilo-cli = inputs.xilo.packages.${prev.stdenv.hostPlatform.system}.xilo-cli;
         ai-usagebar = inputs.ai-usagebar.packages.${prev.stdenv.hostPlatform.system}.default;
