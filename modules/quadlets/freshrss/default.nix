@@ -41,11 +41,21 @@
     ];
     systemd.units."podman-freshrss.service".wantedBy = [ "multi-user.target" ];
 
+    sops.secrets.freshrss_refresh_tokens = { };
+    sops.templates."freshrss-env" = {
+      mode = "0400";
+      restartUnits = [ "podman-freshrss.service" ];
+      content = ''
+        FRESHRSS_REFRESH_TOKENS=${config.sops.placeholder.freshrss_refresh_tokens}
+      '';
+    };
+
     environment.etc."containers/systemd/freshrss.container".text = ''
       [Unit]
       Description=FreshRSS feed reader with Fresher RSS frontend
       Wants=network-online.target
-      After=network-online.target
+      After=${lib.optionalString config.sops.useSystemdActivation "sops-install-secrets.service "}network-online.target
+      ${lib.optionalString config.sops.useSystemdActivation "Requires=sops-install-secrets.service"}
       RequiresMountsFor=/nas/docker/freshrss/data /nas/docker/freshrss/extensions
 
       [Container]
@@ -59,6 +69,7 @@
       Environment=CRON_MIN=7,37
       Environment=FRESHRSS_URL=http://127.0.0.1
       Environment=FRESHER_API_URL=/api/greader.php
+      EnvironmentFile=${config.sops.templates."freshrss-env".path}
       Volume=/nas/docker/freshrss/data:/var/www/FreshRSS/data
       Volume=/nas/docker/freshrss/extensions:/var/www/FreshRSS/extensions
 
