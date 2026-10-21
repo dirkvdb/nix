@@ -11,13 +11,23 @@
 
   config = lib.mkIf config.quadlets.freshrss.enable {
     virtualisation.podman.enable = true;
-    networking.firewall.allowedTCPPorts = [ 8086 ];
+    networking.firewall.allowedTCPPorts = [
+      8086
+      8087
+    ];
 
     services.homepage-dashboard.quadletEntries.FreshRSS = {
       href = "http://${config.networking.hostName}:8086/";
-      description = "RSS feed reader";
+      description = "RSS feed reader backend and administration";
       icon = "freshrss";
       siteMonitor = "http://127.0.0.1:8086/";
+    };
+
+    services.homepage-dashboard.quadletEntries."Fresher RSS" = {
+      href = "http://${config.networking.hostName}:8087/reader/";
+      description = "Modern frontend for FreshRSS";
+      icon = "freshrss";
+      siteMonitor = "http://127.0.0.1:8087/reader/";
     };
 
     systemd.packages = [
@@ -33,18 +43,22 @@
 
     environment.etc."containers/systemd/freshrss.container".text = ''
       [Unit]
-      Description=FreshRSS feed reader
+      Description=FreshRSS feed reader with Fresher RSS frontend
       Wants=network-online.target
       After=network-online.target
       RequiresMountsFor=/nas/docker/freshrss/data /nas/docker/freshrss/extensions
 
       [Container]
-      Image=docker.io/freshrss/freshrss:latest
+      Image=docker.io/dirkvdb/fresher-rss:latest
+      Pull=always
       ContainerName=freshrss
       ServiceName=podman-freshrss
       PublishPort=8086:80
+      PublishPort=8087:80
       Environment=TZ=Europe/Brussels
       Environment=CRON_MIN=7,37
+      Environment=FRESHRSS_URL=http://127.0.0.1
+      Environment=FRESHER_API_URL=/api/greader.php
       Volume=/nas/docker/freshrss/data:/var/www/FreshRSS/data
       Volume=/nas/docker/freshrss/extensions:/var/www/FreshRSS/extensions
 
