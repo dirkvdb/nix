@@ -7,6 +7,8 @@
 }:
 let
   cfg = config.local.apps.panda-reader;
+  user = config.local.user.name;
+  dataDirectory = "${config.home-manager.users.${user}.xdg.dataHome}/pandareader";
   jsonFormat = pkgs.formats.json { };
   settingsFile = jsonFormat.generate "panda-reader-preferences.json" cfg.settings;
   mergePreferences = pkgs.writeShellApplication {
@@ -66,10 +68,19 @@ in
       "panda-reader/secret" = { };
     };
 
+    systemd.tmpfiles.settings.panda-reader.${dataDirectory}.d = {
+      mode = "0700";
+      inherit user;
+      group = config.users.users.${user}.group;
+    };
+
+    # SOPS can create the parent directory as root before tmpfiles repairs its ownership.
+    systemd.services."home-manager-${user}" = lib.mkIf (!config.home-manager.startAsUserService) {
+      after = [ "systemd-tmpfiles-resetup.service" ];
+    };
+
     sops.templates."panda-reader-providers" = {
-      path = "${
-        config.home-manager.users.${config.local.user.name}.xdg.dataHome
-      }/pandareader/providers.json";
+      path = "${dataDirectory}/providers.json";
       owner = config.local.user.name;
       mode = "0400";
       content = builtins.toJSON {
