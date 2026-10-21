@@ -202,6 +202,7 @@
       stromer2mqtt.enable = true;
       lgtv2mqtt.enable = true;
       tasmoadmin.enable = true;
+      freshrss.enable = true;
       dockhand = {
         enable = true;
         stacksDirectory = "/nas/docker";
