@@ -12,7 +12,8 @@ let
   cfg = config.local.apps.opencode;
   sopsEnabled = config.local.apps.sops.enable or false;
   sopsAvailable = options ? sops.templates;
-  vpnjumphostEnabled = config.local.services.vpnjumphost.enable;
+  jiraEnabled =
+    (config.local.apps.mcp.jira.enable or false) && config.local.services.vpnjumphost.enable;
   mkUserHome = mkHome user.name;
   opencodeBaseSettings = {
     "$schema" = "https://opencode.ai/config.json";
@@ -37,7 +38,7 @@ let
   };
   opencodeMcpSettings = {
   }
-  // lib.optionalAttrs vpnjumphostEnabled {
+  // lib.optionalAttrs jiraEnabled {
     jira = {
       type = "local";
       command = [
