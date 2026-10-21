@@ -24,12 +24,12 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
 @@ -81,6 +81,7 @@
  
  use super::{
-     display::WaylandDisplay,
+     display::{WaylandDisplay, refresh_interval_from_millihertz},
 +    scroll::{KineticScrollController, KineticScrollTarget},
      window::{ImeInput, WaylandWindowStatePtr},
  };
  
-@@ -356,6 +357,7 @@
+@@ -359,6 +360,7 @@
      wl_seat: wl_seat::WlSeat, // TODO: Multi seat support
      wl_pointer: Option<wl_pointer::WlPointer>,
      pinch_gesture: Option<zwp_pointer_gesture_pinch_v1::ZwpPointerGesturePinchV1>,
@@ -37,7 +37,7 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
      pinch_scale: f32,
      wl_keyboard: Option<wl_keyboard::WlKeyboard>,
      cursor_shape_device: Option<wp_cursor_shape_device_v1::WpCursorShapeDeviceV1>,
-@@ -385,9 +387,13 @@
+@@ -392,9 +394,13 @@
      pub mouse_location: Option<Point<Pixels>>,
      continuous_scroll_delta: Option<Point<Pixels>>,
      discrete_scroll_delta: Option<Point<f32>>,
@@ -51,20 +51,20 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
      enter_token: Option<()>,
      button_pressed: Option<MouseButton>,
      mouse_focused_window: Option<WaylandWindowStatePtr>,
-@@ -832,6 +838,12 @@
-             cursor_style_to_icon_names(style),
+@@ -868,6 +874,12 @@
              scale,
          );
-+    }
+     }
 +
 +    fn cancel_kinetic_scroll(&mut self) -> Option<(WaylandWindowStatePtr, PlatformInput)> {
 +        let scroll_update = self.kinetic_scroll_controller.cancel_kinetic_scroll()?;
 +        let target = self.kinetic_scroll_target.take()?;
 +        Some(scroll_update.platform_input(&target))
-     }
++    }
  }
  
-@@ -1026,6 +1038,7 @@
+ /// A connection to the Wayland compositor.
+@@ -1064,6 +1076,7 @@
              wl_pointer: None,
              wl_keyboard: None,
              pinch_gesture: None,
@@ -72,7 +72,7 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
              pinch_scale: 1.0,
              cursor_shape_device: None,
              data_device,
-@@ -1071,10 +1084,14 @@
+@@ -1110,10 +1123,14 @@
              },
              capslock: Capslock { on: false },
              scroll_event_received: false,
@@ -87,7 +87,7 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
              vertical_modifier: -1.0,
              horizontal_modifier: -1.0,
              button_pressed: None,
-@@ -1626,9 +1643,26 @@
+@@ -1688,9 +1705,26 @@
          let Some(window) = get_window(&mut state, surface_id) else {
              return;
          };
@@ -114,13 +114,10 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
              window.frame_callback_fired(PlatformFrameSignal::capture(|| {
                  frame_callback_signal_at(callback_data)
              }));
-@@ -1940,6 +1974,17 @@
-                 state.pinch_gesture = state.globals.gesture_manager.as_ref().map(
-                     |gesture_manager: &zwp_pointer_gestures_v1::ZwpPointerGesturesV1| {
-                         gesture_manager.get_pinch_gesture(&pointer, qh, ())
-+                    },
-+                );
-+
+@@ -2024,6 +2058,17 @@
+                     },
+                 );
+ 
 +                if let Some(hold_gesture) = state.hold_gesture.take() {
 +                    hold_gesture.destroy();
 +                }
@@ -129,10 +126,13 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
 +                    |gesture_manager: &zwp_pointer_gestures_v1::ZwpPointerGesturesV1| {
 +                        (gesture_manager.version() >= 3)
 +                            .then(|| gesture_manager.get_hold_gesture(&pointer, qh, ()))
-                     },
-                 );
- 
-@@ -2377,6 +2422,7 @@
++                    },
++                );
++
+                 if let Some(wl_pointer) = &state.wl_pointer {
+                     wl_pointer.release();
+                 }
+@@ -2458,6 +2503,7 @@
                  }
                  state.mouse_location = Some(point(px(surface_x as f32), px(surface_y as f32)));
                  state.restore_cursor_after_hide();
@@ -140,7 +140,7 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
  
                  if let Some(window) = state.mouse_focused_window.clone() {
                      if window.is_blocked() {
-@@ -2417,6 +2463,9 @@
+@@ -2498,6 +2544,9 @@
                          modifiers: state.modifiers,
                      });
                      drop(state);
@@ -150,7 +150,7 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
                      window.handle_input(input);
                  }
              }
-@@ -2516,6 +2565,7 @@
+@@ -2597,6 +2646,7 @@
              }
              wl_pointer::Event::Axis {
                  axis: WEnum::Value(axis),
@@ -158,7 +158,7 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
                  value,
                  ..
              } => {
-@@ -2546,6 +2596,9 @@
+@@ -2627,6 +2677,9 @@
                      }
                      _ => unreachable!(),
                  }
@@ -168,7 +168,7 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
              }
              wl_pointer::Event::AxisDiscrete {
                  axis: WEnum::Value(axis),
-@@ -2602,24 +2655,42 @@
+@@ -2683,24 +2736,42 @@
                      _ => unreachable!(),
                  }
              }
@@ -215,7 +215,7 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
                      {
                          let input = PlatformInput::ScrollWheel(ScrollWheelEvent {
                              position: state.mouse_location.unwrap(),
-@@ -2627,6 +2698,16 @@
+@@ -2708,6 +2779,16 @@
                              modifiers: state.modifiers,
                              touch_phase: TouchPhase::Moved,
                          });
@@ -232,7 +232,7 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
                          drop(state);
                          window.handle_input(input);
                      }
-@@ -2677,6 +2758,7 @@
+@@ -2758,6 +2839,7 @@
                  surface: _,
                  fingers: _,
              } => {
@@ -240,7 +240,7 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
                  state.pinch_scale = 1.0;
                  let input = PlatformInput::Pinch(PinchEvent {
                      position: state.mouse_location.unwrap_or(point(px(0.0), px(0.0))),
-@@ -2685,6 +2767,9 @@
+@@ -2766,6 +2848,9 @@
                      phase: TouchPhase::Started,
                  });
                  drop(state);
@@ -250,13 +250,10 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
                  window.handle_input(input);
              }
              zwp_pointer_gesture_pinch_v1::Event::Update { time: _, scale, .. } => {
-@@ -2718,6 +2803,26 @@
-                 window.handle_input(input);
-             }
-             _ => {}
-+        }
-+    }
-+}
+@@ -2802,6 +2887,26 @@
+         }
+     }
+ }
 +
 +impl Dispatch<zwp_pointer_gesture_hold_v1::ZwpPointerGestureHoldV1, ()> for WaylandClientStatePtr {
 +    fn event(
@@ -274,9 +271,12 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
 +                drop(state);
 +                window.handle_input(input);
 +            }
-         }
-     }
- }
++        }
++    }
++}
+ 
+ impl Dispatch<wp_fractional_scale_v1::WpFractionalScaleV1, ObjectId> for WaylandClientStatePtr {
+     fn event(
 diff --git a/crates/gpui_linux/src/linux/wayland/scroll.rs b/crates/gpui_linux/src/linux/wayland/scroll.rs
 new file mode 100644
 --- /dev/null
