@@ -8,6 +8,7 @@
 let
   inherit (config.local) user;
   inherit (config.local) theme;
+  inherit (config.lib.stylix) colors;
   cfg = config.local.apps.ghostty;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
@@ -24,6 +25,13 @@ in
 
       settings = {
         theme = theme.ghosttyTheme;
+
+        # base0D is neutral for UI accents; ANSI blue must remain distinct
+        # from the foreground so directories (ls/lsd) are recognizable.
+        palette = with colors.withHashtag; [
+          "4=${base0E}"
+          "12=${base0E}"
+        ];
 
         # Font
         font-family = theme.terminalFont;

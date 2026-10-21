@@ -7,12 +7,17 @@
 }:
 let
   inherit (config.local) user;
+  inherit (config.lib.stylix) colors;
   sopsEnabled = config.local.apps.sops.enable or false;
   isStandalone = config.local.home-manager.standalone or false;
   mkUserHome = mkHome user.name;
 in
 {
   config = mkUserHome {
+    # Home Manager reapplies its Fish palette after the system Fish config.
+    stylix.targets.fish.colors.override = colors.override {
+      base0D = colors.base0E;
+    };
 
     home.packages =
       with pkgs;

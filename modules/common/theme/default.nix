@@ -10,6 +10,7 @@ let
   presets = import ./presets.nix { inherit pkgs; };
 
   cfg = config.local.theme;
+  inherit (config.lib.stylix) colors;
   isLinux = lib.hasInfix "linux" system;
   isDesktop = config.local.desktop.enable or false;
 
@@ -149,6 +150,15 @@ in
       polarity = "dark";
       image = ./wallpapers/wallpaper3.jpg;
       base16Scheme = selectedPreset.base16Scheme;
+
+      # Fish rewrites the terminal palette at startup, independently of Ghostty.
+      targets = lib.optionalAttrs isLinux {
+        fish.colors.override = lib.mkDefault (
+          colors.override {
+            base0D = colors.base0E;
+          }
+        );
+      };
 
       fonts = {
         sizes = {
