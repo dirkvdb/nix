@@ -179,6 +179,7 @@ in
         };
         opencode.enable = true;
         panda-reader.enable = true;
+        pi-coding-agent.enable = true;
         affine.enable = true;
         vscode.enable = true;
         zathura.enable = true;
