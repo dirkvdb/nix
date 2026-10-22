@@ -23,10 +23,34 @@ in
   config = {
     system.stateVersion = "26.05"; # Version at install time, never change
 
-    nix.settings = {
-      extra-substituters = [ "https://nix-cache.hl.vandenboer.eu/c/admin/aarch64" ];
-      extra-trusted-public-keys = [ "aarch64:GXmlBw2l2lzWB3cMzNJZ3mpkyAtNaT5z1WaOK9Qcmow=" ];
+    nix = {
+      distributedBuilds = true;
+      buildMachines = [
+        {
+          hostName = "mini.fritz.box";
+          protocol = "ssh-ng";
+          sshUser = "nix-ssh";
+          sshKey = "/etc/ssh/ssh_host_ed25519_key";
+          systems = [ "x86_64-linux" ];
+
+          supportedFeatures = [
+            "benchmark"
+            "big-parallel"
+            "kvm"
+            "nixos-test"
+          ];
+        }
+      ];
+      settings.builders-use-substitutes = true;
     };
+
+    programs.ssh.knownHosts."mini.fritz.box" = {
+      extraHostNames = [ "mini" ];
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIChJpt2O/Vl9QeHHLojMLVKxdyhsdZ7/s18RpRmZRdf/";
+    };
+
+    # Keep runtime emulation, but send x86_64 cross-builds to mini, not QEMU.
+    boot.binfmt.addEmulatedSystemsToNixSandbox = false;
 
     # Enable ZRAM for memory compression
     zramSwap = {
@@ -54,6 +78,7 @@ in
         binfmt.enable = true;
 
         nix = {
+          armCache.enable = true;
           ld.enable = true;
         };
 

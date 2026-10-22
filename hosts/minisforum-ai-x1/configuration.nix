@@ -74,9 +74,18 @@
       "amdgpu.ppfeaturemask=0xfff73fff"
     ];
 
-    nix.settings = {
-      extra-substituters = [ "https://nix-cache.hl.vandenboer.eu/c/admin/aarch64" ];
-      extra-trusted-public-keys = [ "aarch64:GXmlBw2l2lzWB3cMzNJZ3mpkyAtNaT5z1WaOK9Qcmow=" ];
+    nix = {
+      sshServe = {
+        enable = true;
+        protocol = "ssh-ng";
+        write = true;
+        trusted = true;
+        # The MacBook's Nix daemon authenticates with its SSH host key.
+        keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK1tvupf77szfF11bL78JNIIAG0HX29e8ofXxmQlqU7g"
+        ];
+      };
+
     };
 
     services.udev.packages = with pkgs; [
@@ -104,6 +113,7 @@
         binfmt.enable = true;
 
         nix = {
+          armCache.enable = true;
           ld.enable = true;
         };
 

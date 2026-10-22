@@ -16,6 +16,25 @@ QEMU or remote builders:
 just publish-macbook-apps
 ```
 
+## Remote cross-builds from the MacBook
+
+The MacBook uses `mini.fritz.box` as an x86_64 remote builder for the existing
+ARM cross-packages when their outputs are missing from the configured caches.
+Native ARM packages still build locally. Runtime x86_64 emulation remains enabled,
+but Nix does not schedule local builds through QEMU.
+
+Deploy mini's configuration first, then the MacBook's configuration. The Nix
+daemon authenticates using the MacBook's `/etc/ssh/ssh_host_ed25519_key`; mini
+allows its public key through the Nix-only `nix-ssh` account. This account is a
+trusted Nix user, so the MacBook must be trusted by mini. If the MacBook's host
+key changes, update the authorized key in mini's configuration.
+
+Use normal system builds (`just build`) on the MacBook. The
+`build-macbook-apps` and `build-macbook-app` recipes are for direct builds on an
+x86_64 machine and explicitly disable remote builders. Remote build results are
+copied back to the MacBook, but are not automatically uploaded to Xilo. If mini
+is unavailable, uncached x86_64 builds cannot complete until it is reachable.
+
 # Podman Quadlets
 
 Reusable Quadlet modules live in `modules/quadlets/<name>/default.nix` and are
