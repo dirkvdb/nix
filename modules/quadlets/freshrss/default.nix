@@ -73,11 +73,7 @@
       Volume=/nas/docker/freshrss/data:/var/www/FreshRSS/data
       Volume=/nas/docker/freshrss/extensions:/var/www/FreshRSS/extensions
 
-      HealthCmd=CMD cli/health.php
-      HealthInterval=75s
-      HealthTimeout=10s
-      HealthStartPeriod=60s
-      HealthRetries=3
+      HealthCmd=none
 
       # Podman supports max-size, but not Docker's max-file option.
       LogDriver=k8s-file
