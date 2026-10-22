@@ -429,11 +429,11 @@
         "systems": "systems_6"
       },
       "locked": {
-        "lastModified": 1731533236,
-        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "lastModified": 1791914995,
+        "narHash": "sha256-Zf/xfQEAasnwnmEfHqW/4hjDE/s44yn2hD4RuVIZRjA=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "rev": "b7a79d3fea1e214f6d668d521cecec0c01e26544",
         "type": "github"
       },
       "original": {
@@ -1472,16 +1472,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1788895884,
-        "narHash": "sha256-+ylIzZmAEfcqv1L6YwCC7yrpYko1Pa9pYjjFNi80whs=",
+        "lastModified": 1792070308,
+        "narHash": "sha256-PxU7XmXPKph9Iroq5YbzCacISwIO3BDV+mKGPmVla4o=",
         "owner": "stubbedev",
         "repo": "xilo",
-        "rev": "342f40c5cd9dddda10dbccd50c7bf31a738b2921",
+        "rev": "dd96cb09f7781ceccd534af338a36853c80f7193",
         "type": "github"
       },
       "original": {
         "owner": "stubbedev",
-        "ref": "v1.2.1",
+        "ref": "v1.2.6",
         "repo": "xilo",
         "type": "github"
       }
