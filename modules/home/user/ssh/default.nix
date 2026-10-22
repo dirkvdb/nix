@@ -27,6 +27,12 @@ in
           RequestTTY = "yes";
           ForwardAgent = true;
         };
+        work = {
+          HostName = "p260182";
+          User = "dirk";
+          RequestTTY = "yes";
+          ForwardAgent = true;
+        };
         winboat = lib.mkIf winboatEnabled {
           HostName = "127.0.0.1";
           User = "dirk";
