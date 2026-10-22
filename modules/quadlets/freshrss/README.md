@@ -29,8 +29,7 @@ are stored encrypted in Git, never as plaintext in the Nix store. FreshRSS user
 settings are not read or modified by the host configuration.
 
 When rotating a token, update it in both FreshRSS Profile and the SOPS entry,
-then deploy the changed secrets. The scheduled refresh at minutes 7 and 37 is
-unchanged.
+then deploy the changed secrets. The scheduled refresh runs every 15 minutes (at minutes 0, 15, 30, and 45).
 
 ## Verification
 

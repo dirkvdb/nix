@@ -66,7 +66,7 @@
       PublishPort=8086:80
       PublishPort=8087:80
       Environment=TZ=Europe/Brussels
-      Environment=CRON_MIN=7,37
+      Environment=CRON_MIN=*/15
       Environment=FRESHRSS_URL=http://127.0.0.1
       Environment=FRESHER_API_URL=/api/greader.php
       EnvironmentFile=${config.sops.templates."freshrss-env".path}
