@@ -15,18 +15,13 @@ let
   jiraEnabled =
     (config.local.apps.mcp.jira.enable or false) && config.local.services.vpnjumphost.enable;
   mkUserHome = mkHome user.name;
+
   opencodeBaseSettings = {
     "$schema" = "https://opencode.ai/config.json";
     enabled_providers = [
       "openai"
       "github-copilot"
-      "lemonade"
     ];
-    provider.lemonade = {
-      npm = "@ai-sdk/openai-compatible";
-      name = "Lemonade (local)";
-      options.baseURL = "http://mini.fritz.box:13305/api/v0";
-    };
     permission = {
       "*" = "allow";
       bash = {
@@ -100,52 +95,14 @@ in
       (mkUserHome {
         programs.opencode = {
           enable = true;
-          package = llmAgentsPkgs.opencode;
+          package = llmAgentsPkgs.opencode2;
           settings = lib.optionalAttrs (!sopsAvailable) opencodeBaseSettings;
         };
-
-        # OpenCode custom providers do not discover /models themselves. Populate
-        # the provider from Lemonade at startup so its model list stays dynamic.
-        xdg.configFile."opencode/plugins/lemonade-models.js".text = ''
-          export const LemonadeModels = async () => ({
-            config: async (config) => {
-              const provider = config.provider?.lemonade
-              const baseURL = provider?.options?.baseURL
-              if (!baseURL) return
-
-              try {
-                const response = await fetch(baseURL.replace(/\/$/, "") + "/models")
-                if (!response.ok) return
-
-                const payload = await response.json()
-                const models = Array.isArray(payload.data) ? payload.data : []
-                provider.models = Object.fromEntries(
-                  models
-                    .filter((model) => typeof model.id === "string")
-                    .map((model) => {
-                      const labels = new Set(Array.isArray(model.labels) ? model.labels : [])
-                      return [
-                        model.id,
-                        {
-                          name: model.id,
-                          attachment: labels.has("vision"),
-                          reasoning: labels.has("reasoning"),
-                          tool_call: labels.has("tool-calling"),
-                        },
-                      ]
-                    }),
-                )
-              } catch {
-                // Lemonade may be unavailable while OpenCode starts.
-              }
-            },
-          })
-        '';
 
         home.packages = [
           pkgs.uv
         ]
-        ++ lib.optional (!config.local.headless && pkgs.stdenv.isLinux) llmAgentsPkgs.opencode-desktop;
+        ++ lib.optional (!config.local.headless && pkgs.stdenv.isLinux) llmAgentsPkgs.opencode2-desktop;
       })
     ]
   );

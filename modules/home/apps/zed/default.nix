@@ -400,7 +400,7 @@ in
             ];
             opencode = {
               type = "custom";
-              command = "${llmAgentsPkgs.opencode}/bin/opencode";
+              command = "${llmAgentsPkgs.opencode2}/bin/opencode2";
               args = [ "acp" ];
             };
           };

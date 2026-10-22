@@ -32,8 +32,8 @@ let
     "codex"
     "copilot-cli"
     "herdr"
-    "opencode"
-    "opencode-desktop"
+    "opencode2"
+    "opencode2-desktop"
     "chatgpt"
   ] inputs.llm-agents.packages.aarch64-linux;
   packages = crossPackages // cachedPackages;
