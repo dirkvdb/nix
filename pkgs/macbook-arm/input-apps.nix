@@ -57,7 +57,6 @@ let
 
   upstreamTopq = inputs.topq.packages.${buildSystem}.default;
   upstreamTabulite = inputs.tabulite.packages.${buildSystem}.default;
-  upstreamXilo = inputs.xilo.packages.${buildSystem}.xilo-cli;
 
   # Keep the locked DuckDB 1.5.5 recipe and its Excel/SQLite extension sources.
   # Only its stdenv/tools cross-compile; shared libraries come from the ARM cache.
@@ -90,26 +89,6 @@ let
 in
 {
   ram = (inputs.ram.overlays.default (crossPkgs // { inherit rustPlatform; }) crossPkgs).ram;
-
-  # mkXilo is private to the upstream flake. Reuse its resolved client recipe's
-  # identity and module hash, but instantiate Go 1.27 for the cross platform.
-  xilo-cli = (crossPkgs.buildGoModule.override { go = crossPkgs.go_1_27; }) {
-    inherit (upstreamXilo)
-      pname
-      version
-      src
-      meta
-      vendorHash
-      proxyVendor
-      subPackages
-      tags
-      ;
-    env.CGO_ENABLED = 0;
-    ldflags =
-      lib.filter (flag: flag != "-buildid=") upstreamXilo.ldflags
-      ++ lib.optional isCross "-linkmode=internal";
-    doCheck = !isCross && upstreamXilo.doCheck;
-  };
 
   topq = rustPlatform.buildRustPackage {
     inherit (upstreamTopq)
