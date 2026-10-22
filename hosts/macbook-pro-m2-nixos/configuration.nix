@@ -32,6 +32,7 @@ in
           sshUser = "nix-ssh";
           sshKey = "/etc/ssh/ssh_host_ed25519_key";
           systems = [ "x86_64-linux" ];
+          maxJobs = 20;
 
           supportedFeatures = [
             "benchmark"
