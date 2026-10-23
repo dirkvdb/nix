@@ -23,8 +23,8 @@ let
   hasNotch = hostname == "macbook-pro";
   barThickness = if hasNotch then 33 else 26;
 
-  # The Outlook calendar (ICS feed) is only relevant on the dell-workstation.
-  isDellWorkstation = hostname == "dell-workstation";
+  # The dell-workstation flake configuration uses the network hostname p260182.
+  isDellWorkstation = hostname == "p260182";
 
   voxtypeEnabled = config.local.apps.voxtype.enable or false;
   tailscaleEnabled = config.local.services.tailscale.enable or false;
