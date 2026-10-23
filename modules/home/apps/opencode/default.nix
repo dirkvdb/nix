@@ -41,9 +41,9 @@ let
         "mcp-atlassian"
       ];
       environment = {
-        HTTPS_PROXY = "socks5://127.0.0.1:1080";
-        JIRA_URL = "https://jira.vito.be";
-        JIRA_PERSONAL_TOKEN = config.sops.placeholder.jira_personal_token;
+        JIRA_URL = config.sops.placeholder.jira_url;
+        JIRA_USERNAME = config.sops.placeholder.vito_username;
+        JIRA_API_TOKEN = config.sops.placeholder.jira_api_token;
       };
       enabled = true;
     };

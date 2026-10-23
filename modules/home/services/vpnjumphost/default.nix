@@ -10,8 +10,8 @@
 #
 # Configuration is written to ~/.config/vpn-jumphost/config.toml.
 # Credentials (username + password) are read from sops secrets:
-#   /run/secrets/vpnjumphost/username
-#   /run/secrets/vpnjumphost/password
+#   /run/secrets/vito_username
+#   /run/secrets/vito_password
 
 {
   config,
@@ -43,8 +43,8 @@ let
     };
 
     credentials = {
-      username_file = "/run/secrets/vpnjumphost/username";
-      password_file = "/run/secrets/vpnjumphost/password";
+      username_file = "/run/secrets/vito_username";
+      password_file = "/run/secrets/vito_password";
     };
   };
 

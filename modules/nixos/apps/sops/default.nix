@@ -40,7 +40,11 @@ in
           owner = user.name;
         };
 
-        secrets.jira_personal_token = {
+        secrets.jira_url = {
+          owner = user.name;
+        };
+
+        secrets.jira_api_token = {
           owner = user.name;
         };
 
@@ -92,11 +96,11 @@ in
           mode = "0400";
         };
 
-        secrets."vpnjumphost/username" = {
+        secrets.vito_username = {
           owner = user.name;
         };
 
-        secrets."vpnjumphost/password" = {
+        secrets.vito_password = {
           owner = user.name;
         };
       };

@@ -19,9 +19,9 @@ in
         command = "uvx";
         args = [ "mcp-atlassian" ];
         env = {
-          HTTPS_PROXY = "socks5://127.0.0.1:1080";
-          JIRA_URL = "https://jira.vito.be";
-          JIRA_PERSONAL_TOKEN.file = config.sops.secrets.jira_personal_token.path;
+          JIRA_URL.file = config.sops.secrets.jira_url.path;
+          JIRA_USERNAME.file = config.sops.secrets.vito_username.path;
+          JIRA_API_TOKEN.file = config.sops.secrets.jira_api_token.path;
         };
       };
 
