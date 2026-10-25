@@ -88,8 +88,7 @@ in
       RequiresMountsFor=/var/lib/frigate
 
       [Container]
-      # Matches the pinned native nixpkgs package; upstream's stable 0.17.2 release.
-      Image=ghcr.io/blakeblackshear/frigate:0.17.2
+      Image=ghcr.io/blakeblackshear/frigate:stable
       AutoUpdate=registry
       ContainerName=frigate
       # Render-node access is sufficient for VAAPI and OpenVINO; no display access needed.
