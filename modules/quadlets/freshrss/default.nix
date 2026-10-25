@@ -47,6 +47,7 @@
       restartUnits = [ "podman-freshrss.service" ];
       content = ''
         FRESHRSS_REFRESH_TOKENS=${config.sops.placeholder.freshrss_refresh_tokens}
+        FRESHRSS_API_PASSWORDS=${config.sops.placeholder.freshrss_refresh_tokens}
       '';
     };
 
@@ -69,6 +70,8 @@
       Environment=CRON_MIN=*/15
       Environment=FRESHRSS_URL=http://127.0.0.1
       Environment=FRESHER_API_URL=/api/greader.php
+      Environment=IMAGE_UNREAD_CACHE_ENABLED=true
+      Environment=CONTENT_UNREAD_CACHE_ENABLED=true
       EnvironmentFile=${config.sops.templates."freshrss-env".path}
       Volume=/nas/docker/freshrss/data:/var/www/FreshRSS/data
       Volume=/nas/docker/freshrss/extensions:/var/www/FreshRSS/extensions
