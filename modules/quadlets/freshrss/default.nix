@@ -17,14 +17,14 @@
     ];
 
     services.homepage-dashboard.quadletEntries.FreshRSS = {
-      href = "http://${config.networking.hostName}:8086/";
+      href = "http://${config.services.homepage-dashboard.publicHostName}:8086/";
       description = "RSS feed reader backend and administration";
       icon = "freshrss";
       siteMonitor = "http://127.0.0.1:8086/";
     };
 
     services.homepage-dashboard.quadletEntries."Fresher RSS" = {
-      href = "http://${config.networking.hostName}:8087/reader/";
+      href = "http://${config.services.homepage-dashboard.publicHostName}:8087/reader/";
       description = "Modern frontend for FreshRSS";
       icon = "freshrss";
       siteMonitor = "http://127.0.0.1:8087/reader/";

@@ -37,7 +37,7 @@ in
     networking.firewall.allowedTCPPorts = [ 8085 ];
 
     services.homepage-dashboard.quadletEntries.Frigate = {
-      href = "http://${config.networking.hostName}:8085/";
+      href = "http://${config.services.homepage-dashboard.publicHostName}:8085/";
       description = "Camera recordings and live view";
       icon = "frigate";
       siteMonitor = "http://127.0.0.1:8085/";

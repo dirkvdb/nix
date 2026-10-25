@@ -14,7 +14,7 @@
     networking.firewall.allowedTCPPorts = [ 8123 ];
 
     services.homepage-dashboard.quadletEntries."Home Assistant" = {
-      href = "http://${config.networking.hostName}:8123";
+      href = "http://${config.services.homepage-dashboard.publicHostName}:8123";
       description = "Home automation";
       icon = "home-assistant";
       siteMonitor = "http://127.0.0.1:8123";

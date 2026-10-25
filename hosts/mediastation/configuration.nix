@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   inputs,
@@ -84,6 +85,7 @@
       listenPort = 8084;
       openFirewall = true;
       allowedHosts = "*";
+      publicHostName = "mediastation.fritz.box";
       settings = {
         title = "Mediastation";
         description = "Service dashboard";
@@ -93,14 +95,14 @@
           Administration = [
             {
               Cockpit = {
-                href = "http://mediastation:9090";
+                href = "http://${config.services.homepage-dashboard.publicHostName}:9090";
                 description = "Host, services, logs and Podman";
                 icon = "cockpit";
               };
             }
             {
               Homepage = {
-                href = "http://mediastation:8084";
+                href = "http://${config.services.homepage-dashboard.publicHostName}:8084";
                 description = "Dashboard status";
                 icon = "homepage";
                 siteMonitor = "http://127.0.0.1:8084";

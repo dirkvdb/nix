@@ -27,7 +27,7 @@ in
     networking.firewall.allowedTCPPorts = [ 3000 ];
 
     services.homepage-dashboard.quadletEntries.Dockhand = {
-      href = "http://${config.networking.hostName}:3000";
+      href = "http://${config.services.homepage-dashboard.publicHostName}:3000";
       description = "Container and stack management";
       icon = "docker";
       siteMonitor = "http://127.0.0.1:3000";

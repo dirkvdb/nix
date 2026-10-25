@@ -13,7 +13,7 @@
     virtualisation.podman.enable = true;
 
     services.homepage-dashboard.quadletEntries.Homarr = {
-      href = "http://${config.networking.hostName}:8083/";
+      href = "http://${config.services.homepage-dashboard.publicHostName}:8083/";
       description = "Application dashboard";
       icon = "homarr";
       siteMonitor = "http://127.0.0.1:8083/";

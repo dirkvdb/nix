@@ -14,7 +14,7 @@
     networking.firewall.allowedTCPPorts = [ 9999 ];
 
     services.homepage-dashboard.quadletEntries.TasmoAdmin = {
-      href = "http://${config.networking.hostName}:9999/";
+      href = "http://${config.services.homepage-dashboard.publicHostName}:9999/";
       description = "Tasmota device management";
       icon = "tasmoadmin";
       siteMonitor = "http://127.0.0.1:9999/";
