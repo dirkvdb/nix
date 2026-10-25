@@ -145,7 +145,8 @@ in
           shellcheck
           groovy-language-server
           lua-language-server
-          mcp-nixos
+          # Unstable FastMCP is broken with MCP 2.x; use the stable package for now.
+          pkgs.mcp-nixos
           uv # for mcp server launch support
           bubblewrap
         ]
