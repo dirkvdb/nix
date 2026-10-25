@@ -14,12 +14,25 @@ in
     daemonCPUSchedPolicy = "idle";
     daemonIOSchedClass = "idle";
     optimise.automatic = true;
+    settings.netrc-file = mkIf (
+      user.enable && sopsEnabled
+    ) config.sops.templates."cloudsmith-netrc".path;
   };
 
   environment.systemPackages = with pkgs; [
     nixfmt-rs
     nix-output-monitor
   ];
+
+  sops.templates."cloudsmith-netrc" = mkIf (user.enable && sopsEnabled) {
+    owner = user.name;
+    mode = "0400";
+    content = ''
+      machine nix.cloudsmith.io
+      login ${config.sops.placeholder.cloudsmith_username}
+      password ${config.sops.placeholder.cloudsmith_api_key}
+    '';
+  };
 
   sops.templates."user-nix-conf" = mkIf (user.enable && sopsEnabled) {
     path = "/home/${user.name}/.config/nix/nix.conf";

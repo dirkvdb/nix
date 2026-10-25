@@ -70,6 +70,16 @@ in
           owner = user.name;
         };
 
+        secrets.cloudsmith_username = {
+          owner = user.name;
+          mode = "0400";
+        };
+
+        secrets.cloudsmith_api_key = {
+          owner = user.name;
+          mode = "0400";
+        };
+
         secrets.xilo_push_token = {
           owner = user.name;
         };
