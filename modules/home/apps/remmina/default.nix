@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  unstablePkgs,
   config,
   inputs,
   mkHome,
@@ -54,7 +55,7 @@ in
   };
 
   config = lib.mkIf cfg.enable (mkUserHome {
-    home.packages = [ pkgs.remmina ];
+    home.packages = [ unstablePkgs.remmina ]; # 26.05 stable version corrupts mounted files
 
     home.activation.remminaConnections = inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] (
       lib.concatStringsSep "\n" (lib.mapAttrsToList mkConnectionActivation cfg.connections)
