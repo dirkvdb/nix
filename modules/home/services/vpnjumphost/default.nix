@@ -148,6 +148,11 @@ in
           '')
         ];
 
+        programs.git.settings.http = {
+          "http://git.vito.be/".proxy = "socks5h://${cfg.socksProxyUrl}";
+          "https://git.vito.be/".proxy = "socks5h://${cfg.socksProxyUrl}";
+        };
+
         xdg.configFile."vpn-jumphost/config.toml" = {
           source = configFile;
         };
