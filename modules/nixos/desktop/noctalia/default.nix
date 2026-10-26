@@ -246,6 +246,7 @@ let
       animation.speed = 3.0;
       app_icon_color = "primary";
       app_icon_colorize = false;
+      clipboard_history_max_entries = 5000;
       launcher.dmenu.entry.ssh = {
         command = "awk '/^Host /{print $2}' ~/.ssh/config"; # one candidate per stdout line
         exec = "${lib.getExe pkgs.ghostty} -e ssh {selection}"; # {selection} = the chosen line; run detached
