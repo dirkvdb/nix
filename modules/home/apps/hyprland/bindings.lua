@@ -20,8 +20,16 @@ hl.bind(mod .. " + ALT + SPACE", hl.dsp.exec_cmd("nixcfg-menu"), { description =
 hl.bind(mod .. " + X", hl.dsp.workspace.toggle_special(), { description = "Special workspace" })
 ---- APP LAUNCHERS -------
 hl.bind(mod .. " + RETURN", hl.dsp.exec_cmd(terminal .. ' --working-directory="$(nixcfg-cmd-terminal-cwd)"'), { description = "Terminal" })
-hl.bind(mod .. " + S", hl.dsp.exec_cmd("nixcfg-launch-or-focus " .. browser), { description = "Browser" })
-hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd(browser), { description = "Browser (new instance)" })
+hl.bind(mod .. " + S", function()
+    hl.dispatch(hl.dsp.focus({ workspace = 1 }))
+    local window = hl.get_windows({ class = browser, workspace = 1 })[1]
+    if window then
+        hl.dispatch(hl.dsp.focus({ window = window }))
+    else
+        hl.exec_cmd(browser .. " --new-window")
+    end
+end, { description = "Browser (workspace 1)" })
+hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd(browser .. " --new-window"), { description = "Browser (new window on current workspace)" })
 hl.bind(mod .. " + D", hl.dsp.exec_cmd("zeditor"), { description = "Dev editor" })
 hl.bind(mod .. " + E", hl.dsp.exec_cmd("nautilus --new-window"), { description = "File manager" })
 hl.bind(mod .. " + G", hl.dsp.exec_cmd("sublime_merge"), { description = "Sublime merge" })

@@ -243,7 +243,7 @@ hl.window_rule({ match = { class = "^(Bitwarden|org.keepassxc.KeePassXC)$" }, no
 -- Workspace assignments
 hl.window_rule({ match = { class = "(vivaldi-stable)" }, workspace = "1" })
 hl.window_rule({ match = { class = "(firefox|Firefox|librewolf)" }, workspace = "1" })
-hl.window_rule({ match = { class = "(zen|zen-beta)" }, workspace = "1" })
+
 hl.window_rule({ match = { class = "(dev.zed.Zed|dev.zed.Zed-Dev)" }, workspace = "3" })
 hl.window_rule({ match = { class = "(org.gnome.Nautilus|thunar)" }, workspace = "5" })
 hl.window_rule({ match = { class = "(spotify|Spotify|spotifast|chrome-open\\.spotify\\.com__.*)" }, workspace = "9" })
