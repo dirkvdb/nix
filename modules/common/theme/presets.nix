@@ -29,10 +29,10 @@
     gtkThemePackage = pkgs.gnome-themes-extra;
     iconTheme = "Tela-nord";
     iconThemePackage = pkgs.tela-icon-theme;
-    uiFont = "Ubuntu Sans";
+    uiFont = "Inter";
     uiFontSerif = "Noto Serif";
     uiFontSize = 10;
-    uiFontBold = "Ubuntu Sans Bold";
+    uiFontBold = "Inter Bold";
     codeFont = "CaskaydiaMono Nerd Font Mono";
     codeFontSize = 14;
     terminalFont = "FiraMono Nerd Font Mono";
@@ -42,7 +42,7 @@
     uiTextColor = "#c7b5aa";
     uiBaseColor = "#272a2f";
     fonts = with pkgs; [
-      ubuntu-sans
+      inter
       nerd-fonts.caskaydia-mono
       nerd-fonts.fira-mono
     ];
@@ -54,17 +54,17 @@
     gtkThemePackage = pkgs.gnome-themes-extra;
     iconTheme = "Tela-nord";
     iconThemePackage = pkgs.tela-icon-theme;
-    uiFont = "Ubuntu Sans";
+    uiFont = "Inter";
     uiFontSerif = "Noto Serif";
     uiFontSize = 10;
-    uiFontBold = "Ubuntu Sans Bold";
+    uiFontBold = "Inter Bold";
     codeFont = "CaskaydiaMono Nerd Font Mono";
     codeFontSize = 14;
     terminalFont = "FiraMono Nerd Font Mono";
     terminalFontSize = 13;
     ghosttyTheme = "Everforest Dark Hard";
     fonts = with pkgs; [
-      ubuntu-sans
+      inter
       nerd-fonts.caskaydia-mono
       nerd-fonts.fira-mono
     ];

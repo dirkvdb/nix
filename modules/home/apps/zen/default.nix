@@ -174,6 +174,20 @@ in
           pinsForce = true;
           inherit containers pins spaces;
 
+          userChrome = lib.mkAfter ''
+            :root,
+            #urlbar,
+            #searchbar,
+            .tab-text,
+            toolbarbutton,
+            menu,
+            menuitem,
+            panel {
+              font-family: "${theme.uiFont}" !important;
+              font-size: ${toString (fontSizes.applications - 2)}pt !important;
+            }
+          '';
+
           settings = {
             "zen.tabs.show-newtab-vertical" = false;
             "zen.theme.gradient" = true;
