@@ -8,6 +8,7 @@
 let
   inherit (config.local) user;
   inherit (config.local) theme;
+  fontSizes = config.stylix.fonts.sizes;
   isLinux = pkgs.stdenv.isLinux;
   isAarch64Linux = pkgs.stdenv.isLinux && pkgs.stdenv.isAarch64;
   isDesktop = config.local.desktop.enable;

@@ -13,6 +13,7 @@ let
   lemonadePort = (npuCfg.lemonade or { }).port or 13305;
   inherit (config.local) user;
   inherit (config.local) theme;
+  fontSizes = config.stylix.fonts.sizes;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
   zedEditorPinned = unstablePkgs.callPackage ../../../../pkgs/zed-editor { };
