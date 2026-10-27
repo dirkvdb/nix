@@ -36,7 +36,7 @@
     codeFont = "CaskaydiaMono Nerd Font Mono";
     codeFontSize = 14;
     terminalFont = "FiraMono Nerd Font Mono";
-    terminalFontSize = 11;
+    terminalFontSize = 12;
     ghosttyTheme = "Everforest Dark Hard";
     uiAccentColor = "#dec39d";
     uiTextColor = "#c7b5aa";

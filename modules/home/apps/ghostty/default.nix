@@ -35,7 +35,7 @@ in
 
         # Font
         font-family = theme.terminalFont;
-        font-style = "Regular";
+        font-style = "Medium";
         font-size = theme.terminalFontSize;
 
         keybind = [
