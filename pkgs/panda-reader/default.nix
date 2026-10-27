@@ -8,6 +8,7 @@
   makeWrapper,
   makeDesktopItem,
   copyDesktopItems,
+  cacert,
   imagemagick,
   alsa-lib,
   fontconfig,
@@ -66,16 +67,16 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "panda-reader";
-  version = "0.2.11";
+  version = "0.2.12";
 
   src = fetchFromGitHub {
     owner = "yuhangch";
     repo = "panda-reader";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-N0YcOnUaaKbZbDunB+jUvqb46hYU7jiFQC8++SdCue4=";
+    hash = "sha256-cE/FU01uR4EpcIaMvu4bju19Fp4VFryK50F0kzleup8=";
   };
 
-  cargoHash = "sha256-lCi6Et6jmyN0t7XotJCbwyI2hq7UEv4mEngVEw7VgFo=";
+  cargoHash = "sha256-AC4omho/3KlSqeaaWhbgwyAxbZHEwRT6loAShxEzX6s=";
   cargoBuildFlags = [
     "-p"
     "panda-reader"
@@ -84,6 +85,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
   ];
   # Exercise the non-GUI library tests; the desktop binary has no test harness.
   cargoTestFlags = [ "--workspace" ];
+  # The WebDAV transport test constructs a TLS client, even for its local probe.
+  nativeCheckInputs = [ cacert ];
 
   postPatch = ''
     cp ${presets} apps/panda-reader/src/ui/charcoal-grove.rs
