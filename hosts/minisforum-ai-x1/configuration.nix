@@ -295,6 +295,10 @@
           "http://mini.fritz.box:13305"
           "https://ai.hl.vandenboer.eu/"
         ];
+        recipeOptions."builtin.qwen3.6-moe-35b-a3b-FLM" = {
+          ctx_size = 65536;
+          flm_args = "--prefill-chunk-len 8192";
+        };
         customModels."Qwen3.8-27B-GGUF-UD-Q4_K_XL" = {
           checkpoints = {
             main = "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL";
