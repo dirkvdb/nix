@@ -541,10 +541,15 @@ in
                 reveal_target = "dock";
               }
             ];
-            "secondary-shift-y" = [
+          };
+        }
+        {
+          # Context-free bindings take precedence over context-specific defaults.
+          bindings = {
+            "secondary-shift-e" = [
               "task::Spawn"
               {
-                task_name = "Run project";
+                task_name = "Execute project";
                 reveal_target = "dock";
               }
             ];
@@ -565,6 +570,14 @@ in
       ];
 
       userTasks = [
+        {
+          label = "Execute project";
+          command = "just";
+          args = [ "run" ];
+          use_new_terminal = false;
+          allow_concurrent_runs = false;
+          reveal = "always";
+        }
         {
           label = "Build project";
           command = "just";
