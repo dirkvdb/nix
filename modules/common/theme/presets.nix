@@ -27,8 +27,8 @@
     };
     gtkTheme = "Adwaita-dark";
     gtkThemePackage = pkgs.gnome-themes-extra;
-    iconTheme = "Tela-nord";
-    iconThemePackage = pkgs.tela-icon-theme;
+    iconTheme = "Yaru-sage-dark";
+    iconThemePackage = pkgs.yaru-theme;
     uiFont = "Inter";
     uiFontSerif = "Noto Serif";
     uiFontSize = 10;
