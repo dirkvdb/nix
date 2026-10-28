@@ -147,6 +147,15 @@ in
               position = 103;
               isEssential = true;
             };
+            github = {
+              title = "Github";
+              url = "https://www.github.com/";
+              id = "a73d8c92-6f14-4b85-9e2a-0c71d5f638ab";
+              container = containers.Personal.id;
+              workspace = spaces.Personal.id;
+              position = 104;
+              isEssential = true;
+            };
             # Work
             vitogit = {
               title = "Git";
@@ -185,7 +194,7 @@ in
             menuitem,
             panel {
               font-family: "${theme.uiFont}" !important;
-              font-size: ${toString (fontSizes.applications - 2)}pt !important;
+              font-size: ${toString (fontSizes.applications)}pt !important;
             }
           '';
 
