@@ -31,39 +31,51 @@ let
       };
     };
   };
-  opencodeMcpSettings = {
-  }
-  // lib.optionalAttrs jiraEnabled {
-    jira = {
+  solidcraftEnabled = config.local.apps.mcp.solidcraft.enable or false;
+  solidcraftMcpSettings = lib.optionalAttrs solidcraftEnabled {
+    solidcraft = {
       type = "local";
       command = [
-        "uvx"
-        "mcp-atlassian"
+        "${pkgs.solidcraft}/bin/solidcraft-cli"
+        "mcp"
       ];
-      environment = {
-        JIRA_URL = config.sops.placeholder.jira_url;
-        JIRA_USERNAME = config.sops.placeholder.vito_username;
-        JIRA_API_TOKEN = config.sops.placeholder.jira_api_token;
-      };
       enabled = true;
-    };
-  }
-  // lib.optionalAttrs cfg.homeAssistantMcp.enable {
-    "home-assistant" = {
-      type = "local";
-      command = [
-        "uvx"
-        "--with"
-        "mcp<2"
-        "mcp-proxy"
-        "--transport=streamablehttp"
-        "--stateless"
-        "https://ha.egstraat.synology.me/api/mcp"
-      ];
-      environment.API_ACCESS_TOKEN = config.sops.placeholder.home_assistant_api_key;
-      enabled = true;
+      timeout = 330000;
     };
   };
+  opencodeMcpSettings =
+    solidcraftMcpSettings
+    // lib.optionalAttrs jiraEnabled {
+      jira = {
+        type = "local";
+        command = [
+          "uvx"
+          "mcp-atlassian"
+        ];
+        environment = {
+          JIRA_URL = config.sops.placeholder.jira_url;
+          JIRA_USERNAME = config.sops.placeholder.vito_username;
+          JIRA_API_TOKEN = config.sops.placeholder.jira_api_token;
+        };
+        enabled = true;
+      };
+    }
+    // lib.optionalAttrs cfg.homeAssistantMcp.enable {
+      "home-assistant" = {
+        type = "local";
+        command = [
+          "uvx"
+          "--with"
+          "mcp<2"
+          "mcp-proxy"
+          "--transport=streamablehttp"
+          "--stateless"
+          "https://ha.egstraat.synology.me/api/mcp"
+        ];
+        environment.API_ACCESS_TOKEN = config.sops.placeholder.home_assistant_api_key;
+        enabled = true;
+      };
+    };
   opencodeSettings = opencodeBaseSettings // {
     mcp = opencodeMcpSettings;
   };
@@ -96,7 +108,12 @@ in
         programs.opencode = {
           enable = true;
           package = llmAgentsPkgs.opencode2;
-          settings = lib.optionalAttrs (!sopsAvailable) opencodeBaseSettings;
+          settings = lib.optionalAttrs (!sopsAvailable) (
+            opencodeBaseSettings
+            // {
+              mcp = solidcraftMcpSettings;
+            }
+          );
         };
 
         home.packages = [

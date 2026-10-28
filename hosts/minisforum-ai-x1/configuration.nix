@@ -230,6 +230,7 @@
         localsend.enable = true;
         moonlight.enable = true;
         mqtt.enable = true;
+        solidcraft.enable = true;
         topq.enable = true;
         neovim.enable = true;
         obsidian = {
