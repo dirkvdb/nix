@@ -179,6 +179,7 @@
         omasend = prev.callPackage ./pkgs/omasend { };
         gliff = prev.callPackage ./pkgs/gliff { };
         panda-reader = prev.callPackage ./pkgs/panda-reader { };
+        solidcraft = prev.callPackage ./pkgs/solidcraft { };
 
         xilo-cli = inputs.xilo.packages.${prev.stdenv.hostPlatform.system}.xilo-cli;
         ai-usagebar = inputs.ai-usagebar.packages.${prev.stdenv.hostPlatform.system}.default;
@@ -311,6 +312,11 @@
         ) macbookArmApps.packages
         // {
           macbook-arm-apps = macbookArmApps.bundle;
+          solidcraft =
+            (import nixpkgs {
+              system = "x86_64-linux";
+              overlays = [ overlay ];
+            }).solidcraft;
         };
 
       nixosConfigurations = {
