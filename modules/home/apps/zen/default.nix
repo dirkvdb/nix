@@ -149,7 +149,7 @@ in
             };
             github = {
               title = "Github";
-              url = "https://www.github.com/";
+              url = "https://www.github.com/feed";
               id = "a73d8c92-6f14-4b85-9e2a-0c71d5f638ab";
               container = containers.Personal.id;
               workspace = spaces.Personal.id;
