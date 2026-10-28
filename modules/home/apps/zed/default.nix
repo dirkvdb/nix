@@ -525,7 +525,7 @@ in
           };
         }
         {
-          context = "Workspace";
+          # Context-free bindings take precedence over context-specific defaults.
           bindings = {
             "secondary-shift-t" = [
               "task::Spawn"
@@ -541,11 +541,6 @@ in
                 reveal_target = "dock";
               }
             ];
-          };
-        }
-        {
-          # Context-free bindings take precedence over context-specific defaults.
-          bindings = {
             "secondary-shift-e" = [
               "task::Spawn"
               {
