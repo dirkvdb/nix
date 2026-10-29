@@ -154,6 +154,45 @@
 
       # Custom packages overlay
       overlay = final: prev: {
+        mcp-nixos = prev.mcp-nixos.overridePythonAttrs (
+          old:
+          prev.lib.optionalAttrs (old.version == "2.4.3") {
+            # The store-read test mistakes "Error" in valid file contents for a failure.
+            # Disable the test phase until fixed upstream.
+            doCheck = false;
+          }
+        );
+
+        pythonPackagesExtensions = (prev.pythonPackagesExtensions or [ ]) ++ [
+          (pythonFinal: pythonPrev: {
+            imageio = pythonPrev.imageio.overridePythonAttrs (
+              old:
+              prev.lib.optionalAttrs (old.version == "2.37.2") {
+                # Pillow 13 breaks these PNG tests; remove when fixed upstream.
+                # https://github.com/NixOS/nixpkgs/issues/580269
+                pytestFlags = (old.pytestFlags or [ ]) ++ [
+                  "--deselect=tests/test_pillow.py::test_png_16bit"
+                  "--deselect=tests/test_pillow_legacy.py::test_png"
+                ];
+              }
+            );
+
+            fastmcp = pythonPrev.fastmcp.overridePythonAttrs (
+              old:
+              prev.lib.optionalAttrs (old.version == "3.2.3") {
+                # FastMCP 3.2.3 stateful proxy cleanup fails with AnyIO 4.15.1:
+                # "Attempted to exit a cancel scope that isn't the current tasks's current cancel scope".
+                # Keep the rest of the suite enabled until upstream fixes cleanup.
+                pytestFlags = (old.pytestFlags or [ ]) ++ [
+                  "--deselect=tests/server/providers/proxy/test_stateful_proxy_client.py::TestStatefulProxyClient::test_concurrent_log_requests_no_mixing"
+                  "--deselect=tests/server/providers/proxy/test_stateful_proxy_client.py::TestStatefulProxyClient::test_stateful_proxy"
+                  "--deselect=tests/server/providers/proxy/test_stateful_proxy_client.py::TestStatefulProxyClient::test_multi_proxies_no_mixing"
+                ];
+              }
+            );
+          })
+        ];
+
         # Override aquamarine to 0.12.1 to fix split-node GPU render node fallback on Apple Silicon
         # https://github.com/hyprwm/aquamarine/pull/291
         # Remove this override once nixpkgs ships aquamarine >= 0.12

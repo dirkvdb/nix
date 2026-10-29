@@ -612,7 +612,7 @@
       },
       "locked": {
         "lastModified": 1793303701,
-        "narHash": "sha256-/gQUyPtzkwasJT22Tn0VuXvnauAXCVDjGNwNfJTFDsw=",
+        "narHash": "sha256-FrZvHHq3OqUGT07RFA7qps2MNbq/uSmmGO2LX6Tn8CA=",
         "ref": "main",
         "rev": "cac0f7a637fa05cc56982fce326de239eee87caf",
         "revCount": 69,
@@ -622,7 +622,6 @@
       },
       "original": {
         "ref": "main",
-        "submodules": true,
         "type": "git",
         "url": "https://github.com/dirkvdb/map.git"
       }
