@@ -22,7 +22,7 @@
     };
 
     map = {
-      url = "git+https://github.com/dirkvdb/map.git?ref=main&submodules=1";
+      url = "git+https://github.com/dirkvdb/map.git?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
