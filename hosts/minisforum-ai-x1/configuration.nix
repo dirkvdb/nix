@@ -228,6 +228,7 @@
         };
 
         localsend.enable = true;
+        map.enable = true;
         moonlight.enable = true;
         mqtt.enable = true;
         solidcraft.enable = true;

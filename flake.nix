@@ -21,6 +21,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    map = {
+      url = "git+https://github.com/dirkvdb/map.git?ref=main&submodules=1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     tabulite = {
       url = "github:dirkvdb/tabulite";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -184,6 +189,7 @@
         xilo-cli = inputs.xilo.packages.${prev.stdenv.hostPlatform.system}.xilo-cli;
         ai-usagebar = inputs.ai-usagebar.packages.${prev.stdenv.hostPlatform.system}.default;
         ram = inputs.ram.packages.${prev.stdenv.hostPlatform.system}.ram;
+        map = inputs.map.packages.${prev.stdenv.hostPlatform.system}.default;
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
         topq = inputs.topq.packages.${prev.stdenv.hostPlatform.system}.default;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
