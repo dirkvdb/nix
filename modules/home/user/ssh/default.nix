@@ -28,7 +28,7 @@ in
           ForwardAgent = true;
         };
         work = {
-          HostName = "p260182";
+          HostName = "p260182.fritz.box";
           User = "dirk";
           RequestTTY = "yes";
           ForwardAgent = true;
@@ -44,16 +44,16 @@ in
           SendEnv = [ "ARTIFACTORY_TOKEN" ];
         };
         inky = {
-          HostName = "inky.local";
+          HostName = "inky.fritz.box";
           User = "dirk";
           ForwardAgent = true;
         };
         odroid = {
-          HostName = "odroid.local";
+          HostName = "odroid.fritz.box";
           User = "dirk";
         };
         macmini = {
-          HostName = "macmini.local";
+          HostName = "macmini.fritz.box";
           User = "dirk";
           ForwardAgent = true;
         };
@@ -68,7 +68,7 @@ in
           };
         };
         cluster = {
-          HostName = "develop.marvin.vito.local";
+          HostName = "develop.marvin.vito.fritz.box";
           User = "vdboerd";
           ProxyCommand = lib.mkIf proxyEnabled "nc -x ${socksProxyUrl} -X 5 %h %p";
           ForwardAgent = true;
@@ -76,12 +76,12 @@ in
           #   RequestTTY = "yes";
         };
         clusterfs = {
-          HostName = "develop.marvin.vito.local";
+          HostName = "develop.marvin.vito.fritz.box";
           ProxyCommand = lib.mkIf proxyEnabled "nc -x ${socksProxyUrl} -X 5 %h %p";
           User = "vdboerd";
           ForwardAgent = true;
         };
-        "*.vito.be *.vito.local" = lib.mkIf vpnjumphostEnabled {
+        "*.vito.be *.vito.fritz.box" = lib.mkIf vpnjumphostEnabled {
           ProxyCommand = "nc -x 127.0.0.1:1080 -X 5 %h %p";
         };
       };
