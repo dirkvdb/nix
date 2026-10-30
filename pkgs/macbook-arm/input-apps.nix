@@ -146,11 +146,19 @@ in
 
   tabulite-duckdb = duckdb;
 
-  ai-usagebar = crossPkgs.callPackage "${inputs.ai-usagebar}/nix/package.nix" {
-    inherit rustPlatform;
-    inherit (armPkgs) procps xdg-utils;
-    inherit (buildPkgs) makeWrapper;
-  };
+  ai-usagebar =
+    (crossPkgs.callPackage "${inputs.ai-usagebar}/nix/package.nix" {
+      inherit rustPlatform;
+      inherit (armPkgs) procps xdg-utils;
+      inherit (buildPkgs) makeWrapper;
+    }).overrideAttrs
+      (old: {
+        # Bulk vendoring avoids a remote build and transfer for every unpacked crate.
+        cargoDeps = nativePkgs.rustPlatform.fetchCargoVendor {
+          inherit (old) pname version src;
+          hash = "sha256-ftZPiho44qw9CLiUH5bDERJ3KzVcNMOYOtksxXopEB0=";
+        };
+      });
 
   hyprexpose = crossPkgs.callPackage "${inputs.hyprexpose}/default.nix" {
     inherit rustPlatform;
