@@ -34,6 +34,10 @@ let
   targetTriple =
     builtins.replaceStrings [ "-" ] [ "_" ]
       crossPkgs.stdenv.hostPlatform.rust.rustcTarget;
+  nativePkgConfigPath = lib.makeSearchPath "lib/pkgconfig" [
+    (lib.getDev nativePkgs.zstd)
+    (lib.getDev nativePkgs.openssl)
+  ];
 in
 crossPkgs.rustPlatform.buildRustPackage {
   inherit (upstream)
@@ -62,6 +66,7 @@ crossPkgs.rustPlatform.buildRustPackage {
     buildPkgs.makeWrapper
     nativePkgs.imagemagick
     nativePkgs.zstd
+    nativePkgs.openssl
   ];
   buildInputs = [
     armPkgs.fontconfig.dev
@@ -84,7 +89,7 @@ crossPkgs.rustPlatform.buildRustPackage {
   ]);
 
   # Build scripts (including webgpu-shim) also compile for the build machine.
-  # Keep their compiler, bindgen headers and zstd metadata separate from ARM.
+  # Keep their compiler, bindgen headers and library metadata separate from ARM.
   env = {
     LIBCLANG_PATH = "${nativePkgs.llvmPackages.libclang.lib}/lib";
     "CC_${buildTriple}" = "${nativePkgs.stdenv.cc}/bin/cc";
@@ -94,8 +99,8 @@ crossPkgs.rustPlatform.buildRustPackage {
     "BINDGEN_EXTRA_CLANG_ARGS_${buildTriple}" = "-isystem ${lib.getDev nativePkgs.glibc}/include";
     "BINDGEN_EXTRA_CLANG_ARGS_${targetTriple}" = "-isystem ${lib.getDev armPkgs.glibc}/include";
     "PKG_CONFIG_${buildTriple}" = "${nativePkgs.pkg-config}/bin/pkg-config";
-    "PKG_CONFIG_PATH_${buildTriple}" = "${nativePkgs.zstd.dev}/lib/pkgconfig";
-    "PKG_CONFIG_LIBDIR_${buildTriple}" = "${nativePkgs.zstd.dev}/lib/pkgconfig";
+    "PKG_CONFIG_PATH_${buildTriple}" = nativePkgConfigPath;
+    "PKG_CONFIG_LIBDIR_${buildTriple}" = nativePkgConfigPath;
     MLN_CMAKE_PYTHON_EXECUTABLE = "${buildPkgs.python3}/bin/python3";
   };
 
