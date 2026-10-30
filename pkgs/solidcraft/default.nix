@@ -36,7 +36,7 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "solidcraft";
-  version = "0.25.1";
+  version = "0.27.1";
 
   src = fetchFromGitHub {
     owner = "tangency-labs";
