@@ -20,7 +20,7 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "orrery";
-  version = "2026.7.1";
+  version = "2026.10.1";
 
   src = fetchFromGitHub {
     owner = "Hankanman";
