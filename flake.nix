@@ -201,6 +201,7 @@
             assert prev.lib.versionOlder prev.aquamarine.version "0.12";
             prev.aquamarine.overrideAttrs (old: {
               version = "0.12.1";
+              patches = [ ];
               src = prev.fetchFromGitHub {
                 owner = "hyprwm";
                 repo = "aquamarine";
