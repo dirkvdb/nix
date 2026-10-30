@@ -172,6 +172,7 @@ in
         spotifast.enable = true;
         foliate.enable = true;
         localsend.enable = true;
+        map.enable = true;
         moonlight.enable = true;
         neovim.enable = true;
         obsidian = {

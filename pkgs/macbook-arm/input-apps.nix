@@ -90,6 +90,15 @@ in
 {
   ram = (inputs.ram.overlays.default (crossPkgs // { inherit rustPlatform; }) crossPkgs).ram;
 
+  map = import ./map.nix {
+    inherit
+      inputs
+      nativePkgs
+      armPkgs
+      crossPkgs
+      ;
+  };
+
   topq = rustPlatform.buildRustPackage {
     inherit (upstreamTopq)
       pname
