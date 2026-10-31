@@ -239,14 +239,6 @@
         # nixos-apple-silicon uses this firmware package before it is available in 26.05.
         avd-fw = (unstablePkgs prev.stdenv.hostPlatform.system).avd-fw;
 
-        # Patch waybar to support Hyprland 0.55+ Lua IPC protocol
-        # https://github.com/Alexays/Waybar/pull/5013
-        waybar = prev.waybar.overrideAttrs (old: {
-          patches = (old.patches or [ ]) ++ [
-            ./modules/home/apps/hyprland/waybar-lua-ipc.patch
-          ];
-        });
-
         # Pin Sublime Merge to Build 2132
         sublime-merge = prev.callPackage (import
           "${inputs.nixpkgs}/pkgs/applications/version-management/sublime-merge/common.nix"
@@ -307,7 +299,6 @@
             inputs.silent-sddm.nixosModules.default
             {
               nixpkgs.hostPlatform = system;
-              nixpkgs.config.permittedInsecurePackages = [ "freeimage-unstable-2021-11-01" ];
             }
             {
               nixpkgs.overlays = [
@@ -339,7 +330,6 @@
             hostPath
             nix-index-database.darwinModules.nix-index
             {
-              nixpkgs.config.permittedInsecurePackages = [ "freeimage-unstable-2021-11-01" ];
               nixpkgs.overlays = [
                 overlay
                 inputs.obsidian-extensions.overlays.default
