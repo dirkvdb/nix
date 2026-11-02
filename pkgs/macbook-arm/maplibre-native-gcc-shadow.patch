@@ -1,0 +1,20 @@
+diff --git a/src/mln/webgpu/dynamic_texture.cpp b/src/mln/webgpu/dynamic_texture.cpp
+--- a/src/mln/webgpu/dynamic_texture.cpp
++++ b/src/mln/webgpu/dynamic_texture.cpp
+@@ -5,11 +5,11 @@
+ namespace mln {
+ namespace webgpu {
+ 
+-DynamicTexture::DynamicTexture(Context& context, Size size, gfx::TexturePixelType pixelType)
+-    : gfx::DynamicTexture(size, pixelType),
+-      context(context),
+-      size(size),
+-      pixelType(pixelType) {
++DynamicTexture::DynamicTexture(Context& context_, Size size_, gfx::TexturePixelType pixelType_)
++    : gfx::DynamicTexture(size_, pixelType_),
++      context(context_),
++      size(size_),
++      pixelType(pixelType_) {
+     deferredCreation = true;
+ }
+ 

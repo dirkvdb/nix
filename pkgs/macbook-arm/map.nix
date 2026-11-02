@@ -16,6 +16,23 @@ let
       (inputs.map.inputs.pkgs-mod.lib.mkOverlay { static = true; })
     ];
   };
+  maplibreNative =
+    (import "${inputs.map}/dist/maplibre-native.nix" {
+      pkgs = geoPkgs // {
+        inherit (buildPkgs)
+          cmake
+          ninja
+          pkg-config
+          python3
+          ;
+        inherit (nativePkgs) runCommand;
+        inherit (armPkgs) libglvnd;
+      };
+    }).overrideAttrs
+      (old: {
+        # GCC's -Wshadow also diagnoses constructor parameters, unlike Clang.
+        patches = old.patches ++ [ ./maplibre-native-gcc-shadow.patch ];
+      });
   libuvPkgConfig = nativePkgs.runCommand "map-arm-libuv-pkgconfig" { } ''
     mkdir -p $out/lib/pkgconfig
     ln -s ${lib.getDev geoPkgs.pkg-mod-libuv}/lib/pkgconfig/libuv-static.pc $out/lib/pkgconfig/libuv.pc
@@ -45,13 +62,8 @@ crossPkgs.rustPlatform.buildRustPackage {
     version
     src
     cargoDeps
-    postPatch
     postInstall
-    dontUseCmakeConfigure
-    dontUseNinjaBuild
-    dontUseNinjaCheck
-    dontUseNinjaInstall
-    MLN_PRECOMPILE
+    MLN_STATIC_DEPS
     ;
 
   strictDeps = true;
@@ -59,9 +71,6 @@ crossPkgs.rustPlatform.buildRustPackage {
   doInstallCheck = false;
   nativeBuildInputs = [
     buildPkgs.pkg-config
-    buildPkgs.cmake
-    buildPkgs.ninja
-    buildPkgs.git
     buildPkgs.python3
     buildPkgs.makeWrapper
     nativePkgs.imagemagick
@@ -101,7 +110,8 @@ crossPkgs.rustPlatform.buildRustPackage {
     "PKG_CONFIG_${buildTriple}" = "${nativePkgs.pkg-config}/bin/pkg-config";
     "PKG_CONFIG_PATH_${buildTriple}" = nativePkgConfigPath;
     "PKG_CONFIG_LIBDIR_${buildTriple}" = nativePkgConfigPath;
-    MLN_CMAKE_PYTHON_EXECUTABLE = "${buildPkgs.python3}/bin/python3";
+    MLN_NATIVE_BUILD = "${maplibreNative}";
+    WEBGPU_SHIM_HEADER = "${maplibreNative.webgpuHeader}";
   };
 
   postFixup = ''
