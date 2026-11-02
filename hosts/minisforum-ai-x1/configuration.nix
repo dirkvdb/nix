@@ -291,6 +291,7 @@
       enableVulkan = true; # Vulkan GPU backends (llamacpp + whispercpp)
       enableImageGen = true; # default true; set false to drop sd-cpp from closure
       lemonade = {
+        desktopApp.enable = false;
         user = config.local.user.name;
         host = "0.0.0.0";
         allowedOrigins = [
