@@ -58,6 +58,7 @@ def set_source_hash(text: str, value: str) -> str:
 
 def set_dependency_hash(text: str, value: str) -> tuple[str, str] | None:
     patterns = (
+        (r"(\bvendorHash\s*=\s*)(?:\"[^\"]+\"|lib\.fakeHash);", "vendorHash"),
         (r"(\bcargoHash\s*=\s*)(?:\"[^\"]+\"|lib\.fakeHash);", "cargoHash"),
         (
             r"(\bcargoDeps\s*=.*?\bhash\s*=\s*)(?:\"[^\"]+\"|lib\.fakeHash);",
