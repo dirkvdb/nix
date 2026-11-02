@@ -29,11 +29,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793517866,
-        "narHash": "sha256-LKNAawXT7zHrnOkzzYKM+Kakkhkiz6f9nn+2+Aukfi8=",
+        "lastModified": 1793626980,
+        "narHash": "sha256-U98lLEsMqZUE9cp0gQTVlZdWSUBi+59OmwS7aB5txdo=",
         "owner": "nix-community",
         "repo": "nixos-apple-silicon",
-        "rev": "f88fb8087b3f9a0b5f70275fe8e6aca48a95235e",
+        "rev": "481cf53add16849ecd02c4419a1794ce70bfc0eb",
         "type": "github"
       },
       "original": {
@@ -624,11 +624,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793612212,
-        "narHash": "sha256-59So0Rz5MwvWHv7b2h277bmMaMQ9+G9U19gL56CiK78=",
+        "lastModified": 1793636324,
+        "narHash": "sha256-Qi0yvuAHZu8apy2gB/SrenD8Y0xwZQ5ObHnmkJPfwjA=",
         "ref": "main",
-        "rev": "2ddd7dceda337ac578246eaa897cd9ae77809775",
-        "revCount": 97,
+        "rev": "06aa0fbca83040c6432bb54d93aecc3a1cc6250b",
+        "revCount": 100,
         "type": "git",
         "url": "https://github.com/dirkvdb/map.git"
       },
@@ -1040,11 +1040,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "lastModified": 1793533358,
-        "narHash": "sha256-j3XNiAiekyEIBySlR8f3sEpBwrliOTCoVuIitkKGTg0=",
+        "lastModified": 1793624785,
+        "narHash": "sha256-HE1QITxs7VhGOEGeivdxzrW38gQntnJYbPCGQnUQVQI=",
         "owner": "karaolidis",
         "repo": "nix-obsidian-extensions",
-        "rev": "f3282f1ee883796d0b193ff43ecb614c7f8be3b6",
+        "rev": "24cc1e20cf718601a44197ab944940dc78d51ed5",
         "type": "github"
       },
       "original": {
@@ -1527,11 +1527,11 @@
         "rust-overlay": "rust-overlay_4"
       },
       "locked": {
-        "lastModified": 1793606737,
-        "narHash": "sha256-tNB/sc236vRixZw9abpWjKsn2Lkjq2OQqmPbFOXOm9I=",
+        "lastModified": 1793634754,
+        "narHash": "sha256-EQKfmRyxkRyigX0ZohAhllNzTDPXtugVvnLKU84VMRo=",
         "owner": "dirkvdb",
         "repo": "topq",
-        "rev": "80335f1479f7e3621f33779a094907bad88259f7",
+        "rev": "58121ed97c9d5a7de069aac0982deb52649f4384",
         "type": "github"
       },
       "original": {
@@ -1670,11 +1670,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793498088,
-        "narHash": "sha256-1MkvkLk4WEJkPrKvCZa3wapvXmdmNAgjh7Ap97GUqVQ=",
+        "lastModified": 1793615807,
+        "narHash": "sha256-2sHhKvrX5D2s8mFlC1hlffsKZQHZv73ObxReKQ6ESXk=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "536b03dea1ab7460afd44565e81f0a72c371c70f",
+        "rev": "1add15a3a5188e584db1f543bb8b313cc6e1de99",
         "type": "github"
       },
       "original": {
