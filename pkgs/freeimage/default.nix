@@ -1,7 +1,8 @@
 {
   lib,
   stdenv,
-  fetchsvn,
+  fetchFromGitHub,
+  cmake,
   cctools ? null,
   libtiff,
   libpng,
@@ -19,57 +20,29 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "freeimage";
-  version = "unstable-2021-11-01";
+  version = "3.19.29";
 
-  src = fetchsvn {
-    url = "svn://svn.code.sf.net/p/freeimage/svn/";
-    rev = "1900";
-    sha256 = "rWoNlU/BWKZBPzRb1HqU6T0sT7aK6dpqKPe88+o/4sA=";
+  src = fetchFromGitHub {
+    owner = "danoli3";
+    repo = "FreeImage";
+    rev = "b6f6b47065140799f24ef01dc20de0a215698f82";
+    hash = "sha256-1U63PCN48o5y6nb/uGY4mxLDxUX3lUBN4+cpRSFwBJo=";
   };
 
-  sourceRoot = "${finalAttrs.src.name}/FreeImage/trunk";
-
-  # Ensure that the bundled libraries are not used at all
-  prePatch = ''
-    rm -rf Source/Lib* Source/OpenEXR Source/ZLib
-  '';
-  patches = [
-    ./unbundle.diff
-    ./libtiff-4.4.0.diff
+  cmakeFlags = [
+    "-DBUILD_SHARED_LIBS=ON"
+    "-DFREEIMAGE_STATIC=OFF"
+    "-DFREEIMAGE_USE_SYSTEM_LIBS=ON"
+    "-DCPP_STANDARD=17"
+    "-DCMAKE_INSTALL_LIBDIR=lib"
+    "-DCMAKE_INSTALL_INCLUDEDIR=include"
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isLinux [
+    "-DFREEIMAGE_LINUX_PACKAGE_LAYOUT=ON"
   ];
 
-  postPatch = ''
-    # To support cross compilation, use the correct `pkg-config`.
-    substituteInPlace Makefile.fip \
-      --replace "pkg-config" "$PKG_CONFIG"
-    substituteInPlace Makefile.gnu \
-      --replace "pkg-config" "$PKG_CONFIG"
-
-    # FreeImage 3.19 predates the public header locations in current
-    # OpenEXR/libtiff releases. The G3 plugin also depends on libtiff's
-    # private tiffiop.h, which is no longer installed.
-    substituteInPlace Source/FreeImage/PluginEXR.cpp Source/FreeImage/PluginTIFF.cpp \
-      --replace-fail "<OpenEXR/half.h>" "<Imath/half.h>"
-    substituteInPlace Source/FreeImage/PluginEXR.cpp \
-      --replace-fail "Imath::Int64" "uint64_t"
-    # These old sources require private libtiff and libjpeg headers that
-    # current nixpkgs intentionally does not install. Disable those optional
-    # plugins rather than reintroducing bundled copies.
-    substituteInPlace Makefile.srcs fipMakefile.srcs \
-      --replace-fail "./Source/FreeImage/PluginG3.cpp " "" \
-      --replace-fail "./Source/FreeImage/PluginTIFF.cpp " "" \
-      --replace-fail "./Source/Metadata/XTIFF.cpp " "" \
-      --replace-fail "./Source/FreeImageToolkit/JPEGTransform.cpp " ""
-    substituteInPlace Source/FreeImage/Plugin.cpp \
-      --replace-fail "s_plugins->AddNode(InitTIFF);" "" \
-      --replace-fail "s_plugins->AddNode(InitG3);" ""
-  ''
-  + lib.optionalString (stdenv.hostPlatform.isDarwin && stdenv.hostPlatform.isAarch64) ''
-    # Upstream Makefile hardcodes i386 and x86_64 architectures only
-    substituteInPlace Makefile.osx --replace "x86_64" "arm64"
-  '';
-
   nativeBuildInputs = [
+    cmake
     pkg-config
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
@@ -91,34 +64,16 @@ stdenv.mkDerivation (finalAttrs: {
     jxrlib
   ];
 
-  postBuild = lib.optionalString (!stdenv.hostPlatform.isDarwin) ''
-    make -f Makefile.fip
+  postInstall = lib.optionalString stdenv.hostPlatform.isDarwin ''
+    ln -s $out/lib/libFreeImage.${finalAttrs.version}.dylib $out/lib/libfreeimage.3.dylib
+    ln -s libfreeimage.3.dylib $out/lib/libfreeimage.dylib
   '';
-
-  INCDIR = "${placeholder "out"}/include";
-  INSTALLDIR = "${placeholder "out"}/lib";
-
-  preInstall = ''
-    mkdir -p $INCDIR $INSTALLDIR
-  ''
-  # Workaround for Makefiles.osx not using ?=
-  + lib.optionalString stdenv.hostPlatform.isDarwin ''
-    makeFlagsArray+=( "INCDIR=$INCDIR" "INSTALLDIR=$INSTALLDIR" )
-  '';
-
-  postInstall =
-    lib.optionalString (!stdenv.hostPlatform.isDarwin) ''
-      make -f Makefile.fip install
-    ''
-    + lib.optionalString stdenv.hostPlatform.isDarwin ''
-      ln -s $out/lib/libfreeimage.3.dylib $out/lib/libfreeimage.dylib
-    '';
 
   enableParallelBuilding = true;
 
   meta = {
     description = "Open Source library for accessing popular graphics image file formats";
-    homepage = "http://freeimage.sourceforge.net/";
+    homepage = "https://github.com/danoli3/FreeImage";
     license = "GPL";
     maintainers = with lib.maintainers; [ l-as ];
     platforms = with lib.platforms; unix;
