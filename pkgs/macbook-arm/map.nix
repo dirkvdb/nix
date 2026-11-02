@@ -55,6 +55,21 @@ let
     (lib.getDev nativePkgs.zstd)
     (lib.getDev nativePkgs.openssl)
   ];
+  staticDeps = with geoPkgs; [
+    pkg-mod-curl
+    pkg-mod-libwebp
+    pkg-mod-libpng
+    pkg-mod-libjpeg
+    pkg-mod-sqlite
+    pkg-mod-openssl
+    pkg-mod-zlib-compat
+    pkg-mod-libuv
+    pkg-mod-zstd
+    pkg-mod-brotli
+  ];
+  targetPkgConfigPath = lib.makeSearchPath "lib/pkgconfig" (
+    map lib.getDev ([ libuvPkgConfig ] ++ staticDeps)
+  );
 in
 crossPkgs.rustPlatform.buildRustPackage {
   inherit (upstream)
@@ -87,15 +102,15 @@ crossPkgs.rustPlatform.buildRustPackage {
   ++ (with geoPkgs; [
     pkg-mod-gdal
     pkg-mod-proj
-    pkg-mod-curl
-    pkg-mod-libwebp
-    pkg-mod-libpng
-    pkg-mod-libjpeg
-    pkg-mod-sqlite
-    pkg-mod-openssl
-    pkg-mod-zlib-compat
-    pkg-mod-libuv
-  ]);
+  ])
+  ++ staticDeps;
+
+  # GUI dependencies propagate shared libraries with the same pkg-config names.
+  # Prepend static metadata after setup hooks populate the target search path,
+  # retaining the rest for GUI/GDAL probes and leaving native build scripts alone.
+  preBuild = ''
+    export PKG_CONFIG_PATH_${targetTriple}="${targetPkgConfigPath}:''${PKG_CONFIG_PATH:-}"
+  '';
 
   # Build scripts (including webgpu-shim) also compile for the build machine.
   # Keep their compiler, bindgen headers and library metadata separate from ARM.
