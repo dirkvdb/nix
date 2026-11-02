@@ -6,7 +6,7 @@
   cmake,
   git,
   makeWrapper,
-  alsa-lib,
+  cacert,
   fontconfig,
   freetype,
   libdrm,
@@ -20,16 +20,18 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "orrery";
-  version = "2026.10.1";
+  version = "1.0.0";
 
   src = fetchFromGitHub {
     owner = "Hankanman";
     repo = "Orrery";
-    rev = "edd996c51f2c8ca03254066a25be540a20b52c1b";
-    hash = "sha256-uKVv6bshrb/sEWoqmT8IoxzPuHLZMtrPYWjO7TQ+2dk=";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-o4yAvCfrDMPZyeO/uSwpVE3yR6R1IwcsxU/VZScS5Ec=";
   };
 
-  cargoHash = "sha256-H0IDYy+Js0+gcrX1UUG7ZtXvCmUyM2OEKqCNAhgdyME=";
+  cargoHash = "sha256-IcKg6bH9eTVunkMs9Zx0vwtddywi8p2Bc7WMMuRrN1Y=";
+
+  patches = [ ./disable-tray.patch ];
 
   nativeBuildInputs = [
     cmake
@@ -39,8 +41,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     rustPlatform.bindgenHook
   ];
 
+  # The HTTP-client test loads the platform certificate store in the sandbox.
+  nativeCheckInputs = [ cacert ];
+
   buildInputs = [
-    alsa-lib
     fontconfig
     freetype
     libdrm
@@ -71,12 +75,16 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
     install -Dm644 packaging/orrery.desktop \
       $out/share/applications/orrery.desktop
+    install -Dm644 packaging/orrery-search-provider.ini \
+      $out/share/gnome-shell/search-providers/orrery-search-provider.ini
     for size in 32 64 128; do
       install -Dm644 packaging/icons/$size\x$size.png \
         $out/share/icons/hicolor/$size\x$size/apps/orrery.png
     done
     install -Dm644 packaging/icons/128x128@2x.png \
       $out/share/icons/hicolor/256x256/apps/orrery.png
+    install -Dm644 packaging/icons/icon.png \
+      $out/share/icons/hicolor/512x512/apps/orrery.png
   '';
 
   meta = {

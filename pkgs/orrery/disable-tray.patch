@@ -1,0 +1,51 @@
+diff --git a/crates/orrery/src/live.rs b/crates/orrery/src/live.rs
+--- a/crates/orrery/src/live.rs
++++ b/crates/orrery/src/live.rs
+@@ -28,7 +28,6 @@
+ use gpui::Context;
+ use orrery_platform::appearance::Appearance;
+ use orrery_platform::request::AppRequest;
+-use orrery_platform::tray::TrayAction;
+ use orrery_platform::watcher::ChangeSet;
+ 
+ use crate::shell::OrreryApp;
+@@ -54,8 +53,6 @@ enum Signal {
+     /// Raise the main window with this query in the command palette (GNOME
+     /// Shell's LaunchSearch, `orrery open` with no matching repo).
+     Search(String, Option<String>),
+-    /// Quit the app (tray: "Quit").
+-    Quit,
+ }
+ 
+ impl From<AppRequest> for Signal {
+@@ -180,20 +177,8 @@ pub fn spawn(
+     // opens a match in the IDE directly, so it needs no channel back to the app.
+     orrery_platform::krunner::spawn();
+ 
+-    // System tray. Menu activations come back on the tray thread; forward the
+-    // app-level ones onto the channel (Open is handled inside the tray itself).
+-    let tray = {
+-        let tx = tx.clone();
+-        orrery_platform::tray::spawn(move |action| {
+-            let signal = match action {
+-                TrayAction::Show => Signal::ShowWindow(None),
+-                TrayAction::Rescan => Signal::ReposChanged(ChangeSet::discover()),
+-                TrayAction::Quit => Signal::Quit,
+-                TrayAction::Open(_) => return, // handled in the tray
+-            };
+-            let _ = tx.try_send(signal);
+-        })
+-    };
++    // With no tray, the window uses the normal close behavior.
++    let tray: Option<orrery_platform::tray::TrayHandle> = None;
+ 
+     // The single foreground consumer. Holds a weak handle to the app entity; it
+     // ends naturally when the entity is dropped (its `update` calls start failing
+@@ -302,7 +287,6 @@ pub fn spawn(
+                         break;
+                     }
+                 }
+-                Signal::Quit => cx.update(|cx| cx.quit()),
+             }
+         }
+     })
