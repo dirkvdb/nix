@@ -20,8 +20,10 @@ just publish-macbook-apps
 
 The MacBook uses `mini.fritz.box` as an x86_64 remote builder for the existing
 ARM cross-packages when their outputs are missing from the configured caches.
-Native ARM packages still build locally. Runtime x86_64 emulation remains enabled,
-but Nix does not schedule local builds through QEMU.
+The Asahi kernel and major boot packages also cross-compile on mini using
+`hardware.asahi.pkgsSystem = "x86_64-linux"`. Other native ARM packages still
+build locally. Runtime x86_64 emulation remains enabled, but Nix does not schedule
+local builds through QEMU.
 
 Deploy mini's configuration first, then the MacBook's configuration. The Nix
 daemon authenticates using the MacBook's `/etc/ssh/ssh_host_ed25519_key`; mini

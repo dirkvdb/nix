@@ -210,6 +210,8 @@ in
     };
 
     hardware.asahi.enable = true;
+    # Cross-build the kernel and Asahi boot packages on the x86_64 mini builder.
+    hardware.asahi.pkgsSystem = "x86_64-linux";
     hardware.asahi.avd.vaapi-support = true;
     hardware.asahi.peripheralFirmwareDirectory =
       (fetchTree {
