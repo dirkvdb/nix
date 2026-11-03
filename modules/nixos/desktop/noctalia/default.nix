@@ -8,6 +8,7 @@
 }:
 let
   cfg = config.local.desktop.noctalia;
+  displayScale = config.local.desktop.displayScale;
   isLinux = pkgs.stdenv.isLinux;
   isDesktop = config.local.desktop.enable or false;
   isHeadless = config.local.headless or false;
@@ -85,7 +86,6 @@ let
 
     bar.default = {
       font_family = config.stylix.fonts.sansSerif.name;
-      font_scale = 0.8;
       center =
         lib.optionals (!hasNotch) [ "clock" ]
         ++ [ "notifications" ]
@@ -125,6 +125,9 @@ let
         "spacer_3"
         "clock"
       ];
+    }
+    // lib.optionalAttrs (displayScale > 1 && displayScale < 1.6) {
+      font_scale = 0.8;
     };
 
     battery.warning_threshold = 5;
