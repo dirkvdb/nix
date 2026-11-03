@@ -157,6 +157,14 @@
               };
             }
             {
+              Spottarr = {
+                href = "http://${config.services.homepage-dashboard.publicHostName}:8383/";
+                description = "Usenet and Spotnet indexer";
+                icon = "mdi-magnify";
+                siteMonitor = "http://127.0.0.1:8383/";
+              };
+            }
+            {
               Bazarr = {
                 href = "http://bazarr.arr";
                 description = "Subtitle management";
@@ -205,6 +213,7 @@
       lgtv2mqtt.enable = true;
       tasmoadmin.enable = true;
       freshrss.enable = true;
+      spottarr.enable = true;
       dockhand = {
         enable = true;
         stacksDirectory = "/nas/docker";
@@ -246,6 +255,7 @@
           automount = false;
           mounts = {
             "/nas/docker".device = "nas.fritz.box:/volume2/docker";
+            "/nas/data".device = "nas.fritz.box:/volume1/data";
             "/nas/media".device = "nas.fritz.box:/volume1/media";
             "/nas/downloads".device = "nas.fritz.box:/volume1/downloads";
           };

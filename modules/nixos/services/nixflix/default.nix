@@ -460,12 +460,13 @@ in
               enable = true;
               redirect = true;
               priority = 1;
-              baseUrl = "http://192.168.1.13:8383/newznab";
+              baseUrl = "http://127.0.0.1:8383/newznab";
             }
             {
               name = "BT.etree";
               enable = true;
               baseUrl = "https://bt.etree.org/";
+              tags = [ "flaresolverr" ];
             }
             {
               name = "The Pirate Bay";
