@@ -627,11 +627,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793697722,
-        "narHash": "sha256-T88dbqaUKqhYKO3tVB8M7V51zGFuKA/Xq1haFfid/KM=",
+        "lastModified": 1793702510,
+        "narHash": "sha256-oJihlVFMpOYMYAhF42bL5cGFqI8WyFrdItAillx+U1Q=",
         "ref": "main",
-        "rev": "98fbe6161c9771cef7a50f41d6b6b7bd20960f22",
-        "revCount": 110,
+        "rev": "5c8b9d71511f9c44e58169b507ed775e8e302245",
+        "revCount": 111,
         "type": "git",
         "url": "https://github.com/dirkvdb/map.git"
       },
@@ -765,15 +765,16 @@
         "vpn-confinement": "vpn-confinement"
       },
       "locked": {
-        "lastModified": 1793730698,
-        "narHash": "sha256-y9jV5kWIEUXYLprRnSNlWgVUQH5ULhsbDA+kzRnyJX8=",
+        "lastModified": 1793731679,
+        "narHash": "sha256-lB+X6nzN248m4VSijUUooBmR1qmGYurlX1R96f0D+gM=",
         "owner": "kiriwalawren",
         "repo": "nixflix",
-        "rev": "c2116965d7bede631e5e6af8e77202d7f934d38d",
+        "rev": "2feedb85b6efebbbc6528b0d3708be3fd3070471",
         "type": "github"
       },
       "original": {
         "owner": "kiriwalawren",
+        "ref": "v4.0.0",
         "repo": "nixflix",
         "type": "github"
       }
