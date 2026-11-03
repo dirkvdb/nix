@@ -195,7 +195,7 @@
       ];
     };
     quadlets = {
-      openclaw.enable = true;
+      openclaw.enable = false;
       zeroclaw.enable = true;
       homarr.enable = true;
       frigate.enable = true;
