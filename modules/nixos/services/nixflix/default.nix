@@ -7,6 +7,15 @@
 }:
 let
   cfg = config.local.services.nixflix;
+  inherit (config.nixflix) mediaDir downloadsDir;
+  qbittorrent = config.nixflix.torrentClients.qbittorrent;
+  sabnzbd = config.nixflix.usenetClients.sabnzbd;
+  nasMounts = [
+    mediaDir
+    downloadsDir
+  ];
+  isNasPath = path: lib.any (mount: path == mount || lib.hasPrefix "${mount}/" path) nasMounts;
+  unmanagedNasDirs = paths: lib.genAttrs (lib.filter isNasPath paths) (_: lib.mkForce { });
 in
 {
   options.local.services.nixflix = {
@@ -15,6 +24,61 @@ in
 
   config = lib.mkIf cfg.enable {
     networking.firewall.allowedTCPPorts = [ 80 ];
+
+    assertions = map (mount: {
+      assertion = lib.elem (config.fileSystems.${mount}.fsType or "") [
+        "nfs"
+        "nfs4"
+      ];
+      message = "Nixflix NAS directory ${mount} must be declared as an NFS filesystem.";
+    }) nasMounts;
+
+    # Ownership and modes on these exports belong to the NAS. Remove only the
+    # remote directory rules; keep nixflix's local /var/lib and /run setup.
+    systemd.tmpfiles.settings = {
+      "10-nixflix" = unmanagedNasDirs nasMounts;
+      "10-radarr" = unmanagedNasDirs config.nixflix.radarr.mediaDirs;
+      "10-sonarr" = unmanagedNasDirs config.nixflix.sonarr.mediaDirs;
+      "10-lidarr" = unmanagedNasDirs config.nixflix.lidarr.mediaDirs;
+      "10-qbittorrent" = unmanagedNasDirs (
+        [
+          qbittorrent.downloadsDir
+          qbittorrent.serverConfig.BitTorrent.Session.DefaultSavePath
+        ]
+        ++ lib.attrValues qbittorrent.categories
+      );
+      "10-sabnzbd" = unmanagedNasDirs [
+        sabnzbd.downloadsDir
+        sabnzbd.settings.misc.download_dir
+        sabnzbd.settings.misc.complete_dir
+        sabnzbd.settings.misc.dirscan_dir
+        sabnzbd.settings.misc.nzb_backup_dir
+        sabnzbd.settings.misc.admin_dir
+        sabnzbd.settings.misc.log_dir
+      ];
+    };
+
+    # Require the actual mounts even on manual service starts, rather than
+    # allowing applications to write into the local mountpoint directories.
+    systemd.services.nixflix-setup-dirs.unitConfig.RequiresMountsFor = nasMounts;
+    systemd.services.radarr.unitConfig.RequiresMountsFor = nasMounts;
+    systemd.services.sonarr.unitConfig.RequiresMountsFor = nasMounts;
+    systemd.services.lidarr.unitConfig.RequiresMountsFor = nasMounts;
+    systemd.services.prowlarr.unitConfig.RequiresMountsFor = nasMounts;
+    systemd.services.qbittorrent.unitConfig.RequiresMountsFor = nasMounts;
+    systemd.services.sabnzbd.unitConfig.RequiresMountsFor = nasMounts;
+    systemd.services.jellyfin.unitConfig.RequiresMountsFor = nasMounts;
+    systemd.services.bazarr.unitConfig.RequiresMountsFor = nasMounts;
+
+    # The Synology exports use GID 100 (users), not the local media GID 169.
+    # Retain media as the primary group for local state and shared new files.
+    systemd.services.radarr.serviceConfig.SupplementaryGroups = [ "users" ];
+    systemd.services.sonarr.serviceConfig.SupplementaryGroups = [ "users" ];
+    systemd.services.lidarr.serviceConfig.SupplementaryGroups = [ "users" ];
+    systemd.services.qbittorrent.serviceConfig.SupplementaryGroups = [ "users" ];
+    systemd.services.sabnzbd.serviceConfig.SupplementaryGroups = [ "users" ];
+    systemd.services.jellyfin.serviceConfig.SupplementaryGroups = [ "users" ];
+    systemd.services.bazarr.serviceConfig.SupplementaryGroups = [ "users" ];
 
     services.recyclarr.package = unstablePkgs.recyclarr;
     services.sonarr.package = unstablePkgs.sonarr;
@@ -476,13 +540,17 @@ in
         apiKey._secret = config.sops.secrets."jellyfin/api_key".path;
         encoding = {
           enableHardwareEncoding = true;
-          hardwareAccelerationType = "qsv";
+          # Skylake's VA-API works without the unsupported modern QSV runtime.
+          hardwareAccelerationType = "vaapi";
+          vaapiDevice = "/dev/dri/renderD128";
+          # HD 530 decodes HEVC Main (8-bit), but not Main 10 or VP9.
+          enableDecodingColorDepth10Hevc = false;
+          enableDecodingColorDepth10Vp9 = false;
           hardwareDecodingCodecs = [
             "h264"
             "hevc"
             "mpeg2video"
             "vc1"
-            "vp9"
           ];
         };
         users.dirk = {
