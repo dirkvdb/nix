@@ -126,8 +126,8 @@ let
         "clock"
       ];
     }
-    // lib.optionalAttrs (displayScale > 1 && displayScale < 1.6) {
-      font_scale = 0.8;
+    // lib.optionalAttrs (displayScale > 1 && displayScale < 2) {
+      font_scale = 0.9;
     };
 
     battery.warning_threshold = 5;
