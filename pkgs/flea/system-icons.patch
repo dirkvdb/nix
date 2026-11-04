@@ -1,0 +1,858 @@
+Flea 0.4.0: use session icon-theme assets for native file marks
+
+Reuse the existing Icons::session resolver and bounded full-colour raster helper.
+Keep exact row icon names in Copy marks, with the original glyph/language logo
+as fallback. Decode only on background workers and cache ready, pending and
+missing rasters. Thumbnails retain priority; toolbar/action glyphs are unchanged.
+
+diff --git a/crates/flea-gui/src/columns/element/paint.rs b/crates/flea-gui/src/columns/element/paint.rs
+--- a/crates/flea-gui/src/columns/element/paint.rs
++++ b/crates/flea-gui/src/columns/element/paint.rs
+@@ -121,16 +121,13 @@
+                                 pictures_painted += 1;
+                             } else {
+                                 let (mark_x, mark_y, mark) = mark_box();
+-                                let (key, data) = prepared.mark.svg();
+-                                let _ = window.paint_svg(
++                                prepared.mark.paint(
+                                     Bounds::new(
+                                         point(left + px(mark_x), top + px(mark_y)),
+                                         size(px(mark), px(mark)),
+                                     ),
+-                                    key,
+-                                    Some(data),
+-                                    TransformationMatrix::unit(),
+                                     inks.mark,
++                                    window,
+                                     cx,
+                                 );
+                             }
+diff --git a/crates/flea-gui/src/columns/element.rs b/crates/flea-gui/src/columns/element.rs
+--- a/crates/flea-gui/src/columns/element.rs
++++ b/crates/flea-gui/src/columns/element.rs
+@@ -14,7 +14,7 @@
+ use crate::palette::Theme;
+ use gpui::{
+     fill, point, px, relative, size, App, Bounds, ContentMask, Element, ElementId, GlobalElementId,
+-    InspectorElementId, IntoElement, LayoutId, Pixels, Style, TransformationMatrix, Window,
++    InspectorElementId, IntoElement, LayoutId, Pixels, Style, Window,
+ };
+ use std::{cell::RefCell, rc::Rc};
+ #[path = "tags.rs"]
+diff --git a/crates/flea-gui/src/g2/pk1/codeicons_tests.rs b/crates/flea-gui/src/g2/pk1/codeicons_tests.rs
+--- a/crates/flea-gui/src/g2/pk1/codeicons_tests.rs
++++ b/crates/flea-gui/src/g2/pk1/codeicons_tests.rs
+@@ -32,7 +32,12 @@
+             window.refresh();
+             window.draw(cx).clear(cx);
+             assert_eq!(
+-                listing.read(cx).drawn_marks(),
++                listing
++                    .read(cx)
++                    .drawn_marks()
++                    .into_iter()
++                    .map(Mark::fallback)
++                    .collect::<Vec<_>>(),
+                 [expected],
+                 "picker setting {document}"
+             );
+diff --git a/crates/flea-gui/src/g2/pl3/list.rs b/crates/flea-gui/src/g2/pl3/list.rs
+--- a/crates/flea-gui/src/g2/pl3/list.rs
++++ b/crates/flea-gui/src/g2/pl3/list.rs
+@@ -6,7 +6,7 @@
+ use gpui::{
+     fill, point, px, relative, size, App, Bounds, ContentMask, Corners, Element, ElementId, Font,
+     GlobalElementId, GlyphRun, Hsla, ImageAssetLoader, InspectorElementId, IntoElement, LayoutId,
+-    ObjectFit, Pixels, RenderImage, Resource, Style, TextRun, TransformationMatrix, Window,
++    ObjectFit, Pixels, RenderImage, Resource, Style, TextRun, Window,
+ };
+ use std::{cell::RefCell, rc::Rc, sync::Arc};
+ 
+@@ -369,15 +369,7 @@
+                         );
+                     }
+                     None => {
+-                        let (key, data) = line.mark.svg();
+-                        let _ = window.paint_svg(
+-                            glyph,
+-                            key,
+-                            Some(data),
+-                            TransformationMatrix::unit(),
+-                            ink.foreground,
+-                            cx,
+-                        );
++                        line.mark.paint(glyph, ink.foreground, window, cx);
+                     }
+                 }
+                 let Some(shaped) = state
+diff --git a/crates/flea-gui/src/g2/pl3/paint_sync.rs b/crates/flea-gui/src/g2/pl3/paint_sync.rs
+--- a/crates/flea-gui/src/g2/pl3/paint_sync.rs
++++ b/crates/flea-gui/src/g2/pl3/paint_sync.rs
+@@ -36,7 +36,7 @@
+                 mark: if row.directory {
+                     Mark::Folder
+                 } else {
+-                    Mark::for_row(&row.icon, 0o100644)
++                    Mark::for_icon(&row.icon, 0o100644)
+                 },
+                 marked: view.is_selected(&row.uri),
+                 thumb: Some(view.thumbs.file_for(view.first + at, view.policy))
+diff --git a/crates/flea-gui/src/g2/pv1/glyph.rs b/crates/flea-gui/src/g2/pv1/glyph.rs
+--- a/crates/flea-gui/src/g2/pv1/glyph.rs
++++ b/crates/flea-gui/src/g2/pv1/glyph.rs
+@@ -56,7 +56,7 @@
+ 
+     /// Icons.js glyphFor(): a kind's mark by its icon name, the file mark when none is known.
+     pub fn kind(icon: &str, mode: u32) -> Self {
+-        Self::Row(Mark::for_row(icon, mode))
++        Self::Row(Mark::for_icon(icon, mode))
+     }
+ 
+     pub fn svg(self) -> (SharedString, &'static [u8]) {
+@@ -92,6 +92,10 @@
+     }
+ 
+     pub fn paint(self, bounds: Bounds<Pixels>, ink: Hsla, window: &mut Window, cx: &mut gpui::App) {
++        if let Self::Row(mark) = self {
++            mark.paint(bounds, ink, window, cx);
++            return;
++        }
+         let (key, data) = self.svg();
+         let _ = window.paint_svg(
+             bounds,
+diff --git a/crates/flea-gui/src/g2/sr1/contents.rs b/crates/flea-gui/src/g2/sr1/contents.rs
+--- a/crates/flea-gui/src/g2/sr1/contents.rs
++++ b/crates/flea-gui/src/g2/sr1/contents.rs
+@@ -7,8 +7,7 @@
+ use flea::protocol::RowFacts;
+ use gpui::{
+     fill, point, px, relative, size, App, Bounds, ContentMask, Element, ElementId, GlobalElementId,
+-    GlyphRun, Hsla, InspectorElementId, IntoElement, LayoutId, Pixels, Style, TransformationMatrix,
+-    Window,
++    GlyphRun, Hsla, InspectorElementId, IntoElement, LayoutId, Pixels, Style, Window,
+ };
+ use std::{cell::RefCell, collections::HashMap, rc::Rc};
+ use text::prepare;
+@@ -362,20 +361,14 @@
+                 } else {
+                     palette.muted
+                 };
+-                let (key, data) = prepared.mark.svg();
+                 let mark_ink = if lifted {
+                     palette.foreground
+                 } else {
+                     palette.metadata_frame
+                 };
+-                let _ = window.paint_svg(
+-                    mark_bounds(left, top),
+-                    key,
+-                    Some(data),
+-                    TransformationMatrix::unit(),
+-                    mark_ink,
+-                    cx,
+-                );
++                prepared
++                    .mark
++                    .paint(mark_bounds(left, top), mark_ink, window, cx);
+                 let name_x = left + px(LABEL_X);
+                 paint_at(&prepared.name, name_x, top, ROW_H, ink, window);
+                 let location_x = name_x + prepared.name.line().width;
+diff --git a/crates/flea-gui/src/g2/sr1/contents_tests.rs b/crates/flea-gui/src/g2/sr1/contents_tests.rs
+--- a/crates/flea-gui/src/g2/sr1/contents_tests.rs
++++ b/crates/flea-gui/src/g2/sr1/contents_tests.rs
+@@ -43,7 +43,7 @@
+     let (window, state) = open(&mut cx, blocks, 1.);
+     frame(&mut cx, window, 0.);
+     assert_eq!(
+-        state.borrow().visible[0].1.mark,
++        state.borrow().visible[0].1.mark.fallback(),
+         crate::row::marks::Mark::Language(
+             crate::row::marks::Language::for_file("main.rs").unwrap()
+         )
+@@ -54,7 +54,7 @@
+         .apply_settings(&flea::uistate::from_file(r#"{"langMarks":false}"#));
+     frame(&mut cx, window, 0.);
+     assert_eq!(
+-        state.borrow().visible[0].1.mark,
++        state.borrow().visible[0].1.mark.fallback(),
+         crate::row::marks::Mark::FileText
+     );
+     assert_eq!(
+diff --git a/crates/flea-gui/src/grid/element/paint.rs b/crates/flea-gui/src/grid/element/paint.rs
+--- a/crates/flea-gui/src/grid/element/paint.rs
++++ b/crates/flea-gui/src/grid/element/paint.rs
+@@ -227,26 +227,28 @@
+                 pictures.record_paint(drawn.listing, at, window, painted);
+             }
+         } else {
+-            let (key, data) = drawn.language.clone().unwrap_or_else(|| {
+-                drawn
+-                    .tile
+-                    .as_ref()
+-                    .map_or(crate::row::marks::Mark::File, |tile| tile.mark)
+-                    .svg()
+-            });
+             let mark_ink = if drawn.cursor || drawn.selected {
+                 ink.foreground
+             } else {
+                 ink.muted_frame
+             };
+-            let _ = window.paint_svg(
+-                bounds_of(origin, layout.mark(drawn.slot)),
+-                key,
+-                Some(data),
+-                TransformationMatrix::unit(),
+-                mark_ink.opacity(dim),
+-                cx,
+-            );
++            let bounds = bounds_of(origin, layout.mark(drawn.slot));
++            let mark = drawn
++                .tile
++                .as_ref()
++                .map_or(crate::row::marks::Mark::File, |tile| tile.mark);
++            // A language logo is only the fallback, never a replacement for a themed MIME icon.
++            if !mark.paint_theme(bounds, mark_ink.a * dim, window, cx) {
++                let (key, data) = drawn.language.clone().unwrap_or_else(|| mark.svg());
++                let _ = window.paint_svg(
++                    bounds,
++                    key,
++                    Some(data),
++                    TransformationMatrix::unit(),
++                    mark_ink.opacity(dim),
++                    cx,
++                );
++            }
+         }
+         let Some(tile) = drawn.tile.as_ref().filter(|_| !drawn.editing) else {
+             return;
+diff --git a/crates/flea-gui/src/grid/tile.rs b/crates/flea-gui/src/grid/tile.rs
+--- a/crates/flea-gui/src/grid/tile.rs
++++ b/crates/flea-gui/src/grid/tile.rs
+@@ -148,7 +148,7 @@
+         widest: lines.iter().map(|line| line.centred).fold(0., f32::max),
+         caption,
+         lines,
+-        mark: Mark::for_row(&row.icon, row.mode),
++        mark: Mark::for_file(&row.name, row.dir, row.mode, &row.icon, false),
+         elided,
+     }
+ }
+diff --git a/crates/flea-gui/src/list/join_parity_tests.rs b/crates/flea-gui/src/list/join_parity_tests.rs
+--- a/crates/flea-gui/src/list/join_parity_tests.rs
++++ b/crates/flea-gui/src/list/join_parity_tests.rs
+@@ -227,7 +227,7 @@
+             })
+             .unwrap();
+         assert_eq!(
+-            mark.map(|mark| matches!(mark, Mark::Language(_))),
++            mark.map(|mark| matches!(mark.fallback(), Mark::Language(_))),
+             Some(language),
+             "langMarks {on} drew {mark:?} for main.rs"
+         );
+diff --git a/crates/flea-gui/src/list/picker.rs b/crates/flea-gui/src/list/picker.rs
+--- a/crates/flea-gui/src/list/picker.rs
++++ b/crates/flea-gui/src/list/picker.rs
+@@ -159,7 +159,9 @@
+         .prepared
+         .as_ref()
+         .map_or(Mark::File, |prepared| prepared.mark);
+-    let (key, data) = mark.svg();
+-    paint_mark(key, data, at, metrics.mark, ink.opacity(dim), window, cx);
++    let bounds = Bounds::new(at, size(px(metrics.mark), px(metrics.mark)));
++    #[cfg(test)]
++    crate::bfx_cols_tests::record_mark(&mark.svg().0, bounds);
++    mark.paint(bounds, ink.opacity(dim), window, cx);
+     (1, 0)
+ }
+diff --git a/crates/flea-gui/src/list/tests.rs b/crates/flea-gui/src/list/tests.rs
+--- a/crates/flea-gui/src/list/tests.rs
++++ b/crates/flea-gui/src/list/tests.rs
+@@ -269,7 +269,7 @@
+         )
+     );
+     assert_eq!(
+-        (before[3].mark, now[3].mark),
++        (before[3].mark.fallback(), now[3].mark.fallback()),
+         (
+             crate::row::marks::Mark::FileText,
+             crate::row::marks::Mark::Image
+diff --git a/crates/flea-gui/src/row/language_tests.rs b/crates/flea-gui/src/row/language_tests.rs
+--- a/crates/flea-gui/src/row/language_tests.rs
++++ b/crates/flea-gui/src/row/language_tests.rs
+@@ -169,8 +169,11 @@
+             mode: 0o100644,
+             ..RowFacts::default()
+         };
+-        assert!(matches!(Mark::for_facts(&row, true), Mark::Language(_)));
+-        assert_eq!(Mark::for_facts(&row, false), Mark::Code);
++        assert!(matches!(
++            Mark::for_facts(&row, true).fallback(),
++            Mark::Language(_)
++        ));
++        assert_eq!(Mark::for_facts(&row, false).fallback(), Mark::Code);
+         assert_eq!(
+             Mark::for_facts(
+                 &RowFacts {
+@@ -179,7 +182,8 @@
+                     ..row.clone()
+                 },
+                 true
+-            ),
++            )
++            .fallback(),
+             Mark::Folder
+         );
+         assert_eq!(
+@@ -189,7 +193,8 @@
+                     ..row
+                 },
+                 true
+-            ),
++            )
++            .fallback(),
+             Mark::Symlink
+         );
+     }
+diff --git a/crates/flea-gui/src/row/marks/system_icons.rs b/crates/flea-gui/src/row/marks/system_icons.rs
+new file mode 100644
+--- /dev/null
++++ b/crates/flea-gui/src/row/marks/system_icons.rs
+@@ -0,0 +1,237 @@
++//! Session file icons. Selection and painting do no filesystem work; even misses are cached.
++use super::Mark;
++use crate::g2::pv1;
++use flea::ui_logic_op3::openwith::icons::Icons;
++use gpui::{App, Bounds, Corners, Pixels, RenderImage, SvgRenderer, Window};
++use std::{
++    collections::HashMap,
++    sync::{atomic::AtomicU64, Arc, Mutex, OnceLock},
++};
++
++const MAX_NAMES: usize = 1024;
++const MAX_RASTERS: usize = 128;
++
++type Identity = (Arc<str>, Mark);
++#[derive(Default)]
++struct Names {
++    ids: HashMap<(String, Mark), u16>,
++    entries: Vec<Identity>,
++}
++fn names() -> &'static Mutex<Names> {
++    static NAMES: OnceLock<Mutex<Names>> = OnceLock::new();
++    NAMES.get_or_init(Default::default)
++}
++
++pub(super) fn intern(name: &str, fallback: Mark) -> Mark {
++    // Row icon names are theme components, never paths supplied by a remote listing.
++    if name.is_empty()
++        || name.len() > 255
++        || name.contains(['/', '\0'])
++        || matches!(name, "." | "..")
++    {
++        return fallback;
++    }
++    let mut names = names().lock().unwrap();
++    let key = (name.to_owned(), fallback);
++    if let Some(id) = names.ids.get(&key) {
++        return Mark::Themed(*id);
++    }
++    if names.entries.len() >= MAX_NAMES {
++        return fallback;
++    }
++    let id = names.entries.len() as u16;
++    names.entries.push((Arc::from(name), fallback));
++    names.ids.insert(key, id);
++    Mark::Themed(id)
++}
++
++pub(super) fn identity(mark: Mark) -> Identity {
++    if let Mark::Themed(id) = mark {
++        return names()
++            .lock()
++            .unwrap()
++            .entries
++            .get(id as usize)
++            .cloned()
++            .unwrap_or_else(|| (Arc::from(""), Mark::File));
++    }
++    let name = match mark {
++        Mark::Folder => "folder",
++        Mark::File => "application-octet-stream",
++        Mark::FileText => "text-x-generic",
++        Mark::Code | Mark::Language(_) => "text-x-script",
++        Mark::Image => "image-x-generic",
++        Mark::Film => "video-x-generic",
++        Mark::Music => "audio-x-generic",
++        Mark::Archive => "package-x-generic",
++        Mark::Type => "font-x-generic",
++        Mark::Terminal => "application-x-executable",
++        Mark::Table => "x-office-spreadsheet",
++        Mark::Presentation => "x-office-presentation",
++        Mark::Symlink => "emblem-symbolic-link",
++        Mark::Themed(_) => unreachable!(),
++    };
++    (Arc::from(name), mark)
++}
++
++#[derive(Clone, Hash, PartialEq, Eq)]
++struct Key {
++    name: Arc<str>,
++    side: u32,
++    alpha: u8,
++}
++#[derive(Clone)]
++enum Raster {
++    Pending,
++    Ready(Arc<RenderImage>),
++    Missing,
++}
++#[derive(Default)]
++struct Cache {
++    entries: HashMap<Key, (u64, Raster)>,
++    clock: u64,
++}
++impl Cache {
++    /// A pending request is never evicted: one job per key, including simultaneous windows.
++    fn request(&mut self, key: &Key) -> (Raster, bool) {
++        self.clock += 1;
++        if let Some((used, raster)) = self.entries.get_mut(key) {
++            *used = self.clock;
++            return (raster.clone(), false);
++        }
++        if self.entries.len() >= MAX_RASTERS {
++            let oldest = self
++                .entries
++                .iter()
++                .filter(|(_, (_, raster))| !matches!(raster, Raster::Pending))
++                .min_by_key(|(_, (used, _))| *used)
++                .map(|(key, _)| key.clone());
++            let Some(oldest) = oldest else {
++                return (Raster::Missing, false);
++            };
++            self.entries.remove(&oldest);
++        }
++        self.entries
++            .insert(key.clone(), (self.clock, Raster::Pending));
++        (Raster::Pending, true)
++    }
++    fn finish(&mut self, key: Key, image: Option<Arc<RenderImage>>) {
++        if let Some((_, raster)) = self.entries.get_mut(&key) {
++            *raster = image.map_or(Raster::Missing, Raster::Ready);
++        }
++    }
++}
++fn cache() -> &'static Mutex<Cache> {
++    static CACHE: OnceLock<Mutex<Cache>> = OnceLock::new();
++    CACHE.get_or_init(Default::default)
++}
++
++fn candidates(name: &str) -> Vec<&str> {
++    let name = if name == "inode-directory" {
++        "folder"
++    } else {
++        name
++    };
++    let generic = match name.split('-').next().unwrap_or("") {
++        "text" => "text-x-generic",
++        "image" => "image-x-generic",
++        "audio" => "audio-x-generic",
++        "video" => "video-x-generic",
++        "font" => "font-x-generic",
++        "application" => "application-x-generic",
++        _ => name,
++    };
++    if generic == name {
++        vec![name]
++    } else {
++        vec![name, generic]
++    }
++}
++
++/// The existing bounded, untrusted SVG/PNG decoder keeps colour rather than making an alpha mask.
++fn load(icons: &Icons, key: &Key, renderer: SvgRenderer) -> Option<Arc<RenderImage>> {
++    for name in candidates(&key.name) {
++        let Some(path) = icons.resolve(name, key.side, 1) else {
++            continue;
++        };
++        if !matches!(
++            path.extension().and_then(|s| s.to_str()),
++            Some("svg" | "png")
++        ) {
++            continue;
++        }
++        let job = pv1::RasterJob {
++            raster: pv1::raster_for_path(&path, renderer.clone()),
++            path,
++            size: (key.side, key.side),
++            epoch: 0,
++            latest: Arc::new(AtomicU64::new(0)),
++        };
++        if let pv1::RasterOutcome::Raster(image) = pv1::raster_run(&job) {
++            return with_alpha(image, key.alpha);
++        }
++    }
++    None
++}
++
++fn with_alpha(image: Arc<RenderImage>, alpha: u8) -> Option<Arc<RenderImage>> {
++    if alpha == 255 {
++        return Some(image);
++    }
++    let size = image.size(0);
++    let mut bytes = image.as_bytes(0)?.to_vec();
++    // RenderImage holds straight BGRA. Do not tint RGB when dimming cut/disabled rows.
++    for pixel in bytes.chunks_exact_mut(4) {
++        pixel[3] = (u16::from(pixel[3]) * u16::from(alpha) / 255) as u8;
++    }
++    RenderImage::from_bgra(size.width.0 as u32, size.height.0 as u32, bytes).map(Arc::new)
++}
++
++pub(super) fn paint(
++    mark: Mark,
++    bounds: Bounds<Pixels>,
++    opacity: f32,
++    window: &mut Window,
++    cx: &App,
++) -> bool {
++    let (name, _) = identity(mark);
++    // Size buckets bound resize churn; 256 device pixels is ample for file marks, including HiDPI.
++    let pixels = (f32::from(bounds.size.width.max(bounds.size.height)) * window.scale_factor())
++        .ceil()
++        .clamp(1., 256.) as u32;
++    let key = Key {
++        name,
++        side: pixels.next_power_of_two().max(16),
++        alpha: (opacity.clamp(0., 1.) * 255.).round() as u8,
++    };
++    let (raster, fresh) = cache().lock().unwrap().request(&key);
++    if fresh {
++        let renderer = cx.svg_renderer();
++        let (done, completion) = async_channel::bounded(1);
++        // Detached work completes its cache entry even if the initiating window/app closes.
++        cx.background_executor()
++            .spawn(async move {
++                static SESSION: OnceLock<Icons> = OnceLock::new();
++                let image = load(SESSION.get_or_init(Icons::session), &key, renderer);
++                cache().lock().unwrap().finish(key, image);
++                let _ = done.try_send(());
++            })
++            .detach();
++        cx.spawn(async move |cx| {
++            let _ = completion.recv().await;
++            cx.update(|cx| cx.refresh_windows());
++        })
++        .detach();
++    }
++    let Raster::Ready(image) = raster else {
++        return false;
++    };
++    let fit = gpui::ObjectFit::Contain.get_bounds(bounds, image.size(0));
++    window
++        .paint_image(bounds, fit, Corners::default(), image, 0, false)
++        .is_ok()
++}
++
++#[cfg(test)]
++#[path = "system_icons_tests.rs"]
++mod tests;
+diff --git a/crates/flea-gui/src/row/marks/system_icons_tests.rs b/crates/flea-gui/src/row/marks/system_icons_tests.rs
+new file mode 100644
+--- /dev/null
++++ b/crates/flea-gui/src/row/marks/system_icons_tests.rs
+@@ -0,0 +1,177 @@
++use super::*;
++use std::{path::PathBuf, sync::atomic::Ordering};
++
++struct Theme {
++    root: PathBuf,
++    icons: Icons,
++}
++impl Theme {
++    fn new() -> Self {
++        static NEXT: AtomicU64 = AtomicU64::new(0);
++        let root = std::env::temp_dir().join(format!(
++            "flea-system-icons-{}-{}",
++            std::process::id(),
++            NEXT.fetch_add(1, Ordering::Relaxed)
++        ));
++        std::fs::create_dir_all(root.join("Yaru-sage-dark")).unwrap();
++        std::fs::create_dir_all(root.join("Parent/scalable/mimetypes")).unwrap();
++        std::fs::write(
++            root.join("Yaru-sage-dark/index.theme"),
++            "[Icon Theme]\nInherits=Parent\n",
++        )
++        .unwrap();
++        std::fs::write(root.join("Parent/index.theme"),
++            "[Icon Theme]\nDirectories=scalable/mimetypes\n[scalable/mimetypes]\nSize=32\nType=Scalable\nMinSize=16\nMaxSize=256\n").unwrap();
++        let icons = Icons {
++            theme: "Yaru-sage-dark".into(),
++            bases: vec![root.clone()],
++            pixmaps: Vec::new(),
++        };
++        Self { root, icons }
++    }
++    fn write(&self, name: &str, data: &[u8]) {
++        std::fs::write(self.root.join("Parent/scalable/mimetypes").join(name), data).unwrap();
++    }
++    fn load(&self, name: &str, alpha: u8) -> Option<Arc<RenderImage>> {
++        load(
++            &self.icons,
++            &key(name, alpha),
++            SvgRenderer::new(Arc::new(())),
++        )
++    }
++}
++impl Drop for Theme {
++    fn drop(&mut self) {
++        let _ = std::fs::remove_dir_all(&self.root);
++    }
++}
++fn key(name: &str, alpha: u8) -> Key {
++    Key {
++        name: Arc::from(name),
++        side: 32,
++        alpha,
++    }
++}
++const COLOUR: &[u8] = br##"<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><path fill="#ff0000" d="M0 0h16v32H0z"/><path fill="#00ff00" d="M16 0h16v32H16z"/></svg>"##;
++
++#[test]
++fn exact_mime_names_survive_copy_marks_and_language_logos_are_only_fallbacks() {
++    let pdf = Mark::for_icon("application-pdf", 0o100644);
++    let source = Mark::for_file("main.rs", false, 0o100644, "text-x-rust", true);
++    assert_eq!(&*identity(pdf).0, "application-pdf");
++    assert_eq!(pdf.fallback(), Mark::File);
++    assert_eq!(&*identity(source).0, "text-x-rust");
++    assert!(matches!(source.fallback(), Mark::Language(_)));
++    assert_eq!(
++        source,
++        Mark::for_file("main.rs", false, 0o100644, "text-x-rust", true)
++    );
++    assert_eq!(source.svg(), source.fallback().svg());
++    let link = Mark::for_file("main.rs", false, 0o120777, "text-x-rust", true);
++    assert_eq!(link.fallback(), Mark::Symlink);
++    assert_eq!(
++        &*identity(Mark::for_file("d", true, 0o040755, "", true)).0,
++        "folder"
++    );
++    for unsafe_name in ["/tmp/icon.svg", "../icon", "..", "a\0b"] {
++        assert_eq!(Mark::for_icon(unsafe_name, 0o100644), Mark::File);
++    }
++}
++
++#[test]
++fn inherited_svg_keeps_rgb_and_cut_opacity_does_not_tint_it() {
++    let theme = Theme::new();
++    theme.write("text-x-rust.svg", COLOUR);
++    let mark = Mark::for_file("main.rs", false, 0o100644, "text-x-rust", true);
++    let normal = theme.load(&identity(mark).0, 255).unwrap();
++    let cut = theme.load("text-x-rust", 102).unwrap();
++    for (x, bgra) in [(8, [0, 0, 255, 255]), (24, [0, 255, 0, 255])] {
++        let at = (16 * 32 + x) * 4;
++        assert_eq!(&normal.as_bytes(0).unwrap()[at..at + 4], &bgra);
++        assert_eq!(&cut.as_bytes(0).unwrap()[at..at + 3], &bgra[..3]);
++        assert_eq!(cut.as_bytes(0).unwrap()[at + 3], 102);
++    }
++}
++
++#[test]
++fn png_is_full_colour_and_malformed_specific_svg_can_use_generic_theme_icon() {
++    let theme = Theme::new();
++    let path = theme
++        .root
++        .join("Parent/scalable/mimetypes/text-x-generic.png");
++    image::RgbaImage::from_pixel(32, 32, image::Rgba([32, 160, 240, 255]))
++        .save_with_format(path, image::ImageFormat::Png)
++        .unwrap();
++    theme.write("text-x-rust.svg", b"not an SVG");
++    let image = theme.load("text-x-rust", 255).unwrap();
++    assert_eq!(&image.as_bytes(0).unwrap()[0..4], &[240, 160, 32, 255]);
++    assert!(theme.load("folder", 255).is_none());
++    theme.write("folder.svg", b"<svg broken");
++    assert!(theme.load("folder", 255).is_none());
++    // Missing/malformed assets leave exactly the old built-in available to the painter.
++    let folder = Mark::for_icon("folder", 0o040755);
++    assert_eq!(folder.svg(), Mark::Folder.svg());
++}
++
++#[test]
++fn specific_icon_beats_generic_and_invalid_theme_still_has_builtin_fallback() {
++    let theme = Theme::new();
++    theme.write("application-pdf.svg", COLOUR);
++    theme.write("application-x-generic.svg", b"broken generic");
++    assert!(theme.load("application-pdf", 255).is_some());
++    std::fs::write(theme.root.join("Parent/index.theme"), "not an icon theme").unwrap();
++    assert!(theme.load("application-pdf", 255).is_none());
++    assert_eq!(
++        Mark::for_icon("application-pdf", 0o100644).svg(),
++        Mark::File.svg()
++    );
++}
++
++#[test]
++fn requests_and_negative_results_are_cached_and_pending_work_is_never_duplicated() {
++    let mut cache = Cache::default();
++    let wanted = key("folder", 255);
++    assert!(cache.request(&wanted).1);
++    assert!(!cache.request(&wanted).1);
++    cache.finish(wanted.clone(), None);
++    let (raster, fresh) = cache.request(&wanted);
++    assert!(matches!(raster, Raster::Missing));
++    assert!(
++        !fresh,
++        "a missing icon must not cause disk work on every frame"
++    );
++    let image = Arc::new(RenderImage::from_bgra(1, 1, vec![0, 0, 255, 255]).unwrap());
++    cache.finish(wanted.clone(), Some(Arc::clone(&image)));
++    let (raster, fresh) = cache.request(&wanted);
++    let Raster::Ready(held) = raster else {
++        panic!("completed raster lost")
++    };
++    assert!(Arc::ptr_eq(&held, &image));
++    assert!(!fresh);
++    assert!(
++        cache.request(&key("folder", 102)).1,
++        "cut opacity has its own raster"
++    );
++    let mut bigger = wanted.clone();
++    bigger.side = 64;
++    assert!(
++        cache.request(&bigger).1,
++        "HiDPI and Grid need size-specific rasters"
++    );
++}
++
++#[test]
++fn raster_cache_is_bounded_and_only_completed_entries_can_be_evicted() {
++    let mut cache = Cache::default();
++    for n in 0..MAX_RASTERS {
++        assert!(cache.request(&key(&format!("icon-{n}"), 255)).1);
++    }
++    let overflow = key("overflow", 255);
++    assert!(!cache.request(&overflow).1);
++    assert_eq!(cache.entries.len(), MAX_RASTERS);
++    cache.finish(key("icon-0", 255), None);
++    assert!(cache.request(&overflow).1);
++    assert!(!cache.entries.contains_key(&key("icon-0", 255)));
++    assert!(!cache.request(&key("icon-1", 255)).1);
++    assert_eq!(cache.entries.len(), MAX_RASTERS);
++}
+diff --git a/crates/flea-gui/src/row/marks.rs b/crates/flea-gui/src/row/marks.rs
+--- a/crates/flea-gui/src/row/marks.rs
++++ b/crates/flea-gui/src/row/marks.rs
+@@ -1,10 +1,12 @@
+-//! Row marks: Lucide 1.38.0 path data (ISC), the Omarchy cut ui/js/Icons.js carries, drawn as alpha masks.
++//! Session-themed row icons, with the Lucide 1.38.0 alpha-mask glyphs (ISC) as fallback.
+ //! Language logos are simple-icons geometry (CC0 1.0), trademarks of their owners, as ui/js/LangMarkPaths.js carries them.
+ use flea::protocol::RowFacts;
+ use gpui::SharedString;
+ 
+-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+ pub enum Mark {
++    /// Session icon identity; keeps the enum Copy without discarding MIME names.
++    Themed(u16),
+     Folder,
+     File,
+     FileText,
+@@ -36,6 +38,7 @@
+ 
+ mod clip;
+ pub use clip::{ClipMark, ClipMarks};
++mod system_icons;
+ 
+ impl Mark {
+     /// Icons.js glyphForRow(): a symlink by its mode, everything else by its icon name.
+@@ -59,24 +62,68 @@
+         }
+     }
+ 
+-    /// Row.qml's slot: a code file wears its language's logo while language marks are on, every other row its kind's mark.
++    /// Prefer the session's file icon, retaining language logos as an optional built-in fallback.
+     pub fn for_facts(row: &RowFacts, languages: bool) -> Self {
+         Self::for_file(&row.name, row.dir, row.mode, &row.icon, languages)
+     }
+ 
+     /// The same selector for subjects and peek rows that carry file facts without a protocol row.
+     pub fn for_file(name: &str, dir: bool, mode: u32, icon: &str, languages: bool) -> Self {
+-        if languages && !dir && !super::is_symlink(mode) {
+-            if let Some(language) = Language::for_file(name) {
+-                return Self::Language(language);
+-            }
+-        }
+-        Self::for_row(icon, mode)
++        let fallback = if languages && !dir && !super::is_symlink(mode) {
++            Language::for_file(name).map(Self::Language)
++        } else {
++            None
++        }
++        .unwrap_or_else(|| Self::for_row(icon, mode));
++        system_icons::intern(if dir { "folder" } else { icon }, fallback)
++    }
++
++    /// Keep the exact backend MIME icon, even when its built-in fallback is just File.
++    pub fn for_icon(icon: &str, mode: u32) -> Self {
++        system_icons::intern(icon, Self::for_row(icon, mode))
++    }
++
++    /// The original built-in glyph, also used while a theme asset is pending or missing.
++    pub fn fallback(self) -> Self {
++        system_icons::identity(self).1
++    }
++
++    /// Full-colour theme image first; action glyphs continue to use their alpha masks.
++    pub fn paint(
++        self,
++        bounds: gpui::Bounds<gpui::Pixels>,
++        ink: gpui::Hsla,
++        window: &mut gpui::Window,
++        cx: &gpui::App,
++    ) {
++        if self.paint_theme(bounds, ink.a, window, cx) {
++            return;
++        }
++        let (key, data) = self.svg();
++        let _ = window.paint_svg(
++            bounds,
++            key,
++            Some(data),
++            gpui::TransformationMatrix::unit(),
++            ink,
++            cx,
++        );
++    }
++
++    pub fn paint_theme(
++        self,
++        bounds: gpui::Bounds<gpui::Pixels>,
++        opacity: f32,
++        window: &mut gpui::Window,
++        cx: &gpui::App,
++    ) -> bool {
++        system_icons::paint(self, bounds, opacity, window, cx)
+     }
+ 
+     /// The Lucide name Icons.js binds, which Ipc.rowGlyph() reads through for_row(); a language logo is drawn on the file page.
+     pub fn name(self) -> &'static str {
+         match self {
++            Self::Themed(_) => self.fallback().name(),
+             Self::Folder => "folder",
+             Self::File | Self::Language(_) => "file",
+             Self::FileText => "file-text",
+@@ -96,6 +143,7 @@
+     /// The atlas key and the SVG document; the key names the mark so each rasterizes once per size.
+     pub fn svg(self) -> (SharedString, &'static [u8]) {
+         let (key, data) = match self {
++            Self::Themed(_) => return self.fallback().svg(),
+             Self::Language(language) => LOGOS[language.0 as usize],
+             Self::Folder => ("flea-mark:folder", svg!("M2 20V3h6l2 3h12v14H2z")),
+             Self::File => ("flea-mark:file", svg!("M4 22V2h10l6 6v14H4z M14 2v6h6")),
+@@ -137,7 +185,7 @@
+ }
+ 
+ /// One of the language logos LangMarks.js knows, by its slug's place in LOGOS.
+-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+ pub struct Language(u8);
+ 
+ impl Language {

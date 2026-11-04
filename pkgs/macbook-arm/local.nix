@@ -166,6 +166,64 @@ in
     }
   );
 
+  flea-unwrapped =
+    (crossPkgs.callPackage ../flea/default.nix {
+      localsend-cli = crossPkgs.callPackage ../localsend-cli/default.nix { };
+      inherit (armPkgs)
+        alsa-lib
+        bat
+        bubblewrap
+        bzip2
+        coreutils
+        expect
+        ffmpegthumbnailer
+        fontconfig
+        gdk-pixbuf
+        git
+        glycin-thumbnailer
+        gzip
+        glib
+        gvfs
+        hicolor-icon-theme
+        hyprland
+        imagemagick
+        jq
+        libarchive
+        libglvnd
+        libxcb
+        libxkbcommon
+        mpv
+        poppler
+        p7zip
+        poppler-utils
+        python3
+        quickjs-ng
+        qt6
+        ripgrep
+        shared-mime-info
+        tailscale
+        udisks2
+        usbmuxd
+        util-linux
+        vulkan-loader
+        wayland
+        wl-clipboard
+        xdg-terminal-exec
+        xdg-utils
+        xz
+        zoxide
+        zstd
+        ;
+      inherit (buildPkgs) cmake makeWrapper pkg-config;
+      inherit (nativePkgs) writeText;
+      writeShellScriptBin = armPkgs.writeShellScriptBin;
+    }).overrideAttrs
+      (_old: {
+        strictDeps = true;
+        # The focused GUI tests must not execute ARM binaries on the x86 builder.
+        doCheck = false;
+      });
+
   oweka = crossPkgs.callPackage ../oweka/default.nix { };
 
   omasend = withZstd (

@@ -17,9 +17,10 @@ let
       ;
   };
   crossPackages =
-    localPackages
+    (removeAttrs localPackages [ "flea-unwrapped" ])
     // inputPackages
     // {
+      flea = localPackages.flea-unwrapped;
       zed-editor = import ../zed-editor/cross.nix {
         nixpkgs = inputs.nixpkgs-unstable;
       };

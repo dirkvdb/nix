@@ -183,9 +183,48 @@
         orrery = prev.callPackage ./pkgs/orrery { };
         oweka = prev.callPackage ./pkgs/oweka { };
         omasend = prev.callPackage ./pkgs/omasend { };
+        localsend-cli = prev.callPackage ./pkgs/localsend-cli { };
         gliff = prev.callPackage ./pkgs/gliff { };
         panda-reader = prev.callPackage ./pkgs/panda-reader { };
         solidcraft = prev.callPackage ./pkgs/solidcraft { };
+        flea-unwrapped = prev.callPackage ./pkgs/flea {
+          localsend-cli = final.localsend-cli;
+        };
+        # Flea expects Arch-style /usr paths, including inside its bwrap jails.
+        flea = prev.buildFHSEnv {
+          pname = "flea";
+          version = final.flea-unwrapped.version;
+          targetPkgs = _: [ final.flea-unwrapped ] ++ final.flea-unwrapped.runtimeInputs;
+          runScript = "${final.flea-unwrapped}/bin/flea";
+          extraBuildCommands = ''
+            mkdir -p $out/usr/bin $out/usr/lib64 $out/usr/share/omarchy
+            ln -sfn ${final.qt6.qtdeclarative}/bin/qml $out/usr/bin/qml6
+            ln -sfn ${final.gvfs}/libexec/gvfsd-fuse $out/usr/lib64/gvfsd-fuse
+          '';
+          extraPreBwrapCmds = ''
+            # Keep the host's Stylix-selected icon theme visible inside the FHS root.
+            ro_mounts+=(--ro-bind-try /run/current-system/sw/share/icons /.host-icons)
+            ro_mounts+=(--ro-bind-try /usr/share/omarchy /.host-omarchy)
+          '';
+          extraBwrapArgs = [
+            "--ro-bind-try"
+            "/.host-icons"
+            "/usr/share/icons"
+            "--ro-bind-try"
+            "/.host-omarchy"
+            "/usr/share/omarchy"
+          ];
+          extraInstallCommands = ''
+            mkdir -p $out/share
+            ln -s ${final.flea-unwrapped}/share/applications $out/share/applications
+            ln -s ${final.flea-unwrapped}/share/dbus-1 $out/share/dbus-1
+            ln -s ${final.flea-unwrapped}/share/icons $out/share/icons
+            ln -s ${final.flea-unwrapped}/share/xdg-desktop-portal $out/share/xdg-desktop-portal
+          '';
+          meta = final.flea-unwrapped.meta // {
+            mainProgram = "flea";
+          };
+        };
 
         xilo-cli = inputs.xilo.packages.${prev.stdenv.hostPlatform.system}.xilo-cli;
         ai-usagebar = inputs.ai-usagebar.packages.${prev.stdenv.hostPlatform.system}.default;

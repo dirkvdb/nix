@@ -16,6 +16,10 @@ QEMU or remote builders:
 just publish-macbook-apps
 ```
 
+Build Flea alone with `just build-macbook-app flea`. This cross-compiles its
+binaries and LocalSend CLI dependency; the MacBook retains its native FHS
+launcher and cached ARM runtime libraries.
+
 ## Remote cross-builds from the MacBook
 
 The MacBook uses `mini.fritz.box` as an x86_64 remote builder for the existing

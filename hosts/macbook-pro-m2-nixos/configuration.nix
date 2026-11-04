@@ -332,6 +332,7 @@ in
     boot.kernel.sysctl."vm.mmap_rnd_bits" = 18;
 
     environment.systemPackages = with pkgs; [
+      flea
       gliff
       make-slack-great-again
       vulkan-tools

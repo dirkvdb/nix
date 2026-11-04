@@ -1,0 +1,26 @@
+diff --git a/crates/flea-gui/src/palette.rs b/crates/flea-gui/src/palette.rs
+--- a/crates/flea-gui/src/palette.rs
++++ b/crates/flea-gui/src/palette.rs
+@@ -117,5 +117,7 @@ impl Theme {
+     pub fn load() -> (Self, ParsedTheme) {
+-        let path = std::env::var("HOME").unwrap_or_default()
+-            + "/.local/state/omarchy/current/theme/colors.toml";
++        let path = std::env::var("FLEA_THEME_FILE").unwrap_or_else(|_| {
++            std::env::var("HOME").unwrap_or_default()
++                + "/.local/state/omarchy/current/theme/colors.toml"
++        });
+         Self::from_text_observed(&std::fs::read_to_string(path).unwrap_or_default())
+     }
+
+diff --git a/crates/flea-gui/src/presentation/source.rs b/crates/flea-gui/src/presentation/source.rs
+--- a/crates/flea-gui/src/presentation/source.rs
++++ b/crates/flea-gui/src/presentation/source.rs
+@@ -53,5 +53,7 @@ impl Sources {
+         let theme = home.join(".local/state/omarchy/current/theme");
+         Self {
+             inputs: [
+-                theme.join("colors.toml"),
++                std::env::var_os("FLEA_THEME_FILE")
++                    .map(PathBuf::from)
++                    .unwrap_or_else(|| theme.join("colors.toml")),
+                 theme.join("shell.toml"),
