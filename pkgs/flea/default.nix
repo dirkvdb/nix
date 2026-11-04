@@ -166,6 +166,9 @@ rustPlatform.buildRustPackage {
     "--lib"
     "row::marks::system_icons"
   ];
+  preCheck = ''
+    export LD_LIBRARY_PATH="${lib.makeLibraryPath runtimeLibs}:$LD_LIBRARY_PATH"
+  '';
   dontWrapQtApps = true;
 
   nativeBuildInputs = [

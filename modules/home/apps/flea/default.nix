@@ -8,6 +8,7 @@
 }:
 let
   inherit (config.local) user;
+  cfg = config.local.apps.flea;
   mkUserHome = mkHome user.name;
   stateDir = "${user.homeDir}/.local/state/flea";
   jsonFormat = pkgs.formats.json { };
@@ -135,12 +136,18 @@ let
   };
 in
 {
-  config = lib.mkIf (pkgs.stdenv.isLinux && (config.local.desktop.enable or false)) (mkUserHome {
-    # Flea writes its UI state here; copy instead of linking the generated settings from the store.
-    home.activation.fleaSettings = inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      run ${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg stateDir}
-      run ${pkgs.coreutils}/bin/cp --remove-destination --no-preserve=mode ${settingsFile} ${lib.escapeShellArg "${stateDir}/ui.json"}
-      run ${pkgs.coreutils}/bin/chmod 600 ${lib.escapeShellArg "${stateDir}/ui.json"}
-    '';
-  });
+  options.local.apps.flea.enable = lib.mkEnableOption "Flea file manager";
+
+  config =
+    lib.mkIf (cfg.enable && pkgs.stdenv.isLinux && (config.local.desktop.enable or false))
+      (mkUserHome {
+        home.packages = [ pkgs.flea ];
+
+        # Flea writes its UI state here; copy instead of linking the generated settings from the store.
+        home.activation.fleaSettings = inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          run ${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg stateDir}
+          run ${pkgs.coreutils}/bin/cp --remove-destination --no-preserve=mode ${settingsFile} ${lib.escapeShellArg "${stateDir}/ui.json"}
+          run ${pkgs.coreutils}/bin/chmod 600 ${lib.escapeShellArg "${stateDir}/ui.json"}
+        '';
+      });
 }

@@ -217,6 +217,7 @@
         direnv.enable = true;
         spotifast.enable = true;
         fladder.enable = true;
+        flea.enable = true;
         ghostty.enable = true;
         herdr.enable = true;
         keepassxc = {
