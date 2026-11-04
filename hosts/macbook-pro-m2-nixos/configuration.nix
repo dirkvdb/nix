@@ -171,6 +171,7 @@ in
         topq.enable = true;
         spotifast.enable = true;
         foliate.enable = true;
+        flea.enable = true;
         localsend.enable = true;
         map.enable = true;
         moonlight.enable = true;

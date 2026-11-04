@@ -15,6 +15,7 @@ let
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
   isWaybarEnabled = config.local.desktop.waybar.enable or false;
   isNoctaliaEnabled = config.local.desktop.noctalia.enable or false;
+  isFleaEnabled = config.local.apps.flea.enable or false;
   isHyprmoncfgEnabled = config.local.services.hyprmoncfg.enable or false;
   sopsEnabled = config.local.apps.sops.enable or false;
   devWorkspaceGapSize = config.local.desktop.hyprland.devWorkspaceGapSize or 0;
@@ -79,11 +80,17 @@ in
       xdgOpenUsePortal = true;
       extraPortals = [
         pkgs.xdg-desktop-portal-gtk
-      ];
-      config.common.default = [
-        "gtk"
-        "hyprland"
-      ];
+      ]
+      ++ lib.optionals isFleaEnabled [ pkgs.flea ];
+      config.common = {
+        default = [
+          "gtk"
+          "hyprland"
+        ];
+      }
+      // lib.optionalAttrs isFleaEnabled {
+        "org.freedesktop.impl.portal.FileChooser" = "flea";
+      };
     };
 
     home.sessionVariables = {

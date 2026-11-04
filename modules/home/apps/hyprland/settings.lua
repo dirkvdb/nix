@@ -199,6 +199,8 @@ hl.window_rule({ match = { class = "(Alacritty|kitty|com.mitchellh.ghostty)" }, 
 -- Float specific apps
 hl.window_rule({ match = { class = "org.gnome.Calculato" }, float = true })
 hl.window_rule({ match = { class = "com.github.finefindus.eyedropper" }, float = true })
+hl.window_rule({ match = { class = "com.thisisgm.flea.picker" }, float = true })
+hl.window_rule({ match = { class = "com.thisisgm.flea.picker" }, size = "1200 800" })
 
 -- Tag floating windows
 hl.window_rule({
