@@ -96,6 +96,7 @@ let
     libxkbcommon
     mpv
     poppler
+    qt6.qtmultimedia
     qt6.qtdeclarative
     qt6.qtwebengine
     stdenv.cc.cc.lib

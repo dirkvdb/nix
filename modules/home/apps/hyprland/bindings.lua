@@ -31,7 +31,6 @@ hl.bind(mod .. " + S", function()
 end, { description = "Browser (workspace 1)" })
 hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd(browser .. " --new-window"), { description = "Browser (new window on current workspace)" })
 hl.bind(mod .. " + D", hl.dsp.exec_cmd("zeditor"), { description = "Dev editor" })
-hl.bind(mod .. " + E", hl.dsp.exec_cmd("nautilus --new-window"), { description = "File manager" })
 hl.bind(mod .. " + G", hl.dsp.exec_cmd("sublime_merge"), { description = "Sublime merge" })
 hl.bind(mod .. " + T", hl.dsp.exec_cmd(terminal .. " -e btop"), { description = "Activity" })
 ---- WEB APPS ----

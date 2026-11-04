@@ -247,7 +247,7 @@ hl.window_rule({ match = { class = "(vivaldi-stable)" }, workspace = "1" })
 hl.window_rule({ match = { class = "(firefox|Firefox|librewolf)" }, workspace = "1" })
 
 hl.window_rule({ match = { class = "(dev.zed.Zed|dev.zed.Zed-Dev)" }, workspace = "3" })
-hl.window_rule({ match = { class = "(org.gnome.Nautilus|thunar)" }, workspace = "5" })
+hl.window_rule({ match = { class = "(com.thisisgm.flea|org.gnome.Nautilus|thunar)" }, workspace = "5" })
 hl.window_rule({ match = { class = "(spotify|Spotify|spotifast|chrome-open\\.spotify\\.com__.*)" }, workspace = "9" })
 hl.window_rule({ match = { class = "(sublime_merge)" }, workspace = "6" })
 hl.window_rule({ match = { class = "(slack)" }, workspace = "7" })

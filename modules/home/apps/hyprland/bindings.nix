@@ -11,6 +11,7 @@ let
   isDesktop = config.local.desktop.enable or false;
   isHeadless = config.local.headless or false;
   isHyprlandEnabled = config.local.desktop.hyprland.enable or false;
+  isFleaEnabled = config.local.apps.flea.enable or false;
 
   vpnjumphostEnabled = config.local.services.vpnjumphost.enable;
   officeworkEnabled = config.local.services.officework.enable;
@@ -25,6 +26,7 @@ in
 
     # Music shortcut and Nix-conditional keybindings for optional services.
     wayland.windowManager.hyprland.extraConfig = lib.mkAfter ''
+      ${lib.optionalString isFleaEnabled ''hl.bind("SUPER + E", hl.dsp.exec_cmd("flea"), { description = "File manager" })''}
       hl.bind("SUPER + SHIFT + M", hl.dsp.exec_cmd(${
         lib.generators.toLua { } musicCmd
       }), { description = "Music" })

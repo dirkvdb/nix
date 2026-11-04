@@ -27,8 +27,10 @@
     };
     gtkTheme = "Adwaita-dark";
     gtkThemePackage = pkgs.gnome-themes-extra;
-    iconTheme = "Yaru-sage-dark";
-    iconThemePackage = pkgs.yaru-theme;
+    # iconTheme = "Colloid-Dark";
+    # iconThemePackage = pkgs.colloid-icon-theme;
+    iconTheme = "kora-pgrey";
+    iconThemePackage = pkgs.kora-icon-theme;
     uiFont = "Inter";
     uiFontSerif = "Noto Serif";
     uiFontSize = 10;
@@ -52,8 +54,8 @@
     base16Scheme = "${pkgs.base16-schemes}/share/themes/ayu-mirage.yaml";
     gtkTheme = "Adwaita-dark";
     gtkThemePackage = pkgs.gnome-themes-extra;
-    iconTheme = "Tela-nord";
-    iconThemePackage = pkgs.tela-icon-theme;
+    iconTheme = "Colloid-Dark";
+    iconThemePackage = pkgs.colloid-icon-theme;
     uiFont = "Inter";
     uiFontSerif = "Noto Serif";
     uiFontSize = 10;
