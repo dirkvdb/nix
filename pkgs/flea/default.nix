@@ -156,26 +156,68 @@ rustPlatform.buildRustPackage {
   buildInputs = runtimeLibs;
 
   postPatch = ''
-    old="$(printf '%s\n' '    "/usr",' '    "/usr",' '    "--ro-bind",' '    "/etc",' '    "/etc",')"
-    new="$(printf '%s\n' '    "/usr",' '    "/usr",' '    "--ro-bind",' '    "/nix",' '    "/nix",' '    "--ro-bind",' '    "/etc",' '    "/etc",')"
-    substituteInPlace src/backend/sandbox.rs --replace-fail "$old" "$new"
-    # Store binaries are already mounted read-only. FHS user namespaces map
-    # their root owner to nobody, so rebinding them fails the external-tool check.
-    substituteInPlace src/backend/thumbbind.rs \
-      --replace-fail 'const JAIL_ROOTS: [&str; 6] = ["/usr", "/etc", "/bin", "/sbin", "/lib", "/lib64"];' \
-        'const JAIL_ROOTS: [&str; 7] = ["/usr", "/etc", "/bin", "/sbin", "/lib", "/lib64", "/nix/store"];' \
-      --replace-fail 'const MOUNTED: [&str; 2] = ["/usr", "/etc"];' \
-        'const MOUNTED: [&str; 3] = ["/usr", "/etc", "/nix/store"];'
-    # The GUI re-execs its Nix ELF as /flea-media; its loader and FHS library
-    # symlink targets must remain accessible after entering the media sandbox.
-    substituteInPlace crates/flea-gui/src/g2/pv3/sandbox.rs \
-      --replace-fail '        "--clearenv",' '        "--clearenv",
-            "--ro-bind",
-            "/nix/store",
-            "/nix/store",'
-    substituteInPlace src/defaults.rs \
-      --replace-fail '/usr/lib/flea/flea-filemanager1' \
-        '${placeholder "out"}/lib/flea/flea-filemanager1'
+        old="$(printf '%s\n' '    "/usr",' '    "/usr",' '    "--ro-bind",' '    "/etc",' '    "/etc",')"
+        new="$(printf '%s\n' '    "/usr",' '    "/usr",' '    "--ro-bind",' '    "/nix",' '    "/nix",' '    "--ro-bind",' '    "/etc",' '    "/etc",')"
+        substituteInPlace src/backend/sandbox.rs --replace-fail "$old" "$new"
+        # Store binaries are already mounted read-only. FHS user namespaces map
+        # their root owner to nobody, so rebinding them fails the external-tool check.
+        substituteInPlace src/backend/thumbbind.rs \
+          --replace-fail 'const JAIL_ROOTS: [&str; 6] = ["/usr", "/etc", "/bin", "/sbin", "/lib", "/lib64"];' \
+            'const JAIL_ROOTS: [&str; 7] = ["/usr", "/etc", "/bin", "/sbin", "/lib", "/lib64", "/nix/store"];' \
+          --replace-fail 'const MOUNTED: [&str; 2] = ["/usr", "/etc"];' \
+            'const MOUNTED: [&str; 3] = ["/usr", "/etc", "/nix/store"];'
+        # The media sandbox re-execs the Nix ELF directly, so restore its packaged
+        # library path after --clearenv removes the wrapper environment.
+        substituteInPlace crates/flea-gui/src/g2/pv3/sandbox.rs \
+          --replace-fail '        "--clearenv",' '        "--clearenv",
+                "--ro-bind",
+                "/nix/store",
+                "/nix/store",
+                "--setenv",
+                "LD_LIBRARY_PATH",
+                "${lib.makeLibraryPath runtimeLibs}",'
+        # PulseAudio clients need a home path and may need the session auth cookie.
+        # Give the helper a private HOME and mount only the cookie file, not user config.
+        substituteInPlace crates/flea-gui/src/g2/pv3/sandbox.rs \
+          --replace-fail '        "--tmpfs",
+            "/tmp",' '        "--tmpfs",
+            "/tmp",
+            "--setenv",
+            "HOME",
+            "/tmp",' \
+          --replace-fail 'fn pulse_socket() -> Option<PathBuf> {' 'fn pulse_cookie() -> Option<PathBuf> {
+        let config = std::env::var_os("XDG_CONFIG_HOME")
+            .map(PathBuf::from)
+            .or_else(|| std::env::var_os("HOME").map(|home| PathBuf::from(home).join(".config")));
+        let runtime = std::env::var_os("XDG_RUNTIME_DIR")
+            .map(|dir| PathBuf::from(dir).join("pulse/cookie"));
+        [
+            std::env::var_os("PULSE_COOKIE").map(PathBuf::from),
+            config.map(|dir| dir.join("pulse/cookie")),
+            runtime,
+        ]
+        .into_iter()
+        .flatten()
+        .find(|path| path.is_file())
+    }
+
+    fn pulse_socket() -> Option<PathBuf> {' \
+          --replace-fail '    let options = Options {' '    if pulse.is_some() {
+            if let Some(cookie) = pulse_cookie() {
+                words.extend([
+                    "--ro-bind".into(),
+                    cookie.display().to_string(),
+                    "/pulse-cookie".into(),
+                    "--setenv".into(),
+                    "PULSE_COOKIE".into(),
+                    "/pulse-cookie".into(),
+                ]);
+            }
+        }
+        let options = Options {'
+        substituteInPlace src/defaults.rs \
+          --replace-fail '/usr/lib/flea/flea-filemanager1' \
+            '${placeholder "out"}/lib/flea/flea-filemanager1'
   '';
 
   postInstall = ''
