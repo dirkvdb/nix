@@ -22,6 +22,8 @@ in
   # https://github.com/nix-community/stylix/pull/2455), so its color mapping
   # is reproduced here directly until that lands upstream.
   config = lib.mkIf cfg.enable (mkUserHome {
+    home.packages = [ llmAgentsPkgs.herdr-app ];
+
     programs.herdr = {
       enable = true;
       package = llmAgentsPkgs.herdr;
