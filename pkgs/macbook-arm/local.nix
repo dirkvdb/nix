@@ -215,8 +215,7 @@ in
         zstd
         ;
       inherit (buildPkgs) cmake makeWrapper pkg-config;
-      inherit (nativePkgs) writeText;
-      writeShellScriptBin = armPkgs.writeShellScriptBin;
+      writeShellScriptBin = crossPkgs.writeShellScriptBin;
     }).overrideAttrs
       (_old: {
         strictDeps = true;
@@ -250,7 +249,6 @@ in
         makeWrapper
         imagemagick
         ;
-      inherit (nativePkgs) writeText;
     }
   );
 }

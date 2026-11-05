@@ -20,12 +20,13 @@ build-arm-cache:
     just push-arm-cache ./result-arm
 
 # Build all selected MacBook user-space apps on x86_64, without QEMU
+# Allow cached ARM wrappers to substitute even when upstream disables substitution.
 build-macbook-apps cores="12":
-    nix build .#macbook-arm-apps --no-update-lock-file --max-jobs 1 --cores {{ cores }} --option extra-platforms "" --builders "" --out-link result-macbook-apps --print-build-logs
+    nix build .#macbook-arm-apps --no-update-lock-file --max-jobs 1 --cores {{ cores }} --option extra-platforms "" --option always-allow-substitutes true --builders "" --out-link result-macbook-apps --print-build-logs
 
 # Build one app (e.g. topq, omasend or tabulite) without rebuilding the bundle
 build-macbook-app package cores="12":
-    nix build ".#{{ package }}-aarch64" --no-update-lock-file --max-jobs 1 --cores {{ cores }} --option extra-platforms "" --builders "" --out-link "result-{{ package }}-arm" --print-build-logs
+    nix build ".#{{ package }}-aarch64" --no-update-lock-file --max-jobs 1 --cores {{ cores }} --option extra-platforms "" --option always-allow-substitutes true --builders "" --out-link "result-{{ package }}-arm" --print-build-logs
 
 # Build and upload all MacBook apps using the dedicated ARM cache token
 publish-macbook-apps cores="12": (build-macbook-apps cores)
