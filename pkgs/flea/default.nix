@@ -2,7 +2,6 @@
   lib,
   rustPlatform,
   fetchFromGitHub,
-  writeText,
   writeShellScriptBin,
   localsend-cli,
   tailscale,
@@ -64,27 +63,6 @@ let
     machine="$1"
     shift
     exec ${tailscale}/bin/tailscale file cp --update-interval=0 -- "$@" "$machine:"
-  '';
-  themeFamily = builtins.fromJSON (builtins.readFile ../../configs/themes/charcoal-grove.json);
-  charcoalGrove = lib.findFirst (
-    theme: theme.appearance == "dark"
-  ) (throw "flea: Charcoal Grove dark palette is missing") themeFamily.themes;
-  charcoalGroveColors = writeText "flea-charcoal-grove-colors.toml" ''
-    background = "${charcoalGrove.style.background}"
-    dark_background = "${charcoalGrove.style."surface.background"}"
-    foreground = "${charcoalGrove.style.text}"
-    bright_foreground = "${charcoalGrove.style."terminal.bright_foreground"}"
-    accent = "${charcoalGrove.style."text.accent"}"
-    muted = "${charcoalGrove.style."text.muted"}"
-    red = "${charcoalGrove.style.error}"
-    orange = "${charcoalGrove.style.conflict}"
-    yellow = "${charcoalGrove.style.warning}"
-    green = "${charcoalGrove.style.success}"
-    blue = "${charcoalGrove.style."terminal.ansi.blue"}"
-    magenta = "${charcoalGrove.style.syntax.operator.color}"
-    cyan = "${charcoalGrove.style.info}"
-    dark_foreground = "${charcoalGrove.style.ignored}"
-    selection = "${charcoalGrove.style."element.selected"}"
   '';
   runtimeLibs = [
     alsa-lib
@@ -150,10 +128,7 @@ rustPlatform.buildRustPackage {
     hash = "sha256-zzGFgcpA2D3AwGKjt8H1cz9mwi/i/iqBNB4xLl35bZg=";
   };
 
-  patches = [
-    ./charcoal-grove.patch
-    ./system-icons.patch
-  ];
+  patches = [ ./system-icons.patch ];
 
   cargoHash = "sha256-eOl8EtxMEKpwRancasWjtYQ+su7WCpppiCtZ+rZ+WMU=";
   cargoBuildFlags = [
@@ -222,8 +197,6 @@ rustPlatform.buildRustPackage {
     install -Dm644 packaging/com.thisisgm.flea.svg \
       $out/share/icons/hicolor/scalable/apps/com.thisisgm.flea.svg
     install -Dm644 LICENSE THIRD-PARTY-LICENSES.txt -t $out/share/licenses/flea
-    install -Dm644 ${charcoalGroveColors} \
-      $out/share/omarchy/themes/charcoal-grove/colors.toml
 
     install -Dm644 ui/qmldir ui/*.qml ui/*.js -t $out/share/flea/ui
     install -Dm644 ui/js/*.js ui/js/*.mjs -t $out/share/flea/ui/js
@@ -249,11 +222,9 @@ rustPlatform.buildRustPackage {
     wrapProgram $out/bin/flea \
       --set FLEA_UI $out/share/flea/ui \
       --set FLEA_BIN $out/bin/flea \
-      --set FLEA_THEME_FILE ${charcoalGroveColors} \
       --prefix PATH : ${lib.makeBinPath runtimeInputs} \
       --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath runtimeLibs}
     wrapProgram $out/bin/flea-gui \
-      --set FLEA_THEME_FILE ${charcoalGroveColors} \
       --prefix PATH : ${lib.makeBinPath runtimeInputs} \
       --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath runtimeLibs}
   '';

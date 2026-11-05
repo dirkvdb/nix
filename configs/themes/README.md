@@ -10,16 +10,30 @@ using `zed-to-gpui-kit.nix`, which maps UI token names and copies syntax
 highlighting and supported editor/status colors. The adapter contains no
 separate palette. App-specific controls reuse the closest shared color role.
 
-Zed, topq, Map, and Omasend select Charcoal Grove for dark mode and Charcoal
-Grove Light for light mode. Zed retains its dark-mode default; topq, Map, and
-Omasend retain their system-following defaults.
+Zed, topq, and Map select Charcoal Grove for dark mode and Charcoal Grove Light
+for light mode. Zed retains its dark-mode default; topq and Map retain their
+system-following defaults.
 
-Omasend's package generates Rust `gpui_omarchy::Theme` palettes from both shared
-variants and embeds them in the executable. Its Light and Dark choices apply the
-corresponding variant, and System follows the window appearance, including
-changes on Linux. The library's platform-specific font defaults are retained;
-no external Omarchy installation or theme file is required.
+On Linux desktops, Home Manager maps the dark variant to Omarchy's semantic
+palette using `zed-to-omarchy.nix` and installs:
 
-Flea's package maps the dark variant to Omarchy `colors.toml` roles and selects
-that file as its GPUI palette, independently of any Omarchy theme selected in the
-user's home directory.
+- `~/.local/state/omarchy/current/theme/colors.toml`
+- `~/.local/state/omarchy/current/theme.name`
+
+Flea, Omasend, and other applications that read the current Omarchy palette discover it
+at this standard location without application-specific theme patches or
+environment overrides. The adapter includes the standard semantic and bright
+color roles, explicit dark mode, and six-digit RGB values for compatibility
+with strict consumers. These paths are intentionally independent of
+`XDG_STATE_HOME`, matching upstream discovery. Home Manager owns the current
+palette; a separate Omarchy theme switcher should not manage the same files.
+
+Omasend uses its upstream System theme mode (the default) to read and follow the
+shared Omarchy palette on Linux. It no longer embeds custom palettes or requires
+a theme patch. If a previous session saved Light or Dark, select System in
+Omasend's theme menu. Explicit Light and Dark use upstream Flexoki Light and Tokyo
+Night respectively; System follows the generated dark palette rather than the
+window appearance.
+
+This does not install Omarchy or its per-application theme templates. Applications
+must support reading the shared palette.
