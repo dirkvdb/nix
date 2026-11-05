@@ -439,31 +439,9 @@ The mandatory SSH preflight must succeed before recording begins. If using an SS
 
 Two timestamped private logs are stored **on the other PC**, each capped at 16 MiB. The recorder stops after 12 hours by default, when either byte cap is reached, or on Ctrl-C; remote sampling also has a time limit. Increase `--hours` if the observation window crosses the next morning. SSH activity can perturb idle behavior, so use the **same instrumentation for baseline and trial**.
 
-#### Automatic recorder on mediastation
+#### Automatic recorder on mediastation (removed)
 
-`hosts/mediastation/watch-mini.nix` now configures **`watch-mini.service`** on `mediastation`, using the same recorder. It starts at boot after `network-online.target`, runs as `dirk`, records 24-hour sessions, and restarts after one minute on completion, byte-cap exhaustion or failure. Failed initial SSH preflights are therefore retried rather than permanently disabling monitoring. Ping recording begins only after the first healthy SSH preflight; once that has succeeded in a session, ping continues independently through SSH failures.
-
-Logs stay on **mediastation's local disk** in **`/var/lib/watch-mini/`**, not on an NFS share or on `mini`. The directory is private (`0700`), logs are `0600`, and each of the two logs per session remains capped at 16 MiB. Systemd-tmpfiles cleans files unused for seven days; this is age-based retention, not a hard aggregate byte quota. Standard output/errors go to the `watch-mini` journal, while the detailed samples go to the files. State is retained across service restarts and reboots.
-
-The service uses `dirk`'s existing SSH configuration and identity files, **not an interactive session's SSH agent**. Mediastation does not use KeePass to populate an agent. The user supplied the public key `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP4oqfUXoR8JbTTg8dY00q4ScAvCDje2n/KGnkahHsJ7 mediastation-mini-monitor`, whose matching private key belongs at `/home/dirk/.ssh/id_ed25519` on mediastation only and must be usable unattended. The public key is now authorized in mini's host configuration with `restrict`, disabling PTY allocation, forwarding and user SSH rc execution; it still permits commands as `dirk`, not only the sampler. Existing authorized keys are retained. No private key is generated, copied or stored in Nix by the agent. After applying mini's updated configuration, test from mediastation with no inherited agent:
-
-```sh
-sudo -Hu dirk env -u SSH_AUTH_SOCK -u SSH_AGENT_PID \
-  ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes -o ControlPath=none \
-  dirk@mini.fritz.box true
-```
-
-The host's Ed25519 public key is pinned in mediastation's system-wide known hosts, verified directly on `mini` during implementation: **`SHA256:qw9mWSIxngAh70r6v341c9nmmbjDmJyzshksv34v5qY`**. A reinstall/key rotation must be verified independently before updating the pin; strict checking is not disabled. LAN routing/firewall access with NordVPN enabled must also work. The recorder neither changes VPN policy nor opens an inbound port on mediastation.
-
-After the user deploys the updated mediastation configuration, inspect it there:
-
-```sh
-systemctl status watch-mini.service --no-pager
-journalctl -u watch-mini.service -n 30 --no-pager
-ls -lt /var/lib/watch-mini/
-```
-
-Validation: the complete mediastation system built successfully with `nix build .#nixosConfigurations.mediastation.config.system.build.toplevel --no-update-lock-file --out-link result-mediastation --print-build-logs`. The generated unit was inspected, the current host's `just build` passed, and all 14 recorder unit tests passed again. Existing unrelated version/deprecation warnings remain. Live SSH authentication from mediastation and the running service have not been verified. No service was activated or started by the agent. Keep this same service running for both baseline and GFXOFF-off observations, since monitoring activity can change idle behavior.
+The automatic `watch-mini.service` has been removed from the mediastation configuration. The manual recorder described above remains available to run from another PC when needed. The SSH public key previously added to mini for this service is unchanged; remove it separately if it is no longer needed.
 
 #### Evidence after another incident
 

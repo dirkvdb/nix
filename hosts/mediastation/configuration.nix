@@ -8,7 +8,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./watch-mini.nix
     ../../modules/nixos/import.nix
     ../../modules/home/import.nix
 
