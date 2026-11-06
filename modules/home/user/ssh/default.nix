@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   lib,
   mkHome,
   ...
@@ -20,69 +19,78 @@ in
       enable = true;
       enableDefaultConfig = false;
 
-      settings = {
+      matchBlocks = {
         mini = {
-          HostName = "mini.fritz.box";
-          User = "dirk";
-          RequestTTY = "yes";
-          ForwardAgent = true;
+          hostname = "mini.fritz.box";
+          user = "dirk";
+          forwardAgent = true;
+          extraOptions.RequestTTY = "yes";
+        };
+        mediastation = {
+          hostname = "mediastation.fritz.box";
+          user = "dirk";
+          forwardAgent = true;
+          extraOptions.RequestTTY = "yes";
         };
         work = {
-          HostName = "p260182.fritz.box";
-          User = "dirk";
-          RequestTTY = "yes";
-          ForwardAgent = true;
+          hostname = "p260182.fritz.box";
+          user = "dirk";
+          forwardAgent = true;
+          extraOptions.RequestTTY = "yes";
         };
         winboat = lib.mkIf winboatEnabled {
-          HostName = "127.0.0.1";
-          User = "dirk";
-          Port = 2222;
-          RequestTTY = "yes";
-          ForwardAgent = true;
-          RemoteForward = lib.mkIf vpnjumphostEnabled "1080 ${socksProxyUrl}";
-          ExitOnForwardFailure = lib.mkIf vpnjumphostEnabled "yes";
-          SendEnv = [ "ARTIFACTORY_TOKEN" ];
+          hostname = "127.0.0.1";
+          user = "dirk";
+          port = 2222;
+          forwardAgent = true;
+          sendEnv = [ "ARTIFACTORY_TOKEN" ];
+          extraOptions = lib.optionalAttrs vpnjumphostEnabled {
+            ExitOnForwardFailure = "yes";
+            RemoteForward = "1080 ${socksProxyUrl}";
+          };
         };
         inky = {
-          HostName = "inky.fritz.box";
-          User = "dirk";
-          ForwardAgent = true;
+          hostname = "inky.fritz.box";
+          user = "dirk";
+          forwardAgent = true;
         };
         odroid = {
-          HostName = "odroid.fritz.box";
-          User = "dirk";
+          hostname = "odroid.fritz.box";
+          user = "dirk";
         };
         macmini = {
-          HostName = "macmini.fritz.box";
-          User = "dirk";
-          ForwardAgent = true;
+          hostname = "macmini.fritz.box";
+          user = "dirk";
+          forwardAgent = true;
         };
         nas = {
-          HostName = "nas.fritz.box";
-          User = "dirk";
-          Port = 6987;
-          RequestTTY = "yes";
-          WarnWeakCrypto = "no-pq-kex";
-          SetEnv = {
+          hostname = "nas.fritz.box";
+          user = "dirk";
+          port = 6987;
+          setEnv = {
             TERM = "vt100";
+          };
+          extraOptions = {
+            RequestTTY = "yes";
+            WarnWeakCrypto = "no-pq-kex";
           };
         };
         cluster = {
-          HostName = "develop.marvin.vito.fritz.box";
-          User = "vdboerd";
-          ProxyCommand = lib.mkIf proxyEnabled "nc -x ${socksProxyUrl} -X 5 %h %p";
-          ForwardAgent = true;
+          hostname = "develop.marvin.vito.fritz.box";
+          user = "vdboerd";
+          proxyCommand = lib.mkIf proxyEnabled "nc -x ${socksProxyUrl} -X 5 %h %p";
+          forwardAgent = true;
           #   RemoteCommand = "fish";
           #   RequestTTY = "yes";
         };
         clusterfs = {
-          HostName = "develop.marvin.vito.fritz.box";
-          ProxyCommand = lib.mkIf proxyEnabled "nc -x ${socksProxyUrl} -X 5 %h %p";
-          User = "vdboerd";
-          ForwardAgent = true;
+          hostname = "develop.marvin.vito.fritz.box";
+          proxyCommand = lib.mkIf proxyEnabled "nc -x ${socksProxyUrl} -X 5 %h %p";
+          user = "vdboerd";
+          forwardAgent = true;
         };
         "*.vito.be *.vito.fritz.box" = lib.mkIf vpnjumphostEnabled {
-          ProxyCommand = "nc -x 127.0.0.1:1080 -X 5 %h %p";
+          proxyCommand = "nc -x 127.0.0.1:1080 -X 5 %h %p";
         };
       };
     };
