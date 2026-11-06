@@ -213,6 +213,16 @@ in
     hardware.asahi.enable = true;
     # Cross-build the kernel and Asahi boot packages on the x86_64 mini builder.
     hardware.asahi.pkgsSystem = "x86_64-linux";
+    # The cross-build package set only receives this overlay, not nixpkgs.overlays.
+    hardware.asahi.overlay = lib.composeExtensions inputs.apple-silicon.overlays.apple-silicon-overlay (
+      final: prev: {
+        asahi-va-driver =
+          assert lib.assertMsg (
+            !(prev ? asahi-va-driver)
+          ) "asahi-va-driver is now available in stable nixpkgs; remove the Asahi driver overlay workaround.";
+          final.callPackage "${inputs.nixpkgs-unstable}/pkgs/by-name/as/asahi-va-driver/package.nix" { };
+      }
+    );
     hardware.asahi.avd.vaapi-support = true;
     hardware.asahi.peripheralFirmwareDirectory =
       (fetchTree {
