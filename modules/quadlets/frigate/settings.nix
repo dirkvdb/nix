@@ -66,7 +66,7 @@
     review.alerts.required_zones = [ "Nest" ];
   };
   cameras.benchcam = {
-    enabled = true;
+    enabled = false;
     motion.enabled = false;
     detect = {
       enabled = false;
