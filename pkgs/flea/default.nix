@@ -54,6 +54,11 @@
 }:
 let
   version = "0.4.0";
+  terminalLauncher = writeShellScriptBin "xdg-terminal-exec" ''
+    # Host terminals must use their own libraries, not Flea's bundled runtime.
+    unset LD_LIBRARY_PATH
+    exec ${xdg-terminal-exec}/bin/xdg-terminal-exec "$@"
+  '';
   omarchyTailscaleSend = writeShellScriptBin "omarchy-tailscale-send" ''
     set -euo pipefail
     if (( $# < 2 )); then
@@ -109,7 +114,7 @@ let
     usbmuxd
     util-linux
     wl-clipboard
-    xdg-terminal-exec
+    terminalLauncher
     xdg-utils
     xz
     zoxide
