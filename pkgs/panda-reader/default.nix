@@ -67,16 +67,16 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "panda-reader";
-  version = "0.2.12";
+  version = "0.2.14";
 
   src = fetchFromGitHub {
     owner = "yuhangch";
     repo = "panda-reader";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-cE/FU01uR4EpcIaMvu4bju19Fp4VFryK50F0kzleup8=";
+    hash = "sha256-CX3gsHryN8KUI8wSQwJVmxOX+Q8QeUK1evTsS+o5oZM=";
   };
 
-  cargoHash = "sha256-AC4omho/3KlSqeaaWhbgwyAxbZHEwRT6loAShxEzX6s=";
+  cargoHash = "sha256-esTXfT9Uqy1f7WoWFb2MQedMvaXd8qjNA4PXvIOVb2c=";
   cargoBuildFlags = [
     "-p"
     "panda-reader"
