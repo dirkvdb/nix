@@ -180,6 +180,22 @@
               };
             }
             {
+              qBittorrent = {
+                href = "http://qbittorrent.arr";
+                description = "Torrent downloads";
+                icon = "qbittorrent";
+                siteMonitor = "http://qbittorrent.arr";
+              };
+            }
+            {
+              SABnzbd = {
+                href = "http://sabnzbd.arr";
+                description = "Usenet downloads";
+                icon = "sabnzbd";
+                siteMonitor = "http://sabnzbd.arr";
+              };
+            }
+            {
               Jellyfin = {
                 href = "http://jellyfin.arr";
                 description = "Media streaming";
