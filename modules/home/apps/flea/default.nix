@@ -117,6 +117,7 @@ let
     menu.hidden = [
       "delete"
       "openTerminal"
+      "openAgent"
       "placeMenu"
       "runScript"
       "moveto"
@@ -129,7 +130,10 @@ let
       "extThumbs"
       "run"
       "openAsText"
-      "openAgent"
+      "dropbox"
+      "rclone"
+      "toggleLangMarks"
+      "actions"
     ];
     updates.autoCheck = false;
     plugins."flea.dropbox".enabled = false;
