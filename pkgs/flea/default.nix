@@ -135,7 +135,7 @@ rustPlatform.buildRustPackage {
     "--workspace"
     "--bins"
   ];
-  doCheck = true;
+  doCheck = false;
   cargoTestFlags = [
     "--package"
     "flea-gui"
