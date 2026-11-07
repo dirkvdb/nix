@@ -220,6 +220,11 @@ rustPlatform.buildRustPackage {
             }
         }
         let options = Options {'
+        # --print-cmd resolves a terminal that Flea then spawns directly, bypassing
+        # terminalLauncher. Do not pass Flea's runtime libraries to that host binary.
+        substituteInPlace src/terminal.rs \
+          --replace-fail '    match terminal.spawn() {' '    terminal.env_remove("LD_LIBRARY_PATH");
+    match terminal.spawn() {'
         substituteInPlace src/defaults.rs \
           --replace-fail '/usr/lib/flea/flea-filemanager1' \
             '${placeholder "out"}/lib/flea/flea-filemanager1'
