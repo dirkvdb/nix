@@ -68,10 +68,6 @@ let
       exec walker --width 644 --maxheight 300 --minheight 300 "$@"
     '')
 
-    (pkgs.writeShellScriptBin "nixcfg-launch-webapp" ''
-      exec setsid ${chromiumPkg}/bin/chromium --app="$1" "''${@:2}"
-    '')
-
     (pkgs.writeShellScriptBin "nixcfg-launch-or-focus-webapp" ''
       if (($# == 0)); then
         echo "Usage: nixcfg-launch-or-focus-webapp [window-pattern] [url-and-flags...]"
@@ -582,6 +578,11 @@ let
       else
         show_main_menu
       fi
+    '')
+  ]
+  ++ lib.optionals (config.local.desktop.enable or false) [
+    (pkgs.writeShellScriptBin "nixcfg-launch-webapp" ''
+      exec setsid ${chromiumPkg}/bin/chromium --app="$1" "''${@:2}"
     '')
   ];
 in
