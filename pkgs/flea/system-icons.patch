@@ -1,4 +1,4 @@
-Flea 0.4.0: use session icon-theme assets for native file marks
+Flea 0.4.1: use session icon-theme assets for native file marks
 
 Reuse the existing Icons::session resolver and bounded full-colour raster helper.
 Keep exact row icon names in Copy marks, with the original glyph/language logo
@@ -8,25 +8,30 @@ missing rasters. Thumbnails retain priority; toolbar/action glyphs are unchanged
 diff --git a/crates/flea-gui/src/columns/element/paint.rs b/crates/flea-gui/src/columns/element/paint.rs
 --- a/crates/flea-gui/src/columns/element/paint.rs
 +++ b/crates/flea-gui/src/columns/element/paint.rs
-@@ -121,16 +121,13 @@
+@@ -121,21 +121,13 @@
                                  pictures_painted += 1;
                              } else {
-                                 let (mark_x, mark_y, mark) = mark_box();
+                                 let (mark_x, mark_y, mark) = mark_box(self.band);
 -                                let (key, data) = prepared.mark.svg();
+                                 let at = Bounds::new(
+                                     point(left + px(mark_x), top + px(mark_y)),
+                                     size(px(mark), px(mark)),
+                                 );
+                                 #[cfg(test)]
+-                                crate::bfx_cols_tests::record_mark(&key, at);
 -                                let _ = window.paint_svg(
-+                                prepared.mark.paint(
-                                     Bounds::new(
-                                         point(left + px(mark_x), top + px(mark_y)),
-                                         size(px(mark), px(mark)),
-                                     ),
+-                                    at,
 -                                    key,
 -                                    Some(data),
 -                                    TransformationMatrix::unit(),
-                                     inks.mark,
-+                                    window,
-                                     cx,
-                                 );
+-                                    inks.mark,
+-                                    cx,
+-                                );
++                                crate::bfx_cols_tests::record_mark(&prepared.mark.svg().0, at);
++                                prepared.mark.paint(at, inks.mark, window, cx);
                              }
+                             let name = prepared.name_for(chevron, cursor);
+                             let name_x = left + px(geometry.name_x);
 diff --git a/crates/flea-gui/src/columns/element.rs b/crates/flea-gui/src/columns/element.rs
 --- a/crates/flea-gui/src/columns/element.rs
 +++ b/crates/flea-gui/src/columns/element.rs
@@ -88,7 +93,7 @@ diff --git a/crates/flea-gui/src/g2/pl3/list.rs b/crates/flea-gui/src/g2/pl3/lis
 diff --git a/crates/flea-gui/src/g2/pl3/paint_sync.rs b/crates/flea-gui/src/g2/pl3/paint_sync.rs
 --- a/crates/flea-gui/src/g2/pl3/paint_sync.rs
 +++ b/crates/flea-gui/src/g2/pl3/paint_sync.rs
-@@ -36,7 +36,7 @@
+@@ -42,7 +42,7 @@
                  mark: if row.directory {
                      Mark::Folder
                  } else {
@@ -252,10 +257,18 @@ diff --git a/crates/flea-gui/src/list/join_parity_tests.rs b/crates/flea-gui/src
 diff --git a/crates/flea-gui/src/list/picker.rs b/crates/flea-gui/src/list/picker.rs
 --- a/crates/flea-gui/src/list/picker.rs
 +++ b/crates/flea-gui/src/list/picker.rs
-@@ -159,7 +159,9 @@
-         .prepared
-         .as_ref()
-         .map_or(Mark::File, |prepared| prepared.mark);
+@@ -1,6 +1,6 @@
+ //! The chooser reuses list rows with a leading check slot and compact foreground metadata.
+ use super::{
+-    element::{paint_mark, Shown},
++    element::Shown,
+     ListView, Metrics, Palette, RowStates,
+ };
+ use crate::grid::element::pictures::paint_in_slot;
+@@ -153,7 +153,9 @@
+         .and_then(|row| super::outline::mark(view, row))
+         .or_else(|| shown.prepared.as_ref().map(|prepared| prepared.mark))
+         .unwrap_or(Mark::File);
 -    let (key, data) = mark.svg();
 -    paint_mark(key, data, at, metrics.mark, ink.opacity(dim), window, cx);
 +    let bounds = Bounds::new(at, size(px(metrics.mark), px(metrics.mark)));
@@ -317,7 +330,7 @@ diff --git a/crates/flea-gui/src/row/marks/system_icons.rs b/crates/flea-gui/src
 new file mode 100644
 --- /dev/null
 +++ b/crates/flea-gui/src/row/marks/system_icons.rs
-@@ -0,0 +1,237 @@
+@@ -0,0 +1,238 @@
 +//! Session file icons. Selection and painting do no filesystem work; even misses are cached.
 +use super::Mark;
 +use crate::g2::pv1;
@@ -377,6 +390,7 @@ new file mode 100644
 +    }
 +    let name = match mark {
 +        Mark::Folder => "folder",
++        Mark::FolderOpen => "folder-open",
 +        Mark::File => "application-octet-stream",
 +        Mark::FileText => "text-x-generic",
 +        Mark::Code | Mark::Language(_) => "text-x-script",
@@ -559,7 +573,7 @@ diff --git a/crates/flea-gui/src/row/marks/system_icons_tests.rs b/crates/flea-g
 new file mode 100644
 --- /dev/null
 +++ b/crates/flea-gui/src/row/marks/system_icons_tests.rs
-@@ -0,0 +1,177 @@
+@@ -0,0 +1,179 @@
 +use super::*;
 +use std::{path::PathBuf, sync::atomic::Ordering};
 +
@@ -618,6 +632,8 @@ new file mode 100644
 +
 +#[test]
 +fn exact_mime_names_survive_copy_marks_and_language_logos_are_only_fallbacks() {
++    assert_eq!(&*identity(Mark::FolderOpen).0, "folder-open");
++    assert_eq!(Mark::FolderOpen.fallback(), Mark::FolderOpen);
 +    let pdf = Mark::for_icon("application-pdf", 0o100644);
 +    let source = Mark::for_file("main.rs", false, 0o100644, "text-x-rust", true);
 +    assert_eq!(&*identity(pdf).0, "application-pdf");
@@ -753,9 +769,9 @@ diff --git a/crates/flea-gui/src/row/marks.rs b/crates/flea-gui/src/row/marks.rs
 +    /// Session icon identity; keeps the enum Copy without discarding MIME names.
 +    Themed(u16),
      Folder,
-     File,
-     FileText,
-@@ -36,6 +38,7 @@
+     /// A folder open in place in the List tree.
+     FolderOpen,
+@@ -38,6 +40,7 @@
  
  mod clip;
  pub use clip::{ClipMark, ClipMarks};
@@ -763,7 +779,7 @@ diff --git a/crates/flea-gui/src/row/marks.rs b/crates/flea-gui/src/row/marks.rs
  
  impl Mark {
      /// Icons.js glyphForRow(): a symlink by its mode, everything else by its icon name.
-@@ -59,24 +62,68 @@
+@@ -61,24 +64,68 @@
          }
      }
  
@@ -837,17 +853,17 @@ diff --git a/crates/flea-gui/src/row/marks.rs b/crates/flea-gui/src/row/marks.rs
          match self {
 +            Self::Themed(_) => self.fallback().name(),
              Self::Folder => "folder",
+             Self::FolderOpen => "folder-open",
              Self::File | Self::Language(_) => "file",
-             Self::FileText => "file-text",
-@@ -96,6 +143,7 @@
+@@ -99,6 +146,7 @@
      /// The atlas key and the SVG document; the key names the mark so each rasterizes once per size.
      pub fn svg(self) -> (SharedString, &'static [u8]) {
          let (key, data) = match self {
 +            Self::Themed(_) => return self.fallback().svg(),
              Self::Language(language) => LOGOS[language.0 as usize],
              Self::Folder => ("flea-mark:folder", svg!("M2 20V3h6l2 3h12v14H2z")),
-             Self::File => ("flea-mark:file", svg!("M4 22V2h10l6 6v14H4z M14 2v6h6")),
-@@ -137,7 +185,7 @@
+             Self::FolderOpen => (
+@@ -144,7 +192,7 @@
  }
  
  /// One of the language logos LangMarks.js knows, by its slug's place in LOGOS.
