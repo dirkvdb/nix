@@ -215,6 +215,7 @@ in
     # The cross-build package set only receives this overlay, not nixpkgs.overlays.
     hardware.asahi.overlay = lib.composeExtensions inputs.apple-silicon.overlays.apple-silicon-overlay (
       final: prev: {
+        avd-fw = final.callPackage "${inputs.nixpkgs-unstable}/pkgs/by-name/av/avd-fw/package.nix" { };
         asahi-va-driver =
           assert lib.assertMsg (
             !(prev ? asahi-va-driver)
