@@ -96,7 +96,6 @@ in
           serie
           binsider
           nixd
-          unstablePkgs.pixi
         ]
       )
 
