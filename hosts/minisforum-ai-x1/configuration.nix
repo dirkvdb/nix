@@ -103,7 +103,10 @@
       theme.preset = "everforest";
 
       system = {
-        kernel.useLatest = true;
+        kernel = {
+          useLatest = true;
+          native = true;
+        };
 
         cpu.cores = 20;
         performance.enable = true;

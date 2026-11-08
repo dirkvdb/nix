@@ -13,11 +13,15 @@ let
   nhConfigurationName = config.local.system.nix.nh.configurationName or null;
   nhHostArg = lib.optionalString (nhConfigurationName != null) " -H ${nhConfigurationName}";
   hostname = config.local.system.network.hostname or "";
-  cachePush =
-    lib.optionalString (hostname == "mini" || nhConfigurationName == "dell-workstation")
-      " && xilo push admin/nix ${
-         if isStandalone then "\"$HOME/.local/state/nix/profiles/home-manager\"" else "/run/current-system"
-       }";
+
+  cachePush = lib.optionalString (hostname == "mini" || nhConfigurationName == "dell-workstation") (
+    if isStandalone then
+      ''&& xilo push admin/nix "$HOME/.local/state/nix/profiles/home-manager"''
+    else if pkgs.stdenv.isDarwin then
+      "&& xilo push admin/nix /run/current-system"
+    else
+      "&& /run/current-system/sw/bin/nixcfg-push-system"
+  );
   switchCommand =
     if isStandalone then
       "nix run home-manager/release-26.05 -- switch -b backup --flake ~/nix#${configName}${cachePush}"
