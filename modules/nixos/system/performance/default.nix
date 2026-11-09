@@ -18,6 +18,9 @@ in
     services.ananicy = {
       enable = true;
       package = pkgs.ananicy-cpp;
+      # Moving realtime processes to the root cgroup breaks logind/polkit
+      # session detection for Hyprland and every application it launches.
+      settings.cgroup_realtime_workaround = lib.mkForce false;
     };
 
     # Distribute hardware interrupts across all CPU cores
