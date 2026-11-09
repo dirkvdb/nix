@@ -76,7 +76,7 @@ in
           };
         };
         cluster = {
-          hostname = "develop.marvin.vito.fritz.box";
+          hostname = "develop.marvin.vito.local";
           user = "vdboerd";
           proxyCommand = lib.mkIf proxyEnabled "nc -x ${socksProxyUrl} -X 5 %h %p";
           forwardAgent = true;
@@ -84,12 +84,12 @@ in
           #   RequestTTY = "yes";
         };
         clusterfs = {
-          hostname = "develop.marvin.vito.fritz.box";
+          hostname = "develop.marvin.vito.local";
           proxyCommand = lib.mkIf proxyEnabled "nc -x ${socksProxyUrl} -X 5 %h %p";
           user = "vdboerd";
           forwardAgent = true;
         };
-        "*.vito.be *.vito.fritz.box" = lib.mkIf vpnjumphostEnabled {
+        "*.vito.be *.vito.local" = lib.mkIf vpnjumphostEnabled {
           proxyCommand = "nc -x 127.0.0.1:1080 -X 5 %h %p";
         };
       };
