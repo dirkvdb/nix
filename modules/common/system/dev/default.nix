@@ -27,7 +27,19 @@ in
         oweka
         unstablePkgs.sccache
         unstablePkgs.devenv
-        unstablePkgs.pixi
+        # Temporary: Pixi 0.83.0 is missing system zstd and AWS-LC build dependencies.
+        (unstablePkgs.pixi.overrideAttrs (
+          old:
+          assert lib.assertMsg (
+            !(builtins.elem unstablePkgs.zstd (old.buildInputs or [ ]))
+          ) "Pixi now includes zstd in buildInputs; remove the temporary Pixi override.";
+          {
+            buildInputs = (old.buildInputs or [ ]) ++ [
+              unstablePkgs.zstd
+              unstablePkgs.aws-lc
+            ];
+          }
+        ))
         llmAgentsPkgs.hunk
         ai-usagebar
       ]
