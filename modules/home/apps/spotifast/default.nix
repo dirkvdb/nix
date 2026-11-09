@@ -12,6 +12,18 @@ let
   cfg = config.local.apps.spotifast;
   mkUserHome = mkHome user.name;
   isHeadless = config.local.headless;
+  spotifast = pkgs.symlinkJoin {
+    name = "spotifast-soloist";
+    paths = [ unstablePkgs.spotifast ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    # Soloist is downloaded unpatched. Match its nix-ld runtime to Spotifast's
+    # unstable audio libraries instead of mixing them with the system libc.
+    postBuild = ''
+      wrapProgram "$out/bin/spotifast" \
+        --set NIX_LD "${unstablePkgs.stdenv.cc.bintools.dynamicLinker}" \
+        --prefix NIX_LD_LIBRARY_PATH : "${lib.makeLibraryPath [ unstablePkgs.glibc ]}"
+    '';
+  };
   settingsFile = pkgs.writeText "spotifast-settings.json" ''
     {
       "device_name": ${builtins.toJSON config.local.system.network.hostname},
@@ -89,7 +101,7 @@ in
   };
 
   config = lib.mkIf (cfg.enable && !isHeadless) (mkUserHome {
-    home.packages = [ unstablePkgs.spotifast ];
+    home.packages = [ spotifast ];
 
     # Render the SOPS-managed client ID at activation time so it never enters
     # the Nix store. Keep the result writable because spotifast updates it.
