@@ -15,6 +15,7 @@ in
     ../../modules/nixos/import.nix
     ../../modules/home/import.nix
 
+    inputs.owly.nixosModules.default
     inputs.stylix.nixosModules.stylix
     inputs.nixos-hardware.nixosModules.common-hidpi
     inputs.nixos-hardware.nixosModules.common-pc-ssd
@@ -22,6 +23,11 @@ in
 
   config = {
     system.stateVersion = "26.05"; # Version at install time, never change
+
+    services.owly = {
+      enable = true;
+      settings.allow_untested = true;
+    };
 
     nix = {
       distributedBuilds = true;
@@ -113,6 +119,7 @@ in
           networkmanager = {
             enable = true;
             vpn.homeVpn = true;
+            enableIpv6 = true;
             wifi.backend = "wpa_supplicant";
           };
         };

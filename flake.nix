@@ -123,6 +123,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    owly = {
+      url = "github:t4t5/owly";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -196,6 +200,7 @@
         tabulite = inputs.tabulite.packages.${prev.stdenv.hostPlatform.system}.default;
         topq = inputs.topq.packages.${prev.stdenv.hostPlatform.system}.default;
         tether = inputs.tether.packages.${prev.stdenv.hostPlatform.system}.tether;
+        owly = inputs.owly.packages.${prev.stdenv.hostPlatform.system}.owly;
 
         hyprexpose = inputs.hyprexpose.packages.${prev.stdenv.hostPlatform.system}.default;
 
