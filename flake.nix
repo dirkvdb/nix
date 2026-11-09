@@ -202,13 +202,13 @@
         # nixos-apple-silicon uses this firmware package before it is available in 26.05.
         avd-fw = (unstablePkgs prev.stdenv.hostPlatform.system).avd-fw;
 
-        # Pin Sublime Merge to Build 2132
+        # Pin Sublime Merge to Build 2136
         sublime-merge = prev.callPackage (import
           "${inputs.nixpkgs}/pkgs/applications/version-management/sublime-merge/common.nix"
           {
-            buildVersion = "2132";
-            aarch64sha256 = "17ibia0j8jvrz6a4fvps9096j0kbdr47wgb5gm9134kav51rshpg";
-            x64sha256 = "1n5ks4q54jgixzd8hgg9lbx5hf0kp33ngs6zk24lw47bgf7wvkh2";
+            buildVersion = "2136";
+            aarch64sha256 = "sha256-YtEnzifgq/eQWtrTtp7A/7N8W1bLQsYr82islf1IoqM=";
+            x64sha256 = "sha256-gwnbtxd2gphEzgYZzWcx/EYNnmhW5O0orEcgWZRgTE0=";
           }
         ) { };
 
