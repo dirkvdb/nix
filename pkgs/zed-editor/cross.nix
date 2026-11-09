@@ -9,6 +9,7 @@ let
   # dependency tree. Only Zed and its build scripts need to be compiled here.
   zed-editor = crossPkgs.zed-editor.override {
     inherit (armPkgs)
+      aws-lc
       libgit2
       sqlite
       zlib
