@@ -8,7 +8,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./freeze-diagnostics.nix
     ../../modules/nixos/import.nix
     ../../modules/home/import.nix
 
@@ -25,9 +24,6 @@
     system.stateVersion = "26.05"; # Version at install time, never change
 
     programs.librepods.enable = true;
-    users.users.dirk.openssh.authorizedKeys.keys = [
-      "restrict ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP4oqfUXoR8JbTTg8dY00q4ScAvCDje2n/KGnkahHsJ7 mediastation-mini-monitor"
-    ];
     users.users.dirk.extraGroups = [
       "librepods"
       "vboxusers"
