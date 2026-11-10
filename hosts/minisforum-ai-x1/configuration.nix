@@ -172,7 +172,7 @@
       services = {
         hyprmoncfg.enable = true;
         nordvpn = {
-          enable = true;
+          enable = false;
           localDns = true;
         };
         ssh = {
