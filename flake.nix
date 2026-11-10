@@ -122,11 +122,6 @@
       url = "github:zackb/tether";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    owly = {
-      url = "github:t4t5/owly";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
