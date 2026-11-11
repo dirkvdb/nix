@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [ "$#" -gt 1 ]; then
-  echo "Usage: nixcfg-publish-aarch64-apps [cores] (run from the Nix configuration checkout)" >&2
+  echo "Usage: nixcfg-publish-aarch64-apps [cores]" >&2
   exit 2
 fi
 
@@ -13,6 +13,9 @@ case "$cores" in
     exit 2
     ;;
 esac
+
+# Use the same checkout for interactive runs and the scheduled service.
+cd "$HOME/nix"
 
 token_file=/run/secrets/xilo_aarch64_push_token
 if [ ! -r "$token_file" ] || [ ! -s "$token_file" ]; then
