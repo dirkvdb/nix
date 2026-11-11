@@ -8,6 +8,7 @@
 let
   cfg = config.local.system.utils;
   hasDesktop = config.local.desktop.enable or false;
+
   sysadmin = with pkgs; [
     bind
     killall
@@ -50,10 +51,11 @@ in
       ++ lib.optionals cfg.sysadmin sysadmin
       ++ lib.optionals hasDesktop [
         sublime-merge
-        unstablePkgs.gitcomet
+
         pinta # image editor
         siffra # calculator
       ];
+
   };
 
 }

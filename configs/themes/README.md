@@ -1,7 +1,7 @@
 # Charcoal Grove
 
 `charcoal-grove.json` is the single source of truth for the Charcoal Grove
-theme family used by Zed, topq, Map, Omasend, and Flea. Edit this file to change
+theme family used by Zed, topq, Map, GitComet Desktop, Omasend, and Flea. Edit this file to change
 their palettes or syntax highlighting. It contains Charcoal Grove (dark) and
 Charcoal Grove Light.
 
@@ -13,6 +13,14 @@ separate palette. App-specific controls reuse the closest shared color role.
 Zed, topq, and Map select Charcoal Grove for dark mode and Charcoal Grove Light
 for light mode. Zed retains its dark-mode default; topq and Map retain their
 system-following defaults.
+
+GitComet Desktop uses `zed-to-gitcomet.nix` to generate its GPUI frontend's
+version 2 theme schema from the same palette, including syntax, diff, and graph
+colors. The `local.apps.gitcomet` module installs both variants in GitComet's
+application-data `themes` directory and selects the dark `charcoal_grove`
+variant by default. Like Flea, settings are copied to a writable regular file on
+every activation; app/user changes remain writable but are reset on activation. See `../../modules/common/apps/gitcomet/README.md` for mutable
+settings and module options.
 
 On Linux desktops, Home Manager maps the dark variant to Omarchy's semantic
 palette using `zed-to-omarchy.nix` and installs:
