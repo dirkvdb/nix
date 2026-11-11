@@ -6,7 +6,7 @@
   rustPlatform,
 }:
 gitcomet.overrideAttrs (
-  finalAttrs: _:
+  finalAttrs: old:
   {
     version = "0.3.4";
     src = fetchFromGitHub {
@@ -15,6 +15,11 @@ gitcomet.overrideAttrs (
       tag = "v${finalAttrs.version}";
       hash = "sha256-zBlJI6n9/Gb/8Fl17DwFUCginvij8KKyOT2eFsc4J0U=";
     };
+    # These CLI-only assertions run against the GUI-enabled binary in the Nix build.
+    checkFlags = (old.checkFlags or [ ]) ++ [
+      "--skip=standalone_difftool_gui_flag_without_ui_feature_exits_two"
+      "--skip=standalone_mergetool_gui_flag_without_ui_feature_exits_two"
+    ];
     cargoDeps = rustPlatform.fetchCargoVendor {
       inherit (finalAttrs) src;
       name = "gitcomet-${finalAttrs.version}";
