@@ -12,6 +12,15 @@ zed-editor.overrideAttrs (old: rec {
   version = zedPinnedVersion;
   doCheck = false;
   doInstallCheck = stdenv.buildPlatform.canExecute stdenv.hostPlatform;
+  # Zed 1.28 renamed the binary, but the inherited installer uses the old name.
+  installPhase =
+    if lib.versionAtLeast version "1.28.0" then
+      assert lib.assertMsg (lib.hasInfix "$release_target/remote_server" old.installPhase)
+        "Zed's upstream install recipe has changed; remove the remote-server installPhase workaround in pkgs/zed-editor/default.nix.";
+      builtins.replaceStrings [ "$release_target/remote_server" ] [ "$release_target/remote-server" ]
+        old.installPhase
+    else
+      old.installPhase;
   patches = (old.patches or [ ]) ++ [
     # https://github.com/zed-industries/zed/pull/55857 (adapted for 1.26.2)
     ../../modules/home/apps/zed/wayland-kinetic-scroll.patch
