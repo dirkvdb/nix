@@ -53,7 +53,7 @@
   zstd,
 }:
 let
-  version = "0.4.1";
+  version = "0.4.2";
   terminalLauncher = writeShellScriptBin "xdg-terminal-exec" ''
     # Host terminals must use their own libraries, not Flea's bundled runtime.
     unset LD_LIBRARY_PATH
@@ -130,12 +130,12 @@ rustPlatform.buildRustPackage {
     owner = "thisisgm";
     repo = "flea";
     tag = "v${version}";
-    hash = "sha256-yqVHNWsWLNnB2pBpk9ZGNciFLrW2LRg5gz/1WtEXuqg=";
+    hash = "sha256-zLoCwfFnxP2ns85jcU5ywh4F2p5SrMDirfBgJig1VG0=";
   };
 
   patches = [ ./system-icons.patch ];
 
-  cargoHash = "sha256-iLl4kOWIhHawsKHp6kR6f8OZijHHk33lTezck8y1sMo=";
+  cargoHash = "sha256-z64BjWipyFhkrgtown7VTg3G1pcs5NV4adCPXLMrR0Q=";
   cargoBuildFlags = [
     "--workspace"
     "--bins"
@@ -173,7 +173,7 @@ rustPlatform.buildRustPackage {
             'const MOUNTED: [&str; 3] = ["/usr", "/etc", "/nix/store"];'
         # The media sandbox re-execs the Nix ELF directly, so restore its packaged
         # library path after --clearenv removes the wrapper environment.
-        substituteInPlace crates/flea-gui/src/g2/pv3/sandbox.rs \
+        substituteInPlace crates/flea-gui/src/g2/media_preview/sandbox.rs \
           --replace-fail '        "--clearenv",' '        "--clearenv",
                 "--ro-bind",
                 "/nix/store",
@@ -183,7 +183,7 @@ rustPlatform.buildRustPackage {
                 "${lib.makeLibraryPath runtimeLibs}",'
         # PulseAudio clients need a home path and may need the session auth cookie.
         # Give the helper a private HOME and mount only the cookie file, not user config.
-        substituteInPlace crates/flea-gui/src/g2/pv3/sandbox.rs \
+        substituteInPlace crates/flea-gui/src/g2/media_preview/sandbox.rs \
           --replace-fail '        "--tmpfs",
             "/tmp",' '        "--tmpfs",
             "/tmp",
