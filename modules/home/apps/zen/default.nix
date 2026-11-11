@@ -229,10 +229,10 @@ in
             "font.size.variable.x-unicode" = theme.uiFontSize + 6;
             "font.size.variable.x-western" = theme.uiFontSize + 6;
             "dom.webserial.enabled" = true;
-          }
-          // lib.optionalAttrs (proxyPacUrl != null) {
-            "network.proxy.type" = 2;
-            "network.proxy.autoconfig_url" = proxyPacUrl;
+
+            # Omitting these leaves old PAC settings in prefs.js when PAC is disabled.
+            "network.proxy.type" = if proxyPacUrl != null then 2 else 0;
+            "network.proxy.autoconfig_url" = if proxyPacUrl != null then proxyPacUrl else "";
           }
           // {
             # Enable Widevine DRM support (Netflix, Disney+, Spotify, etc.)
