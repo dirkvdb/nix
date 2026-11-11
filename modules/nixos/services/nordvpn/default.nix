@@ -19,7 +19,7 @@ in
         };
       in
       # The unstable module's manual page has no redirect in the 26.05 manual.
-      upstream // { meta = builtins.removeAttrs upstream.meta [ "doc" ]; }
+      upstream // { meta = removeAttrs upstream.meta [ "doc" ]; }
     )
   ];
 
