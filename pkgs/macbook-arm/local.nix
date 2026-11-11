@@ -166,6 +166,24 @@ in
     }
   );
 
+  solidcraft = crossPkgs.callPackage ../solidcraft/default.nix {
+    inherit (armPkgs)
+      dbus
+      wayland
+      libxkbcommon
+      libglvnd
+      vulkan-loader
+      libx11
+      libxcursor
+      libxi
+      libxrandr
+      libxrender
+      libxext
+      libxcb
+      ;
+    inherit (buildPkgs) makeWrapper pkg-config cmake;
+  };
+
   flea-unwrapped =
     (crossPkgs.callPackage ../flea/default.nix {
       localsend-cli = crossPkgs.callPackage ../localsend-cli/default.nix { };
