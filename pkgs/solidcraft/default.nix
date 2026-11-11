@@ -36,16 +36,16 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "solidcraft";
-  version = "0.30.1";
+  version = "0.40.0";
 
   src = fetchFromGitHub {
     owner = "tangency-labs";
     repo = "solidcraft";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-OBFZLKF/qnO2wzDpVcyTHJoxHyHw7+hi41zJXim/4GE=";
+    hash = "sha256-iso2/7kRslWAwpF8X29JI6md5eJmy2GlyOOgJidoe9A=";
   };
 
-  cargoHash = "sha256-/335aT/yANzBtrsEc7byA54IJxMqNeAGktBr5/sSDAo=";
+  cargoHash = "sha256-qsyundf5UTXPa6igpWduJqa2/cGizclCmTR6nW7ir9Y=";
 
   nativeBuildInputs = [
     makeWrapper
