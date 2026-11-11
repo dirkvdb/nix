@@ -21,6 +21,9 @@ let
     // inputPackages
     // {
       flea = localPackages.flea-unwrapped;
+      gitcomet = import ../gitcomet/cross.nix {
+        nixpkgs = inputs.nixpkgs-unstable;
+      };
       zed-editor = import ../zed-editor/cross.nix {
         nixpkgs = inputs.nixpkgs-unstable;
       };
@@ -49,7 +52,7 @@ in
     localPackages
     // (removeAttrs inputPackages [ "tabulite-duckdb" ])
     // {
-      zed-editor = crossPackages.zed-editor;
+      inherit (crossPackages) gitcomet zed-editor;
     };
 
   bundle = nativePkgs.linkFarm "macbook-arm-apps" (

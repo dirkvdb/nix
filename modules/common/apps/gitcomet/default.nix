@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  unstablePkgs,
+
   mkHome,
   ...
 }:
@@ -25,18 +25,19 @@ let
       };
     }
   );
+  inherit (pkgs) gitcomet;
   package =
     if pkgs.stdenv.isLinux then
       pkgs.symlinkJoin {
-        name = "gitcomet-${unstablePkgs.gitcomet.version}";
-        paths = [ unstablePkgs.gitcomet ];
+        name = "gitcomet-${gitcomet.version}";
+        paths = [ gitcomet ];
         nativeBuildInputs = [ pkgs.makeWrapper ];
         postBuild = ''
           wrapProgram "$out/bin/gitcomet" --set GITCOMET_NO_DESKTOP_INSTALL 1
         '';
       }
     else
-      unstablePkgs.gitcomet;
+      gitcomet;
 in
 {
   options.local.apps.gitcomet = {

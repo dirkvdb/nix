@@ -31,7 +31,7 @@ hl.bind(mod .. " + S", function()
 end, { description = "Browser (workspace 1)" })
 hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd(browser .. " --new-window"), { description = "Browser (new window on current workspace)" })
 hl.bind(mod .. " + D", hl.dsp.exec_cmd("zeditor"), { description = "Dev editor" })
-hl.bind(mod .. " + G", hl.dsp.exec_cmd("sublime_merge"), { description = "Sublime merge" })
+hl.bind(mod .. " + G", hl.dsp.exec_cmd("gitcomet"), { description = "GitComet" })
 hl.bind(mod .. " + T", hl.dsp.exec_cmd(terminal .. " -e btop"), { description = "Activity" })
 ---- WEB APPS ----
 hl.bind(mod .. " + SHIFT + Y", hl.dsp.exec_cmd('nixcfg-launch-or-focus-webapp Youtube "https://youtube.com/"'), { description = "Youtube" })

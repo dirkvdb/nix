@@ -250,6 +250,7 @@ hl.window_rule({ match = { class = "(dev.zed.Zed|dev.zed.Zed-Dev)" }, workspace 
 hl.window_rule({ match = { class = "(com.thisisgm.flea|org.gnome.Nautilus|thunar)" }, workspace = "5" })
 hl.window_rule({ match = { class = "(spotify|Spotify|spotifast|chrome-open\\.spotify\\.com__.*)" }, workspace = "9" })
 hl.window_rule({ match = { class = "(sublime_merge)" }, workspace = "6" })
+hl.window_rule({ match = { class = "gitcomet" }, workspace = "6" })
 hl.window_rule({ match = { class = "(slack)" }, workspace = "7" })
 hl.window_rule({ match = { class = "(outlook-for-linux|chrome-outlook\\.office365\\.com__.*)" }, workspace = "8 silent" })
 hl.window_rule({ match = { class = "(teams-for-linux)" }, workspace = "8 silent" })
