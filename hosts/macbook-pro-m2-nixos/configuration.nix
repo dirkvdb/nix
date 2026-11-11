@@ -184,7 +184,7 @@ in
         opencode.enable = true;
         panda-reader.enable = true;
         pi-coding-agent.enable = true;
-        affine.enable = true;
+        solidcraft.enable = true;
         zathura.enable = true;
         zed = {
           enable = true;
