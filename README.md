@@ -7,16 +7,16 @@ sudo sbctl create-keys
 Register the KeePassXC Git credential helper:
 - git-credential-keepassxc configure
 
-# MacBook ARM application cache
+# aarch64 application cache
 
 Build the MacBook's custom user-space applications without
 QEMU or remote builders:
 
 ```bash
-just publish-macbook-apps
+just publish-aarch64-apps
 ```
 
-Build Flea alone with `just build-macbook-app flea`. This cross-compiles its
+Build Flea alone with `just build-aarch64-app flea`. This cross-compiles its
 binaries and LocalSend CLI dependency; the MacBook retains its native FHS
 launcher and cached ARM runtime libraries.
 
@@ -36,7 +36,7 @@ trusted Nix user, so the MacBook must be trusted by mini. If the MacBook's host
 key changes, update the authorized key in mini's configuration.
 
 Use normal system builds (`just build`) on the MacBook. The
-`build-macbook-apps` and `build-macbook-app` recipes are for direct builds on an
+`build-aarch64-apps` and `build-aarch64-app` recipes are for direct builds on an
 x86_64 machine and explicitly disable remote builders. Remote build results are
 copied back to the MacBook, but are not automatically uploaded to Xilo. If mini
 is unavailable, uncached x86_64 builds cannot complete until it is reachable.

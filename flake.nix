@@ -312,7 +312,7 @@
           name: package: nixpkgs.lib.nameValuePair "${name}-aarch64" package
         ) macbookArmApps.packages
         // {
-          macbook-arm-apps = macbookArmApps.bundle;
+          aarch64-apps = macbookArmApps.bundle;
           solidcraft =
             (import nixpkgs {
               system = "x86_64-linux";

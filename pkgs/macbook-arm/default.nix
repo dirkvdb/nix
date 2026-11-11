@@ -55,7 +55,7 @@ in
       inherit (crossPackages) gitcomet zed-editor;
     };
 
-  bundle = nativePkgs.linkFarm "macbook-arm-apps" (
+  bundle = nativePkgs.linkFarm "aarch64-apps" (
     lib.mapAttrsToList (name: path: { inherit name path; }) packages
   );
 }

@@ -30,13 +30,45 @@ let
     else
       "nh os switch -j2 ~/nix${nhHostArg} && nixcfg-reload${cachePush}";
   resetFlakeLock = "git -C ~/nix restore --source=HEAD --staged --worktree -- flake.lock";
-  updateCommand =
-    if isStandalone then
-      "${resetFlakeLock} && git -C ~/nix pull -r --autostash && nixcfg-switch"
-    else if pkgs.stdenv.isDarwin then
-      "${resetFlakeLock} && nh darwin switch -j2 --update ~/nix${nhHostArg}${cachePush}"
-    else
-      "${resetFlakeLock} && git -C ~/nix pull -r --autostash && nh os switch -j2 --update ~/nix${nhHostArg}${cachePush}";
+  updateCommand = ''
+    set -euo pipefail
+
+    action=switch
+    case "$*" in
+      ""|--switch) ;;
+      --build) action=build ;;
+      -h|--help)
+        echo "Usage: nixcfg-update [--build|--switch]"
+        echo "Update the configuration and switch (default), or only build it."
+        exit 0
+        ;;
+      *)
+        echo "Usage: nixcfg-update [--build|--switch]" >&2
+        exit 2
+        ;;
+    esac
+
+    ${resetFlakeLock}
+    ${lib.optionalString (isStandalone || !pkgs.stdenv.isDarwin) "git -C ~/nix pull -r --autostash"}
+    ${
+      if isStandalone then
+        ''
+          if [ "$action" = build ]; then
+            nix run home-manager/release-26.05 -- build --flake ~/nix#${configName}
+          else
+            nixcfg-switch
+          fi
+        ''
+      else
+        ''
+          nh ${if pkgs.stdenv.isDarwin then "darwin" else "os"} "$action" -j2 --update ~/nix${nhHostArg}
+          if [ "$action" = switch ]; then
+            true ${cachePush}
+          fi
+        ''
+    }
+  '';
+  updatePackage = pkgs.writeShellScriptBin "nixcfg-update" updateCommand;
 
   # Use the chromium package with WideVine support from home-manager config
   chromiumPkg = config.home-manager.users.${user.name}.programs.chromium.package;
@@ -594,8 +626,9 @@ in
   config = mkHome user.name {
     home.packages = [
       (pkgs.writeShellScriptBin "nixcfg-switch" switchCommand)
-      (pkgs.writeShellScriptBin "nixcfg-update" updateCommand)
+      updatePackage
     ]
     ++ lib.optionals (pkgs.stdenv.isLinux && !isStandalone) linuxScripts;
+
   };
 }

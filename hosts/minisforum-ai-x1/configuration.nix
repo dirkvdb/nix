@@ -171,6 +171,7 @@
       };
 
       services = {
+        nixcfg-update.enable = true;
         hyprmoncfg.enable = true;
         nordvpn = {
           enable = false;
