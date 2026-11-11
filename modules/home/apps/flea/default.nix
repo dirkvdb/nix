@@ -50,6 +50,10 @@ let
     hiddenLast = false;
     showGitStatus = true;
     highlightToday = false;
+    highlightHover = false;
+    tabsAsIcons = false;
+    emptyFolderOmi = false;
+    emptyFolderRotate = false;
     wrapAtEnds = false;
     escapeUp = false;
     openMode = "double";
@@ -81,6 +85,7 @@ let
       driveSize = false;
       trashCount = false;
       showUnmounted = true;
+      nearbyHosts = false;
       showTags = false;
       rail = "shown";
       autoHide = false;
@@ -134,7 +139,10 @@ let
       "rclone"
       "toggleLangMarks"
       "actions"
+      "print"
     ];
+    menuVersion = 1;
+    stateVersion = 4;
     updates.autoCheck = false;
     plugins."flea.dropbox".enabled = false;
   };
