@@ -8,6 +8,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./kernel.nix
     ../../modules/nixos/import.nix
     ../../modules/home/import.nix
 
