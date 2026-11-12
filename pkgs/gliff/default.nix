@@ -19,16 +19,16 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "gliff";
-  version = "0.4.2";
+  version = "0.4.3";
 
   src = fetchFromGitHub {
     owner = "omacom";
     repo = "gliff";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-SUvnAxmXyBqPrtgBfEp06/KHlO0m2OtaP+lVaFgK04M=";
+    hash = "sha256-0QOfYXBi93o56V0pOuYo+isigNNy0MY4e3GYtlvd8rM=";
   };
 
-  cargoHash = "sha256-cwa2ECXZ1LPJnJO1FwZF7ke+eZ40H/6nSTicRKW9+08=";
+  cargoHash = "sha256-bkdj9F+0KAZ4JdKIgP38WbExXuu/ZVDzn6jjziocP0U=";
 
   nativeBuildInputs = [
     pkg-config
