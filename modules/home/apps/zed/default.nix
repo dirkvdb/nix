@@ -182,7 +182,7 @@ in
 
           agent_ui_font_size = 15.0;
           ui_font_size = 13.0;
-          ui_font_family = "RobotoMono Nerd Font Propo";
+          ui_font_family = theme.uiFont;
           ui_font_features = {
             calt = 0;
           };
