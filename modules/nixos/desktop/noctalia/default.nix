@@ -56,9 +56,8 @@ let
     ln -s ${lib.escapeShellArg noctaliaConfigPath} "$out"
   '';
   noctaliaPackage = unstablePkgs.noctalia.overrideAttrs (old: {
-    patches = (old.patches or [ ]) ++ [
-      ./trayicon.patch
-    ];
+    patches =
+      (old.patches or [ ]) ++ lib.optional (lib.versionOlder old.version "5.5.0") ./trayicon.patch;
     env =
       (old.env or { })
       // lib.optionalAttrs pkgs.stdenv.hostPlatform.isx86_64 {
