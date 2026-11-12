@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  unstablePkgs,
   ...
 }:
 let
@@ -27,6 +28,7 @@ in
       [
         age
         sshfs
+        unstablePkgs.tailcat
         nix-ld # required for running certain binaries not meant for NixOS
       ]
       ++ lib.optionals cfg.sysadmin sysadmin
