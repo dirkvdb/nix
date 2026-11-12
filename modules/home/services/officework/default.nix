@@ -64,7 +64,7 @@ in
           lib.recursiveUpdate
             (graphicalService {
               description = "Microsoft Teams (teams-for-linux)";
-              execStart = "${pkgs.teams-for-linux}/bin/teams-for-linux --minimized";
+              execStart = "${pkgs.teams-for-linux}/bin/teams-for-linux --window.minimized";
             })
             {
               Service = {

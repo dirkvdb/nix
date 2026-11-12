@@ -19,9 +19,9 @@ in
     home.packages = [ pkgs.teams-for-linux ];
 
     xdg.configFile."teams-for-linux/config.json".text = builtins.toJSON {
-      appIconType = "light";
-      disableGpu = false;
-      enableIncomingCallToast = true;
+      tray.iconType = "light";
+      performance.disableGpu = false;
+      incomingCalls.toast = true;
       secure = true; # for camera to work
     };
   });
