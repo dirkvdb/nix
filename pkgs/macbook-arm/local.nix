@@ -189,6 +189,7 @@ in
       localsend-cli = crossPkgs.callPackage ../localsend-cli/default.nix { };
       inherit (armPkgs)
         alsa-lib
+        avahi
         bat
         bubblewrap
         bzip2
