@@ -52,7 +52,6 @@ in
 
     # Per-directory XDG config entries for dotfiles
     xdg.configFile."btop".source = ./dotfiles/btop;
-    xdg.configFile."wezterm".source = ./dotfiles/wezterm;
 
     xdg.configFile."sublime-merge/Packages/User".source = ./dotfiles/sublime-merge/Packages/User;
 
@@ -103,7 +102,7 @@ in
         with pkgs;
         [
           sqlitebrowser
-          wezterm
+
           (writeShellScriptBin "sublime_merge" ''
             exec env \
               GDK_BACKEND=wayland \

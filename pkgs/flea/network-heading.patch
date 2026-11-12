@@ -1,0 +1,86 @@
+diff --git a/crates/flea-gui/src/g2/device_rail/source.rs b/crates/flea-gui/src/g2/device_rail/source.rs
+--- a/crates/flea-gui/src/g2/device_rail/source.rs
++++ b/crates/flea-gui/src/g2/device_rail/source.rs
+@@ -275,1 +275,1 @@
+-        if network && self.show_network && !self.network.rows.is_empty() {
++        if network && self.show_network {
+diff --git a/crates/flea-gui/src/g2/rail_places/producer_sources.rs b/crates/flea-gui/src/g2/rail_places/producer_sources.rs
+--- a/crates/flea-gui/src/g2/rail_places/producer_sources.rs
++++ b/crates/flea-gui/src/g2/rail_places/producer_sources.rs
+@@ -83,1 +83,9 @@
+-                    (!section.rows.is_empty()).then_some(section)
++                    let network = section.heading
++                        == flea::ui_logic_rail_places::order::Heading::Key("settings.places.network");
++                    let shown = self.state
++                        .get("places")
++                        .and_then(|places| places.get("showNetwork"))
++                        .and_then(Json::as_bool)
++                        != Some(false);
++                    (!section.rows.is_empty() || (network && shown))
++                        .then_some(section)
+diff --git a/src/ui_logic_rail_places/order.rs b/src/ui_logic_rail_places/order.rs
+--- a/src/ui_logic_rail_places/order.rs
++++ b/src/ui_logic_rail_places/order.rs
+@@ -177,1 +177,4 @@
+-    .filter(|s| !s.rows.is_empty())
++    .filter(|s| {
++        !s.rows.is_empty()
++            || s.heading == Heading::Key("settings.places.network")
++    })
+diff --git a/src/ui_logic_rail_places/plugin.rs b/src/ui_logic_rail_places/plugin.rs
+--- a/src/ui_logic_rail_places/plugin.rs
++++ b/src/ui_logic_rail_places/plugin.rs
+@@ -213,1 +213,4 @@
+-    out.retain(|s| !s.rows.is_empty());
++    out.retain(|s| {
++        !s.rows.is_empty()
++            || s.heading == Heading::Key("settings.places.network")
++    });
+diff --git a/crates/flea-gui/src/g2/rail_places/content.rs b/crates/flea-gui/src/g2/rail_places/content.rs
+--- a/crates/flea-gui/src/g2/rail_places/content.rs
++++ b/crates/flea-gui/src/g2/rail_places/content.rs
+@@ -53,1 +53,2 @@
+     pub caseless: bool,
++    pub network: bool,
+@@ -166,1 +167,2 @@
+             caseless: crate::g2::status_feedback::caption::caseless(catalog.language()),
++            network: s.heading == Heading::Key("settings.places.network"),
+diff --git a/crates/flea-gui/src/rail/layout.rs b/crates/flea-gui/src/rail/layout.rs
+--- a/crates/flea-gui/src/rail/layout.rs
++++ b/crates/flea-gui/src/rail/layout.rs
+@@ -66,1 +66,1 @@
+-            let network = section
++            let network = section.network || section
+diff --git a/crates/flea-gui/src/rail/visual_geometry_tests.rs b/crates/flea-gui/src/rail/visual_geometry_tests.rs
+--- a/crates/flea-gui/src/rail/visual_geometry_tests.rs
++++ b/crates/flea-gui/src/rail/visual_geometry_tests.rs
+@@ -11,1 +11,2 @@
+         caseless: false,
++        network: group == Group::Network,
+diff --git a/src/ui_logic_rail_places/plugin_heading_tests.rs b/src/ui_logic_rail_places/plugin_heading_tests.rs
+--- a/src/ui_logic_rail_places/plugin_heading_tests.rs
++++ b/src/ui_logic_rail_places/plugin_heading_tests.rs
+@@ -1,1 +1,23 @@
+ // Plugin rail headings from board 0402-plugin-rail-mark: a plugin's own title, merged by title, else one PLUGINS.
++#[test]
++fn empty_network_heading_survives_section_pipeline() {
++    use super::order::{rail_sections, Shown};
++    let network = RailSection {
++        heading: Heading::Key("settings.places.network"),
++        rows: Vec::new(),
++    };
++    let sections = rail_sections(
++        &[],
++        Shown::default(),
++        Vec::new(),
++        &[false; 7],
++        vec![network],
++        &[],
++    );
++    let sections = plugin_headings(sections, english);
++    assert!(sections.iter().any(|s| {
++        s.heading == Heading::Key("settings.places.network") && s.rows.is_empty()
++    }));
++    assert!(!sections.iter().any(|s| s.heading == Heading::Key(PLUGINS_HEADING)));
++}
++

@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  pkgs,
+
   mkHome,
   ...
 }:
@@ -20,7 +20,7 @@ in
     services.skhd = {
       enable = true;
       config = ''
-        alt - return : ${pkgs.wezterm}/bin/wezterm
+
         alt - d : zed¡
         alt - b : open -na zen
         alt - e : open ${user.homeDir}
