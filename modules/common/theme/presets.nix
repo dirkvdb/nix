@@ -31,7 +31,7 @@
     # iconThemePackage = pkgs.colloid-icon-theme;
     iconTheme = "kora-pgrey";
     iconThemePackage = pkgs.kora-icon-theme;
-    uiFont = "Inter";
+    uiFont = "Inter Variable";
     uiFontSerif = "Noto Serif";
     uiFontSize = 10;
     uiFontBold = "Inter Bold";
@@ -56,7 +56,7 @@
     gtkThemePackage = pkgs.gnome-themes-extra;
     iconTheme = "Colloid-Dark";
     iconThemePackage = pkgs.colloid-icon-theme;
-    uiFont = "Inter";
+    uiFont = "Inter Variable";
     uiFontSerif = "Noto Serif";
     uiFontSize = 10;
     uiFontBold = "Inter Bold";

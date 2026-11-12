@@ -5,6 +5,8 @@ let
     theme:
     let
       s = theme.style;
+      # The shared palette's sand accent keeps controls warm without using yellow.
+      uiAccent = builtins.elemAt s.accents 5;
       status = name: {
         foreground = s.${name};
         background = s."${name}.background";
@@ -63,7 +65,7 @@ let
           secondary = s."text.muted";
           disabled = s."text.disabled";
           placeholder = s."text.placeholder";
-          emphasis = s."text.accent";
+          emphasis = s.text;
         };
         stroke = {
           subtle = s."border.variant";
@@ -82,8 +84,8 @@ let
           focus_background = s."element.selected";
         };
         accent = {
-          foreground = s."text.accent";
-          solid = s."text.accent";
+          foreground = uiAccent;
+          solid = uiAccent;
           on_solid = s."editor.background";
           subtle_background = s."element.selected";
         };
@@ -122,7 +124,11 @@ let
           thumb_pressed = s."scrollbar.thumb.hover_background";
         };
         shadow = s."border.transparent";
-        graph_lane_palette = s.accents;
+        # Keep the main graph lane consistent with the subdued UI accent.
+        graph_lane_palette = [
+          uiAccent
+        ]
+        ++ builtins.filter (color: color != uiAccent) s.accents;
       };
       syntax = builtins.listToAttrs (
         map (name: {

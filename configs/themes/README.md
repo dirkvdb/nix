@@ -16,7 +16,9 @@ system-following defaults.
 
 GitComet Desktop uses `zed-to-gitcomet.nix` to generate its GPUI frontend's
 version 2 theme schema from the same palette, including syntax, diff, and graph
-colors. The `local.apps.gitcomet` module installs both variants in GitComet's
+colors. Emphasized UI text uses the normal text color; controls and the first
+graph lane use the muted sand palette accent rather than the yellow text accent.
+The `local.apps.gitcomet` module installs both variants in GitComet's
 application-data `themes` directory and selects the dark `charcoal_grove`
 variant by default. Like Flea, settings are copied to a writable regular file on
 every activation; app/user changes remain writable but are reset on activation. See `../../modules/common/apps/gitcomet/README.md` for mutable
