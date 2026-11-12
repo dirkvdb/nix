@@ -324,6 +324,7 @@
         celluloid.enable = true;
         chatgpt.enable = true;
         direnv.enable = true;
+        flea.enable = true;
         spotifast.enable = true;
         ghostty.enable = true;
         herdr.enable = true;

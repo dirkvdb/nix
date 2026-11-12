@@ -1,10 +1,26 @@
 {
   buildFHSEnv,
+  coreutils,
   flea-unwrapped,
   gvfs,
   qt6,
   writeShellScript,
+  writeText,
 }:
+let
+  fontconfig = writeText "flea-fonts.conf" ''
+    <?xml version="1.0"?>
+    <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+    <fontconfig>
+      <!-- Rewrite before loading system aliases so Stylix resolves sans-serif. -->
+      <match target="pattern">
+        <test name="family" compare="eq"><string>monospace</string></test>
+        <edit name="family" mode="assign" binding="strong"><string>sans-serif</string></edit>
+      </match>
+      <include>/etc/fonts/fonts.conf</include>
+    </fontconfig>
+  '';
+in
 # Flea expects Arch-style /usr paths, including inside its bwrap jails.
 buildFHSEnv {
   pname = "flea";
@@ -13,6 +29,9 @@ buildFHSEnv {
   # D-Bus activation's temporary parent exits once the backend acquires its name.
   dieWithParent = false;
   runScript = writeShellScript "flea-launcher" ''
+    export FONTCONFIG_FILE=${fontconfig}
+    # Flea's font cache does not include FONTCONFIG_FILE in its key.
+    ${coreutils}/bin/rm -f "''${XDG_STATE_HOME:-$HOME/.local/state}/flea/fc-match-monospace"
     case "''${1:-}" in
       --flea-portal)
         shift
