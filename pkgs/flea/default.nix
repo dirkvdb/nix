@@ -9,6 +9,7 @@
   makeWrapper,
   cmake,
   alsa-lib,
+  avahi,
   bat,
   bubblewrap,
   bzip2,
@@ -87,6 +88,7 @@ let
     wayland
   ];
   runtimeInputs = runtimeLibs ++ [
+    avahi
     bat
     bubblewrap
     bzip2

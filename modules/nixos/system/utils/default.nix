@@ -26,6 +26,7 @@ in
       with pkgs;
       [
         age
+        sshfs
         nix-ld # required for running certain binaries not meant for NixOS
       ]
       ++ lib.optionals cfg.sysadmin sysadmin

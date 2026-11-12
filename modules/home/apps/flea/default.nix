@@ -85,7 +85,7 @@ let
       driveSize = false;
       trashCount = false;
       showUnmounted = true;
-      nearbyHosts = false;
+      nearbyHosts = true;
       showTags = false;
       rail = "shown";
       autoHide = false;

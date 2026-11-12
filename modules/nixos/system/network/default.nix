@@ -45,6 +45,12 @@ in
       firewall.enable = cfg.firewall;
     };
 
+    services.avahi = {
+      enable = true;
+      openFirewall = true;
+      nssmdns4 = true;
+    };
+
     services.resolved = {
       enable = true;
       settings.Resolve.LLMNR = "false";
