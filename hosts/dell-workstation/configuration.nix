@@ -335,6 +335,7 @@
           ];
           keyfilePath = "${config.local.user.homeDir}/.local/share/desktop.key";
         };
+        map.enable = true;
         neovim.enable = true;
         obsidian = {
           enable = true;
