@@ -229,6 +229,7 @@
       tasmoadmin.enable = true;
       freshrss.enable = true;
       spottarr.enable = true;
+      music-assistant.enable = true;
       dockhand = {
         enable = true;
         stacksDirectory = "/nas/docker";
