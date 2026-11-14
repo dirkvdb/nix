@@ -217,11 +217,6 @@ in
     hardware.asahi.overlay = lib.composeExtensions inputs.apple-silicon.overlays.apple-silicon-overlay (
       final: prev: {
         avd-fw = final.callPackage "${inputs.nixpkgs-unstable}/pkgs/by-name/av/avd-fw/package.nix" { };
-        asahi-va-driver =
-          assert lib.assertMsg (
-            !(prev ? asahi-va-driver)
-          ) "asahi-va-driver is now available in stable nixpkgs; remove the Asahi driver overlay workaround.";
-          final.callPackage "${inputs.nixpkgs-unstable}/pkgs/by-name/as/asahi-va-driver/package.nix" { };
       }
     );
     hardware.asahi.avd.vaapi-support = true;
