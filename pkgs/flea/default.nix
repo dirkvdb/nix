@@ -54,7 +54,7 @@
   zstd,
 }:
 let
-  version = "0.4.2";
+  version = "0.4.3";
   terminalLauncher = writeShellScriptBin "xdg-terminal-exec" ''
     # Host terminals must use their own libraries, not Flea's bundled runtime.
     unset LD_LIBRARY_PATH
@@ -132,12 +132,12 @@ rustPlatform.buildRustPackage {
     owner = "thisisgm";
     repo = "flea";
     tag = "v${version}";
-    hash = "sha256-zLoCwfFnxP2ns85jcU5ywh4F2p5SrMDirfBgJig1VG0=";
+    hash = "sha256-/s2ego3S/gqqZABrEEa3Z0PSWxwUvntLA4GMLVcUZaE=";
   };
 
   patches = [ ./system-icons.patch ];
 
-  cargoHash = "sha256-z64BjWipyFhkrgtown7VTg3G1pcs5NV4adCPXLMrR0Q=";
+  cargoHash = "sha256-Hj7lC1WrUD+amqV+AKoAuIs88HYjCeWYTbWGcPVCpCw=";
   cargoBuildFlags = [
     "--workspace"
     "--bins"

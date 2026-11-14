@@ -186,6 +186,7 @@
         };
         flea-unwrapped = prev.callPackage ./pkgs/flea {
           localsend-cli = final.localsend-cli;
+          inherit (unstablePkgs prev.stdenv.hostPlatform.system) rustPlatform;
         };
         flea = prev.callPackage ./pkgs/flea/fhs.nix {
           inherit (final) flea-unwrapped;

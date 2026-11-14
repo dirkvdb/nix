@@ -2,6 +2,7 @@
   nativePkgs,
   armPkgs,
   crossPkgs,
+  fleaRustPlatform,
 }:
 let
   inherit (nativePkgs) lib;
@@ -186,6 +187,7 @@ in
 
   flea-unwrapped =
     (crossPkgs.callPackage ../flea/default.nix {
+      rustPlatform = fleaRustPlatform;
       localsend-cli = crossPkgs.callPackage ../localsend-cli/default.nix { };
       inherit (armPkgs)
         alsa-lib
