@@ -30,7 +30,7 @@ in
       };
       sharedModules = [
         inputs.zen-browser.homeModules.default
-        inputs.nvf.homeManagerModules.default
+        inputs.nvf.homeModules.default
       ];
       users.${user.name}.imports = [
         ./home.nix
