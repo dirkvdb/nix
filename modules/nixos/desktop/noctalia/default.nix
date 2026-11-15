@@ -56,8 +56,6 @@ let
     ln -s ${lib.escapeShellArg noctaliaConfigPath} "$out"
   '';
   noctaliaPackage = unstablePkgs.noctalia.overrideAttrs (old: {
-    patches =
-      (old.patches or [ ]) ++ lib.optional (lib.versionOlder old.version "5.5.0") ./trayicon.patch;
     env =
       (old.env or { })
       // lib.optionalAttrs pkgs.stdenv.hostPlatform.isx86_64 {
@@ -247,8 +245,7 @@ let
 
     shell = {
       animation.speed = 3.0;
-      app_icon_color = "primary";
-      app_icon_colorize = false;
+      app_icon_color = "on_surface";
       clipboard_history_max_entries = 5000;
       launcher.dmenu.entry.ssh = {
         command = "awk '/^Host /{print $2}' ~/.ssh/config"; # one candidate per stdout line
@@ -361,7 +358,7 @@ let
         length = 15;
         type = "spacer";
       };
-      tray.app_icon_colorize = true;
+      tray.colorize_icons = true;
       volume = {
         show_label = false;
       };
