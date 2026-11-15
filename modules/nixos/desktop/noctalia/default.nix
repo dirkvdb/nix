@@ -83,6 +83,7 @@ let
 
     bar.default = {
       font_family = config.stylix.fonts.sansSerif.name;
+      font_weight = 700;
       center =
         lib.optionals (!hasNotch) [ "clock" ]
         ++ [ "notifications" ]
