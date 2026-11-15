@@ -27,6 +27,7 @@ in
       with pkgs;
       [
         age
+        lazybw
         sshfs
         unstablePkgs.tailcat
         nix-ld # required for running certain binaries not meant for NixOS

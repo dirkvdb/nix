@@ -178,6 +178,7 @@
         oweka = prev.callPackage ./pkgs/oweka { };
         omasend = prev.callPackage ./pkgs/omasend { };
         localsend-cli = prev.callPackage ./pkgs/localsend-cli { };
+        lazybw = prev.callPackage ./pkgs/lazybw { };
         gliff = prev.callPackage ./pkgs/gliff { };
         panda-reader = prev.callPackage ./pkgs/panda-reader { };
         solidcraft = prev.callPackage ./pkgs/solidcraft { };

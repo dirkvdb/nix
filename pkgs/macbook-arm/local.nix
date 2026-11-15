@@ -244,6 +244,11 @@ in
         doCheck = false;
       });
 
+  lazybw = crossPkgs.callPackage ../lazybw/default.nix {
+    inherit (armPkgs) bitwarden-cli;
+    inherit (buildPkgs) makeWrapper;
+  };
+
   oweka = crossPkgs.callPackage ../oweka/default.nix { };
 
   omasend = withZstd (
