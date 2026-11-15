@@ -220,27 +220,8 @@ in
       }
     );
     hardware.asahi.avd.vaapi-support = true;
-    hardware.asahi.peripheralFirmwareDirectory =
-      (fetchTree {
-        type = "path";
-        path = "/boot/vendorfw/";
-        narHash = "sha256-OiVIifGtvtUTTergzAy03jrxjRtD4cg3QS+CgyY8VOM=";
-      }).outPath;
 
     assertions = [
-      {
-        assertion =
-          !(pkgs.stdenv.hostPlatform.isAarch64 && config.hardware.asahi.enable)
-          || (
-            config.hardware.asahi.extractPeripheralFirmware
-            && config.hardware.asahi.peripheralFirmwareDirectory != null
-            && builtins.pathExists "${config.hardware.asahi.peripheralFirmwareDirectory}/firmware.cpio"
-          );
-        message = ''
-          Asahi peripheral firmware is required on Apple Silicon. Ensure /boot/vendorfw exists,
-          contains firmware.cpio, and matches the configured narHash before building this host.
-        '';
-      }
       {
         assertion = lib.versionOlder pkgs.pipewire.version "1.6.7";
         message = ''
