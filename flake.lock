@@ -996,11 +996,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "lastModified": 1794657570,
-        "narHash": "sha256-CUpbjVQ7PKQ0l9hs71d0qlNeQo6ZFadAwQg9rvK+RFI=",
+        "lastModified": 1794745769,
+        "narHash": "sha256-mSVmXC5Eu0pNXnisGgXYqqbwqd1RcYSD7A/17+cdevo=",
         "owner": "karaolidis",
         "repo": "nix-obsidian-extensions",
-        "rev": "0bc24df4a741a3295272c97f776a24ff64c222b1",
+        "rev": "8b82e34fe0fd16e98f43d2cdadcc10bfc80ce40e",
         "type": "github"
       },
       "original": {
@@ -1381,11 +1381,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794159260,
-        "narHash": "sha256-7UpNfiEZ8D21aaoeSy7JMDolLU7Sl81JU+ho6o7+MBY=",
+        "lastModified": 1794774881,
+        "narHash": "sha256-crTzx2+NqdAlu3VjqFLXv5uLFGqqbVelOo46HOdzQIQ=",
         "owner": "zackb",
         "repo": "tether",
-        "rev": "adb03f60c9c69e2b439c751e2c24434a8abfffaa",
+        "rev": "9ca3c46f7f3a8f1c63cadb9bd7016716a305bd69",
         "type": "github"
       },
       "original": {
