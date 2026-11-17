@@ -18,8 +18,6 @@ in
         "application/x-qgis-project"
         "application/x-qgis-project-container"
         "application/x-esri-shape"
-        "image/tiff"
-        "image/x-tiff"
         "application/geopackage+sqlite3"
       ];
       description = "MIME types for which QGIS is the default handler.";
