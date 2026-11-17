@@ -39,6 +39,7 @@ in
         font-size = theme.terminalFontSize;
 
         keybind = [
+          "ctrl+enter=unbind"
           "ctrl+shift+h=previous_tab"
           "ctrl+shift+l=next_tab"
         ];
