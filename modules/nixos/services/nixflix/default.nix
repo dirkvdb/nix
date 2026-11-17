@@ -499,6 +499,7 @@ in
       torrentClients.qbittorrent = {
         enable = true;
         password._secret = config.sops.secrets."arr/password".path;
+        serverConfig.Preferences.WebUI.Locale = "nl";
         serverConfig.Preferences.WebUI.Username = config.local.user.name;
         serverConfig.Preferences.WebUI.Password_PBKDF2 = "@ByteArray(GOT/oxX4EohRRMf1FOoGAA==:nNroSP4qegzAps3jIK/qQsWAXuC/F7slljkkN4UdVbbFO6/O7QYPhi36ZBqqE/k8Ra9BWFCaxiLs0Yq5XqjFhg==)";
         serverConfig.Preferences.WebUI.AuthSubnetWhitelistEnabled = true;
@@ -510,6 +511,7 @@ in
         package = unstablePkgs.sabnzbd;
         settings = {
           misc = {
+            language = "nl";
             api_key._secret = config.sops.secrets."sabnzbd/api_key".path;
             nzb_key._secret = config.sops.secrets."sabnzbd/nzb_key".path;
           };
@@ -539,6 +541,7 @@ in
         enable = true;
         openFirewall = true;
         apiKey._secret = config.sops.secrets."jellyfin/api_key".path;
+        system.uiCulture = "nl-NL";
         encoding = {
           enableHardwareEncoding = true;
           # Skylake's VA-API works without the unsupported modern QSV runtime.
