@@ -12,6 +12,7 @@
     xdg.userDirs.download = "${config.home.homeDirectory}/downloads";
     xdg.userDirs.pictures = "${config.home.homeDirectory}/pictures";
     xdg.userDirs.documents = "${config.home.homeDirectory}/docs";
+    xdg.userDirs.projects = "${config.home.homeDirectory}/dev";
     xdg.userDirs.desktop = null;
     xdg.userDirs.templates = null;
     xdg.userDirs.publicShare = null;

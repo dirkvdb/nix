@@ -29,10 +29,6 @@ let
       reverse = false;
     };
     rememberSort = true;
-    folderSorts."${user.homeDir}/nix" = {
-      key = "name";
-      reverse = true;
-    };
     rememberViewPerFolder = false;
     folderViews = { };
     dual = {
@@ -71,12 +67,25 @@ let
     trashAutoEmpty = false;
     trashSweptOn = 0;
     places = {
-      favourites = [
-        {
-          path = "${user.homeDir}/dev";
-          label = "dev";
-        }
-      ];
+      favourites =
+        lib.optionals config.local.system.dev.enable [
+          {
+            path = "/work";
+            label = "work";
+          }
+        ]
+        ++
+          lib.optionals
+            (
+              (config.local.system.nfs-mounts.enable or false)
+              && (config.local.system.nfs-mounts.presets.nas or false)
+            )
+            [
+              {
+                path = "/nas";
+                label = "nas";
+              }
+            ];
       showHome = true;
       showRecent = false;
       showNetwork = true;
