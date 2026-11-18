@@ -9,6 +9,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./home-network-routing.nix
     ../../modules/nixos/import.nix
     ../../modules/home/import.nix
 
