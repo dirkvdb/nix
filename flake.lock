@@ -190,11 +190,11 @@
         "nixpkgs": "nixpkgs_8"
       },
       "locked": {
-        "lastModified": 1794957578,
-        "narHash": "sha256-CeoX/kb30rmQsb+H5iEwhpnjXfT7RjhlVP4u0KVXd5Y=",
+        "lastModified": 1795027501,
+        "narHash": "sha256-7iAA6K2EAepKzOdukHLz4Fd6e7uInw1M6meonXVFaQQ=",
         "owner": "stubbedev",
         "repo": "flakes.nix",
-        "rev": "e03d3e79a94df2cabe00f55c2ab0c6647867d589",
+        "rev": "dadd76e3d2297990e19474c15c37e66c2c09d146",
         "type": "github"
       },
       "original": {
@@ -1587,16 +1587,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1795026709,
-        "narHash": "sha256-hH2cFKJi18en6ZhjuqFvK4jzWF5uwjgThuPZ4rVC0+0=",
+        "lastModified": 1795029015,
+        "narHash": "sha256-D/Bn/J/+PmglsTr1wBvO4R4UePVcWxOLJGIclYO8PyQ=",
         "owner": "stubbedev",
         "repo": "xilo",
-        "rev": "b48c60917a4472a527f463995ad62e9ea0addf18",
+        "rev": "fe03fc3aa325e96841a342f2bbe238b86698c4e1",
         "type": "github"
       },
       "original": {
         "owner": "stubbedev",
-        "ref": "v2.0.0",
+        "ref": "v2.0.1",
         "repo": "xilo",
         "type": "github"
       }
