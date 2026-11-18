@@ -12,8 +12,8 @@ diff --git a/crates/gpui_linux/src/linux/wayland.rs b/crates/gpui_linux/src/linu
 diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/src/linux/wayland/client.rs
 --- a/crates/gpui_linux/src/linux/wayland/client.rs
 +++ b/crates/gpui_linux/src/linux/wayland/client.rs
-@@ -42,7 +42,7 @@
-     },
+@@ -45,7 +45,7 @@
+     ext_background_effect_manager_v1, ext_background_effect_surface_v1,
  };
  use wayland_protocols::wp::pointer_gestures::zv1::client::{
 -    zwp_pointer_gesture_pinch_v1, zwp_pointer_gestures_v1,
@@ -87,9 +87,7 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
              vertical_modifier: -1.0,
              horizontal_modifier: -1.0,
              button_pressed: None,
-@@ -1688,9 +1705,26 @@
-         let Some(window) = get_window(&mut state, surface_id) else {
-             return;
+@@ -1697,3 +1714,20 @@
          };
 +        let kinetic_input = if let wl_callback::Event::Done { .. } = event
 +            && let Some(target) = state.kinetic_scroll_target.clone()
@@ -106,14 +104,10 @@ diff --git a/crates/gpui_linux/src/linux/wayland/client.rs b/crates/gpui_linux/s
 +            None
 +        };
          drop(state);
++        if let Some((window, input)) = kinetic_input {
++            window.handle_input(input);
++        }
  
-         if let wl_callback::Event::Done { callback_data } = event {
-+            if let Some((window, input)) = kinetic_input {
-+                window.handle_input(input);
-+            }
-             window.frame_callback_fired(PlatformFrameSignal::capture(|| {
-                 frame_callback_signal_at(callback_data)
-             }));
 @@ -2024,6 +2058,17 @@
                      },
                  );

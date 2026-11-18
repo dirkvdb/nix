@@ -6,26 +6,25 @@
   rustPlatform,
 }:
 let
-  zedPinnedVersion = "1.28.1";
+  zedPinnedVersion = "1.29.1";
 in
 zed-editor.overrideAttrs (old: rec {
   version = zedPinnedVersion;
   doCheck = false;
   doInstallCheck = stdenv.buildPlatform.canExecute stdenv.hostPlatform;
   patches = (old.patches or [ ]) ++ [
-    # https://github.com/zed-industries/zed/pull/55857 (adapted for 1.26.2)
     ../../modules/home/apps/zed/wayland-kinetic-scroll.patch
   ];
   src = fetchFromGitHub {
     owner = "zed-industries";
     repo = "zed";
     tag = "v${version}";
-    hash = "sha256-3FtJA++1yvpAcWgjUrWkRnN/SirfAj66kjQ/iSdrNpQ=";
+    hash = "sha256-Ez/IEIz5ALLwbE5OiGDd1WgIftR6R3H//v2TdPOIdww=";
   };
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit src;
     name = "${old.pname}-${version}";
-    hash = "sha256-1rPsY1UrDAUhe7FlLm2GqTFNzW9XwVP7Lcv7hUcyRdo=";
+    hash = "sha256-6nqsXKe4L8mTW88+RgkoACTXPHRrHhzkTDjSr2s5CZk=";
   };
   env =
     (old.env or { })
