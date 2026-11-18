@@ -7,16 +7,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1794080910,
-        "narHash": "sha256-UTP9B1S6nLuEFvAIveZq0Mf7Xuf0Z6ovngBJVDQQ26E=",
+        "lastModified": 1794882133,
+        "narHash": "sha256-pS9bNAq+xKAt7AJLXNF7zVV4g4cMmgT7YMEQHLPbOXA=",
         "owner": "akitaonrails",
         "repo": "ai-usagebar",
-        "rev": "59573ff3cb4546781ba8090902e7fc65cedf0ad4",
+        "rev": "699c4dbe4e97100b4afb78e8473d45235c3f907c",
         "type": "github"
       },
       "original": {
         "owner": "akitaonrails",
-        "ref": "v1.49.0",
+        "ref": "v1.52.2",
         "repo": "ai-usagebar",
         "type": "github"
       }
@@ -190,11 +190,11 @@
         "nixpkgs": "nixpkgs_8"
       },
       "locked": {
-        "lastModified": 1794485798,
-        "narHash": "sha256-b8XQVvmk9sfl79tLccxAGx0lcUyAInOZyTykeHQomAo=",
+        "lastModified": 1794957578,
+        "narHash": "sha256-CeoX/kb30rmQsb+H5iEwhpnjXfT7RjhlVP4u0KVXd5Y=",
         "owner": "stubbedev",
         "repo": "flakes.nix",
-        "rev": "d408dbdc725171bde102d670dbb40aa929c19d6b",
+        "rev": "e03d3e79a94df2cabe00f55c2ab0c6647867d589",
         "type": "github"
       },
       "original": {
@@ -927,11 +927,11 @@
     },
     "nixpkgs_8": {
       "locked": {
-        "lastModified": 1794192123,
-        "narHash": "sha256-SvB8u5qaJAOwZZyZciqTVOg/rBoUs2w0sFTU6ED51AQ=",
+        "lastModified": 1794537146,
+        "narHash": "sha256-Wpz/7x/YWnDIBu7yj6ixe8j6fIMsidd9Y+o1PqPF3iM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "177d0540942fb205af6993b1d5fa0b57799e09f8",
+        "rev": "d5cc6833999746cffdfe0598f7bc801a57b887a9",
         "type": "github"
       },
       "original": {
@@ -1587,16 +1587,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1794589128,
-        "narHash": "sha256-SSBFpQc+/5Q4brgTA3IvBxuXXSNghPjM6pVLnV+JHI8=",
+        "lastModified": 1795026709,
+        "narHash": "sha256-hH2cFKJi18en6ZhjuqFvK4jzWF5uwjgThuPZ4rVC0+0=",
         "owner": "stubbedev",
         "repo": "xilo",
-        "rev": "e4213217548b4573e81b39e579880a28175d44f0",
+        "rev": "b48c60917a4472a527f463995ad62e9ea0addf18",
         "type": "github"
       },
       "original": {
         "owner": "stubbedev",
-        "ref": "v1.2.8",
+        "ref": "v2.0.0",
         "repo": "xilo",
         "type": "github"
       }

@@ -6,7 +6,7 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     xilo = {
-      url = "github:stubbedev/xilo/v1.2.8";
+      url = "github:stubbedev/xilo/v2.0.0";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
@@ -37,7 +37,7 @@
     };
 
     ai-usagebar = {
-      url = "github:akitaonrails/ai-usagebar/v1.49.0";
+      url = "github:akitaonrails/ai-usagebar/v1.52.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
