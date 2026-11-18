@@ -228,7 +228,7 @@ in
               effort = "medium";
               enable_thinking = true;
               provider = "openai-subscribed";
-              model = "gpt-6.1-sol";
+              model = "gpt-6.2-sol";
             };
           };
           edit_predictions = {
