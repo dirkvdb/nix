@@ -9,6 +9,7 @@
 let
   cfg = config.local.system.dev;
   inherit (config.local) user;
+  vpnjumphostEnabled = config.local.services.vpnjumphost.enable or false;
 
 in
 {
@@ -63,6 +64,12 @@ in
       xdg.configFile."pixi/config.toml".text = ''
         [shell]
         change-ps1 = false
+      ''
+      + lib.optionalString vpnjumphostEnabled ''
+
+        [proxy-config]
+        http = "socks5h://127.0.0.1:1081"
+        https = "socks5h://127.0.0.1:1081"
       '';
 
       # Hunk configuration
