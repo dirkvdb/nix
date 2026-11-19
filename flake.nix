@@ -6,7 +6,7 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     xilo = {
-      url = "github:stubbedev/xilo/v2.0.1";
+      url = "github:stubbedev/xilo/v2.0.2";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
