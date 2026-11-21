@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  options,
   lib,
   mkHome,
   ...
@@ -13,6 +14,40 @@ let
   nhConfigurationName = config.local.system.nix.nh.configurationName or null;
   nhHostArg = lib.optionalString (nhConfigurationName != null) " -H ${nhConfigurationName}";
   hostname = config.local.system.network.hostname or "";
+
+  kernel = config.boot.kernelPackages.kernel;
+  kernelOutputs = map (
+    output: builtins.unsafeDiscardStringContext (toString kernel.${output})
+  ) kernel.outputs;
+  pushSystemClosure = pkgs.writeShellScriptBin "nixcfg-push-system" ''
+    set -euo pipefail
+    system="''${1:-/run/current-system}"
+    ${
+      if !config.local.system.kernel.native then
+        ''exec xilo push admin/nix "$system"''
+      else
+        ''
+          work="$(mktemp -d)"
+          trap 'rm -rf "$work"' EXIT
+          export LC_ALL=C
+          nix-store --query --requisites "$system" | sort -u > "$work/closure"
+          printf '%s\n' ${lib.escapeShellArgs kernelOutputs} | sort -u > "$work/kernel-outputs"
+          comm -12 "$work/closure" "$work/kernel-outputs" > "$work/excluded"
+          if [ ! -s "$work/excluded" ]; then
+            echo "Native kernel outputs not found in the system closure; refusing to upload." >&2
+            exit 1
+          fi
+
+          # Xilo recursively uploads dependencies, so exclude every transitive referrer too.
+          xargs -r nix-store --query --referrers-closure < "$work/excluded" | sort -u > "$work/referrers"
+          comm -23 "$work/closure" "$work/referrers" > "$work/upload"
+          if [ -s "$work/upload" ]; then
+            echo "Uploading system dependencies that do not reference the native kernel."
+            xilo push admin/nix - < "$work/upload"
+          fi
+        ''
+    }
+  '';
 
   cachePush = lib.optionalString (hostname == "mini" || nhConfigurationName == "dell-workstation") (
     if isStandalone then
@@ -34,22 +69,31 @@ let
     set -euo pipefail
 
     action=switch
-    case "$*" in
-      ""|--switch) ;;
-      --build) action=build ;;
-      -h|--help)
-        echo "Usage: nixcfg-update [--build|--switch]"
-        echo "Update the configuration and switch (default), or only build it."
-        exit 0
-        ;;
-      *)
-        echo "Usage: nixcfg-update [--build|--switch]" >&2
-        exit 2
-        ;;
-    esac
+    commit=false
+    usage="Usage: nixcfg-update [--build|--switch] [--commit]"
+    for arg in "$@"; do
+      case "$arg" in
+        --switch) action=switch ;;
+        --build) action=build ;;
+        --commit) commit=true ;;
+        -h|--help)
+          echo "$usage"
+          echo "Update the configuration and switch (default), or only build it."
+          echo "Use --commit to commit flake.lock changes before building."
+          exit 0
+          ;;
+        *)
+          echo "$usage" >&2
+          exit 2
+          ;;
+      esac
+    done
 
     ${resetFlakeLock}
     ${lib.optionalString (isStandalone || !pkgs.stdenv.isDarwin) "git -C ~/nix pull -r --autostash"}
+    if [ "$commit" = true ]; then
+      nix flake update --flake ~/nix --commit-lock-file
+    fi
     ${
       if isStandalone then
         ''
@@ -61,7 +105,17 @@ let
         ''
       else
         ''
-          nh ${if pkgs.stdenv.isDarwin then "darwin" else "os"} "$action" -j2 --update ~/nix${nhHostArg}
+          update_flag=--update
+          if [ "$commit" = true ]; then
+            update_flag=--no-update-lock-file
+          fi
+          out_link_args=()
+          if [ "$action" = build ] && [ -n "''${NIXCFG_UPDATE_OUT_LINK:-}" ]; then
+            out_link_args=(--out-link "$NIXCFG_UPDATE_OUT_LINK")
+          fi
+          nh ${
+            if pkgs.stdenv.isDarwin then "darwin" else "os"
+          } "$action" -j2 "$update_flag" "''${out_link_args[@]}" ~/nix${nhHostArg}
           if [ "$action" = switch ]; then
             true ${cachePush}
           fi
@@ -623,12 +677,17 @@ let
   ];
 in
 {
-  config = mkHome user.name {
-    home.packages = [
-      (pkgs.writeShellScriptBin "nixcfg-switch" switchCommand)
-      updatePackage
-    ]
-    ++ lib.optionals (pkgs.stdenv.isLinux && !isStandalone) linuxScripts;
-
-  };
+  config = lib.mkMerge [
+    (mkHome user.name {
+      home.packages = [
+        (pkgs.writeShellScriptBin "nixcfg-switch" switchCommand)
+        updatePackage
+      ]
+      ++ lib.optionals (pkgs.stdenv.isLinux && !isStandalone) linuxScripts;
+    })
+    (lib.optionalAttrs (lib.hasAttrByPath [ "boot" "kernelPackages" ] options) {
+      # The scheduled upload runs this helper from the unactivated system build.
+      environment.systemPackages = [ pushSystemClosure ];
+    })
+  ];
 }

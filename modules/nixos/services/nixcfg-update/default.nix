@@ -18,7 +18,24 @@ let
     ];
     text = builtins.readFile ../../../../scripts/publish-aarch64-apps.sh;
   };
+  systemOutLink = "%t/nixcfg-update/system";
+  publishSystem = pkgs.writeShellScript "nixcfg-publish-built-system" ''
+    set -euo pipefail
+    system="$1"
+    token_file=${
+      lib.escapeShellArg (config.sops.secrets.xilo_push_token.path or "/run/secrets/xilo_push_token")
+    }
+    if [ ! -r "$token_file" ] || [ ! -s "$token_file" ]; then
+      echo "System cache token is missing or unreadable: deploy xilo_push_token first." >&2
+      exit 1
+    fi
+
+    # Use the helper from the build, which knows that build's native kernel outputs.
+    export XILO_TOKEN="$(cat "$token_file")"
+    exec "$system/sw/bin/nixcfg-push-system" "$system"
+  '';
   serviceEnvironment = [
+    "NIXCFG_UPDATE_OUT_LINK=${systemOutLink}"
     "PATH=${
       lib.makeBinPath [
         pkgs.coreutils
@@ -34,37 +51,30 @@ let
 in
 {
   options.local.services.nixcfg-update.enable =
-    lib.mkEnableOption "daily build-only Nix configuration updates";
+    lib.mkEnableOption "daily Nix configuration updates with builds";
 
   config = lib.mkIf cfg.enable (
     mkHome user.name {
       home.packages = [ publishAarch64Apps ];
 
       systemd.user.services.nixcfg-update = {
-        Unit = {
-          Description = "Update and build the Nix configuration without switching";
-          OnSuccess = [ "aarch64-apps-update.service" ];
-        };
+        Unit.Description = "Update, build, and push the Nix configuration without switching";
         Service = {
           Type = "oneshot";
+          RuntimeDirectory = "nixcfg-update";
           WorkingDirectory = "%h/nix";
-          ExecStart = "${hmCfg.home.path}/bin/nixcfg-update --build";
-          Environment = serviceEnvironment;
-        };
-      };
-
-      systemd.user.services.aarch64-apps-update = {
-        Unit.Description = "Build and publish cross-compiled aarch64 apps";
-        Service = {
-          Type = "oneshot";
-          WorkingDirectory = "%h/nix";
-          ExecStart = "${publishAarch64Apps}/bin/nixcfg-publish-aarch64-apps";
+          ExecStart = [
+            "${hmCfg.home.path}/bin/nixcfg-update --build --commit"
+            "${publishAarch64Apps}/bin/nixcfg-publish-aarch64-apps"
+            "${publishSystem} ${systemOutLink}"
+            "${pkgs.git}/bin/git push"
+          ];
           Environment = serviceEnvironment;
         };
       };
 
       systemd.user.timers.nixcfg-update = {
-        Unit.Description = "Update and build the Nix configuration every morning";
+        Unit.Description = "Update, build, and push the Nix configuration every morning";
         Timer = {
           OnCalendar = "*-*-* 06:00:00";
           Persistent = true;
