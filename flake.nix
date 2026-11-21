@@ -181,7 +181,9 @@
         lazybw = prev.callPackage ./pkgs/lazybw { };
         gliff = prev.callPackage ./pkgs/gliff { };
         panda-reader = prev.callPackage ./pkgs/panda-reader { };
-        solidcraft = prev.callPackage ./pkgs/solidcraft { };
+        solidcraft = prev.callPackage ./pkgs/solidcraft {
+          inherit (unstablePkgs prev.stdenv.hostPlatform.system) rustPlatform;
+        };
         gitcomet = prev.callPackage ./pkgs/gitcomet {
           inherit (unstablePkgs prev.stdenv.hostPlatform.system) gitcomet rustPlatform;
         };
