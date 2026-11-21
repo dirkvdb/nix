@@ -339,7 +339,6 @@
       orca-slicer
       orrery
       unstablePkgs.ferdium
-      unstablePkgs.freetube
       unstablePkgs.openscad
       unstablePkgs.openlogi
     ];
