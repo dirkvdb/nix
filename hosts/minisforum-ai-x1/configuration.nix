@@ -182,6 +182,7 @@
           disablePasswordAuth = true;
         };
         fwupd.enable = true;
+        eid.enable = true;
         printing.enable = true;
         sunshine.enable = true;
         syncthing = {
