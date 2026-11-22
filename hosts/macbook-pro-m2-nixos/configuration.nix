@@ -147,6 +147,10 @@ in
         };
         power-profiles-daemon.enable = true;
         tailscale.enable = true;
+        vpnjumphost = {
+          enable = true;
+          autostart = false;
+        };
         wluma = {
           enable = true;
           alsIioPath = "/sys/devices/platform/soc/2a6c00000.aop/als.1.auto";
