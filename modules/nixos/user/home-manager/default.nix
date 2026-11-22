@@ -31,6 +31,8 @@ in
       sharedModules = [
         inputs.zen-browser.homeModules.default
         inputs.nvf.homeModules.default
+        # Stylix 26.05 still themes Wayprompt after its removal from Home Manager.
+        { stylix.targets.wayprompt.enable = false; }
       ];
       users.${user.name}.imports = [
         ./home.nix
