@@ -1,25 +1,12 @@
 {
-  lib,
+  pkgs,
   rustPlatform,
-  fetchFromGitHub,
-  makeWrapper,
-  pkg-config,
-  cmake,
-  dbus,
-  wayland,
-  libxkbcommon,
-  libglvnd,
-  vulkan-loader,
-  libx11,
-  libxcursor,
-  libxi,
-  libxrandr,
-  libxrender,
-  libxext,
-  libxcb,
+  targetPkgs ? pkgs,
 }:
 let
-  runtimeLibs = [
+  inherit (pkgs) lib fetchFromGitHub;
+  inherit (pkgs.buildPackages) makeWrapper pkg-config cmake;
+  runtimeLibs = with targetPkgs; [
     dbus
     wayland
     libxkbcommon

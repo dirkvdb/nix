@@ -7,7 +7,7 @@ let
 
   localPackages = import ./local.nix {
     inherit nativePkgs armPkgs crossPkgs;
-    fleaRustPlatform =
+    unstableRustPlatform =
       (import inputs.nixpkgs-unstable { system = "x86_64-linux"; })
       .pkgsCross.aarch64-multiplatform.rustPlatform;
   };

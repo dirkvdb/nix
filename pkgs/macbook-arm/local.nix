@@ -2,7 +2,7 @@
   nativePkgs,
   armPkgs,
   crossPkgs,
-  fleaRustPlatform,
+  unstableRustPlatform,
 }:
 let
   inherit (nativePkgs) lib;
@@ -167,27 +167,16 @@ in
     }
   );
 
-  solidcraft = crossPkgs.callPackage ../solidcraft/default.nix {
-    inherit (armPkgs)
-      dbus
-      wayland
-      libxkbcommon
-      libglvnd
-      vulkan-loader
-      libx11
-      libxcursor
-      libxi
-      libxrandr
-      libxrender
-      libxext
-      libxcb
-      ;
-    inherit (buildPkgs) makeWrapper pkg-config cmake;
+  solidcraft = import ../solidcraft {
+    pkgs = crossPkgs;
+    rustPlatform = unstableRustPlatform;
+    # Reuse cached native ARM libraries instead of cross-building them.
+    targetPkgs = armPkgs;
   };
 
   flea-unwrapped =
     (crossPkgs.callPackage ../flea/default.nix {
-      rustPlatform = fleaRustPlatform;
+      rustPlatform = unstableRustPlatform;
       localsend-cli = crossPkgs.callPackage ../localsend-cli/default.nix { };
       inherit (armPkgs)
         alsa-lib
