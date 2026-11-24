@@ -388,6 +388,7 @@
             system = hpcSystem;
             mkHome = _: attrs: attrs;
             unstablePkgs = hpcUnstablePkgs;
+            llmAgentsPkgs = llmAgentsPkgs hpcSystem;
           };
         };
       };
