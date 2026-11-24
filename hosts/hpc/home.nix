@@ -70,7 +70,10 @@ in
       };
 
       apps = {
-        direnv.enable = true;
+        direnv = {
+          enable = true;
+          rootlessStoreWorkaround = true;
+        };
         neovim.enable = true;
       };
     };

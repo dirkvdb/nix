@@ -18,15 +18,28 @@ let
   # add itself). We use devenv's native shell hook for fish activation
   # instead, so strip direnv's own fish hook out of the package to stop it
   # auto-activating .envrc files in fish.
-  direnvNoFishHook = pkgs.runCommand "direnv-no-fish-hook" { } ''
-    cp -r ${pkgs.direnv} $out
-    chmod -R u+w $out
-    rm -f $out/share/fish/vendor_conf.d/direnv.fish
-  '';
+  direnvNoFishHook =
+    if cfg.rootlessStoreWorkaround then
+      # Avoid copying store files where nix-rootless cannot set their permissions.
+      pkgs.symlinkJoin {
+        name = "direnv-no-fish-hook-${pkgs.direnv.version}";
+        inherit (pkgs.direnv) pname version meta;
+        paths = [ pkgs.direnv ];
+        postBuild = ''
+          rm -f $out/share/fish/vendor_conf.d/direnv.fish
+        '';
+      }
+    else
+      pkgs.runCommand "direnv-no-fish-hook" { } ''
+        cp -r ${pkgs.direnv} $out
+        chmod -R u+w $out
+        rm -f $out/share/fish/vendor_conf.d/direnv.fish
+      '';
 in
 {
   options.local.apps.direnv = {
     enable = lib.mkEnableOption "Enable direnv";
+    rootlessStoreWorkaround = lib.mkEnableOption "the symlink-based direnv package for nix-rootless stores";
   };
 
   config = lib.mkIf cfg.enable (mkUserHome {
