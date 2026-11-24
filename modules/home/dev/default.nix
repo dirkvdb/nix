@@ -24,6 +24,12 @@ in
       default = true;
       description = "Install the LLM coding agent CLIs (codex, copilot-cli).";
     };
+
+    uncachedPackages.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Install dev tools that aren't in the public binary cache and must be built locally (oweka). Disable on stores that can't build from source, like nix-rootless.";
+    };
   };
 
   config = lib.mkIf cfg.enable (mkUserHome {
@@ -33,10 +39,10 @@ in
         serie
         binsider
         nixd
-        oweka
         unstablePkgs.sccache
         unstablePkgs.pixi
       ]
+      ++ lib.optionals cfg.uncachedPackages.enable [ oweka ]
       ++ lib.optionals (!isHeadless) [
         tabulite
         ai-usagebar

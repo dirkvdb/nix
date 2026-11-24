@@ -77,6 +77,8 @@ in
       system.dev = {
         enable = true;
         llmClis.enable = false;
+        # nix-rootless can't chmod while unpacking, so source builds fail.
+        uncachedPackages.enable = false;
       };
 
       apps = {
