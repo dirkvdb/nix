@@ -1091,6 +1091,7 @@
         "nvf": "nvf",
         "obsidian-extensions": "obsidian-extensions",
         "ram": "ram",
+        "rust-overlay": "rust-overlay_3",
         "silent-sddm": "silent-sddm",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
@@ -1148,6 +1149,27 @@
     "rust-overlay_3": {
       "inputs": {
         "nixpkgs": [
+          "nixpkgs-unstable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794518310,
+        "narHash": "sha256-NmwbbRaUf/AoY+NoJimXOdjlbkwl6+aDbe8nodaaZzY=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "8bbfc858c7b85f5e6ed6d6cc201ffcee1bb08a9b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "ref": "stable",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_4": {
+      "inputs": {
+        "nixpkgs": [
           "tabulite",
           "nixpkgs"
         ]
@@ -1166,7 +1188,7 @@
         "type": "github"
       }
     },
-    "rust-overlay_4": {
+    "rust-overlay_5": {
       "inputs": {
         "nixpkgs": [
           "topq",
@@ -1358,7 +1380,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "rust-overlay": "rust-overlay_3"
+        "rust-overlay": "rust-overlay_4"
       },
       "locked": {
         "lastModified": 1793084624,
@@ -1464,7 +1486,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "rust-overlay": "rust-overlay_4"
+        "rust-overlay": "rust-overlay_5"
       },
       "locked": {
         "lastModified": 1793634754,

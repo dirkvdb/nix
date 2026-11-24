@@ -26,6 +26,7 @@ let
       flea = localPackages.flea-unwrapped;
       gitcomet = import ../gitcomet/cross.nix {
         nixpkgs = inputs.nixpkgs-unstable;
+        inherit (inputs) rust-overlay;
       };
       zed-editor = import ../zed-editor/cross.nix {
         nixpkgs = inputs.nixpkgs-unstable;

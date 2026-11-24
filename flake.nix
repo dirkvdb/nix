@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay/stable";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
 
     xilo = {
       url = "github:stubbedev/xilo/v2.0.2";
@@ -143,6 +147,23 @@
           config.allowUnfree = true;
         };
 
+      gitcometPkgs =
+        system:
+        import inputs.nixpkgs-unstable {
+          inherit system;
+          overlays = [ inputs.rust-overlay.overlays.default ];
+        };
+      gitcometRustPlatform =
+        system:
+        let
+          pkgs = gitcometPkgs system;
+          rustToolchain = pkgs.rust-bin.stable."1.100.0".default;
+        in
+        pkgs.makeRustPlatform {
+          cargo = rustToolchain;
+          rustc = rustToolchain;
+        };
+
       llmAgentsPkgs = system: inputs.llm-agents.packages.${system};
       macbookArmApps = import ./pkgs/macbook-arm { inherit inputs; };
 
@@ -185,9 +206,15 @@
           pkgs = prev;
           inherit (unstablePkgs prev.stdenv.hostPlatform.system) rustPlatform;
         };
-        gitcomet = prev.callPackage ./pkgs/gitcomet {
-          inherit (unstablePkgs prev.stdenv.hostPlatform.system) gitcomet rustPlatform;
-        };
+        gitcomet =
+          let
+            system = prev.stdenv.hostPlatform.system;
+            rustPlatform = gitcometRustPlatform system;
+          in
+          prev.callPackage ./pkgs/gitcomet {
+            inherit rustPlatform;
+            gitcomet = (unstablePkgs system).gitcomet.override { inherit rustPlatform; };
+          };
         flea-unwrapped = prev.callPackage ./pkgs/flea {
           localsend-cli = final.localsend-cli;
           inherit (unstablePkgs prev.stdenv.hostPlatform.system) rustPlatform;
