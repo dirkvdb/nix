@@ -13,11 +13,13 @@ in
   imports = [
     inputs.stylix.homeModules.stylix
     inputs.zen-browser.homeModules.default
-    inputs.nvf.homeModules.default
+
     ../../modules/common/options
     ../../modules/common/theme
     ../../modules/home/import.nix
   ];
+
+  disabledModules = [ ../../modules/home/apps/neovim/default.nix ];
 
   config = {
     home = {
@@ -74,7 +76,7 @@ in
           enable = true;
           rootlessStoreWorkaround = true;
         };
-        neovim.enable = true;
+
       };
     };
 
