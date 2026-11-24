@@ -28,7 +28,13 @@ in
     uncachedPackages.enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Install dev tools that aren't in the public binary cache and must be built locally (oweka). Disable on stores that can't build from source, like nix-rootless.";
+      description = "Install dev tools that aren't in the public binary cache and must be built locally";
+    };
+
+    devenv.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Install devenv and its shell hook.";
     };
   };
 
@@ -53,16 +59,10 @@ in
       ];
 
     programs.devenv = {
-      enable = true;
+      enable = cfg.devenv.enable;
       package = unstablePkgs.devenv;
+      settings.tui.statusline.enabled = false;
     };
-
-    xdg.configFile."devenv/config.yaml".text = ''
-      version: 1
-      tui:
-        statusline:
-          enabled: false
-    '';
 
     programs.lazygit = {
       enable = true;

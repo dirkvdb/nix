@@ -79,6 +79,8 @@ in
         llmClis.enable = false;
         # nix-rootless can't chmod while unpacking, so source builds fail.
         uncachedPackages.enable = false;
+        # devenv 2.x embeds Nix and can't see the rewritten nix-rootless store.
+        devenv.enable = false;
       };
 
       apps = {
