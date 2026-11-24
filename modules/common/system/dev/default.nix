@@ -9,6 +9,7 @@
 let
   cfg = config.local.system.dev;
   inherit (config.local) user;
+  isHeadless = config.local.headless or false;
   vpnjumphostEnabled = config.local.services.vpnjumphost.enable or false;
 
 in
@@ -21,7 +22,6 @@ in
     environment.systemPackages =
       with pkgs;
       [
-        tabulite
         serie
         binsider
         nixd
@@ -30,6 +30,9 @@ in
         unstablePkgs.devenv
         unstablePkgs.pixi
         llmAgentsPkgs.hunk
+      ]
+      ++ lib.optionals (!isHeadless) [
+        tabulite
         ai-usagebar
       ]
       ++ lib.optionals pkgs.stdenv.isLinux [
@@ -79,28 +82,30 @@ in
 
       home.sessionVariables.HUNK_DISABLE_UPDATE_NOTICE = "1";
 
-      xdg.configFile."ai-usagebar/config.toml".text = ''
-        [ui]
-        primary = "copilot"
+      xdg.configFile."ai-usagebar/config.toml" = lib.mkIf (!isHeadless) {
+        text = ''
+          [ui]
+          primary = "copilot"
 
-        [anthropic]
-        enabled = false
+          [anthropic]
+          enabled = false
 
-        [openai]
-        enabled = true
+          [openai]
+          enabled = true
 
-        [copilot]
-        enabled = true
+          [copilot]
+          enabled = true
 
-        [zai]
-        enabled = false
+          [zai]
+          enabled = false
 
-        [openrouter]
-        enabled = false
+          [openrouter]
+          enabled = false
 
-        [commandcode]
-        enabled = false
-      '';
+          [commandcode]
+          enabled = false
+        '';
+      };
     };
   };
 }
