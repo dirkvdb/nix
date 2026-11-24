@@ -153,6 +153,13 @@
       set -gx ARTIFACTORY_TOKEN (cat ${config.sops.secrets.artifactory_token.path} | string trim)
     '';
 
+    # Interactive MARVIN compute node; the inner ssh to login.marvin.vito.local
+    # is routed through the vpnjumphost SOCKS proxy by the *.vito.local block.
+    home-manager.users.dirk.programs.ssh.matchBlocks."marvin-cluster-16GB-8CPU" = {
+      user = "vdboerd";
+      proxyCommand = "ssh -q %r@login.marvin.vito.local setuptunnel --mem 16GB --cpus 8";
+    };
+
     # Intel iGPU drives the compositor. The NVIDIA dGPU is available for
     # offload only; list it second so Hyprland prefers the iGPU.
     # AQ_DRM_DEVICES is colon-separated, so use colon-free udev symlinks instead
