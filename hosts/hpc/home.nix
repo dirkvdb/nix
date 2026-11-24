@@ -85,5 +85,20 @@ in
 
     # Atuin times out on NFS mounts
     programs.atuin.enable = lib.mkForce false;
+
+    # Compute nodes (and nix-rootless) may export an XDG_RUNTIME_DIR such as
+    # /run/user/<uid> that does not exist or is not writable, which breaks
+    # tools like devenv. Fall back to a private directory in /tmp (not $HOME,
+    # since sockets on NFS are unreliable).
+    programs.fish.shellInit = ''
+      if not test -d "$XDG_RUNTIME_DIR" -a -w "$XDG_RUNTIME_DIR" -a -x "$XDG_RUNTIME_DIR"
+          set -l fallback_runtime_dir /tmp/xdg-runtime-(id -u)
+          mkdir -p -m 700 $fallback_runtime_dir 2>/dev/null
+          if test -d $fallback_runtime_dir -a -O $fallback_runtime_dir
+              chmod 700 $fallback_runtime_dir
+              set -gx XDG_RUNTIME_DIR $fallback_runtime_dir
+          end
+      end
+    '';
   };
 }
