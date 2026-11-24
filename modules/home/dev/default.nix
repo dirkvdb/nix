@@ -36,7 +36,6 @@ in
         oweka
         unstablePkgs.sccache
         unstablePkgs.pixi
-        llmAgentsPkgs.hunk
       ]
       ++ lib.optionals (!isHeadless) [
         tabulite
@@ -80,13 +79,6 @@ in
       http = "socks5h://127.0.0.1:1081"
       https = "socks5h://127.0.0.1:1081"
     '';
-
-    # Hunk configuration
-    xdg.configFile."hunk/config.toml".text = ''
-      theme = "ayu-mirage"
-    '';
-
-    home.sessionVariables.HUNK_DISABLE_UPDATE_NOTICE = "1";
 
     xdg.configFile."ai-usagebar/config.toml" = lib.mkIf (!isHeadless) {
       text = ''

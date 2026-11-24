@@ -35,7 +35,6 @@ let
   # These exact ARM derivations are already published by llm-agents. Preserve
   # their identities so they substitute upstream rather than rebuilding them.
   cachedPackages = lib.getAttrs [
-    "hunk"
     "codex"
     "copilot-cli"
     "herdr"
