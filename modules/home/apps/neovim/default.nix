@@ -8,6 +8,7 @@
 let
   inherit (config.local) user;
   cfg = config.local.apps.neovim;
+  isHeadless = config.local.headless;
   mkUserHome = mkHome user.name;
 
   # Helper to create keymaps more concisely
@@ -117,10 +118,12 @@ in
           relativenumber = true;
           cursorline = true;
           cursorlineopt = "both";
+        }
+        // lib.optionalAttrs (!isHeadless) {
           clipboard = "unnamedplus";
         };
 
-        vim.extraPackages = lib.optionals pkgs.stdenv.isLinux [ pkgs.wl-clipboard ];
+        vim.extraPackages = lib.optionals (pkgs.stdenv.isLinux && !isHeadless) [ pkgs.wl-clipboard ];
 
         vim.diagnostics = {
           enable = true;

@@ -7,6 +7,12 @@ sudo sbctl create-keys
 Register the KeePassXC Git credential helper:
 - git-credential-keepassxc configure
 
+# Install home manager config on a non nixos system
+```bash
+nix run github:nix-community/home-manager/release-26.11 -- \
+  switch --flake "$HOME/nix#hpc" -b backup
+```
+
 # aarch64 application cache
 
 Build the MacBook's custom user-space applications without
