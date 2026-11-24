@@ -157,7 +157,9 @@
     # is routed through the vpnjumphost SOCKS proxy by the *.vito.local block.
     home-manager.users.dirk.programs.ssh.matchBlocks."marvin-cluster-16GB-8CPU" = {
       user = "vdboerd";
+      forwardAgent = true;
       proxyCommand = "ssh -q %r@login.marvin.vito.local setuptunnel --mem 16GB --cpus 8";
+      extraOptions.StrictHostKeyChecking = "accept-new";
     };
 
     # Intel iGPU drives the compositor. The NVIDIA dGPU is available for
