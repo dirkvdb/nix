@@ -63,6 +63,9 @@ in
       desktop.enable = false;
       headless = true;
 
+      # The cluster's OpenSSH client rejects this directive even for other hosts.
+      ssh.supportsWarnWeakCrypto = false;
+
       # Use everforest theme (only terminal/CLI styling, no GUI)
       theme.preset = "everforest";
 

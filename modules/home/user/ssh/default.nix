@@ -14,6 +14,12 @@ let
   mkUserHome = mkHome user.name;
 in
 {
+  options.local.ssh.supportsWarnWeakCrypto = lib.mkOption {
+    type = lib.types.bool;
+    default = true;
+    description = "Whether the SSH client understands the WarnWeakCrypto directive.";
+  };
+
   config = mkUserHome {
     programs.ssh = {
       enable = true;
@@ -72,6 +78,8 @@ in
           };
           extraOptions = {
             RequestTTY = "yes";
+          }
+          // lib.optionalAttrs config.local.ssh.supportsWarnWeakCrypto {
             WarnWeakCrypto = "no-pq-kex";
           };
         };
