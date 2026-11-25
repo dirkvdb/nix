@@ -159,7 +159,7 @@
       user = "vdboerd";
       forwardAgent = true;
       proxyCommand = "ssh -q %r@login.marvin.vito.local setuptunnel --mem 16GB --cpus 8";
-      extraOptions.StrictHostKeyChecking = "accept-new";
+      extraOptions.StrictHostKeyChecking = "no";
     };
 
     # Intel iGPU drives the compositor. The NVIDIA dGPU is available for
