@@ -6,7 +6,7 @@
   rustPlatform,
 }:
 let
-  zedPinnedVersion = "1.29.1";
+  zedPinnedVersion = "1.30.2";
 in
 zed-editor.overrideAttrs (old: rec {
   version = zedPinnedVersion;
@@ -19,12 +19,12 @@ zed-editor.overrideAttrs (old: rec {
     owner = "zed-industries";
     repo = "zed";
     tag = "v${version}";
-    hash = "sha256-Ez/IEIz5ALLwbE5OiGDd1WgIftR6R3H//v2TdPOIdww=";
+    hash = "sha256-exlXazwzBTm367MS1qMWCKazE6yZKGdt2LWhDvWeVaU=";
   };
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit src;
     name = "${old.pname}-${version}";
-    hash = "sha256-6nqsXKe4L8mTW88+RgkoACTXPHRrHhzkTDjSr2s5CZk=";
+    hash = "sha256-ndc/gFMFHYHqZ2N+L/thrhnFRBb+o1Ik322oXAGehPg=";
   };
   env =
     (old.env or { })
