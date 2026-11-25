@@ -156,7 +156,7 @@ in
         # Bulk vendoring avoids a remote build and transfer for every unpacked crate.
         cargoDeps = nativePkgs.rustPlatform.fetchCargoVendor {
           inherit (old) pname version src;
-          hash = "sha256-/7pGXus+JUVJeJqTG7ynzQFFt2wy1Hy0/kOGO8Gd+V4=";
+          hash = "sha256-oyMSYS6ickUekoFSa/z8hMsYpni6SUq9yiKXpwzK5jg=";
         };
       });
 
