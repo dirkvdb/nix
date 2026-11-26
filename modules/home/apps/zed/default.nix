@@ -214,9 +214,14 @@ in
             default_profile = "write";
             show_turn_stats = true;
             play_sound_when_agent_done = "always";
+            commit_message_model = {
+              provider = "copilot_chat";
+              model = "gpt-6-luna";
+              enable_thinking = false;
+            };
             inline_assistant_model = {
               provider = "copilot_chat";
-              model = "gpt-6.1-sol";
+              model = "gpt-6.2-sol";
             };
             sandbox_permissions = {
               allow_unsandboxed = true;
