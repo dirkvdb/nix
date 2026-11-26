@@ -20,9 +20,10 @@ colors. Emphasized UI text uses the normal text color; controls and the first
 graph lane use the muted sand palette accent rather than the yellow text accent.
 The `local.apps.gitcomet` module installs both variants in GitComet's
 application-data `themes` directory and selects the dark `charcoal_grove`
-variant by default. Like Flea, settings are copied to a writable regular file on
-every activation; app/user changes remain writable but are reset on activation. See `../../modules/common/apps/gitcomet/README.md` for mutable
-settings and module options.
+variant when it first seeds `session.json`. Home Manager leaves an existing
+session file untouched, so open repositories and in-app preferences persist.
+Changes to the seed defaults do not affect existing sessions; the theme file
+itself is still managed by Home Manager.
 
 On Linux desktops, Home Manager maps the dark variant to Omarchy's semantic
 palette using `zed-to-omarchy.nix` and installs:

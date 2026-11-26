@@ -62,11 +62,13 @@ in
         in
         {
           home.file."${appDir}/themes/charcoal-grove.json".source = theme;
-          # GitComet writes session state here; copy instead of linking, like Flea.
+          # GitComet owns this file after initialization, including its open repositories.
           home.activation.gitcometSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            run ${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg stateDir}
-            run ${pkgs.coreutils}/bin/cp --remove-destination --no-preserve=mode ${settings} ${lib.escapeShellArg "${stateDir}/session.json"}
-            run ${pkgs.coreutils}/bin/chmod 600 ${lib.escapeShellArg "${stateDir}/session.json"}
+            gitcometSession=${lib.escapeShellArg "${stateDir}/session.json"}
+            if [ ! -e "$gitcometSession" ] && [ ! -L "$gitcometSession" ]; then
+              run ${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg stateDir}
+              run ${pkgs.coreutils}/bin/install -m 600 -T ${settings} "$gitcometSession"
+            fi
           '';
         }
       ))

@@ -3,7 +3,7 @@
   "open_repos": ["nix"],
   "sidebar_collapsed": false,
   "theme_mode": "charcoal_grove",
-  "ui_scale_percent": 100,
+  "ui_scale_percent": 90,
   "window_controls_mode": "system",
   "browser_open_target": "existing_window",
   "ui_density": "compact",
